@@ -16,6 +16,7 @@
 #include <QMediaPlaylist>
 #include <QPainter>
 #include <QGSettings>
+#include <dapplication.h>
 
 ZoneMainWindow::ZoneMainWindow(QWidget *parent)
     : QWidget(parent)
@@ -27,6 +28,9 @@ ZoneMainWindow::ZoneMainWindow(QWidget *parent)
     setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
     // let background be transparent
     setAttribute(Qt::WA_TranslucentBackground, true);
+    if (DApplication::isWayland()) {
+        setWindowFlag(Qt::FramelessWindowHint, 1);
+    }
 
     // catch the screen that mouse is in
     QList<QScreen *> screenList = QGuiApplication::screens();

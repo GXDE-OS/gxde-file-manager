@@ -38,6 +38,7 @@
 #include <DThemeManager>
 #include <dsegmentedcontrol.h>
 #include <DWindowManagerHelper>
+#include <dapplication.h>
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -81,6 +82,9 @@ Frame::Frame(QFrame *parent)
     setFocusPolicy(Qt::StrongFocus);
     setWindowFlags(Qt::BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground);
+    if (DApplication::isWayland()) {
+        setWindowFlag(Qt::FramelessWindowHint, 1);
+    }
 
     setBlendMode(DBlurEffectWidget::BehindWindowBlend);
     setMaskColor(DBlurEffectWidget::DarkColor);

@@ -1772,6 +1772,10 @@ void CanvasGridView::initUI()
     setAttribute(Qt::WA_TranslucentBackground);
     viewport()->setAttribute(Qt::WA_TranslucentBackground);
 
+    if (DApplication::isWayland()) {
+        setWindowFlag(Qt::FramelessWindowHint, true);
+    }
+
     auto primaryScreen = Display::instance()->primaryScreen();
     setGeometry(primaryScreen->geometry());
     auto newGeometry =  getValidNewGeometry(primaryScreen->availableGeometry(), this->geometry());

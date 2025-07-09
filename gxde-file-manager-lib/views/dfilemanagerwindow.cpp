@@ -964,6 +964,9 @@ void DFileManagerWindow::initTitleBar()
     if (app) {
         isDXcbPlatform = app->isDXcbPlatform();
     }
+    if (DApplication::isWayland()) {
+        isDXcbPlatform = true;
+    }
 
     if (isDXcbPlatform) {
         d->toolbar->getSettingsButton()->hide();
