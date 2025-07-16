@@ -1,4 +1,4 @@
-gxde-file-manager (5.0.4) UNRELEASED; urgency=medium
+gxde-file-manager (5.0.5) UNRELEASED; urgency=medium
 
   * 修复高分屏下背景模糊的问题
   * 修复 i386 break 的问题
@@ -14,8 +14,9 @@ gxde-file-manager (5.0.4) UNRELEASED; urgency=medium
   * 各平台均不在运行时使用deepin-anything来搜索
   * 移除 deepin-anything-dev 和 deepin-anything-server-dev 编译依赖
   * Repair display problem in Treeland
+  * 调整：复制路径时去除开头的 file://
 
- -- gfdgd_xi <3025613752@qq.com>  Wed, 09 Jul 2025 18:28:52 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Wed, 16 Jul 2025 10:26:16 +0800
 
 gxde-file-manager (4.8.20) UNRELEASED; urgency=medium
 

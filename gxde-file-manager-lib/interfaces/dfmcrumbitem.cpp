@@ -128,7 +128,8 @@ QMenu *DFMCrumbItemPrivate::createStandardContextMenu() const
     bool shouldDisable = !WindowManager::tabAddableByWinId(wnd->windowId());
 
     menu->addAction(DFMCrumbItemData::actionIcons["edit-copy"], QObject::tr("Copy path"), [this]() {
-        QGuiApplication::clipboard()->setText(data.url.toString());
+        //QGuiApplication::clipboard()->setText(data.url.toString());
+        QGuiApplication::clipboard()->setText(data.url.toString().replace(FILE_ROOT, "/"));
     });
 
     menu->addAction(DFMCrumbItemData::actionIcons["window-new"], QObject::tr("Open in new window"), [this]() {
