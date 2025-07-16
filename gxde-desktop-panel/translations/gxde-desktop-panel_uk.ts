@@ -4,47 +4,47 @@
 <context>
     <name>CanvasGridView</name>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2439"/>
+        <location filename="../view/canvasgridview.cpp" line="2443"/>
         <source>Icon size</source>
         <translation>Розмір іконки</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2445"/>
+        <location filename="../view/canvasgridview.cpp" line="2449"/>
         <source>Auto merge</source>
         <translation>Автоматичне обєднання</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2454"/>
+        <location filename="../view/canvasgridview.cpp" line="2458"/>
         <source>Auto arrange</source>
         <translation>Автоматичне розміщення</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2463"/>
+        <location filename="../view/canvasgridview.cpp" line="2467"/>
         <source>Hide Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2516"/>
+        <location filename="../view/canvasgridview.cpp" line="2520"/>
         <source>Set Wallpaper</source>
         <translation>Встановити шпалери</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2518"/>
+        <location filename="../view/canvasgridview.cpp" line="2522"/>
         <source>Wallpaper and Screensaver</source>
         <translation>Шпалери і зберігач екрана</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2599"/>
+        <location filename="../view/canvasgridview.cpp" line="2603"/>
         <source>Properties</source>
         <translation>Властивості</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2502"/>
+        <location filename="../view/canvasgridview.cpp" line="2506"/>
         <source>Display Settings</source>
         <translation>Налаштування дисплею</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2509"/>
+        <location filename="../view/canvasgridview.cpp" line="2513"/>
         <source>Corner Settings</source>
         <translation>Налаштування кутів</translation>
     </message>
@@ -80,57 +80,57 @@
 <context>
     <name>Frame</name>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="423"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="427"/>
         <source>Wallpaper Slideshow</source>
         <translation>Показ слайдів із зображень тла</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="449"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="453"/>
         <source>When login</source>
         <translation>Під час входу</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="451"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="455"/>
         <source>When wakeup</source>
         <translation>Під час пробудження</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="495"/>
         <source>Require a password on wakeup</source>
         <translation>Вимагати пароль при пробудженні</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="516"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="520"/>
         <source>Never</source>
         <translation>Ніколи</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="517"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="521"/>
         <source>Wait:</source>
         <translation>Очікування:</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="545"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="549"/>
         <source>Wallpaper</source>
         <translation>Шпалери</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="545"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="549"/>
         <source>Screensaver</source>
         <translation>Зберігач екрана</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="607"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="611"/>
         <source>Only desktop</source>
         <translation>Лише стільниця</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="608"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="612"/>
         <source>Only lock screen</source>
         <translation>Лише заблокований екран</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="636"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="640"/>
         <source>Apply</source>
         <translation>Застосувати</translation>
     </message>
@@ -138,82 +138,72 @@
 <context>
     <name>ZoneMainWindow</name>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="55"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="59"/>
         <source>Fast Screen Off</source>
         <translation>Швидке вимикання екрану</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="56"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="60"/>
         <source>Control Center</source>
         <translation>Центр керування</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="57"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="61"/>
         <source>All Windows</source>
         <translation>Всі вікна</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="58"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="62"/>
         <source>Launcher</source>
         <translation>Запускач</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="59"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="63"/>
         <source>Desktop</source>
         <translation>Стільниця</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="60"/>
-        <source>Text Editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="61"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
         <source>Screen Shot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="62"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
         <source>Screen Record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="63"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
         <source>Screen OCR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="64"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
         <source>Screen Scroll</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
         <source>Color Picker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
-        <source>File Manager</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
         <source>System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
         <source>Notify Center</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>
         <source>None</source>
         <translation>Жоден</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="98"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="102"/>
         <source>Close Window</source>
         <translation>Закрити вікно</translation>
     </message>

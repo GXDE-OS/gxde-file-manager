@@ -1165,6 +1165,11 @@
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="262"/>
+        <source>Hide my directories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="268"/>
         <source>Hide system disk</source>
         <translation>시스템 디스크 숨기기</translation>
     </message>
@@ -1921,7 +1926,7 @@
     <message>
         <location filename="../interfaces/dfilemenumanager.cpp" line="871"/>
         <location filename="../interfaces/dfilemenumanager.cpp" line="874"/>
-        <location filename="../interfaces/dfmcrumbitem.cpp" line="134"/>
+        <location filename="../interfaces/dfmcrumbitem.cpp" line="135"/>
         <location filename="../interfaces/dfmsidebaritem.cpp" line="505"/>
         <location filename="../views/dfmsidebarbookmarkitem.cpp" line="78"/>
         <location filename="../views/dfmsidebardeviceitem.cpp" line="94"/>
@@ -1938,7 +1943,7 @@
     <message>
         <location filename="../interfaces/dfilemenumanager.cpp" line="872"/>
         <location filename="../interfaces/dfilemenumanager.cpp" line="875"/>
-        <location filename="../interfaces/dfmcrumbitem.cpp" line="138"/>
+        <location filename="../interfaces/dfmcrumbitem.cpp" line="139"/>
         <location filename="../interfaces/dfmsidebaritem.cpp" line="509"/>
         <location filename="../views/dfmsidebarbookmarkitem.cpp" line="82"/>
         <location filename="../views/dfmsidebardeviceitem.cpp" line="102"/>
@@ -2193,12 +2198,12 @@
         <translation>전부 복원</translation>
     </message>
     <message>
-        <location filename="../dialogs/dfmsettingdialog.cpp" line="355"/>
+        <location filename="../dialogs/dfmsettingdialog.cpp" line="356"/>
         <source>Auto mount</source>
         <translation>자동으로 마운트</translation>
     </message>
     <message>
-        <location filename="../dialogs/dfmsettingdialog.cpp" line="393"/>
+        <location filename="../dialogs/dfmsettingdialog.cpp" line="394"/>
         <source>Open after auto mount</source>
         <translation>자동으로 마운트한 후 열기</translation>
     </message>
@@ -2694,7 +2699,7 @@
         <translation>복사 경로</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfmcrumbitem.cpp" line="144"/>
+        <location filename="../interfaces/dfmcrumbitem.cpp" line="145"/>
         <source>Edit address</source>
         <translation>주소 수정</translation>
     </message>
