@@ -132,6 +132,7 @@ private:
         {"advance.mount.auto_mount", DFMApplication::GA_AutoMount},
         {"advance.mount.auto_mount_and_open", DFMApplication::GA_AutoMountAndOpen},
         {"advance.dialog.default_chooser_dialog", DFMApplication::GA_OverrideFileChooserDialog},
+        {"advance.other.hide_my_directories", DFMApplication::GA_HiddenMyDirectories},
         {"advance.other.hide_system_partition", DFMApplication::GA_HiddenSystemPartition},
         {"advance.other.show_crumbbar_clickable_area", DFMApplication::GA_ShowCsdCrumbBarClickableArea}
     };

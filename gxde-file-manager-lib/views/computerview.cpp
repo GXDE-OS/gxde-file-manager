@@ -589,9 +589,13 @@ void ComputerView::initUI()
     m_removableFlowLayout->setVerticalSpacing(50);
 
     QVBoxLayout *contentLayout = new QVBoxLayout;
-    contentLayout->addWidget(m_systemTitleLine);
-    contentLayout->addLayout(m_systemFlowLayout);
-    contentLayout->addSpacing(20);
+    bool disabledMyDirectories = DFMApplication::genericAttribute(DFMApplication::GA_HiddenMyDirectories).toBool();
+    if (!disabledMyDirectories) {
+        contentLayout->addWidget(m_systemTitleLine);
+        contentLayout->addLayout(m_systemFlowLayout);
+        contentLayout->addSpacing(20);
+    }
+    m_systemTitleLine->setVisible(!disabledMyDirectories);
     contentLayout->addWidget(m_nativeTitleLine);
     contentLayout->addLayout(m_nativeFlowLayout);
     contentLayout->addSpacing(20);

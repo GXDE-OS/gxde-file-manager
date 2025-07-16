@@ -258,6 +258,12 @@
                     "name": qsTranslate("GenerateSettingTranslate", "Other"),
                     "options": [
                         {
+                            "key": "hide_my_directories",
+                            "text": qsTranslate("GenerateSettingTranslate", "Hide my directories"),
+                            "type": "checkbox",
+                            "default": false
+                        },
+                        {
                             "key": "hide_system_partition",
                             "text": qsTranslate("GenerateSettingTranslate", "Hide system disk"),
                             "type": "checkbox",
