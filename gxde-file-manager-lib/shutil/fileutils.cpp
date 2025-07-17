@@ -417,7 +417,9 @@ QString FileUtils::formatSize(qint64 num, bool withUnitVisible, int precision, i
     qreal fileSize(num);
 
     if (unitList.size() == 0) {
-        list << " B" << " KB" << " MB" << " GB" << " TB"; // should we use KiB since we use 1024 here?
+//        list << " B" << " KB" << " MB" << " GB" << " TB"; // should we use KiB since we use 1024 here?
+        // 遵守 IEC 标准
+        list << " B" << " KiB" << " MiB" << " GiB" << " TiB"; // should we use KiB since we use 1024 here?
     } else {
         list = unitList;
     }
