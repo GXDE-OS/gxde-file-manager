@@ -198,6 +198,7 @@ void DMultiFilePropertyDialogPrivate::initUiParameter()noexcept
         wifeLabel->setTextFormat(Qt::PlainText);
         wifeLabel->setWordWrap(true);
         wifeLabel->setFixedWidth(180);
+        wifeLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
 
 
 

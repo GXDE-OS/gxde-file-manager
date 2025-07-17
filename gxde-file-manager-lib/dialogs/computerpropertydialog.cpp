@@ -98,6 +98,8 @@ void ComputerPropertyDialog::initUI()
         keyLabel->setStyleSheet("QLabel { color: #777777; font-size: 12px; }");
         valLabel->setStyleSheet("QLabel { font-size: 12px; }");
 
+        //valLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+
         gridLayout->addWidget(keyLabel, row, 0, Qt::AlignRight | Qt::AlignTop);
         gridLayout->addWidget(valLabel, row, 1, Qt::AlignLeft | Qt::AlignTop);
         gridLayout->setRowMinimumHeight(row, valLabel->heightForWidth(gridLayout->columnMinimumWidth(1)));

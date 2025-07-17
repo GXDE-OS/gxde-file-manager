@@ -879,6 +879,12 @@ QFrame *PropertyDialog::createBasicInfoWidget(const DAbstractFileInfoPointer &in
     SectionValueLabel *timeCreatedLabel = new SectionValueLabel(info->lastReadDisplayName());
     SectionValueLabel *timeModifiedLabel = new SectionValueLabel(info->lastModifiedDisplayName());
 
+    m_containSizeLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+    m_folderSizeLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+    typeLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+    timeCreatedLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+    timeModifiedLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+
     QFormLayout *layout = new QFormLayout;
     layout->setHorizontalSpacing(12);
     layout->setVerticalSpacing(16);
@@ -899,6 +905,7 @@ QFrame *PropertyDialog::createBasicInfoWidget(const DAbstractFileInfoPointer &in
         SectionKeyLabel *linkPathSectionLabel = new SectionKeyLabel(QObject::tr("Link path"));
 
         LinkSectionValueLabel *linkPathLabel = new LinkSectionValueLabel(info->symlinkTargetPath());
+        linkPathLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
         linkPathLabel->setToolTip(info->symlinkTargetPath());
         linkPathLabel->setLinkTargetUrl(info->redirectedFileUrl());
         linkPathLabel->setOpenExternalLinks(true);
