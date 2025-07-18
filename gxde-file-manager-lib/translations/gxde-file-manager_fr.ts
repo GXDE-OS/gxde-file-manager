@@ -65,7 +65,7 @@
         <translation>Disque</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="147"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="149"/>
         <source>Bit</source>
         <translation>Bit </translation>
     </message>
@@ -202,6 +202,34 @@
         <location filename="../views/dfmadvancesearchbar.cpp" line="154"/>
         <source>Last year</source>
         <translation>L&apos;année dernière</translation>
+    </message>
+</context>
+<context>
+    <name>DFMPreviewSidebar</name>
+    <message>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="23"/>
+        <source>File Size:</source>
+        <translation type="unfinished">Taille du fichier :</translation>
+    </message>
+    <message>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="32"/>
+        <source>File Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="36"/>
+        <source>Mimetype:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="38"/>
+        <source>Time read:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="40"/>
+        <source>Time modified:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -366,7 +394,7 @@
 <context>
     <name>DFileManagerWindow</name>
     <message>
-        <location filename="../views/dfilemanagerwindow.cpp" line="947"/>
+        <location filename="../views/dfilemanagerwindow.cpp" line="962"/>
         <source>Dark theme</source>
         <translation>Thème sombre</translation>
     </message>
@@ -416,7 +444,7 @@
 <context>
     <name>DFileView</name>
     <message>
-        <location filename="../views/dfileview.cpp" line="2723"/>
+        <location filename="../views/dfileview.cpp" line="2727"/>
         <source>(Reverse)</source>
         <translation>(Inverse)</translation>
     </message>
@@ -1766,12 +1794,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1205"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1212"/>
         <source>Allow to execute as program</source>
         <translation>Exécuter comme</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="980"/>
+        <location filename="../dialogs/propertydialog.cpp" line="987"/>
         <source>Local disk</source>
         <translation>Disque local</translation>
     </message>
@@ -1785,9 +1813,9 @@
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="887"/>
-        <location filename="../dialogs/propertydialog.cpp" line="985"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1012"/>
+        <location filename="../dialogs/propertydialog.cpp" line="893"/>
+        <location filename="../dialogs/propertydialog.cpp" line="992"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1019"/>
         <source>Contains</source>
         <translation>Contenu</translation>
     </message>
@@ -1809,75 +1837,75 @@
         <translation>Heure de modification</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="899"/>
+        <location filename="../dialogs/propertydialog.cpp" line="905"/>
         <source>Link path</source>
         <translation>Chemin du lien</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="980"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1007"/>
+        <location filename="../dialogs/propertydialog.cpp" line="987"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1014"/>
         <source>Device type</source>
         <translation>Type de périphérique </translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="986"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1013"/>
+        <location filename="../dialogs/propertydialog.cpp" line="993"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1020"/>
         <source>Free space</source>
         <translation>Espace libre</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="981"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1008"/>
+        <location filename="../dialogs/propertydialog.cpp" line="988"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1015"/>
         <source>Total space</source>
         <translation>Espace total</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="983"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1010"/>
+        <location filename="../dialogs/propertydialog.cpp" line="990"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1017"/>
         <source>Filesystem</source>
         <translation>Système de fichiers</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1117"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1124"/>
         <source>Access denied</source>
         <translation>Accès refusé</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1118"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1128"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1125"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1135"/>
         <source>Executable</source>
         <translation>Exécutable</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1119"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1120"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1126"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1127"/>
         <source>Write only</source>
         <translation>Écriture uniquement</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1121"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1122"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1128"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1129"/>
         <source>Read only</source>
         <translation>Lecture uniquement </translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1123"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1124"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1130"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1131"/>
         <source>Read-write</source>
         <translation>Lecture-Écriture</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1200"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1207"/>
         <source>Others</source>
         <translation>Autres</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1198"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1205"/>
         <source>Owner</source>
         <translation>Propriétaire </translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1199"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1206"/>
         <source>Group</source>
         <translation>Groupe</translation>
     </message>
@@ -2341,14 +2369,14 @@
     </message>
     <message>
         <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="315"/>
-        <location filename="../dialogs/propertydialog.cpp" line="953"/>
+        <location filename="../dialogs/propertydialog.cpp" line="960"/>
         <location filename="../interfaces/dabstractfileinfo.cpp" line="641"/>
         <source>%1 item</source>
         <translation>%1 élément</translation>
     </message>
     <message>
         <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="317"/>
-        <location filename="../dialogs/propertydialog.cpp" line="953"/>
+        <location filename="../dialogs/propertydialog.cpp" line="960"/>
         <location filename="../interfaces/dabstractfileinfo.cpp" line="643"/>
         <source>%1 items</source>
         <translation>%1 éléments</translation>
