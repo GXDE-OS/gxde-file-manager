@@ -611,6 +611,23 @@ QPushButton#NewTabButton:disabled {
     image: url(:/icons/images/icons/new_tab_disabled.png);
 }
 
+QPushButton#RightViewDetailsButton{
+    image: url(:/icons/images/icons/dfm_rightview_detail_normal_16px.svg);
+}
+QPushButton#RightViewDetailsButton:pressed{
+    image: url(:/icons/images/icons/dfm_rightview_detail_normal_16px.svg);
+}
+QPushButton#RightViewDetailsButton:disabled {
+    image: url(:/icons/images/icons/dfm_rightview_detail_normal_16px.svg);
+}
+QPushButton#RightViewDetailsButton:checked {
+    background-color: #2ca7f8;
+    border: 2px solid #2ca7f8;
+    border-radius: 4px;
+    image: url(:/icons/images/icons/dfm_rightview_detail_normal_16px.svg);
+}
+
+
 
 /*DRenameBar ===================== DRenameBar*/
 QFrame#DRenameBar{

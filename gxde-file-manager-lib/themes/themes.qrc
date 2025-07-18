@@ -110,5 +110,7 @@
         <file>dark/icons/up_hover.svg</file>
         <file>dark/icons/up_normal.svg</file>
         <file>dark/icons/up_press.svg</file>
+        <file>dark/icons/dfm_rightview_detail_hover_16px.svg</file>
+        <file>dark/icons/dfm_rightview_detail_normal_16px.svg</file>
     </qresource>
 </RCC>

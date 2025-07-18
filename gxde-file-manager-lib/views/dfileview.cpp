@@ -2002,6 +2002,10 @@ void DFileView::initConnects()
     connect(d->openWithActionGroup, &QActionGroup::triggered, this, &DFileView::openWithActionTriggered);
 
     connect(selectionModel(), &QItemSelectionModel::selectionChanged, this, &DFileView::delayUpdateStatusBar);
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged, this, [this](){
+        notifyChooseFileChanged(selectedUrls());
+    });
+
     connect(model(), &DFileSystemModel::dataChanged, this, &DFileView::handleDataChanged);
     connect(model(), &DFileSystemModel::stateChanged, this, &DFileView::onModelStateChanged);
     connect(model(), &DFileSystemModel::rootUrlDeleted, this, &DFileView::onRootUrlDeleted);

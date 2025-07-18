@@ -80,6 +80,7 @@ RESOURCES += \
 
 HEADERS += \
     controllers/appcontroller.h \
+    views/dfmpreviewsidebar.h \
     views/dfmsidebaropticaldevitem.h \
     views/dtoolbar.h \
     views/dfileview.h \
@@ -269,6 +270,7 @@ HEADERS += \
 
 SOURCES += \
     controllers/appcontroller.cpp \
+    views/dfmpreviewsidebar.cpp \
     views/dfmsidebaropticaldevitem.cpp \
     views/dtoolbar.cpp \
     views/dfileview.cpp \

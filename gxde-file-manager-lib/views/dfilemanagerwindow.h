@@ -108,6 +108,7 @@ signals:
     void aboutToClose();
     void positionChanged(const QPoint &pos);
     void currentUrlChanged();
+    void currentChooseFileChanged(const QList<DUrl> &url);
     void currentViewStateChanged();
 
 public slots:
@@ -131,6 +132,7 @@ public slots:
     void showEmptyTrashButton();
     void hideEmptyTrashButton();
     void onNewTabButtonClicked();
+    void onRightViewDetailsButtonClicked();
     void requestEmptyTrashFiles();
     void onTrashStateChanged();
 

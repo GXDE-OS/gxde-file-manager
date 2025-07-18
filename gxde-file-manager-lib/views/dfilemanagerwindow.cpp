@@ -39,6 +39,7 @@
 #include "dfilesystemmodel.h"
 #include "dfmviewmanager.h"
 #include "dfmsidebar.h"
+#include "dfmpreviewsidebar.h"
 #include "dfmsidebaritem.h"
 #include "dfmaddressbar.h"
 #include "dfmsettings.h"
@@ -115,10 +116,11 @@ public:
     QFrame *centralWidget{ nullptr };
     DFMSideBar *leftSideBar{ nullptr };
     QFrame *rightView { nullptr };
-    QVBoxLayout *rightViewLayout { nullptr };
+    QGridLayout *rightViewLayout { nullptr };
     DToolBar *toolbar{ nullptr };
     TabBar *tabBar { nullptr };
     QPushButton *newTabButton;
+    QPushButton *rightViewDetailsButton;
     DFMBaseView *currentView { nullptr };
     DStatusBar *statusBar { nullptr };
     QVBoxLayout *mainLayout { nullptr };
@@ -128,6 +130,7 @@ public:
     QPushButton *emptyTrashButton { nullptr };
     DRenameBar *renameBar{ nullptr };
     DFMAdvanceSearchBar *advanceSearchBar = nullptr;
+    DFMPreviewSidebar *previewSidebar = nullptr;
 
     QMap<DUrl, QWidget *> views;
 
@@ -369,7 +372,8 @@ void DFileManagerWindowPrivate::initAdvanceSearchBar()
 
     int renameWidgetIndex = rightViewLayout->indexOf(renameBar);
     int advanceSearchBarInsertTo = renameWidgetIndex == -1 ? 0 : renameWidgetIndex + 1;
-    rightViewLayout->insertWidget(advanceSearchBarInsertTo, advanceSearchBar);
+    //rightViewLayout->insertWidget(advanceSearchBarInsertTo, advanceSearchBar);
+    rightViewLayout->addWidget(advanceSearchBar, advanceSearchBarInsertTo, 0);
 
     QObject::connect(advanceSearchBar, &DFMAdvanceSearchBar::optionChanged, q, [ = ](const QMap<int, QVariant> &formData) {
         if (currentView) {
@@ -404,8 +408,8 @@ void DFileManagerWindowPrivate::initRenameBar()
 
     // see the comment in initAdvanceSearchBar()
     renameBar = new DRenameBar(q);
-
-    rightViewLayout->insertWidget(rightViewLayout->indexOf(emptyTrashButton) + 1, renameBar);
+    rightViewLayout->addWidget(renameBar, rightViewLayout->indexOf(emptyTrashButton) + 1, 0);
+    //rightViewLayout->insertWidget(rightViewLayout->indexOf(emptyTrashButton) + 1, renameBar);
 
     QObject::connect(renameBar, &DRenameBar::clickCancelButton, q, &DFileManagerWindow::hideRenameBar);
 }
@@ -547,6 +551,13 @@ void DFileManagerWindow::onNewTabButtonClicked()
     }
 
     openNewTab(url);
+}
+
+void DFileManagerWindow::onRightViewDetailsButtonClicked()
+{
+    D_D(DFileManagerWindow);
+
+    d->previewSidebar->setVisible(d->rightViewDetailsButton->isChecked());
 }
 
 void DFileManagerWindow::requestEmptyTrashFiles()
@@ -843,6 +854,9 @@ void DFileManagerWindow::resizeEvent(QResizeEvent *event)
     Q_D(DFileManagerWindow);
     DMainWindow::resizeEvent(event);
     d->titleFrame->setFixedSize(event->size().width() - titlebar()->buttonAreaWidth(), TITLE_FIXED_HEIGHT);
+    // 设置预览控件体积
+    d->previewSidebar->setMaximumWidth(event->size().width() * 0.15);
+    d->previewSidebar->setMinimumWidth(event->size().width() * 0.15);
 }
 
 bool DFileManagerWindow::fmEvent(const QSharedPointer<DFMEvent> &event, QVariant *resultData)
@@ -923,6 +937,7 @@ void DFileManagerWindow::initTitleFrame()
     titleLayout->setSpacing(0);
     titleLayout->addSpacing(0);
     titleLayout->addWidget(d->newTabButton);
+    titleLayout->addWidget(d->rightViewDetailsButton);
     titleLayout->addSpacing(12);
     titleLayout->setContentsMargins(0, 0, 0, 0);
     d->titleFrame->setLayout(titleLayout);
@@ -1038,13 +1053,21 @@ void DFileManagerWindow::initRightView()
     tabBarLayout->addWidget(d->tabBar);
     //tabBarLayout->addWidget(d->newTabButton);
 
-    d->rightViewLayout = new QVBoxLayout;
-    d->rightViewLayout->addLayout(tabBarLayout);
-    d->rightViewLayout->addWidget(d->emptyTrashButton);
-    d->rightViewLayout->addLayout(d->viewStackLayout);
+    d->rightViewLayout = new QGridLayout;
+    d->rightViewLayout->addLayout(tabBarLayout, 0, 0);
+    d->rightViewLayout->addWidget(d->emptyTrashButton, 1, 0);
+    d->rightViewLayout->addLayout(d->viewStackLayout, 2, 0);
+    // 预览视图
+    //d->rightViewLayout->addWidget(new QLabel("   "), 2, 1);
+    d->rightViewLayout->addWidget(d->previewSidebar, 1, 1, 2, 1, Qt::AlignTop);
     d->rightViewLayout->setSpacing(0);
     d->rightViewLayout->setContentsMargins(0, 0, 0, 0);
     d->rightView->setLayout(d->rightViewLayout);
+
+    // connections
+    connect(this, &DFileManagerWindow::currentChooseFileChanged, this, [d](const QList<DUrl> &url){
+        d->previewSidebar->setFileUrl(url);
+    });
 }
 
 void DFileManagerWindow::initToolBar()
@@ -1062,6 +1085,11 @@ void DFileManagerWindow::initTabBar()
 
     d->tabBar = new TabBar(this);
     d->tabBar->setFixedHeight(24);
+
+    d->rightViewDetailsButton = new QPushButton(this);
+    d->rightViewDetailsButton->setFixedSize(25, 25);
+    d->rightViewDetailsButton->setObjectName("RightViewDetailsButton");
+    d->rightViewDetailsButton->setCheckable(true);
 
     d->newTabButton = new QPushButton(this);
     d->newTabButton->setFixedSize(25, 25);
@@ -1087,6 +1115,8 @@ void DFileManagerWindow::initViewLayout()
 void DFileManagerWindow::initCentralWidget()
 {
     D_D(DFileManagerWindow);
+    d->previewSidebar = new DFMPreviewSidebar(this);
+    d->previewSidebar->setVisible(false);  // 默认不可见
     initSplitter();
 
     d->centralWidget = new QFrame(this);
@@ -1119,6 +1149,7 @@ void DFileManagerWindow::initConnect()
     QObject::connect(d->tabBar, &TabBar::tabBarShown, this, &DFileManagerWindow::showNewTabButton);
     //QObject::connect(d->tabBar, &TabBar::tabBarHidden, this, &DFileManagerWindow::hideNewTabButton);
     QObject::connect(d->newTabButton, &QPushButton::clicked, this, &DFileManagerWindow::onNewTabButtonClicked);
+    QObject::connect(d->rightViewDetailsButton, &QPushButton::toggled, this, &DFileManagerWindow::onRightViewDetailsButtonClicked);
 
     QObject::connect(d->emptyTrashButton, &QPushButton::clicked,
                      this, &DFileManagerWindow::requestEmptyTrashFiles, Qt::QueuedConnection);

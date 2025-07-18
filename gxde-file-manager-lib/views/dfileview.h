@@ -166,6 +166,8 @@ public slots:
 
     void setIconSizeBySizeIndex(const int& sizeIndex);
 
+    void onRowCountChanged();
+
 #ifdef SW_LABEL
     bool checkRenamePrivilege_sw(DUrl fileUrl);
 #endif
@@ -180,7 +182,7 @@ private slots:
     void dislpayAsActionTriggered(QAction * action);
     void sortByActionTriggered(QAction * action);
     void openWithActionTriggered(QAction * action);
-    void onRowCountChanged();
+
     void updateModelActiveIndex();
     void handleDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight, const QVector<int> & roles = QVector<int>());
     void onRootUrlDeleted(const DUrl &rootUrl);

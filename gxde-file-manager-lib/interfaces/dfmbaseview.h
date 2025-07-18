@@ -41,6 +41,7 @@ public:
 protected:
     void notifyUrlChanged();
     void notifyStateChanged();
+    void notifyChooseFileChanged(const QList<DUrl> &url);
     void requestCdTo(const DUrl &url);
 };
 
