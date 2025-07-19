@@ -1108,7 +1108,8 @@ void DFileManagerWindow::initCentralWidget()
 {
     D_D(DFileManagerWindow);
     d->previewSidebar = new DFMPreviewSidebar(this);
-    d->previewSidebar->setVisible(false);  // 默认不可见
+    bool showRightViewDetails = DFMApplication::genericAttribute(DFMApplication::GA_showRightViewDetails).toBool();
+    d->previewSidebar->setVisible(showRightViewDetails);  // 读取配置判断是否应当显示
     initSplitter();
 
     d->centralWidget = new QFrame(this);

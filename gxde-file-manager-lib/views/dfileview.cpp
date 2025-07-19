@@ -1924,6 +1924,13 @@ void DFileView::initUI()
     m_rightViewDetailsAction->setObjectName("RightViewDetailsAction");
     m_rightViewDetailsAction->setCheckable(true);
 
+    bool showRightViewDetails = DFMApplication::genericAttribute(DFMApplication::GA_showRightViewDetails).toBool();
+    if (showRightViewDetails) {
+        m_rightViewDetailsAction->setChecked(true);
+        //onRightViewDetailsActionTriggered();
+    }
+
+
     QPalette palette = this->palette();
 
     palette.setColor(QPalette::Text, Qt::red);
@@ -2044,12 +2051,15 @@ void DFileView::initConnects()
 
     connect(DThemeManager::instance(), &DThemeManager::widgetThemeChanged, this, &DFileView::updateToolBarActions);
 
-    connect(m_rightViewDetailsAction, &QAction::triggered, this, [this](){
-        DFileManagerWindow* w = qobject_cast<DFileManagerWindow*>(WindowManager::getWindowById(windowId()));
-        w->setPreviewSidebarVisible(m_rightViewDetailsAction->isChecked());
+    connect(m_rightViewDetailsAction, &QAction::triggered, this, &DFileView::onRightViewDetailsActionTriggered);
+}
 
-        //return w && w->cd(m_rightViewDetailsAction->isChecked());
-    });
+void DFileView::onRightViewDetailsActionTriggered()
+{
+    DFileManagerWindow* w = qobject_cast<DFileManagerWindow*>(WindowManager::getWindowById(windowId()));
+    w->setPreviewSidebarVisible(m_rightViewDetailsAction->isChecked());
+    // 保存设置
+    DFMApplication::setGenericAttribute(DFMApplication::GA_showRightViewDetails, m_rightViewDetailsAction->isChecked());
 }
 
 void DFileView::increaseIcon()

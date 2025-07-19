@@ -239,6 +239,7 @@ private:
     void updateColumnWidth();
     void popupHeaderViewContextMenu(const QPoint &pos);
     void onModelStateChanged(int state);
+    void onRightViewDetailsActionTriggered();
     void updateContentLabel();
     void updateToolBarActions(QWidget* widget = nullptr, QString theme = "");
 
