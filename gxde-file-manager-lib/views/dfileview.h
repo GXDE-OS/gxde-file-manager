@@ -246,6 +246,8 @@ private:
 
     void refresh() Q_DECL_OVERRIDE;
 
+    QAction *m_rightViewDetailsAction;
+
 
     QScopedPointer<DFileViewPrivate> d_ptr;
 

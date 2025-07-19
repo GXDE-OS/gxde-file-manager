@@ -181,6 +181,7 @@ public:
 DFileView::DFileView(QWidget *parent)
     : DListView(parent)
     , d_ptr(new DFileViewPrivate(this))
+    , m_rightViewDetailsAction(new QAction(this))
 {
     if (DFMGlobal::isRootUser()) {
         D_THEME_INIT_WIDGET(DFileViewRoot)
@@ -795,8 +796,9 @@ QWidget *DFileView::widget() const
 QList<QAction *> DFileView::toolBarActionList() const
 {
     Q_D(const DFileView);
-
-    return d->toolbarActionGroup->actions();
+    auto list = d->toolbarActionGroup->actions();
+    list << m_rightViewDetailsAction;
+    return list;
 }
 
 void DFileView::setFilters(QDir::Filters filters)
@@ -1919,6 +1921,9 @@ void DFileView::initUI()
 {
     D_D(DFileView);
 
+    m_rightViewDetailsAction->setObjectName("RightViewDetailsAction");
+    m_rightViewDetailsAction->setCheckable(true);
+
     QPalette palette = this->palette();
 
     palette.setColor(QPalette::Text, Qt::red);
@@ -2038,6 +2043,13 @@ void DFileView::initConnects()
     });
 
     connect(DThemeManager::instance(), &DThemeManager::widgetThemeChanged, this, &DFileView::updateToolBarActions);
+
+    connect(m_rightViewDetailsAction, &QAction::triggered, this, [this](){
+        DFileManagerWindow* w = qobject_cast<DFileManagerWindow*>(WindowManager::getWindowById(windowId()));
+        w->setPreviewSidebarVisible(m_rightViewDetailsAction->isChecked());
+
+        //return w && w->cd(m_rightViewDetailsAction->isChecked());
+    });
 }
 
 void DFileView::increaseIcon()
@@ -2872,6 +2884,7 @@ void DFileView::updateToolBarActions(QWidget *widget, QString theme)
             d->toolbarActionGroup->addAction(list_view_mode_action);
         }
 
+
         QIcon icon_view_mode_icon;
         icon_view_mode_icon.addFile(ThemeConfig::instace()->string("FileView", "iconview.icon"));
         icon_view_mode_icon.addFile(ThemeConfig::instace()->string("FileView", "iconview.icon", ThemeConfig::Hover), QSize(), QIcon::Active);
@@ -2883,6 +2896,12 @@ void DFileView::updateToolBarActions(QWidget *widget, QString theme)
         list_view_mode_icon.addFile(ThemeConfig::instace()->string("FileView", "listview.icon", ThemeConfig::Hover), QSize(), QIcon::Active);
         list_view_mode_icon.addFile(ThemeConfig::instace()->string("FileView", "listview.icon", ThemeConfig::Checked), QSize(), QIcon::Normal, QIcon::On);
         list_view_mode_action->setIcon(list_view_mode_icon);
+
+        QIcon rightViewDetailsAction_icon;
+        rightViewDetailsAction_icon.addFile(ThemeConfig::instace()->string("FileView", "rightViewDetailsAction.icon"));
+        m_rightViewDetailsAction->setIcon(rightViewDetailsAction_icon);
+
+        icon_view_mode_icon.addFile(ThemeConfig::instace()->string("FileView", "iconview.icon"));
     }
 }
 

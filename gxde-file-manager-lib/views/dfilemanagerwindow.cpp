@@ -120,7 +120,6 @@ public:
     DToolBar *toolbar{ nullptr };
     TabBar *tabBar { nullptr };
     QPushButton *newTabButton;
-    QPushButton *rightViewDetailsButton;
     DFMBaseView *currentView { nullptr };
     DStatusBar *statusBar { nullptr };
     QVBoxLayout *mainLayout { nullptr };
@@ -553,11 +552,10 @@ void DFileManagerWindow::onNewTabButtonClicked()
     openNewTab(url);
 }
 
-void DFileManagerWindow::onRightViewDetailsButtonClicked()
+void DFileManagerWindow::setPreviewSidebarVisible(bool isVisiable)
 {
     D_D(DFileManagerWindow);
-
-    d->previewSidebar->setVisible(d->rightViewDetailsButton->isChecked());
+    d->previewSidebar->setVisible(isVisiable);
 }
 
 void DFileManagerWindow::requestEmptyTrashFiles()
@@ -937,7 +935,6 @@ void DFileManagerWindow::initTitleFrame()
     titleLayout->setSpacing(0);
     titleLayout->addSpacing(0);
     titleLayout->addWidget(d->newTabButton);
-    titleLayout->addWidget(d->rightViewDetailsButton);
     titleLayout->addSpacing(12);
     titleLayout->setContentsMargins(0, 0, 0, 0);
     d->titleFrame->setLayout(titleLayout);
@@ -1086,11 +1083,6 @@ void DFileManagerWindow::initTabBar()
     d->tabBar = new TabBar(this);
     d->tabBar->setFixedHeight(24);
 
-    d->rightViewDetailsButton = new QPushButton(this);
-    d->rightViewDetailsButton->setFixedSize(25, 25);
-    d->rightViewDetailsButton->setObjectName("RightViewDetailsButton");
-    d->rightViewDetailsButton->setCheckable(true);
-
     d->newTabButton = new QPushButton(this);
     d->newTabButton->setFixedSize(25, 25);
     //d->newTabButton->setObjectName("NewTabButton");
@@ -1149,7 +1141,6 @@ void DFileManagerWindow::initConnect()
     QObject::connect(d->tabBar, &TabBar::tabBarShown, this, &DFileManagerWindow::showNewTabButton);
     //QObject::connect(d->tabBar, &TabBar::tabBarHidden, this, &DFileManagerWindow::hideNewTabButton);
     QObject::connect(d->newTabButton, &QPushButton::clicked, this, &DFileManagerWindow::onNewTabButtonClicked);
-    QObject::connect(d->rightViewDetailsButton, &QPushButton::toggled, this, &DFileManagerWindow::onRightViewDetailsButtonClicked);
 
     QObject::connect(d->emptyTrashButton, &QPushButton::clicked,
                      this, &DFileManagerWindow::requestEmptyTrashFiles, Qt::QueuedConnection);

@@ -132,9 +132,9 @@ public slots:
     void showEmptyTrashButton();
     void hideEmptyTrashButton();
     void onNewTabButtonClicked();
-    void onRightViewDetailsButtonClicked();
     void requestEmptyTrashFiles();
     void onTrashStateChanged();
+    void setPreviewSidebarVisible(bool isVisiable);
 
     void onShowRenameBar(const DFMUrlListBaseEvent &event)noexcept;
     void onTabBarCurrentIndexChange(const int &index)noexcept;
