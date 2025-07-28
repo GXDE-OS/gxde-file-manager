@@ -157,6 +157,7 @@ public:
         DecompressHere,
         Cut,
         Copy,
+        CopyPath,
         Paste,
         Rename,
         BookmarkRename,

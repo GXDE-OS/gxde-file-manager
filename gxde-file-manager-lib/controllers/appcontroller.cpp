@@ -94,6 +94,7 @@
 #include "ddiskmanager.h"
 
 #include <QFileDialog>
+#include <QClipboard>
 
 #ifdef SW_LABEL
 #include "sw_label/filemanagerlibrary.h"
@@ -299,6 +300,11 @@ void AppController::actionCut(const QSharedPointer<DFMUrlListBaseEvent> &event)
 void AppController::actionCopy(const QSharedPointer<DFMUrlListBaseEvent> &event)
 {
     fileService->writeFilesToClipboard(event->sender(), DFMGlobal::CopyAction, event->urlList());
+}
+
+void AppController::actionCopyPath(const QSharedPointer<DFMUrlBaseEvent> &event)
+{
+    QApplication::clipboard()->setText(event->url().toString().replace("file://", ""));
 }
 
 void AppController::actionPaste(const QSharedPointer<DFMUrlBaseEvent> &event)

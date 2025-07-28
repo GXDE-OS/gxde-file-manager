@@ -773,6 +773,7 @@ QVector<MenuAction> DAbstractFileInfo::menuActionList(DAbstractFileInfo::MenuTyp
                    << MenuAction::OpenAsAdmin
                    << MenuAction::OpenInTerminal
                    << MenuAction::Separator
+                   << MenuAction::CopyPath
                    << MenuAction::Paste
                    << MenuAction::SelectAll
                    << MenuAction::Separator
@@ -785,6 +786,7 @@ QVector<MenuAction> DAbstractFileInfo::menuActionList(DAbstractFileInfo::MenuTyp
                        << MenuAction::OpenInNewTab
                        << MenuAction::Separator
                        << MenuAction::Copy
+                       << MenuAction::CopyPath
                        << MenuAction::Separator
                        << MenuAction::Compress
                        << MenuAction::Separator;
@@ -824,6 +826,7 @@ QVector<MenuAction> DAbstractFileInfo::menuActionList(DAbstractFileInfo::MenuTyp
             actionKeys << MenuAction::Separator
                        << MenuAction::Cut
                        << MenuAction::Copy
+                       << MenuAction::CopyPath
                        << MenuAction::Rename;
 
             if (FileUtils::isGvfsMountFile(absoluteFilePath()) || deviceListener->isInRemovableDeviceFolder(absoluteFilePath())) {
@@ -1726,6 +1729,7 @@ QSet<MenuAction> DAbstractFileInfo::disableMenuActionList() const
 
     if (isVirtualEntry()) {
         list << MenuAction::Copy;
+        list << MenuAction::CopyPath;
     }
 
     return list;

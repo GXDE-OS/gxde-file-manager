@@ -73,6 +73,7 @@ public slots:
     void actionDecompressHere(const QSharedPointer<DFMUrlListBaseEvent> &event);
     void actionCut(const QSharedPointer<DFMUrlListBaseEvent> &event);
     void actionCopy(const QSharedPointer<DFMUrlListBaseEvent> &event);
+    void actionCopyPath(const QSharedPointer<DFMUrlBaseEvent> &event);
     void actionPaste(const QSharedPointer<DFMUrlBaseEvent> &event);
     void actionRename(const QSharedPointer<DFMUrlListBaseEvent> &event);
     void actionBookmarkRename(const QSharedPointer<DFMUrlBaseEvent> &event);

@@ -202,6 +202,16 @@ static bool processMenuEvent(const QSharedPointer<DFMMenuActionEvent> &event)
     case DFMGlobal::Copy:
         AppController::instance()->actionCopy(dMakeEventPointer<DFMUrlListBaseEvent>(event->sender(), event->selectedUrls()));
         break;
+    case DFMGlobal::CopyPath:
+        // 如果选中了文件，则复制文件路径
+        // 如果没有，则复制当前文件夹的路径
+        if (event->selectedUrls().count() <= 0) {
+            AppController::instance()->actionCopyPath(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), event->currentUrl()));
+        }
+        else {
+            AppController::instance()->actionCopyPath(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), event->selectedUrls().first()));
+        }
+        break;
     case DFMGlobal::Paste:
         AppController::instance()->actionPaste(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), event->currentUrl()));
         break;

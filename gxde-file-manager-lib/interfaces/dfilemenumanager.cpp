@@ -882,6 +882,7 @@ void DFileMenuData::initData()
     actionKeys[MenuAction::DecompressHere] = QObject::tr("Extract here");
     actionKeys[MenuAction::Cut] = QObject::tr("Cut");
     actionKeys[MenuAction::Copy] = QObject::tr("Copy");
+    actionKeys[MenuAction::CopyPath] = QObject::tr("Copy Path");
     actionKeys[MenuAction::Paste] = QObject::tr("Paste");
     actionKeys[MenuAction::Rename] = QObject::tr("Rename");
     actionKeys[MenuAction::BookmarkRename] = QObject::tr("Rename");
