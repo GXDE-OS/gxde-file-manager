@@ -1,4 +1,4 @@
-gxde-file-manager (5.2.0) UNRELEASED; urgency=medium
+gxde-file-manager (5.2.1) UNRELEASED; urgency=medium
 
   * 修复高分屏下背景模糊的问题
   * 修复 i386 break 的问题
@@ -19,8 +19,9 @@ gxde-file-manager (5.2.0) UNRELEASED; urgency=medium
   * 完成功能：右侧详情页
   * 支持鼠标选择复制文件属性信息
   * 容量单位改为 KiB、MiB、GiB 等
+  * 支持右键复制文件路径
 
- -- gfdgd_xi <3025613752@qq.com>  Sat, 19 Jul 2025 19:50:21 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Mon, 28 Jul 2025 22:51:13 +0800
 
 gxde-file-manager (4.8.20) UNRELEASED; urgency=medium
 
