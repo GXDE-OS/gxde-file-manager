@@ -69,7 +69,7 @@ Replaces:
  dde-file-manager,
 Conflicts:
  dde-file-manager(>> 5.0.1-1)
-Recommends: dde-qt5integration, avfs
+Recommends: dde-qt5integration, avfs, gxde-file-manager-integration
 Description: File manager front end
  File manager front-end of Deepin OS
 
