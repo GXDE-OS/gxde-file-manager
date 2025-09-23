@@ -21,6 +21,7 @@
 #include "backgroundhelper.h"
 #include "util/xcb/xcb.h"
 
+#include <dapplication.h>
 #include <QScreen>
 #include <QGuiApplication>
 #include <qpa/qplatformwindow.h>
@@ -258,6 +259,9 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
         if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
             Xcb::XcbMisc::instance().set_window_type(l->winId(), Xcb::XcbMisc::Desktop);
         }
+    }
+    if (DApplication::isWayland()) {
+        l->setWindowFlag(Qt::FramelessWindowHint, true);
     }
 
     if (m_visible)
