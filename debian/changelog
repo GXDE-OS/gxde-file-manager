@@ -1,4 +1,4 @@
-gxde-file-manager (5.2.2) UNRELEASED; urgency=medium
+gxde-file-manager (5.2.2-1) UNRELEASED; urgency=medium
 
   * 修复高分屏下背景模糊的问题
   * 修复 i386 break 的问题
@@ -17,7 +17,7 @@ gxde-file-manager (5.2.2) UNRELEASED; urgency=medium
   * 调整：复制路径时去除开头的 file://
   * GXDE 文件管理器支持隐藏计算机中我的目录
   * 完成功能：右侧详情页
-  * 支持鼠标选择复制文件属性信息
+  * 支持鼠标选择复制文件属性信息，仅在空区域右键生效
   * 容量单位改为 KiB、MiB、GiB 等
   * 支持右键复制文件路径
   * 新增推荐依赖 gxde-file-manager-integration

@@ -786,18 +786,18 @@ QVector<MenuAction> DAbstractFileInfo::menuActionList(DAbstractFileInfo::MenuTyp
                        << MenuAction::OpenInNewTab
                        << MenuAction::Separator
                        << MenuAction::Copy
-                       << MenuAction::CopyPath
+//                       << MenuAction::CopyPath
                        << MenuAction::Separator
                        << MenuAction::Compress
                        << MenuAction::Separator;
 
-            if (canShare() && !isShared()) {
-                actionKeys << MenuAction::Share
-                           << MenuAction::Separator;
-            } else if (isShared()) {
-                actionKeys << MenuAction::UnShare
-                           << MenuAction::Separator;
-            }
+            // if (canShare() && !isShared()) {
+            //     actionKeys << MenuAction::Share
+            //                << MenuAction::Separator;
+            // } else if (isShared()) {
+            //     actionKeys << MenuAction::UnShare
+            //                << MenuAction::Separator;
+            // }
             actionKeys << MenuAction::CreateSymlink
                        << MenuAction::SendToDesktop
                        << MenuAction::Separator
@@ -826,7 +826,7 @@ QVector<MenuAction> DAbstractFileInfo::menuActionList(DAbstractFileInfo::MenuTyp
             actionKeys << MenuAction::Separator
                        << MenuAction::Cut
                        << MenuAction::Copy
-                       << MenuAction::CopyPath
+                       // << MenuAction::CopyPath
                        << MenuAction::Rename;
 
             if (FileUtils::isGvfsMountFile(absoluteFilePath()) || deviceListener->isInRemovableDeviceFolder(absoluteFilePath())) {
