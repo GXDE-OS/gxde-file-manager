@@ -26,6 +26,8 @@
 #include <com_deepin_wm.h>
 #include <QGSettings>
 #include <DWindowManagerHelper>
+#include <QNetworkAccessManager>
+
 
 using WMInter = com::deepin::wm;
 DWIDGET_USE_NAMESPACE
@@ -45,6 +47,7 @@ public:
 
     void setBackground(const QString &path);
     void setVisible(bool visible);
+    void setPictureRatioMode(Qt::AspectRatioMode mode);
 
     void onWMChanged();
 Q_SIGNALS:
@@ -52,6 +55,8 @@ Q_SIGNALS:
     void enableChanged();
     void backgroundGeometryChanged(QLabel *l);
     void backgroundAdded(QLabel *l);
+    void weatherImageChanged(QPixmap);
+    void onScreenChanged();
 
 private:
     bool isKWin() const;
@@ -60,7 +65,12 @@ private:
     void updateBackground();
     void onScreenAdded(QScreen *screen);
     void onScreenRemoved(QScreen *screen);
+    void startDownloadWeatherImage();
+    void downloadWeatherImageFinished(QNetworkReply *reply);
+    void calculateAllScreenSize();
 
+    bool m_isBackgroundSpanned = true;
+    bool m_isLoadWeatherReport = false;
     bool m_previuew = false;
     bool m_visible = true;
     bool m_backgroundEnable = true; // 背景是否显示
@@ -70,8 +80,13 @@ private:
     int currentWorkspaceIndex = 0;
     QString currentWallpaper;
     QPixmap backgroundPixmap;
+    QPixmap m_weatherImage;
+    QSize m_screenSize;
     QMap<QScreen*, QLabel*> backgroundMap;
+    Qt::AspectRatioMode m_pictureRatioMode = Qt::AspectRatioMode::KeepAspectRatioByExpanding;
     static BackgroundHelper *desktop_instance;
+    QNetworkAccessManager m_networkManager;
+    QTimer m_weatherTimer;
 
 public:
     static BackgroundHelper* getDesktopInstance();

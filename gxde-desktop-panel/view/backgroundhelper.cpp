@@ -21,6 +21,9 @@
 #include "backgroundhelper.h"
 #include "util/xcb/xcb.h"
 
+#include <QNetworkReply>
+#include <QPushButton>
+#include <QGridLayout>
 #include <dapplication.h>
 #include <QScreen>
 #include <QGuiApplication>
@@ -46,6 +49,14 @@ BackgroundHelper::BackgroundHelper(bool preview, QObject *parent)
     }
 
     onWMChanged();
+
+    if (m_isLoadWeatherReport) {
+        m_weatherTimer.setInterval(30 * 60 * 1000);
+        connect(&m_weatherTimer, &QTimer::timeout, this, &BackgroundHelper::startDownloadWeatherImage);
+        startDownloadWeatherImage();
+    }
+
+    connect(this, &BackgroundHelper::onScreenChanged, this, &BackgroundHelper::calculateAllScreenSize);
 }
 
 BackgroundHelper::~BackgroundHelper()
@@ -190,6 +201,11 @@ void BackgroundHelper::onWMChanged()
     Q_EMIT enableChanged();
 }
 
+void BackgroundHelper::setPictureRatioMode(Qt::AspectRatioMode mode)
+{
+    m_pictureRatioMode = mode;
+}
+
 void BackgroundHelper::updateBackground(QLabel *l)
 {
     if (backgroundPixmap.isNull())
@@ -197,12 +213,17 @@ void BackgroundHelper::updateBackground(QLabel *l)
 
     QScreen *s = l->windowHandle()->screen();
     l->windowHandle()->handle()->setGeometry(s->handle()->geometry());
-
-    const QSize trueSize = s->handle()->geometry().size();
+    QSize trueSize;
+    if (m_isBackgroundSpanned) {
+        trueSize = m_screenSize;
+    }
+    else {
+        trueSize = s->handle()->geometry().size();
+    }
     QPixmap pix = backgroundPixmap;
 
     pix = pix.scaled(trueSize,
-                     Qt::KeepAspectRatioByExpanding,
+                     m_pictureRatioMode,
                      Qt::SmoothTransformation);
 
     if (pix.width() > trueSize.width() || pix.height() > trueSize.height()) {
@@ -210,6 +231,17 @@ void BackgroundHelper::updateBackground(QLabel *l)
                              (pix.height() - trueSize.height()) / 2.0,
                              trueSize.width(),
                              trueSize.height()));
+    }
+    // 如果为穿透背景
+    if (m_isBackgroundSpanned) {
+        pix = pix.copy(s->handle()->geometry());
+    }
+    // 只有在 KeepAspectRatio 模式（居中）下的背景才设置居中
+    if (m_pictureRatioMode == Qt::AspectRatioMode::KeepAspectRatio) {
+        l->setAlignment(Qt::AlignCenter);
+    }
+    else {
+        l->setAlignment(Qt::AlignLeft);
     }
 
     pix.setDevicePixelRatio(l->devicePixelRatioF());
@@ -235,15 +267,54 @@ void BackgroundHelper::updateBackground()
     setBackground(path);
 }
 
+void BackgroundHelper::startDownloadWeatherImage()
+{
+    QNetworkRequest request;
+    request.setUrl(QUrl("https://wttr.in/~.png?lang=zh&transparency=200&tqnp"));
+    connect(&m_networkManager, &QNetworkAccessManager::finished, this, &BackgroundHelper::downloadWeatherImageFinished);
+    m_networkManager.get(request);
+}
+
+void BackgroundHelper::downloadWeatherImageFinished(QNetworkReply *reply)
+{
+    QByteArray bytes = reply->readAll();
+    QPixmap pixmap;
+    pixmap.loadFromData(bytes);
+    m_weatherImage = pixmap;
+    emit weatherImageChanged(m_weatherImage);
+}
+
 void BackgroundHelper::onScreenAdded(QScreen *screen)
 {
     QLabel *l = new QLabel();
+    QLabel *weather = new QLabel();
+    connect(this, &BackgroundHelper::weatherImageChanged, [l, weather, this](){
+        if (weather) {
+            QRect rect = l->windowHandle()->screen()->geometry();
+            // 在壁纸跨屏模式下，天气预报只显示在最右上角的屏幕
+            if (m_isBackgroundSpanned) {
+                if (rect.y() != 0 || rect.width() + rect.x() < m_screenSize.width()) {
+                    return;
+                }
+            }
+            weather->setPixmap(m_weatherImage);
+        }
+    });
+    weather->setAlignment(Qt::AlignRight);
+    weather->setPixmap(m_weatherImage);
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(weather);
+    layout->addStretch();
+
+    l->setLayout(layout);
 
     backgroundMap[screen] = l;
 
     l->createWinId();
     l->windowHandle()->setScreen(screen);
     l->setGeometry(screen->geometry());
+    l->setStyleSheet("background: transparent;");
+    l->setAlignment(Qt::AlignCenter);
 
     QTimer::singleShot(0, this, [l, screen] {
         // 禁用高分屏缩放，防止窗口的sizeIncrement默认设置大于1
@@ -294,6 +365,32 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
     Q_EMIT backgroundAdded(l);
 
     qInfo() << screen << screen->geometry();
+
+    Q_EMIT onScreenChanged();
+    calculateAllScreenSize();
+}
+
+void BackgroundHelper::calculateAllScreenSize()
+{
+    QSize size;
+    // 如果有多个屏幕，可以遍历它们
+    QList<QScreen *> screens = QGuiApplication::screens();
+    foreach(QScreen *screen, screens) {
+        QRect geometry = screen->geometry();
+        int width = geometry.x() + geometry.width();
+        int height = geometry.y() + geometry.height();
+        if (geometry.x() + geometry.width() > size.width()) {
+            size.setWidth(width);
+        }
+        if (geometry.y() + geometry.height() > size.height()) {
+            size.setHeight(height);
+        }
+    }
+    m_screenSize = size;
+    qDebug() << m_screenSize;
+    for (QLabel *l: backgroundMap) {
+        updateBackground(l);
+    }
 }
 
 void BackgroundHelper::onScreenRemoved(QScreen *screen)
@@ -305,4 +402,7 @@ void BackgroundHelper::onScreenRemoved(QScreen *screen)
     }
 
     qInfo() << screen;
+
+    Q_EMIT onScreenChanged();
+    calculateAllScreenSize();
 }
