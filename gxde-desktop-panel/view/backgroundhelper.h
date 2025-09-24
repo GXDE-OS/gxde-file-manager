@@ -27,7 +27,7 @@
 #include <QGSettings>
 #include <DWindowManagerHelper>
 #include <QNetworkAccessManager>
-
+#include <QFile>
 
 using WMInter = com::deepin::wm;
 DWIDGET_USE_NAMESPACE
@@ -69,8 +69,8 @@ private:
     void downloadWeatherImageFinished(QNetworkReply *reply);
     void calculateAllScreenSize();
 
-    bool m_isBackgroundSpanned = true;
-    bool m_isLoadWeatherReport = false;
+    bool m_isBackgroundSpanned = QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/backgroundSpanned");
+    bool m_isLoadWeatherReport = QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/weatherReport");
     bool m_previuew = false;
     bool m_visible = true;
     bool m_backgroundEnable = true; // 背景是否显示

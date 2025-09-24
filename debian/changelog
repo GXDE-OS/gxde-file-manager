@@ -1,4 +1,4 @@
-gxde-file-manager (5.2.2-1) UNRELEASED; urgency=medium
+gxde-file-manager (5.2.3) UNRELEASED; urgency=medium
 
   * 修复高分屏下背景模糊的问题
   * 修复 i386 break 的问题
@@ -21,8 +21,10 @@ gxde-file-manager (5.2.2-1) UNRELEASED; urgency=medium
   * 容量单位改为 KiB、MiB、GiB 等
   * 支持右键复制文件路径
   * 新增推荐依赖 gxde-file-manager-integration
+  * 支持壁纸跨屏显示（目前需手动创建文件 ~/.config/GXDE/dde-file-manager/backgroundSpanned 以启用该功能）
+  * 支持壁纸显示天气预报（目前需手动创建文件 ~/.config/GXDE/dde-file-manager/weatherReport 以启动该功能）
 
- -- gfdgd_xi <3025613752@qq.com>  Sun, 03 Aug 2025 09:45:06 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Wed, 24 Sep 2025 20:56:50 +0800
 
 gxde-file-manager (4.8.20) UNRELEASED; urgency=medium
 
