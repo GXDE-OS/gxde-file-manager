@@ -486,11 +486,21 @@ bool FileController::renameFile(const QSharedPointer<DFMRenameEvent> &event) con
             DFMEventDispatcher::instance()->processEvent<DFMSaveOperatorEvent>(event, dMakeEventPointer<DFMRenameEvent>(nullptr, oldUrl, DUrl::fromLocalFile(path)));
         }
     } else {
-        result = file.rename(newFilePath);
+        /*result = file.rename(newFilePath);
 
         if (!result) {
             result = QProcess::execute("mv \"" + file.fileName().toUtf8() + "\" \"" + newFilePath.toUtf8() + "\"") == 0;
-        }
+        }*/
+        // 因为 QFile 的 rename 函数在 proot link2symlink 下有问题（https://gitee.com/GXDE-OS/GXDE/issues/ID0SJO ），
+        // 所以重命名全部都使用 mv 进行处理
+        QProcess process;
+        process.start("mv", QStringList() << file.fileName().toUtf8()
+                                          << newFilePath.toUtf8());
+        // 原 QProcess::execute 的写法无法正确处理特殊字符（如 " 等），于是改用传入 list
+        process.waitForStarted(-1);
+        process.waitForFinished(-1);
+        qDebug() << "Error: " << process.readAllStandardError();
+        result = !process.exitCode();
 
         if (result) {
             DFMEventDispatcher::instance()->processEvent<DFMSaveOperatorEvent>(event, dMakeEventPointer<DFMRenameEvent>(nullptr, newUrl, oldUrl));
