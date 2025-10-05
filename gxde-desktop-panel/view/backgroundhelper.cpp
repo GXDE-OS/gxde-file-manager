@@ -379,8 +379,9 @@ void BackgroundHelper::calculateAllScreenSize()
     QList<QScreen *> screens = QGuiApplication::screens();
     foreach(QScreen *screen, screens) {
         QRect geometry = screen->geometry();
-        int width = geometry.x() + geometry.width();
-        int height = geometry.y() + geometry.height();
+        double ratio = screen->devicePixelRatio();
+        int width = (geometry.x() + geometry.width()) * ratio;
+        int height = (geometry.y() + geometry.height()) * ratio;
         if (geometry.x() + geometry.width() > size.width()) {
             size.setWidth(width);
         }
