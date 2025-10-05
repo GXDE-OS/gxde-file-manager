@@ -2734,7 +2734,7 @@ Localizzazione italiana a cura di Massimo A. Carofano</translation>
         <translation>Spazio Libero %1</translation>
     </message>
     <message>
-        <location filename="../controllers/filecontroller.cpp" line="753"/>
+        <location filename="../controllers/filecontroller.cpp" line="763"/>
         <source>Files are being processed</source>
         <translation type="unfinished"></translation>
     </message>

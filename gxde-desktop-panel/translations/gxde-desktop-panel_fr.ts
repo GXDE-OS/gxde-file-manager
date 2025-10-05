@@ -80,57 +80,92 @@
 <context>
     <name>Frame</name>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="427"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
         <source>Wallpaper Slideshow</source>
         <translation>Diaporama de fonds d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="453"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
+        <source>Display Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
+        <source>Show weather report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
         <source>When login</source>
         <translation>Lors de la connexion</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="455"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
         <source>When wakeup</source>
         <translation>À la sortie de veille</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="495"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
+        <source>Keep Aspect Ratio By Expanding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
+        <source>Ignore Aspect Ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
+        <source>Keep Aspect Ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
+        <source>Center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
+        <source>Background Spanned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
         <source>Require a password on wakeup</source>
         <translation>Demander un mot de passe à la sortie de veille</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="520"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
         <source>Never</source>
         <translation>Jamais</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="521"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
         <source>Wait:</source>
         <translation>Attendre :</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="549"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Wallpaper</source>
         <translation>Fond d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="549"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Screensaver</source>
         <translation>Économiseur d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="611"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
         <source>Only desktop</source>
         <translation>Bureau seulement</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="612"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672"/>
         <source>Only lock screen</source>
         <translation>Écran de verrouillage seulement</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="640"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>

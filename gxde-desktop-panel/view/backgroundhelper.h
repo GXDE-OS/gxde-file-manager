@@ -41,7 +41,7 @@ public:
     enum WallpaperDisplayMethods {
         KeepAspectRatioByExpanding = 0,  // 适应屏幕（默认）
         IgnoreAspectRatio = 1,  // 拉伸
-        KeepAspectRatio = 2,  // 拉伸居中
+        KeepAspectRatio = 2,  // 适应居中
         Center = 3,  // 居中
         BackgroundSpanned = 4  // 跨屏显示
     };

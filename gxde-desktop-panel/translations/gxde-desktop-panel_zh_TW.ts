@@ -80,57 +80,92 @@
 <context>
     <name>Frame</name>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="427"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
         <source>Wallpaper Slideshow</source>
         <translation>自動切換桌布</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="453"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
+        <source>Display Mode</source>
+        <translation>顯示模式</translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
+        <source>Show weather report</source>
+        <translation>顯示天氣預報</translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
         <source>When login</source>
         <translation>登入時</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="455"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
         <source>When wakeup</source>
         <translation>喚醒時</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="495"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
+        <source>Keep Aspect Ratio By Expanding</source>
+        <translation>適應屏幕</translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
+        <source>Ignore Aspect Ratio</source>
+        <translation>拉伸</translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
+        <source>Keep Aspect Ratio</source>
+        <translation>適應居中</translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
+        <source>Center</source>
+        <translation>居中</translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
+        <source>Background Spanned</source>
+        <translation>跨屏顯示</translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
         <source>Require a password on wakeup</source>
         <translation>喚醒時需要密碼</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="520"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
         <source>Never</source>
         <translation>永不</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="521"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
         <source>Wait:</source>
         <translation>等待時間：</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="549"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Wallpaper</source>
         <translation>桌布</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="549"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Screensaver</source>
         <translation>螢幕保護程式</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="611"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
         <source>Only desktop</source>
         <translation>僅桌面</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="612"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672"/>
         <source>Only lock screen</source>
         <translation>僅鎖定畫面</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="640"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
         <source>Apply</source>
         <translation>套用</translation>
     </message>

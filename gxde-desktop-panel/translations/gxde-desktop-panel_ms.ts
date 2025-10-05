@@ -80,57 +80,92 @@
 <context>
     <name>Frame</name>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="427"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
         <source>Wallpaper Slideshow</source>
         <translation>Paparan Slaid Kertas Dinding</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="453"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
+        <source>Display Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
+        <source>Show weather report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
         <source>When login</source>
         <translation>Bila daftar masuk</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="455"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
         <source>When wakeup</source>
         <translation>Bila bangun</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="495"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
+        <source>Keep Aspect Ratio By Expanding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
+        <source>Ignore Aspect Ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
+        <source>Keep Aspect Ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
+        <source>Center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
+        <source>Background Spanned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
         <source>Require a password on wakeup</source>
         <translation>Perlukan kata laluan ketika bangun</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="520"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
         <source>Never</source>
         <translation>Tidak Sesekali</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="521"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
         <source>Wait:</source>
         <translation>Tunggu:</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="549"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Wallpaper</source>
         <translation>Kertas Dinding</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="549"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Screensaver</source>
         <translation>Penyelamat Skrin</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="611"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
         <source>Only desktop</source>
         <translation>Desktop sahaja</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="612"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672"/>
         <source>Only lock screen</source>
         <translation>Skrin kunci sahaja</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="640"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
         <source>Apply</source>
         <translation>Laksana</translation>
     </message>
