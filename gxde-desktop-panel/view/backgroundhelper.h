@@ -36,7 +36,16 @@ class BackgroundHelper : public QObject
 {
     Q_OBJECT
     friend class CanvasGridView;
+
 public:
+    enum WallpaperDisplayMethods {
+        KeepAspectRatioByExpanding = 0,  // 适应屏幕（默认）
+        IgnoreAspectRatio = 1,  // 拉伸
+        KeepAspectRatio = 2,  // 拉伸居中
+        Center = 3,  // 居中
+        BackgroundSpanned = 4  // 跨屏显示
+    };
+
     explicit BackgroundHelper(bool preview = false, QObject *parent = nullptr);
     ~BackgroundHelper();
 
@@ -47,9 +56,12 @@ public:
 
     void setBackground(const QString &path);
     void setVisible(bool visible);
-    void setPictureRatioMode(Qt::AspectRatioMode mode);
+    void setWallpaperDisplayMethods(WallpaperDisplayMethods method);
+    Qt::AspectRatioMode wallpaperDisplayMethods2PictureRatioMode(WallpaperDisplayMethods method);
+    WallpaperDisplayMethods getWallpaperDisplayMethods();
 
     void onWMChanged();
+    void refreshBackground();
 Q_SIGNALS:
     void aboutDestoryBackground(QLabel *l);
     void enableChanged();
@@ -68,8 +80,8 @@ private:
     void startDownloadWeatherImage();
     void downloadWeatherImageFinished(QNetworkReply *reply);
     void calculateAllScreenSize();
+    WallpaperDisplayMethods getWallpaperDisplayMethodsConfigData();
 
-    bool m_isBackgroundSpanned = QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/backgroundSpanned");
     bool m_isLoadWeatherReport = QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/weatherReport");
     bool m_previuew = false;
     bool m_visible = true;
@@ -83,10 +95,10 @@ private:
     QPixmap m_weatherImage;
     QSize m_screenSize;
     QMap<QScreen*, QLabel*> backgroundMap;
-    Qt::AspectRatioMode m_pictureRatioMode = Qt::AspectRatioMode::KeepAspectRatioByExpanding;
     static BackgroundHelper *desktop_instance;
     QNetworkAccessManager m_networkManager;
     QTimer m_weatherTimer;
+    WallpaperDisplayMethods m_wallpaperDisplayMethods = WallpaperDisplayMethods::KeepAspectRatioByExpanding;
 
 public:
     static BackgroundHelper* getDesktopInstance();

@@ -1,4 +1,4 @@
-gxde-file-manager (5.2.4) UNRELEASED; urgency=medium
+gxde-file-manager (5.2.5) UNRELEASED; urgency=medium
 
   * 修复高分屏下背景模糊的问题
   * 修复 i386 break 的问题
@@ -24,8 +24,9 @@ gxde-file-manager (5.2.4) UNRELEASED; urgency=medium
   * 支持壁纸跨屏显示（目前需手动创建文件 ~/.config/GXDE/dde-file-manager/backgroundSpanned 以启用该功能）
   * 支持壁纸显示天气预报（目前需手动创建文件 ~/.config/GXDE/dde-file-manager/weatherReport 以启动该功能）
   * 修复小小电脑下部分目录重命名文件夹变为隐藏文件的问题（https://gitee.com/GXDE-OS/GXDE/issues/ID0SJO ）
+  * 支持调整壁纸显示模式（https://gitee.com/GXDE-OS/GXDE/issues/ICZ2W4 ）
 
- -- gfdgd_xi <3025613752@qq.com>  Sat, 04 Oct 2025 21:20:43 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Sun, 05 Oct 2025 08:58:14 +0800
 
 gxde-file-manager (4.8.20) UNRELEASED; urgency=medium
 

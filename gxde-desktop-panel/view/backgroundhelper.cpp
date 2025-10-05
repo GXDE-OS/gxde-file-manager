@@ -50,13 +50,19 @@ BackgroundHelper::BackgroundHelper(bool preview, QObject *parent)
 
     onWMChanged();
 
+    m_weatherTimer.setInterval(30 * 60 * 1000);
+    connect(&m_weatherTimer, &QTimer::timeout, this, &BackgroundHelper::startDownloadWeatherImage);
     if (m_isLoadWeatherReport) {
-        m_weatherTimer.setInterval(30 * 60 * 1000);
-        connect(&m_weatherTimer, &QTimer::timeout, this, &BackgroundHelper::startDownloadWeatherImage);
+        m_weatherTimer.start();
         startDownloadWeatherImage();
     }
 
     connect(this, &BackgroundHelper::onScreenChanged, this, &BackgroundHelper::calculateAllScreenSize);
+
+    // 用于动态检测配置文件
+    QFileSystemWatcher *fileWatcher = new QFileSystemWatcher();
+    fileWatcher->addPath(QDir::homePath() + "/.config/GXDE/dde-file-manager/wallpaperDisplayMethod");
+    connect(fileWatcher, &QFileSystemWatcher::fileChanged, this, &BackgroundHelper::refreshBackground);
 }
 
 BackgroundHelper::~BackgroundHelper()
@@ -105,10 +111,7 @@ void BackgroundHelper::setBackground(const QString &path)
     currentWallpaper = path.startsWith("file:") ? QUrl(path).toLocalFile() : path;
     backgroundPixmap = QPixmap(currentWallpaper);
 
-    // 更新背景图
-    for (QLabel *l : backgroundMap) {
-        updateBackground(l);
-    }
+    refreshBackground();
 }
 
 void BackgroundHelper::setVisible(bool visible)
@@ -201,11 +204,6 @@ void BackgroundHelper::onWMChanged()
     Q_EMIT enableChanged();
 }
 
-void BackgroundHelper::setPictureRatioMode(Qt::AspectRatioMode mode)
-{
-    m_pictureRatioMode = mode;
-}
-
 void BackgroundHelper::updateBackground(QLabel *l)
 {
     if (backgroundPixmap.isNull())
@@ -214,7 +212,7 @@ void BackgroundHelper::updateBackground(QLabel *l)
     QScreen *s = l->windowHandle()->screen();
     l->windowHandle()->handle()->setGeometry(s->handle()->geometry());
     QSize trueSize;
-    if (m_isBackgroundSpanned) {
+    if (WallpaperDisplayMethods::BackgroundSpanned) {
         trueSize = m_screenSize;
     }
     else {
@@ -222,9 +220,11 @@ void BackgroundHelper::updateBackground(QLabel *l)
     }
     QPixmap pix = backgroundPixmap;
 
-    pix = pix.scaled(trueSize,
-                     m_pictureRatioMode,
+    if (m_wallpaperDisplayMethods != WallpaperDisplayMethods::Center) {
+        pix = pix.scaled(trueSize,
+                     wallpaperDisplayMethods2PictureRatioMode(m_wallpaperDisplayMethods),
                      Qt::SmoothTransformation);
+    }
 
     if (pix.width() > trueSize.width() || pix.height() > trueSize.height()) {
         pix = pix.copy(QRect((pix.width() - trueSize.width()) / 2.0,
@@ -233,11 +233,12 @@ void BackgroundHelper::updateBackground(QLabel *l)
                              trueSize.height()));
     }
     // 如果为穿透背景
-    if (m_isBackgroundSpanned) {
+    if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
         pix = pix.copy(s->handle()->geometry());
     }
     // 只有在 KeepAspectRatio 模式（居中）下的背景才设置居中
-    if (m_pictureRatioMode == Qt::AspectRatioMode::KeepAspectRatio) {
+    if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::KeepAspectRatio ||
+        m_wallpaperDisplayMethods == WallpaperDisplayMethods::Center) {
         l->setAlignment(Qt::AlignCenter);
     }
     else {
@@ -289,10 +290,11 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
     QLabel *l = new QLabel();
     QLabel *weather = new QLabel();
     connect(this, &BackgroundHelper::weatherImageChanged, [l, weather, this](){
+        weather->setVisible(m_isLoadWeatherReport);
         if (weather) {
             QRect rect = l->windowHandle()->screen()->geometry();
             // 在壁纸跨屏模式下，天气预报只显示在最右上角的屏幕
-            if (m_isBackgroundSpanned) {
+            if (WallpaperDisplayMethods::BackgroundSpanned) {
                 if (rect.y() != 0 || rect.width() + rect.x() < m_screenSize.width()) {
                     return;
                 }
@@ -387,7 +389,6 @@ void BackgroundHelper::calculateAllScreenSize()
         }
     }
     m_screenSize = size;
-    qDebug() << m_screenSize;
     for (QLabel *l: backgroundMap) {
         updateBackground(l);
     }
@@ -405,4 +406,70 @@ void BackgroundHelper::onScreenRemoved(QScreen *screen)
 
     Q_EMIT onScreenChanged();
     calculateAllScreenSize();
+}
+
+void BackgroundHelper::refreshBackground()
+{
+    m_isLoadWeatherReport = QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/weatherReport");
+    m_wallpaperDisplayMethods = getWallpaperDisplayMethodsConfigData();
+    if (m_isLoadWeatherReport) {
+        m_weatherTimer.start();
+        startDownloadWeatherImage();
+    }
+    else {
+        m_weatherTimer.stop();
+        emit weatherImageChanged(QPixmap());
+    }
+    calculateAllScreenSize();
+}
+
+void BackgroundHelper::setWallpaperDisplayMethods(WallpaperDisplayMethods method)
+{
+    m_wallpaperDisplayMethods = method;
+
+    if (!QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/")) {
+        QDir dir(QDir::homePath() + "/.config/GXDE/dde-file-manager/");
+        dir.mkpath(QDir::homePath() + "/.config/GXDE/dde-file-manager/");
+    }
+    QFile file(QDir::homePath() + "/.config/GXDE/dde-file-manager/wallpaperDisplayMethod");
+    file.open(QFile::WriteOnly);
+    file.write(QString::number(method).toUtf8());
+    file.close();
+
+    refreshBackground();
+}
+
+BackgroundHelper::WallpaperDisplayMethods BackgroundHelper::getWallpaperDisplayMethods()
+{
+    return m_wallpaperDisplayMethods;
+}
+
+Qt::AspectRatioMode BackgroundHelper::wallpaperDisplayMethods2PictureRatioMode
+    (BackgroundHelper::WallpaperDisplayMethods method)
+{
+    switch (method) {
+    case BackgroundHelper::KeepAspectRatioByExpanding:
+    case BackgroundHelper::BackgroundSpanned:
+        return Qt::AspectRatioMode::KeepAspectRatioByExpanding;
+        break;
+    case BackgroundHelper::IgnoreAspectRatio:
+        return Qt::AspectRatioMode::IgnoreAspectRatio;
+    case BackgroundHelper::KeepAspectRatio:
+        return Qt::AspectRatioMode::KeepAspectRatio;
+    default:
+        return Qt::AspectRatioMode::KeepAspectRatioByExpanding;
+        break;
+    }
+}
+
+BackgroundHelper::WallpaperDisplayMethods BackgroundHelper::getWallpaperDisplayMethodsConfigData()
+{
+    QFile file(QDir::homePath() + "/.config/GXDE/dde-file-manager/wallpaperDisplayMethod");
+    if (!file.exists()) {
+        return BackgroundHelper::WallpaperDisplayMethods::KeepAspectRatioByExpanding;
+    }
+    file.open(QFile::ReadOnly);
+    QString data = file.readAll();
+    file.close();
+    return static_cast<BackgroundHelper::WallpaperDisplayMethods>(data.toInt());
 }

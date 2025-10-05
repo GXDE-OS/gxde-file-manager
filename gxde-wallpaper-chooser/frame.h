@@ -28,6 +28,8 @@
 #include <dblureffectwidget.h>
 #include <dimagebutton.h>
 #include <dregionmonitor.h>
+#include <QActionGroup>
+#include <QPushButton>
 
 DWIDGET_BEGIN_NAMESPACE
 class DSegmentedControl;
@@ -72,9 +74,9 @@ public slots:
     void handleNeedCloseButton(QString path, QPoint pos);
 
 protected:
-    void showEvent(QShowEvent *);
-    void hideEvent(QHideEvent *);
-    void keyPressEvent(QKeyEvent *);
+    void showEvent(QShowEvent *) override;
+    void hideEvent(QHideEvent *) override;
+    void keyPressEvent(QKeyEvent *) override;
     void paintEvent(QPaintEvent *event) override;
     bool event(QEvent *event) override;
 
@@ -104,7 +106,10 @@ private:
 #ifndef DISABLE_WALLPAPER_CAROUSEL
     QHBoxLayout *m_wallpaperCarouselLayout;
     QCheckBox *m_wallpaperCarouselCheckBox;
+    QPushButton *m_wallpaperDisplayMethodChooser;
+    QCheckBox *m_wallpaperShowWeatherReport;
     DSegmentedControl *m_wallpaperCarouselControl;
+    QActionGroup *m_wallpaperDisplayMethodChooserActionGroup;
 #endif
 
     ComDeepinDaemonAppearanceInterface * m_dbusAppearance = NULL;

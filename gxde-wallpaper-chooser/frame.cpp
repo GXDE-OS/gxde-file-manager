@@ -49,6 +49,8 @@
 #include <QScreen>
 #include <QVBoxLayout>
 #include <QCheckBox>
+#include <QComboBox>
+#include <QMenu>
 
 #define DESKTOP_BUTTON_ID "desktop"
 #define LOCK_SCREEN_BUTTON_ID "lock-screen"
@@ -159,7 +161,11 @@ void Frame::show()
         m_dbusDeepinWM->RequestHideWindows();
 
     m_mouseArea->registerRegion();
-
+    auto actionList = m_wallpaperDisplayMethodChooserActionGroup->actions();
+    auto method = m_backgroundHelper->getWallpaperDisplayMethods();
+    if (actionList.count() >= method + 1) {
+        actionList.at(method)->setChecked(true);
+    }
     DBlurEffectWidget::show();
 }
 
@@ -308,6 +314,8 @@ void Frame::reLayoutTools()
 #ifndef DISABLE_WALLPAPER_CAROUSEL
         m_wallpaperCarouselCheckBox->hide();
         m_wallpaperCarouselControl->hide();
+        m_wallpaperDisplayMethodChooser->hide();
+        //m_wallpaperShowWeatherReport->hide();
         layout()->removeItem(m_wallpaperCarouselLayout);
         static_cast<QBoxLayout*>(layout())->insertLayout(0, m_toolLayout);
 #endif
@@ -318,6 +326,8 @@ void Frame::reLayoutTools()
 #ifndef DISABLE_WALLPAPER_CAROUSEL
         m_wallpaperCarouselCheckBox->show();
         m_wallpaperCarouselControl->setVisible(m_wallpaperCarouselCheckBox->isChecked());
+        m_wallpaperDisplayMethodChooser->show();
+        //m_wallpaperShowWeatherReport->show();
         layout()->removeItem(m_toolLayout);
         static_cast<QBoxLayout*>(layout())->insertLayout(0, m_wallpaperCarouselLayout);
 #endif
@@ -351,7 +361,10 @@ void Frame::adjustModeSwitcherPoint()
         int width = m_wallpaperCarouselCheckBox->sizeHint().width() +
                     m_wallpaperCarouselControl->sizeHint().width() +
                     m_wallpaperCarouselLayout->contentsMargins().left() +
-                    m_wallpaperCarouselControl->count() * m_wallpaperCarouselLayout->spacing();
+                    m_wallpaperCarouselControl->count() * m_wallpaperCarouselLayout->spacing() +
+                    //m_wallpaperShowWeatherReport->sizeHint().width() +
+                    m_wallpaperDisplayMethodChooser->sizeHint().width();
+
 
         if (width > tools_width) {
             tools_width = width;
@@ -427,6 +440,10 @@ void Frame::initUI()
     m_wallpaperCarouselCheckBox = new QCheckBox(tr("Wallpaper Slideshow"), this);
     m_wallpaperCarouselCheckBox->setChecked(true);
     m_wallpaperCarouselControl = new DSegmentedControl(this);
+    m_wallpaperDisplayMethodChooser = new QPushButton(tr("Display Mode"));
+    m_wallpaperShowWeatherReport = new QCheckBox(tr("Show weather report"), this);
+    m_wallpaperShowWeatherReport->setChecked(QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/"));
+    m_wallpaperShowWeatherReport->setVisible(false);
 
     QByteArrayList array_policy {"30", "60", "300", "600", "900", "1800", "3600", "login", "wakeup"};
 
@@ -466,11 +483,27 @@ void Frame::initUI()
         m_wallpaperCarouselControl->setVisible(m_wallpaperCarouselCheckBox->isChecked());
     }
 
+    // 因为 QCombobox 的下拉框会超出壁纸选择 Widget 的范围导致被错误识别为点击空白地区导致退出
+    // 于是使用 QMenu 自行实现类似效果以避免下拉框超出范围
+    m_wallpaperDisplayMethodChooserActionGroup = new QActionGroup(this);
+    QMenu *menu = new QMenu();
+    menu->addAction(new QAction(tr("Keep Aspect Ratio By Expanding"), m_wallpaperDisplayMethodChooserActionGroup));
+    menu->addAction(new QAction(tr("Ignore Aspect Ratio"), m_wallpaperDisplayMethodChooserActionGroup));
+    menu->addAction(new QAction(tr("Keep Aspect Ratio"), m_wallpaperDisplayMethodChooserActionGroup));
+    menu->addAction(new QAction(tr("Center"), m_wallpaperDisplayMethodChooserActionGroup));
+    menu->addAction(new QAction(tr("Background Spanned"), m_wallpaperDisplayMethodChooserActionGroup));
+    for (auto i: m_wallpaperDisplayMethodChooserActionGroup->actions()) {
+        i->setCheckable(true);
+    }
+
     m_wallpaperCarouselLayout->setSpacing(10);
     m_wallpaperCarouselLayout->setContentsMargins(20, 10, 20, 10);
     m_wallpaperCarouselLayout->addWidget(m_wallpaperCarouselCheckBox);
     m_wallpaperCarouselLayout->addWidget(m_wallpaperCarouselControl);
+    m_wallpaperCarouselLayout->addWidget(m_wallpaperDisplayMethodChooser);
+    m_wallpaperCarouselLayout->addWidget(m_wallpaperShowWeatherReport);
     m_wallpaperCarouselLayout->addStretch();
+
 
     layout->addLayout(m_wallpaperCarouselLayout);
 
@@ -485,6 +518,33 @@ void Frame::initUI()
     });
     connect(m_wallpaperCarouselControl, &DSegmentedControl::currentChanged, this, [this, array_policy] (int index) {
         m_dbusAppearance->setWallpaperSlideShow(array_policy.at(index));
+    });
+    connect(m_wallpaperDisplayMethodChooser, &QPushButton::clicked, this, [this, menu](){
+        menu->exec(QPoint(QCursor::pos().x() - menu->sizeHint().width(),
+                          QCursor::pos().y() + menu->sizeHint().height()));
+    });
+    connect(m_wallpaperDisplayMethodChooserActionGroup, &QActionGroup::triggered, this, [this](QAction *action){
+        int index = m_wallpaperDisplayMethodChooserActionGroup->actions().indexOf(action);
+        BackgroundHelper::WallpaperDisplayMethods choose = static_cast<BackgroundHelper::WallpaperDisplayMethods>(index);
+        m_backgroundHelper->setWallpaperDisplayMethods(choose);
+        m_backgroundHelper->refreshBackground();
+    });
+    connect(m_wallpaperShowWeatherReport, &QCheckBox::clicked, this, [this] (bool checked) {
+        QFile file(QDir::homePath() + "/.config/GXDE/dde-file-manager/weatherReport");
+        if (!checked) {
+            file.remove();
+        }
+        else {
+            if (!QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/")) {
+                QDir dir(QDir::homePath() + "/.config/GXDE/dde-file-manager/");
+                dir.mkpath(QDir::homePath() + "/.config/GXDE/dde-file-manager/");
+            }
+            file.open(QFile::WriteOnly);
+            file.write("1");
+            file.close();
+        }
+        m_backgroundHelper->refreshBackground();
+        m_dbusDeepinWM->SetTransientBackground(desktopBackground());
     });
 #endif
 
