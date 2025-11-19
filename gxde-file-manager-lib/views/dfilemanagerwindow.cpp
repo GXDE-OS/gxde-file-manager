@@ -405,13 +405,16 @@ void DFileManagerWindowPrivate::initRenameBar()
 
     Q_Q(DFileManagerWindow);
 
-    // see the comment in initAdvanceSearchBar()
     renameBar = new DRenameBar(q);
-    rightViewLayout->addWidget(renameBar, rightViewLayout->indexOf(emptyTrashButton) + 1, 0);
-    //rightViewLayout->insertWidget(rightViewLayout->indexOf(emptyTrashButton) + 1, renameBar);
+    // 修正：将 renameBar 添加到第2行第0列
+    rightViewLayout->addWidget(renameBar, 2, 0);
+
+    // 默认隐藏
+    renameBar->setVisible(false);
 
     QObject::connect(renameBar, &DRenameBar::clickCancelButton, q, &DFileManagerWindow::hideRenameBar);
 }
+
 
 bool DFileManagerWindowPrivate::isRenameBarVisible() const
 {
@@ -1029,10 +1032,6 @@ void DFileManagerWindow::initRightView()
     d->rightView = new QFrame;
 
     QSizePolicy sp = d->rightView->sizePolicy();
-
-    //NOTE(zccrs): 保证窗口宽度改变时只会调整right view的宽度，侧边栏保持不变
-    //             QSplitter是使用QLayout的策略对widgets进行布局，所以此处
-    //             设置size policy可以生效
     sp.setHorizontalStretch(1);
     d->rightView->setSizePolicy(sp);
 
@@ -1048,20 +1047,40 @@ void DFileManagerWindow::initRightView()
     tabBarLayout->setMargin(0);
     tabBarLayout->setSpacing(0);
     tabBarLayout->addWidget(d->tabBar);
-    //tabBarLayout->addWidget(d->newTabButton);
 
     d->rightViewLayout = new QGridLayout;
+
+    // 修正布局：使用正确的行号分配
+    // 第0行：tabBarLayout
     d->rightViewLayout->addLayout(tabBarLayout, 0, 0);
+
+    // 第1行：emptyTrashButton（在需要时显示）
     d->rightViewLayout->addWidget(d->emptyTrashButton, 1, 0);
-    d->rightViewLayout->addLayout(d->viewStackLayout, 2, 0);
-    // 预览视图
-    //d->rightViewLayout->addWidget(new QLabel("   "), 2, 1);
-    d->rightViewLayout->addWidget(d->previewSidebar, 1, 1, 2, 1, Qt::AlignTop);
+
+    // 第2行：预留位置，稍后会在 initRenameBar() 中添加 renameBar
+    // renameBar 会根据需要在这一行显示
+
+    // 第3行：主视图区域
+    d->rightViewLayout->addLayout(d->viewStackLayout, 3, 0);
+
+    // 预览侧边栏：从第0行到第3行（tabBar + emptyTrashButton + renameBar + viewStackLayout）
+    d->rightViewLayout->addWidget(d->previewSidebar, 0, 1, 4, 1, Qt::AlignTop);
+
+    // 设置列拉伸因子：主内容区域可拉伸，预览侧边栏固定宽度
+    d->rightViewLayout->setColumnStretch(0, 1);
+    d->rightViewLayout->setColumnStretch(1, 0);
+
+    // 设置行拉伸因子：只有主视图区域可拉伸
+    d->rightViewLayout->setRowStretch(0, 0); // tabBar 固定高度
+    d->rightViewLayout->setRowStretch(1, 0); // emptyTrashButton 固定高度
+    d->rightViewLayout->setRowStretch(2, 0); // renameBar 固定高度
+    d->rightViewLayout->setRowStretch(3, 1); // 主视图区域可拉伸
+
     d->rightViewLayout->setSpacing(0);
     d->rightViewLayout->setContentsMargins(0, 0, 0, 0);
     d->rightView->setLayout(d->rightViewLayout);
 
-    // connections
+    // 连接信号
     connect(this, &DFileManagerWindow::currentChooseFileChanged, this, [d](const QList<DUrl> &url){
         d->previewSidebar->setFileUrl(url);
     });
