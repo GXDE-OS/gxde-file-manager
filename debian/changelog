@@ -1,4 +1,4 @@
-gxde-file-manager (5.2.7) UNRELEASED; urgency=medium
+gxde-file-manager (5.2.8) UNRELEASED; urgency=medium
 
   * 修复高分屏下背景模糊的问题
   * 修复 i386 break 的问题
@@ -27,8 +27,9 @@ gxde-file-manager (5.2.7) UNRELEASED; urgency=medium
   * 支持调整壁纸显示模式（https://gitee.com/GXDE-OS/GXDE/issues/ICZ2W4 ）
   * 修复高缩放下壁纸显示不全的问题
   * 修复 批量重命名工具出现位置错误的问题
+  * 支持读取部分 autorun.inf 缩略图
 
- -- gfdgd_xi <3025613752@qq.com>  Sun, 05 Oct 2025 13:14:53 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Sun, 25 Jan 2026 16:21:03 +0800
 
 gxde-file-manager (4.8.20) UNRELEASED; urgency=medium
 

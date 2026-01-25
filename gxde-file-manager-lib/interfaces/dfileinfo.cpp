@@ -871,8 +871,14 @@ QIcon DFileInfo::fileIcon() const
             QPainter pa(&pixmap);
 
             pa.setPen(Qt::gray);
+            if (d->fileInfo.isDir()) {
+                // 文件夹自定义缩略图不绘制边框
+                pa.setPen(QColor(0, 0, 0, 0));
+            }
             pa.drawRect(pixmap.rect().adjusted(0, 0, -1, -1));
+
             d->icon.addPixmap(pixmap);
+
             d->iconFromTheme = false;
             d->needThumbnail = false;
 

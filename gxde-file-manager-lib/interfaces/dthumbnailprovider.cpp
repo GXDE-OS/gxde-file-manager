@@ -47,6 +47,7 @@
 #include <QJsonArray>
 #include <QProcess>
 #include <QDebug>
+#include <QSettings>
 
 // use original poppler api
 #include <poppler-document.h>
@@ -155,6 +156,36 @@ DThumbnailProvider *DThumbnailProvider::instance()
 bool DThumbnailProvider::hasThumbnail(const QFileInfo &info) const
 {
     Q_D(const DThumbnailProvider);
+
+    if (info.isDir() && (QFile::exists(info.absoluteFilePath() + "/autorun.inf") || QFile::exists(info.absoluteFilePath() + "/AUTORUN.INF"))) {
+        // 判断是否有 autorun.inf 缩略图
+        // 读取 autorun.inf 显示缩略图
+        QString path = info.absoluteFilePath() + "/AUTORUN.INF";
+        if (QFile::exists(info.absoluteFilePath() + "/autorun.inf")) {
+            path = info.absoluteFilePath() + "/autorun.inf";
+        }
+        QFile file(path);
+        if (!file.open(QFile::ReadOnly)) {
+            return false;
+        }
+        if (file.readLine().toLower().replace("\n", "").replace(" ", "") != "[autorun]") {
+            file.close();
+            return false;
+        }
+        QString data = file.readLine().replace("\n", "");
+        if (!data.toLower().replace(" ", "").startsWith("icon=")) {
+            file.close();
+            return false;
+        }
+        data = data.remove(0, 5);
+        if (!QFile::exists(data)) {
+            data = info.absoluteFilePath() + "/" + data;
+        }
+        if (QFile::exists(data)) {
+            QImageReader reader(data);
+            return reader.canRead();
+        }
+    }
 
     if (!info.isReadable() || !info.isFile())
         return false;
@@ -342,6 +373,62 @@ QString DThumbnailProvider::createThumbnail(const QFileInfo &info, DThumbnailPro
 
         if (image->width() > size || image->height() > size) {
             image->operator =(image->scaled(size, size, Qt::KeepAspectRatio));
+        }
+    } else if (info.isDir() && (QFile::exists(info.absoluteFilePath() + "/autorun.inf") || QFile::exists(info.absoluteFilePath() + "/AUTORUN.INF"))) {
+        // 读取 autorun.inf 显示缩略图
+        QString path = info.absoluteFilePath() + "/AUTORUN.INF";
+        if (QFile::exists(info.absoluteFilePath() + "/autorun.inf")) {
+            path = info.absoluteFilePath() + "/autorun.inf";
+        }
+        QFile file(path);
+        if (!file.open(QFile::ReadOnly)) {
+            d->errorString = file.errorString();
+            goto _return;
+        }
+        if (file.readLine().toLower().replace("\n", "").replace(" ", "") != "[autorun]") {
+            file.close();
+            d->errorString = "Not right autorun.inf";
+            goto _return;
+        }
+        QString data = file.readLine().replace("\n", "");
+        if (!data.toLower().replace(" ", "").startsWith("icon=")) {
+            d->errorString = "Not Found icon item";
+            goto _return;
+        }
+        data = data.remove(0, 5);
+        if (!QFile::exists(data)) {
+            data = info.absoluteFilePath() + "/" + data;
+        }
+        if (QFile::exists(data)) {
+            QImageReader reader(data, mime.preferredSuffix().toLatin1());
+            if (!reader.canRead()) {
+                d->errorString = reader.errorString();
+                goto _return;
+            }
+
+            const QSize &imageSize = reader.size();
+
+            //        if(!imageSize.isValid()){
+            //            d->errorString = "Fail to read image file attribute data:" + info.absoluteFilePath();
+            //            goto _return;
+            //        }
+
+            if (imageSize.width() > size || imageSize.height() > size || mime.name() == "image/svg+xml") {
+                reader.setScaledSize(reader.size().scaled(size, size, Qt::KeepAspectRatio));
+            }
+
+            if (!reader.read(image.data())) {
+                d->errorString = reader.errorString();
+                goto _return;
+            }
+
+            if (image->width() > size || image->height() > size) {
+                image->operator =(image->scaled(size, size, Qt::KeepAspectRatio));
+            }
+        }
+        else {
+            d->errorString = "Icon not fount";
+            goto _return;
         }
     } else if (mime.name() == "text/plain") {
         //FIXME(zccrs): This should be done using the image plugin?
