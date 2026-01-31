@@ -212,11 +212,12 @@ void BackgroundHelper::updateBackground(QLabel *l)
     QScreen *s = l->windowHandle()->screen();
     l->windowHandle()->handle()->setGeometry(s->handle()->geometry());
     QSize trueSize;
-    if (WallpaperDisplayMethods::BackgroundSpanned) {
+    if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
         trueSize = m_screenSize;
     }
     else {
         trueSize = s->handle()->geometry().size();
+        qDebug() << s->handle()->geometry().size();
     }
     QPixmap pix = backgroundPixmap;
 
