@@ -80,13 +80,13 @@ Depends:
  ${misc:Depends}, 
  libgxde-file-manager( =${binary:Version}),
  gxde-daemon,
- gxde-requ
 Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1)
 Provides: dde-desktop
 Replaces: dde-desktop
 Recommends: 
  deepin-screensaver,
- fantascene-dynamic-wallpaper
+ fantascene-dynamic-wallpaper,
+ gxde-requ
 Description: deepin desktop-environment - desktop module
  Deepin Desktop Environment (DDE) - desktop module.
 
