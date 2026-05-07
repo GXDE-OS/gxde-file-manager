@@ -79,6 +79,7 @@
 #include <QHBoxLayout>
 #include <QSplitter>
 #include <QResizeEvent>
+#include <QEvent>
 #include <QThread>
 #include <QDesktopWidget>
 #include <QStackedLayout>
@@ -850,6 +851,21 @@ bool DFileManagerWindow::eventFilter(QObject *watched, QEvent *event)
     return d->processKeyPressEvent(static_cast<QKeyEvent *>(event));
 }
 
+void DFileManagerWindow::changeEvent(QEvent *event)
+{
+    DMainWindow::changeEvent(event);
+
+    if (event->type() != QEvent::WindowStateChange || isMaximized()) {
+        return;
+    }
+
+    // KWin may keep stale normal-size hints after leaving maximized state.
+    // Re-apply resizable constraints so the restored window can be resized.
+    setMinimumSize(650, 420);
+    setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+    updateGeometry();
+}
+
 void DFileManagerWindow::resizeEvent(QResizeEvent *event)
 {
     Q_D(DFileManagerWindow);
@@ -1145,10 +1161,10 @@ void DFileManagerWindow::initConnect()
     D_D(DFileManagerWindow);
 
     if (titlebar()) {
-        QObject::connect(titlebar(), SIGNAL(minimumClicked()), parentWidget(), SLOT(showMinimized()));
-        QObject::connect(titlebar(), SIGNAL(maximumClicked()), parentWidget(), SLOT(showMaximized()));
-        QObject::connect(titlebar(), SIGNAL(restoreClicked()), parentWidget(), SLOT(showNormal()));
-        QObject::connect(titlebar(), SIGNAL(closeClicked()), parentWidget(), SLOT(close()));
+        QObject::connect(titlebar(), SIGNAL(minimumClicked()), this, SLOT(showMinimized()));
+        QObject::connect(titlebar(), SIGNAL(maximumClicked()), this, SLOT(showMaximized()));
+        QObject::connect(titlebar(), SIGNAL(restoreClicked()), this, SLOT(showNormal()));
+        QObject::connect(titlebar(), SIGNAL(closeClicked()), this, SLOT(close()));
     }
 
     QObject::connect(fileSignalManager, &FileSignalManager::requestCloseCurrentTab, this, &DFileManagerWindow::closeCurrentTab);
