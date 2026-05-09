@@ -1,3 +1,9 @@
+gxde-file-manager (5.2.12) UNRELEASED; urgency=medium
+
+  * 打开本地软链接目录时保留软链接路径
+
+ -- gfdgd_xi <3025613752@qq.com>  Sat, 09 May 2026 15:46:35 +0800
+
 gxde-file-manager (5.2.11) UNRELEASED; urgency=medium
 
   * 修复 KWin 下文件管理器最大化还原后无法调整窗口大小的问题
