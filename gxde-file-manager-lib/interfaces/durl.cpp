@@ -697,7 +697,7 @@ bool DUrl::hasScheme(const QString &scheme)
 bool DUrl::operator ==(const DUrl &url) const
 {
     if (!hasScheme(url.scheme())) {
-        return QUrl::operator ==(url);
+        return static_cast<const QUrl&>(*this) == static_cast<const QUrl&>(url);
     }
 
     QString path1 = m_virtualPath;

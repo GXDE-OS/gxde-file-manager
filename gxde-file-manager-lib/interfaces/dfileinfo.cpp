@@ -93,7 +93,10 @@ private:
 RequestEP::RequestEP(QObject *parent)
     : QThread(parent)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    // 这个，不需要了
     QMetaType::registerEqualsComparator<QList<QColor>>();
+#endif
     qRegisterMetaType<DFileInfoPrivate*>();
 
     connect(this, &RequestEP::finished, this, [this] {
@@ -698,7 +701,7 @@ QDateTime DFileInfo::created() const
 {
     Q_D(const DFileInfo);
 
-    return d->fileInfo.created();
+    return d->fileInfo.birthTime();
 }
 
 QDateTime DFileInfo::lastModified() const
@@ -709,7 +712,7 @@ QDateTime DFileInfo::lastModified() const
         struct stat attrib;
 
         if (lstat(d->fileInfo.filePath().toLocal8Bit().constData(), &attrib) >= 0)
-            return QDateTime::fromTime_t(attrib.st_mtime);
+            return QDateTime::fromSecsSinceEpoch(attrib.st_mtime);
     }
 
     return d->fileInfo.lastModified();
@@ -723,7 +726,7 @@ QDateTime DFileInfo::lastRead() const
         struct stat attrib;
 
         if (lstat(d->fileInfo.filePath().toLocal8Bit().constData(), &attrib) >= 0)
-            return QDateTime::fromTime_t(attrib.st_atime);
+            return QDateTime::fromSecsSinceEpoch(attrib.st_atime);
     }
 
     return d->fileInfo.lastRead();

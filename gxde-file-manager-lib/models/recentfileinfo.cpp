@@ -209,8 +209,8 @@ void RecentFileInfo::updateInfo()
                 continue;
             }
 
-            const QStringRef &location = reader.attributes().value("href");
-            const QStringRef &dateTime = reader.attributes().value("modified");
+            const auto location = reader.attributes().value("href");
+            const auto dateTime = reader.attributes().value("modified");
 
             if (!location.isEmpty()) {
                 DUrl findUrl = DUrl(location.toString());

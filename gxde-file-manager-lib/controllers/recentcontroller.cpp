@@ -409,7 +409,7 @@ void RecentController::handleFileChanged()
                 continue;
             }
 
-            const QStringRef &location = reader.attributes().value("href");
+            const auto location = reader.attributes().value("href");
 
             if (!location.isEmpty()) {
                 DUrl url = DUrl(location.toString());
@@ -470,5 +470,5 @@ void RecentController::asyncHandleFileChanged()
      * Applications using GTK does not trigger file closed/modified events
      * at all for some obscure reasons.
      */
-    QtConcurrent::run(this, &RecentController::handleFileChanged);
+    QtConcurrent::run(&RecentController::handleFileChanged, this);
 }

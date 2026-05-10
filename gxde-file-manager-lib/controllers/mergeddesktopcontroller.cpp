@@ -222,7 +222,7 @@ const QList<DAbstractFileInfoPointer> MergedDesktopController::getChildren(const
             if (path == QStringLiteral(VIRTUALENTRY_PATH)) {
                 appendVirtualEntries();
             } else {
-                QString entryName = path.split('/', QString::SkipEmptyParts).last();
+                QString entryName = path.split('/', Qt::SkipEmptyParts).last();
                 DMD_TYPES entryType = entryTypeByName(entryName);
                 appendEntryFiles(infoList, entryType);
             }
@@ -232,7 +232,7 @@ const QList<DAbstractFileInfoPointer> MergedDesktopController::getChildren(const
             QString expandedFolder = currentUrl.fragment();
             QStringList expandedFolders;
             if (!expandedFolder.isEmpty()) {
-                expandedFolders = expandedFolder.split(',', QString::SkipEmptyParts);
+                expandedFolders = expandedFolder.split(',', Qt::SkipEmptyParts);
             }
             appendVirtualEntries(false, expandedFolders);
             appendFolders();

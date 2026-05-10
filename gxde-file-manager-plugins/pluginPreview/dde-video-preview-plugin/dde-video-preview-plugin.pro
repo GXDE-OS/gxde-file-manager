@@ -10,9 +10,17 @@ TARGET = dde-video-preview-plugin
 TEMPLATE = lib
 
 PKGCONFIG += libgxmr
-CONFIG += plugin link_pkgconfig c++11
+CONFIG += plugin link_pkgconfig c++17
 
 include(../../../common/common.pri)
+
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += dtk2widget
+    DEFINES += DFM_USE_QT6
+} else {
+    PKGCONFIG += dtkwidget
+}
+
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings

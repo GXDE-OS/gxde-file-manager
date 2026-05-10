@@ -76,7 +76,7 @@
 #include <DSettingsWidgetFactory>
 #include <DSettingsOption>
 #include <QTimer>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QApplication>
 #include <QScreen>
 #include <qsettingbackend.h>
@@ -879,7 +879,7 @@ void DialogManager::showDiskSpaceOutOfUsedDialog()
     d.addButton(tr("OK"));
 
     QRect rect = d.geometry();
-    rect.moveCenter(qApp->desktop()->geometry().center());
+    rect.moveCenter(qApp->primaryScreen()->geometry().center());
     d.move(rect.x(), rect.y());
     d.exec();
 }
@@ -995,7 +995,7 @@ void DialogManager::showNoPermissionDialog(const DFMUrlListBaseEvent &event)
         d.setTitle(tr("You do not have permission to operate file/folder!"));
         QString message = urls.at(0).toLocalFile();
 
-        if (fm.width(message) > maxWith) {
+        if (fm.horizontalAdvance(message) > maxWith) {
             message = fm.elidedText(message, Qt::ElideMiddle, maxWith - 10);
         }
 
@@ -1023,7 +1023,7 @@ void DialogManager::showNoPermissionDialog(const DFMUrlListBaseEvent &event)
                 break;
             }
             QString s = QString("%1.%2").arg(QString::number(i + 1), urls.at(i).toLocalFile());
-            if (fm.width(s) > maxWith) {
+            if (fm.horizontalAdvance(s) > maxWith) {
                 s = fm.elidedText(s, Qt::ElideMiddle, maxWith - 10);
             }
             message += s + "\n";

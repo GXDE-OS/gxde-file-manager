@@ -30,7 +30,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QWidget>
-#include <QX11Info>
+#include "qx11info_compat.h"
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 

@@ -20,7 +20,7 @@
  */
 #include "dfmapplication.h"
 #include "private/dfmapplication_p.h"
-#if QT_HAS_INCLUDE("anything_interface.h")
+#if __has_include("anything_interface.h")
 #include "anything_interface.h"
 #else
 #define DISABLE_QUICK_SEARCH

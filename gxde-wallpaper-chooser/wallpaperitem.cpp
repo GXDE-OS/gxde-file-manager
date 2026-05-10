@@ -205,7 +205,7 @@ void WallpaperItem::mousePressEvent(QMouseEvent *event)
         emit pressed();
 }
 
-void WallpaperItem::enterEvent(QEvent *event)
+void WallpaperItem::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
 

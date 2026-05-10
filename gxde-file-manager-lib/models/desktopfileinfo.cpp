@@ -225,7 +225,11 @@ QMap<QString, QVariant> DesktopFileInfo::getDesktopFileInfo(const DUrl &fileUrl)
     QMap<QString, QVariant> map;
     QSettings settings(fileUrl.path(), QSettings::IniFormat);
 
+    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    // 在 Qt6 中 QSettings::setIniCodec()已经不可用了...
+    // 但没事，QSettings现在对INI默认以UTF-8编码读写
     settings.setIniCodec("utf-8");
+    #endif
     settings.beginGroup("Desktop Entry");
     // Loads .desktop file (read from 'Desktop Entry' group)
     Properties desktop(fileUrl.path(), "Desktop Entry");

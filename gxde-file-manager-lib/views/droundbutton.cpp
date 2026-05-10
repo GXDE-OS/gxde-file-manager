@@ -65,7 +65,7 @@ QColor DRoundButton::color() const
     return m_allStatusColors.first().second;
 }
 
-void DRoundButton::enterEvent(QEvent* event)
+void DRoundButton::enterEvent(QEnterEvent* event)
 {
     if (!isChecked()) {
         setPaintStatus(PaintStatus::hover);

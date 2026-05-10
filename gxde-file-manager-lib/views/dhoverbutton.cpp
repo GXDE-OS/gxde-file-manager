@@ -43,7 +43,7 @@ void DHoverButton::setMenu(DFileMenu *menu)
     m_menu = menu;
 }
 
-void DHoverButton::enterEvent(QEvent *e)
+void DHoverButton::enterEvent(QEnterEvent *e)
 {
     Q_UNUSED(e)
 

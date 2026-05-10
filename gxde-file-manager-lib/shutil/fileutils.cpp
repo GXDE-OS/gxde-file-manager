@@ -52,7 +52,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QSettings>
-#include <QX11Info>
+#include "qx11info_compat.h"
 #include <dabstractfilewatcher.h>
 
 #include <sys/vfs.h>
@@ -181,7 +181,7 @@ qint64 FileUtils::totalSize(const QString &targetFile)
 qint64 FileUtils::totalSize(const DUrlList &files) {
   qint64 total = 1;
   foreach (QUrl url, files) {
-    QFileInfo file = url.path();
+    QFileInfo file(url.path());
     if (file.isFile()) total += file.size();
     else if (!file.isSymLink()) {
       QDirIterator it(url.path(), QDir::AllEntries | QDir::System
@@ -200,7 +200,7 @@ qint64 FileUtils::totalSize(const DUrlList &files, const qint64 &maxLimit, bool 
 {
     qint64 total = 1;
     foreach (QUrl url, files) {
-      QFileInfo file = url.path();
+      QFileInfo file(url.path());
       if (file.isFile()) total += file.size();
       if(total > maxLimit){
           isInLimit = false;
@@ -351,7 +351,7 @@ QIcon FileUtils::searchAppIcon(const DesktopFile &app,
   }
 
   // Last chance
-  QDir appIcons("/usr/share/pixmaps","", 0, QDir::Files | QDir::NoDotAndDotDot);
+  QDir appIcons("/usr/share/pixmaps", QString(), QDir::NoSort, QDir::Files | QDir::NoDotAndDotDot);
   QStringList iconFiles = appIcons.entryList();
   QStringList searchIcons = iconFiles.filter(name);
   if (searchIcons.count() > 0) {
@@ -983,7 +983,7 @@ bool FileUtils::writeTextFile(const QString &filePath, const QString &content)
     QFile file(filePath);
     if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
         QTextStream in(&file);
-        in << content << endl;
+        in << content << Qt::endl;
         file.close();
         return true;
     } else {

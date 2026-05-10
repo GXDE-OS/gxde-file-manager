@@ -30,6 +30,7 @@
 #include "dlocalfiledevice.h"
 
 #include <QMutex>
+#include <QRegularExpression>
 #include <QTimer>
 #include <QLoggingCategory>
 #include <QProcess>
@@ -46,7 +47,7 @@ Q_LOGGING_CATEGORY(fileJob, "file.job")
 Q_LOGGING_CATEGORY(fileJob, "file.job", QtInfoMsg)
 #endif
 
-#if defined(Q_OS_LINUX) && (defined(__GLIBC__) || QT_HAS_INCLUDE(<sys/syscall.h>))
+#if defined(Q_OS_LINUX) && (defined(__GLIBC__) || __has_include(<sys/syscall.h>))
 #  include <sys/syscall.h>
 
 # if defined(Q_OS_ANDROID) && !defined(SYS_gettid)
@@ -494,7 +495,7 @@ QString DFileCopyMoveJobPrivate::formatFileName(const QString &name) const
     if (fs_type == "vfat") {
         QString new_name = name;
 
-        return new_name.replace(QRegExp("[\"*:<>?\\|]"), "_");
+        return new_name.replace(QRegularExpression("[\"*:<>?\\|]"), "_");
     }
 
     return name;
@@ -1490,7 +1491,7 @@ DFileCopyMoveJob::State DFileCopyMoveJob::state() const
 {
     Q_D(const DFileCopyMoveJob);
 
-    return static_cast<State>(d->state.load());
+    return static_cast<State>(d->state.loadRelaxed());
 }
 
 DFileCopyMoveJob::Error DFileCopyMoveJob::error() const

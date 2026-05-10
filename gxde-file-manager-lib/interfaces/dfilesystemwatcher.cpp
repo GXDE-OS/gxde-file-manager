@@ -316,12 +316,14 @@ void DFileSystemWatcherPrivate::_q_readFromInotify()
 
 QString DFileSystemWatcherPrivate::getPathFromID(int id) const
 {
-    QHash<int, QString>::const_iterator i = idToPath.find(id);
+    QMultiHash<int, QString>::const_iterator i = idToPath.find(id);
     while (i != idToPath.constEnd() && i.key() == id) {
-        if ((i + 1) == idToPath.constEnd() || (i + 1).key() != id) {
+        QMultiHash<int, QString>::const_iterator next = i;
+        ++next;
+        if (next == idToPath.constEnd() || next.key() != id) {
             return i.value();
         }
-        ++i;
+        i = next;
     }
     return QString();
 }

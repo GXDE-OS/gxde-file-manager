@@ -25,7 +25,7 @@
 #include "dmoveablewidget.h"
 #include <QMouseEvent>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QPushButton>
 #include <QResizeEvent>
 #include <QPainter>
@@ -49,7 +49,7 @@ void DMoveableWidget::moveCenter(){
     if (parent()){
         cp = static_cast<QWidget*>(parent())->geometry().center();
     }else{
-        cp = qApp->desktop()->availableGeometry().center();
+        cp = qApp->primaryScreen()->availableGeometry().center();
     }
     qr.moveCenter(cp);
     move(qr.topLeft());
@@ -60,7 +60,7 @@ void DMoveableWidget::moveTopRight(){
     if (parent()){
         pRect = static_cast<QWidget*>(parent())->geometry();
     }else{
-        pRect = qApp->desktop()->availableGeometry();
+        pRect = qApp->primaryScreen()->availableGeometry();
     }
     int x = pRect.width() - width();
     move(QPoint(x, 0));

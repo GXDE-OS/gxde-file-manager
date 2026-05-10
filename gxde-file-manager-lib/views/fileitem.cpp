@@ -345,7 +345,7 @@ void FileIconItem::updateStyleSheet()
     QString base = "FileIconItem[showBackground=true] QTextEdit {background: %1; color: %2;}";
 
     base.append("FileIconItem QTextEdit {color: %3}");
-    base = base.arg(palette().color(QPalette::Background).name(QColor::HexArgb))
+    base = base.arg(palette().color(QPalette::Window).name(QColor::HexArgb))
            .arg(palette().color(QPalette::BrightText).name(QColor::HexArgb))
            .arg(palette().color(QPalette::Text).name(QColor::HexArgb));
 

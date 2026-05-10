@@ -110,7 +110,7 @@ void CircleProgressAnimatePad::paintEvent(QPaintEvent *event)
         pen.setColor(Qt::black);
         painter.setPen(pen);
         QFontMetrics fm(font);
-        QRect textRect = QRect(0, 0, fm.width(text), fm.height());
+        QRect textRect = QRect(0, 0, fm.horizontalAdvance(text), fm.height());
         textRect.moveCenter(QRect(0,0,width(), height()).center());
         painter.drawText(textRect, text);
     }
@@ -123,7 +123,7 @@ void CircleProgressAnimatePad::mousePressEvent(QMouseEvent *event)
     emit clicked();
 }
 
-void CircleProgressAnimatePad::enterEvent(QEvent *event)
+void CircleProgressAnimatePad::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event)
 

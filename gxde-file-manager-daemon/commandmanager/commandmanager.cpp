@@ -43,9 +43,10 @@ using namespace PartMan;
 
 bool CommandManager::process(const QString &cmd, const QStringList &args,  QString &output,  QString &error)
 {
-    typedef bool (*Exec) (const QString &, const QStringList & , QString &,  QString &);
-    Exec f = &PartMan::SpawnCmd;
-    QFuture<bool> future = QtConcurrent::run(f, cmd, args, output, error);
+    // 用C++11 Lambda表达式重写，改进可读性
+    QFuture<bool> future = QtConcurrent::run([&] {
+        return PartMan::SpawnCmd(cmd, args, output, error);
+    });
     future.waitForFinished();
     bool ret = future.result();
     return ret;

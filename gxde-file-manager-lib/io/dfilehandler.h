@@ -23,6 +23,9 @@
 
 #include <dfmglobal.h>
 
+#include <QFileDevice>
+#include <QDateTime>
+
 DFM_BEGIN_NAMESPACE
 
 class DFileHandlerPrivate;

@@ -11,17 +11,22 @@ include($$PWD/dbus/dbus.pri)
 include($$PWD/../gxde-wallpaper-chooser/gxde-wallpaper-chooser.pri)
 include($$PWD/../gxde-zone/gxde-zone.pri)
 
-QT       += core gui widgets svg dbus x11extras network concurrent multimediawidgets multimedia
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-greaterThan(QT_MINOR_VERSION, 7): QT += gui-private
-else: QT += platformsupport-private
+QT       += core gui widgets svg dbus network concurrent multimediawidgets multimedia
+lessThan(QT_MAJOR_VERSION, 6): QT += x11extras
+QT       += gui-private
 
 TEMPLATE    = app
 TARGET      = gxde-desktop-panel
 DESTDIR     = $$BUILD_DIST
-CONFIG      += c++11 link_pkgconfig
-PKGCONFIG   += xcb xcb-ewmh xcb-shape gsettings-qt dframeworkdbus
+CONFIG      += c++17 link_pkgconfig
+PKGCONFIG   += xcb xcb-ewmh xcb-shape
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += dtk2widget core5compat
+    PKGCONFIG += gsettings-qt6 dframeworkdbus
+    DEFINES += DFM_USE_QT6
+} else {
+    PKGCONFIG += gsettings-qt dframeworkdbus
+}
 
 INCLUDEPATH += $$PWD/../gxde-file-manager-lib\
                $$PWD/../utils \

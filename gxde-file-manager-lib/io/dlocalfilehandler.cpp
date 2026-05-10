@@ -175,8 +175,8 @@ bool DLocalFileHandler::setFileTime(const DUrl &url, const QDateTime &accessDate
     Q_ASSERT(url.isLocalFile());
 
     utimbuf buf = {
-        .actime = accessDateTime.toTime_t(),
-        .modtime = lastModifiedTime.toTime_t()
+        .actime = accessDateTime.toSecsSinceEpoch(),
+        .modtime = lastModifiedTime.toSecsSinceEpoch()
     };
 
     if (::utime(url.toLocalFile().toLocal8Bit(), &buf) == 0) {

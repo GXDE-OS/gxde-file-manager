@@ -28,7 +28,7 @@
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QtMath>
 #include <QUrl>
 #include <QLabel>
@@ -127,8 +127,8 @@ void PdfWidget::initUI()
     }
 
     setContentsMargins(0, 0, 0, 0);
-    setFixedSize(qMin(DEFAULT_VIEW_SIZE.width(), (int)(qApp->desktop()->width() * 0.8)),
-                 qMin(DEFAULT_VIEW_SIZE.height(), (int)(qApp->desktop()->height() * 0.8)));
+    setFixedSize(qMin(DEFAULT_VIEW_SIZE.width(), (int)(qApp->primaryScreen()->geometry().width() * 0.8)),
+                 qMin(DEFAULT_VIEW_SIZE.height(), (int)(qApp->primaryScreen()->geometry().height() * 0.8)));
 
     d->thumbListWidget = new DListWidget(this);
     d->thumbListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

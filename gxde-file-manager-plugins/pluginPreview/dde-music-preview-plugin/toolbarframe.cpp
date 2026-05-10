@@ -43,7 +43,7 @@ ToolBarFrame::ToolBarFrame(const QString &uri, QWidget *parent) :
     initUI();
     initConnections();
 
-    m_player->setMedia(QUrl::fromUserInput(uri));
+    m_player->setSource(QUrl::fromUserInput(uri));
 }
 
 void ToolBarFrame::initUI()
@@ -79,14 +79,14 @@ void ToolBarFrame::initUI()
 
 void ToolBarFrame::initConnections()
 {
-    connect(m_player, &QMediaPlayer::stateChanged, this, &ToolBarFrame::onPlayStateChanged);
+    connect(m_player, &QMediaPlayer::playbackStateChanged, this, &ToolBarFrame::onPlayStateChanged);
     connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &ToolBarFrame::onPlayStatusChanged);
     connect(m_playControlButton, &QPushButton::clicked, this, &ToolBarFrame::onPlayControlButtonClicked);
     connect(m_updateProgressTimer, &QTimer::timeout, this, &ToolBarFrame::updateProgress);
     connect(m_progressSlider, &QSlider::valueChanged, this, &ToolBarFrame::seekPosition);
 }
 
-void ToolBarFrame::onPlayStateChanged(const QMediaPlayer::State &state)
+void ToolBarFrame::onPlayStateChanged(QMediaPlayer::PlaybackState state)
 {
     QString iconName;
     if(state == QMediaPlayer::StoppedState || state == QMediaPlayer::PausedState){
@@ -108,7 +108,7 @@ void ToolBarFrame::onPlayStateChanged(const QMediaPlayer::State &state)
                                        );
 }
 
-void ToolBarFrame::onPlayStatusChanged(const QMediaPlayer::MediaStatus &status)
+void ToolBarFrame::onPlayStatusChanged(QMediaPlayer::MediaStatus status)
 {
     if(status == QMediaPlayer::LoadedMedia || status == QMediaPlayer::BufferedMedia){
         qlonglong msDuration = m_player->duration();
@@ -139,9 +139,9 @@ void ToolBarFrame::onPlayStatusChanged(const QMediaPlayer::MediaStatus &status)
 
 void ToolBarFrame::onPlayControlButtonClicked()
 {
-    if(m_player->state() == QMediaPlayer::PlayingState){
+    if(m_player->playbackState() == QMediaPlayer::PlayingState){
         pause();
-    } else if (m_player->state() == QMediaPlayer::StoppedState){
+    } else if (m_player->playbackState() == QMediaPlayer::StoppedState){
         m_progressSlider->setValue(0);
         play();
     } else {

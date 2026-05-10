@@ -393,7 +393,7 @@ void AppController::actionSetFMBackground(quint64 winId)
 {
     // 请求
     auto fileName = QFileDialog::getOpenFileName(NULL, "", QDir::homePath(), "图像文件 (*.jpg *.png *.svg *.bmp *.jpeg *.gif);;所有文件 (*.*)");
-    if (fileName == NULL || fileName == "") {
+    if (fileName.isEmpty()) {
         return;
     }
     QString lightBackgroundPath = QDir::homePath() + "/.config/GXDE/gxde-file-manager/background-light-FullWindow.png";
@@ -663,16 +663,12 @@ void AppController::actionFormatDevice(const QSharedPointer<DFMUrlBaseEvent> &ev
         tmpWidget->setAttribute(Qt::WA_DontShowOnScreen);
         tmpWidget->show();
 
-        connect(process, static_cast<void (QProcess::*)(int)>(&QProcess::finished),
-        tmpWidget, &QWidget::deleteLater);
-        connect(process, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error),
-        tmpWidget, &QWidget::deleteLater);
+        connect(process, &QProcess::finished, tmpWidget, &QWidget::deleteLater);
+        connect(process, &QProcess::errorOccurred, tmpWidget, &QWidget::deleteLater);
     });
 
-    connect(process, static_cast<void (QProcess::*)(int)>(&QProcess::finished),
-            process, &QProcess::deleteLater);
-    connect(process, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error),
-            process, &QProcess::deleteLater);
+    connect(process, &QProcess::finished, process, &QProcess::deleteLater);
+    connect(process, &QProcess::errorOccurred, process, &QProcess::deleteLater);
     process->startDetached(cmd, args);
 }
 

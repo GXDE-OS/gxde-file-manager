@@ -106,7 +106,7 @@ void DTagEdit::initializeParameters()
     m_promptLabel->setWordWrap(true);
     m_BGFrame->setContentsMargins(QMargins{0, 0, 0, 0});
 
-    this->setMargin(0);
+    this->setContentsMargins(0, 0, 0, 0);
     this->setFixedWidth(140);
     this->setFocusPolicy(Qt::StrongFocus);
     this->setBorderColor(QColor{"#ffffff"});

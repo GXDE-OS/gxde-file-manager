@@ -25,6 +25,7 @@
 #include "desktopfile.h"
 #include "properties.h"
 #include <QFile>
+#include <QLocale>
 #include <QSettings>
 #include <QDebug>
 

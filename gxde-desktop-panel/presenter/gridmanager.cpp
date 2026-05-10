@@ -9,6 +9,8 @@
 
 #include "gridmanager.h"
 
+#include <algorithm>
+
 #include <QPoint>
 #include <QRect>
 #include <QDebug>
@@ -56,7 +58,7 @@ public:
         QStringList sortItems;
 
         auto inUsePos = m_gridItems.keys();
-        qSort(inUsePos.begin(), inUsePos.end(), qQPointLessThanKey);
+        std::sort(inUsePos.begin(), inUsePos.end(), qQPointLessThanKey);
 
         for (int index = 0; index < inUsePos.length(); ++index) {
             auto gridPos = inUsePos.value(index);
@@ -73,7 +75,7 @@ public:
         QStringList sortItems;
 
         auto inUsePos = m_gridItems.keys();
-        qSort(inUsePos.begin(), inUsePos.end(), qQPointLessThanKey);
+        std::sort(inUsePos.begin(), inUsePos.end(), qQPointLessThanKey);
 
         for (int index = 0; index < inUsePos.length(); ++index) {
             auto gridPos = inUsePos.value(index);

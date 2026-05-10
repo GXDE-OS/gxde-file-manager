@@ -23,6 +23,8 @@
 
 #include "dfileiodeviceproxy_p.h"
 
+#include <QFile>
+
 DFM_BEGIN_NAMESPACE
 
 class DLocalFileDevicePrivate : public DFileIODeviceProxyPrivate

@@ -5,49 +5,47 @@ Maintainer: gfdgd xi <3025613752@qq.com>
 Build-Depends:
  debhelper (>=9),
  pkg-config,
- qt5-qmake,
- qtbase5-dev,
- qtbase5-private-dev,
- libqt5x11extras5-dev,
+ qmake6,
+ qt6-base-dev,
+ qt6-base-private-dev,
+ qt6-multimedia-dev,
+ qt6-svg-dev,
+ qt6-tools-dev-tools,
+ qt6-tools-dev,
+ qt6-declarative-dev,
+ qt6-5compat-dev,
  libjemalloc-dev,
- libgsettings-qt-dev,
- libqt5svg5-dev,
+ libgsettings-qt6-dev,
  libmagic-dev,
  libsecret-1-dev,
  libpoppler-cpp-dev,
- libpolkit-agent-1-dev,
- libpolkit-qt5-1-dev,
- qtmultimedia5-dev,
+ libpolkit-qt6-1-dev,
  libffmpegthumbnailer-dev,
  libtag1-dev,
- libdtkwidget2-dev,
+ libdtk2widget6-dev,
+ libdtk6core-dev,
+ libdtk6core-bin,
  libxcb1-dev,
  x11proto-core-dev,
  libx11-dev,
- qttools5-dev-tools,
  libglib2.0-dev,
  gxde-dock-dev(>=4.8.4.1),
  libxcb-ewmh-dev,
  libxcb-shape0-dev,
  libgxframeworkdbus-dev,
  libxcb-util0-dev,
- qtdeclarative5-dev,
  deepin-gettext-tools,
- libkf5codecs-dev,
- libdtkcore2-dev,
- libdtkcore-bin,
- libgxmr-dev,
+ libkf6codecs-dev,
 # deepin-anything-dev,
 # deepin-anything-server-dev,
- libudisks2-qt5-dev,
+ libudisks2-qt6-dev,
  libxrender-dev,
  libmtdev-dev,
  libfontconfig1-dev,
  libfreetype6-dev,
  libegl1-mesa-dev,
  libdisomaster-dev,
- libwebp-dev,
- libqt5xdg-dev
+ libwebp-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
@@ -58,8 +56,8 @@ Depends:
  ${misc:Depends},
  libgxde-file-manager( =${binary:Version}),
  socat,
- libdtkwidget2,
- libdtkcore2, 
+ libdtk2widget6,
+ libdtk6core,
  libdisomaster,
  libisoburn1,
  gxde-compressor,
@@ -69,7 +67,7 @@ Replaces:
  dde-file-manager,
 Conflicts:
  dde-file-manager(>> 5.0.1-1)
-Recommends: dde-qt5integration, avfs, gxde-file-manager-integration
+Recommends: dde-qt6integration, avfs, gxde-file-manager-integration
 Description: File manager front end
  File manager front-end of Deepin OS
 
@@ -107,7 +105,7 @@ Depends:
  libpoppler-cpp0v5 | libpoppler-cpp1 | libpoppler-cpp2,
  gvfs-backends(>=1.27.3),
  cryptsetup,
- libkf5codecs5,
+ libkf6codecs6,
 # deepin-anything-libs
 Breaks: gxde-file-manager(<=1.2.3-3)
 Replaces: libdde-file-manager

@@ -80,8 +80,8 @@ void startProcessDetached(const QString &program,
 //    qDebug() << process->program() << process->arguments();
     process->closeReadChannel(QProcess::StandardOutput);
     process->closeReadChannel(QProcess::StandardError);
-    process->connect(process, static_cast < void(QProcess::*)(int) > (&QProcess::finished),
-    process, [ = ](int) {
+    process->connect(process, &QProcess::finished,
+    process, [ = ](int, QProcess::ExitStatus) {
         process->deleteLater();
     });
 }
@@ -979,9 +979,10 @@ void CanvasGridView::paintEvent(QPaintEvent *event)
 
     QPainter painter(viewport());
     auto repaintRect = event->rect();
-    painter.setRenderHints(QPainter::HighQualityAntialiasing);
+    painter.setRenderHints(QPainter::Antialiasing);
 
-    auto option = viewOptions();
+    QStyleOptionViewItem option;
+    initViewItemOption(&option);
     option.textElideMode = Qt::ElideMiddle;
 
     const QModelIndex current = d->currentCursorIndex;
@@ -1038,7 +1039,7 @@ void CanvasGridView::paintEvent(QPaintEvent *event)
             if (hoverIndex.isValid() && hoverIndex != d->currentCursorIndex) {
                 QPainterPath path;
                 auto lastRect = visualRect(hoverIndex);
-                path.addRoundRect(lastRect, 4, 4);
+                path.addRoundedRect(lastRect, 4, 4);
                 painter.fillPath(path, QColor(43, 167, 248, 255 * 3 / 10));
                 painter.strokePath(path, QColor(30, 126, 255, 255 * 2 / 10));
             }
@@ -1254,7 +1255,7 @@ void CanvasGridView::rowsInserted(const QModelIndex &parent, int first, int last
     QAbstractItemView::rowsInserted(parent, first, last);
 
     for (int index = first; index <= last; ++index) {
-        const QModelIndex &child = parent.child(index, 0);
+        const QModelIndex &child = parent.model() ? parent.model()->index(index, 0, parent) : QModelIndex();
 
         DAbstractFileInfoPointer info = model()->fileInfo(child);
         if (info) {
@@ -1463,7 +1464,7 @@ bool CanvasGridView::setRootUrl(const DUrl &url)
 
         QString frag = url.fragment();
         if (!frag.isEmpty()) {
-            QStringList entryNameList = frag.split(',', QString::SkipEmptyParts);
+            QStringList entryNameList = frag.split(',', Qt::SkipEmptyParts);
             for (const QString & oneEntry : entryNameList) {
                 virtualEntryExpandState[MergedDesktopController::entryTypeByName(oneEntry)] = true;
             }
@@ -1531,7 +1532,7 @@ bool CanvasGridView::edit(const QModelIndex &index, QAbstractItemView::EditTrigg
     }
 
     if (trigger == SelectedClicked) {
-        QStyleOptionViewItem option = viewOptions();
+        QStyleOptionViewItem option; initViewItemOption(&option);
 
         option.rect = visualRect(index).marginsRemoved(d->cellMargins);
 
@@ -1730,7 +1731,12 @@ static inline QRect fix_available_geometry()
     QRegion availableRegion = virtualRegion.subtracted(strutParialRegion);
 
     auto primaryGeometry = qApp->primaryScreen()->geometry();
-    QRect availableRect = availableRegion.intersected(primaryGeometry).rects().value(0);
+    QRect availableRect;
+    {
+        const QRegion intersected = availableRegion.intersected(primaryGeometry);
+        if (intersected.begin() != intersected.end())
+            availableRect = *intersected.begin();
+    }
 
     qDebug() << "\n"
              << "dump dock info begin ---------------------------" << "\n"
@@ -1754,7 +1760,7 @@ static inline QRect getValidNewGeometry(const QRect &geometry, const QRect &oldG
         return newGeometry;
     }
 
-    auto primaryScreen = Display::instance()->primaryScreen();
+    auto primaryScreen = DesktopDisplay::instance()->primaryScreen();
     newGeometry = primaryScreen->geometry();;
     geometryValid = (newGeometry.width() > 0) && (newGeometry.height() > 0);
     if (geometryValid) {
@@ -1776,7 +1782,7 @@ void CanvasGridView::initUI()
         setWindowFlag(Qt::FramelessWindowHint, true);
     }
 
-    auto primaryScreen = Display::instance()->primaryScreen();
+    auto primaryScreen = DesktopDisplay::instance()->primaryScreen();
     setGeometry(primaryScreen->geometry());
     auto newGeometry =  getValidNewGeometry(primaryScreen->availableGeometry(), this->geometry());
     d->canvasRect = newGeometry;
@@ -1934,7 +1940,7 @@ void CanvasGridView::initConnection()
         connect(screen, &QScreen::availableGeometryChanged,
         this, [ = ](const QRect & /*geometry*/) {
             QTimer::singleShot(400, this, [ = ]() {
-                auto geometry = Display::instance()->primaryScreen()->availableGeometry();
+                auto geometry = DesktopDisplay::instance()->primaryScreen()->availableGeometry();
                 qDebug() << "primaryScreen availableGeometryChanged changed to:" << geometry;
                 qDebug() << "primaryScreen:" << qApp->primaryScreen() << qApp->primaryScreen()->geometry();
                 updateGeometry(geometry);
@@ -1942,9 +1948,9 @@ void CanvasGridView::initConnection()
         });
     };
 
-    connectScreenGeometryChanged(Display::instance()->primaryScreen());
+    connectScreenGeometryChanged(DesktopDisplay::instance()->primaryScreen());
 
-    connect(Display::instance(), &Display::primaryScreenChanged,
+    connect(DesktopDisplay::instance(), &DesktopDisplay::primaryScreenChanged,
     this, [ = ](QScreen * screen) {
         qDebug() << "primaryScreenChanged to:" << screen;
         qDebug() << "currend primaryScreen" << qApp->primaryScreen()
@@ -2044,13 +2050,13 @@ void CanvasGridView::initConnection()
     connect(d->dbusDock, &DBusDock::HideModeChanged,
     this, [ = ]() {
         if (3 == d->dbusDock->hideMode() || 1 == d->dbusDock->hideMode()) {
-            updateGeometry(Display::instance()->primaryScreen()->availableGeometry());
+            updateGeometry(DesktopDisplay::instance()->primaryScreen()->availableGeometry());
         }
     });
     connect(d->dbusDock, &DBusDock::PositionChanged,
     this, [ = ]() {
         if (3 == d->dbusDock->hideMode()) {
-            updateGeometry(Display::instance()->primaryScreen()->availableGeometry());
+            updateGeometry(DesktopDisplay::instance()->primaryScreen()->availableGeometry());
         }
     });
     connect(d->dbusDock, &DBusDock::IconSizeChanged,
@@ -2180,14 +2186,15 @@ inline QRect CanvasGridView::gridRectAt(const QPoint &pos) const
 
 inline QList<QRect> CanvasGridView::itemPaintGeomertys(const QModelIndex &index) const
 {
-    QStyleOptionViewItem option = viewOptions();
+    QStyleOptionViewItem option; initViewItemOption(&option);
     option.rect = visualRect(index).marginsRemoved(d->cellMargins);
     return itemDelegate()->paintGeomertys(option, index);
 }
 
 inline QRect CanvasGridView::itemIconGeomerty(const QModelIndex &index) const
 {
-    QStyleOptionViewItem option = viewOptions();
+    QStyleOptionViewItem option;
+    initViewItemOption(&option);
     option.rect = visualRect(index).marginsRemoved(d->cellMargins);
     auto rects = itemDelegate()->paintGeomertys(option, index);
     if (rects.isEmpty()) {
@@ -2503,7 +2510,7 @@ void CanvasGridView::showEmptyAreaMenu(const Qt::ItemFlags &/*indexFlags*/)
     }
 
     QAction display(menu);
-    display.setText(tr("Display Settings"));
+    display.setText(tr("DesktopDisplay Settings"));
     display.setData(DisplaySettings);
     menu->addAction(&display);
 

@@ -30,7 +30,7 @@ DFMSplitterHandle::DFMSplitterHandle(Qt::Orientation orientation, QSplitter *par
 
 }
 
-void DFMSplitterHandle::enterEvent(QEvent *)
+void DFMSplitterHandle::enterEvent(QEnterEvent *)
 {
     QGuiApplication::setOverrideCursor(orientation() == Qt::Horizontal ? Qt::SizeHorCursor : Qt::SizeVerCursor);
 }

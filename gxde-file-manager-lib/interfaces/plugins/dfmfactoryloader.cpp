@@ -21,7 +21,11 @@ DFM_BEGIN_NAMESPACE
 
 Q_GLOBAL_STATIC(QList<DFMFactoryLoader *>, qt_factory_loaders)
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+Q_GLOBAL_STATIC(QRecursiveMutex, qt_factoryloader_mutex)
+#else
 Q_GLOBAL_STATIC_WITH_ARGS(QMutex, qt_factoryloader_mutex, (QMutex::Recursive))
+#endif
 
 namespace {
 
@@ -199,7 +203,7 @@ void DFMFactoryLoader::update()
                 const QString &key = keys.at(k);
 
                 if (d->rki) {
-                    d->keyMap.insertMulti(key, loader);
+                    d->keyMap.insert(key, loader);
                     ++keyUsageCount;
                 } else {
                     QPluginLoader *previous = d->keyMap.value(key);
@@ -209,7 +213,7 @@ void DFMFactoryLoader::update()
                     }
                     int dfm_version = (int)loader->metaData().value(versionKeyLiteral()).toDouble();
                     if (!previous || (prev_dfm_version > QString(QMAKE_VERSION).toDouble() && dfm_version <= QString(QMAKE_VERSION).toDouble())) {
-                        d->keyMap.insertMulti(key, loader);
+                        d->keyMap.insert(key, loader);
                         ++keyUsageCount;
                     }
                 }

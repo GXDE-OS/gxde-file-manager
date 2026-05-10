@@ -29,7 +29,7 @@
 #include <QHBoxLayout>
 #include <QFrame>
 #include <QDebug>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QApplication>
 #include <QResizeEvent>
 #include <QGraphicsBlurEffect>
@@ -202,7 +202,7 @@ void PreviewDialog::initUI()
 
 
     QRect rect = this->rect();
-    QRect dRect = qApp->desktop()->rect();
+    QRect dRect = qApp->primaryScreen()->geometry();
     rect.moveCenter(dRect.center());
     move(rect.x(), rect.y());
 }
@@ -407,7 +407,7 @@ void PreviewDialog::updateDialogGeometry()
 
     QSize pSize = d->currentPreviewWidgetDefaultSize;
     QRect rect = QRect(0, 0, pSize.width(), pSize.height());
-    QRect dRect = qApp->desktop()->geometry();
+    QRect dRect = qApp->primaryScreen()->geometry();
 
     const DAbstractFileInfoPointer& info = fileService->createFileInfo(this, d->currentUrl);
 
@@ -448,7 +448,7 @@ void PreviewDialog::updateDialogGeometry()
 //            info->mimeTypeName().startsWith("video") ||
 //            info->mimeTypeName() == "application/pdf"){
 
-//        setMaximumSize(qApp->desktop()->size());
+//        setMaximumSize(qApp->primaryScreen()->geometry().size());
 //    } else {
 //        setMaximumSize(rect.size());
 //    }

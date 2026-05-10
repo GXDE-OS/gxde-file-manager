@@ -165,7 +165,7 @@ DFMEventFuture DFMEventDispatcher::processEventAsync(const QSharedPointer<DFMEve
         pool->setMaxThreadCount(pool->maxThreadCount() + 2);
     }
 
-    return DFMEventFuture(QtConcurrent::run(pool, this, static_cast<QVariant(DFMEventDispatcher::*)(const QSharedPointer<DFMEvent>&, DFMAbstractEventHandler *)>(&DFMEventDispatcher::processEvent), event, target));
+    return DFMEventFuture(QtConcurrent::run(pool, static_cast<QVariant(DFMEventDispatcher::*)(const QSharedPointer<DFMEvent>&, DFMAbstractEventHandler *)>(&DFMEventDispatcher::processEvent), this, event, target));
 }
 
 QVariant DFMEventDispatcher::processEventWithEventLoop(const QSharedPointer<DFMEvent> &event, DFMAbstractEventHandler *target)

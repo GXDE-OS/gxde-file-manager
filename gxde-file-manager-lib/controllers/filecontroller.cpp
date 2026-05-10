@@ -676,8 +676,9 @@ DUrlList FileController::moveToTrash(const QSharedPointer<DFMMoveToTrashEvent> &
         return list;
     }
 
-    const QSet<DUrl> &source_files_set = event->urlList().toSet();
-    const QSet<DUrl> &target_files_set = list.toSet();
+    const auto &eventUrls = event->urlList();
+    const QSet<DUrl> source_files_set(eventUrls.begin(), eventUrls.end());
+    const QSet<DUrl> target_files_set(list.begin(), list.end());
     DUrlList has_restore_files;
 
     for (const DAbstractFileInfoPointer &info : infos) {

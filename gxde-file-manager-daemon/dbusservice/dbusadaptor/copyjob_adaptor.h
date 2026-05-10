@@ -20,7 +20,7 @@ class QByteArray;
 template<class T> class QList;
 template<class Key, class Value> class QMap;
 class QString;
-class QStringList;
+// QStringList现在已经是Qt6的typedef了，无需前向声明
 class QVariant;
 QT_END_NAMESPACE
 

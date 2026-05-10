@@ -42,7 +42,7 @@ public:
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
         QPalette pa;
-        pa.setColor(QPalette::Foreground, Qt::white);
+        pa.setColor(QPalette::WindowText, Qt::white);
 
         title->setPalette(pa);
 
@@ -58,7 +58,7 @@ public:
         if (window()->windowHandle()) {
             screen_size = window()->windowHandle()->screen()->availableSize();
         } else {
-            screen_size = qApp->desktop()->size();
+            screen_size = qApp->primaryScreen()->geometry().size();
         }
 
         return QSize(p->info.width, p->info.height).scaled(qMin(p->info.width, int(screen_size.width() * 0.5)),
@@ -99,7 +99,7 @@ public:
 
         QPalette pa_label;
 
-        pa_label.setColor(QPalette::Foreground, QColor("#303030"));
+        pa_label.setColor(QPalette::WindowText, QColor("#303030"));
         timeLabel->setPalette(pa_label);
 
         slider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);

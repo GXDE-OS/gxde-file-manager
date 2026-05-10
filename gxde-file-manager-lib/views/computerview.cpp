@@ -312,8 +312,8 @@ void ComputerViewItem::updateStatus()
     if (m_checked) {
         setIconSizeState(m_iconSize, QIcon::Selected);
         setDisplayName(m_name);
-        if (fontMetrics().width(m_name) < width()) {
-            getTextEdit()->setFixedWidth(fontMetrics().width(m_name) + 10);
+        if (fontMetrics().horizontalAdvance(m_name) < width()) {
+            getTextEdit()->setFixedWidth(fontMetrics().horizontalAdvance(m_name) + 10);
         }
         if (getTextEdit()->isReadOnly()) {
             getTextEdit()->setStyleSheet("border-radius:4px; background-color:#2da6f7; color:white");
@@ -438,7 +438,7 @@ void ComputerViewItem::setPixelWidth(int pixelWidth)
 
 void ComputerViewItem::updateIconPixelWidth()
 {
-    const QImage img = getIconLabel()->pixmap()->toImage();
+    const QImage img = getIconLabel()->pixmap().toImage();
     int pixelWidth = 0;
     for (int i = 0; i < img.width(); i++) {
         QColor color = img.pixelColor(i, (int)img.height() / 2);

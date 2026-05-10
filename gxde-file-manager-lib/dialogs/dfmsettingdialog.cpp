@@ -25,6 +25,7 @@
 #include "dfmsettingdialog.h"
 
 #include <QCheckBox>
+#include <QFile>
 #include <QFrame>
 #include <QVBoxLayout>
 #include <QDebug>

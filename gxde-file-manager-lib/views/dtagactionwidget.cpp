@@ -98,7 +98,7 @@ void DTagActionWidgetPrivate::initUiElement()
     }
 
     m_HBoxLayout->addSpacing(21);
-    m_HBoxLayout->setMargin(0);
+    m_HBoxLayout->setContentsMargins(0, 0, 0, 0);
     m_HBoxLayout->setSpacing(0);
 
     mainLayout = new QVBoxLayout();

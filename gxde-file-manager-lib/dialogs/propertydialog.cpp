@@ -339,13 +339,13 @@ PropertyDialog::PropertyDialog(const DFMEvent &event, const DUrl url, QWidget *p
         lbdf_r->setMaximumWidth(QWIDGETSIZE_MAX);
         QWidget* wdfl = new QWidget();
         wdfl->setLayout(new QHBoxLayout);
-        wdfl->layout()->setMargin(0);
+        wdfl->layout()->setContentsMargins(0, 0, 0, 0);
         wdfl->layout()->addWidget(lbdf_l);
         wdfl->layout()->addWidget(lbdf_r);
 
         m_wdf = new QWidget(this);
         m_wdf->setLayout(new QVBoxLayout);
-        m_wdf->layout()->setMargin(0);
+        m_wdf->layout()->setContentsMargins(0, 0, 0, 0);
         m_wdf->layout()->addWidget(wdfl);
         m_wdf->layout()->addWidget(progbdf);
         m_mainLayout->addWidget(m_wdf);
@@ -454,7 +454,7 @@ void PropertyDialog::initUI()
     m_mainLayout = new QVBoxLayout;
 
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
-    m_mainLayout->setMargin(0);
+    m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->setSpacing(0);
     m_mainLayout->addWidget(m_icon, 0, Qt::AlignHCenter | Qt::AlignTop);
     m_mainLayout->addWidget(m_editStackWidget, 0, Qt::AlignHCenter | Qt::AlignTop);
@@ -609,7 +609,9 @@ void PropertyDialog::flickFolderToSidebar()
         if (aniLabel) {
             aniLabel->move(QPoint(val.toPoint().x() - aniLabel->width() / 2, aniLabel->y()));
             QImage img = fileInfo->fileIcon().pixmap(aniLabel->size()).toImage();
-            QMatrix ma;
+            // QTransform已经代替QMatrix了
+            // Qt5时代QMatrix就被标deprecated了，到Qt6直接给移除了，所以得迁移到QTransform
+            QTransform ma;
             ma.rotate(val.toPoint().y());
             img = img.transformed(ma, Qt::SmoothTransformation);
             img = img.scaled(aniLabel->width() / 2, aniLabel->height() / 2, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -825,7 +827,7 @@ void PropertyDialog::initTextShowFrame(const QString &text)
         hLayout->addStretch(1);
         hLayout->addWidget(label);
         if (i < (labelTexts.length() - 1) && i != (maxLineCount - 1)) {
-            if (label->fontMetrics().width(labelText) > (m_edit->width() - 10)) {
+            if (label->fontMetrics().horizontalAdvance(labelText) > (m_edit->width() - 10)) {
                 label->setFixedWidth(m_edit->width());
             }
         } else {
@@ -836,7 +838,7 @@ void PropertyDialog::initTextShowFrame(const QString &text)
                 }
             }
 
-            if (label->fontMetrics().width(labelText) > (m_edit->width() - 2 * m_editButton->width()) && labelTexts.length() >= maxLineCount) {
+            if (label->fontMetrics().horizontalAdvance(labelText) > (m_edit->width() - 2 * m_editButton->width()) && labelTexts.length() >= maxLineCount) {
                 labelText = label->fontMetrics().elidedText(labelText, Qt::ElideMiddle, m_edit->width() - 2 * m_editButton->width());
             }
             label->setText(labelText);

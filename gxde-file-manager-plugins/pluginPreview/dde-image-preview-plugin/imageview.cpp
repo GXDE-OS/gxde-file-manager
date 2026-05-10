@@ -27,7 +27,7 @@
 #include <QUrl>
 #include <QImageReader>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QtMath>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -59,7 +59,7 @@ void ImageView::setFile(const QString &fileName, const QByteArray &format)
             const QPixmap &current_pixmap = movie->currentPixmap();
             m_sourceSize = current_pixmap.size();
 
-            const QSize &dsize = qApp->desktop()->size();
+            const QSize &dsize = qApp->primaryScreen()->geometry().size();
             qreal device_pixel_ratio = this->devicePixelRatioF();
 
             QPixmap pixmap = current_pixmap.scaled(QSize(qMin((int)(dsize.width() * 0.7 * device_pixel_ratio), m_sourceSize.width()),
@@ -83,7 +83,7 @@ void ImageView::setFile(const QString &fileName, const QByteArray &format)
 
     m_sourceSize = reader.size();
 
-    const QSize &dsize = qApp->desktop()->size();
+    const QSize &dsize = qApp->primaryScreen()->geometry().size();
     qreal device_pixel_ratio = this->devicePixelRatioF();
 
     QPixmap pixmap = QPixmap::fromImageReader(&reader).scaled(QSize(qMin((int)(dsize.width() * 0.7 * device_pixel_ratio), m_sourceSize.width()),

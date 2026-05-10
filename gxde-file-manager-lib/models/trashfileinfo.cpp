@@ -76,7 +76,11 @@ void TrashFileInfoPrivate::updateInfo()
         QSettings setting(DFMStandardPaths::location(DFMStandardPaths::TrashInfosPath) + fileBaseName + ".trashinfo", QSettings::NativeFormat);
 
         setting.beginGroup("Trash Info");
+        #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        // 在 Qt6 中 QSettings::setIniCodec()已经不可用了...
+        // 但没事，QSettings现在对INI默认以UTF-8编码读写
         setting.setIniCodec("utf-8");
+        #endif
 
         originalFilePath = QByteArray::fromPercentEncoding(setting.value("Path").toByteArray()) + filePath.mid(basePath.size() + fileBaseName.size());
 
@@ -129,7 +133,11 @@ void TrashFileInfoPrivate::inheritParentTrashInfo()
         QSettings setting(DFMStandardPaths::location(DFMStandardPaths::TrashInfosPath) + QDir::separator() + name + ".trashinfo", QSettings::NativeFormat);
 
         setting.beginGroup("Trash Info");
+        #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        // 在 Qt6 中 QSettings::setIniCodec()已经不可用了...
+        // 但没事，QSettings现在对INI默认以UTF-8编码读写
         setting.setIniCodec("utf-8");
+        #endif
 
         originalFilePath = QByteArray::fromPercentEncoding(setting.value("Path").toByteArray()) + restPath;
 

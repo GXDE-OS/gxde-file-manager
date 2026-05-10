@@ -32,7 +32,7 @@
 #include <QDebug>
 #include <QMimeData>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QTimer>
 #include <QPainter>
 #include <QPixmap>

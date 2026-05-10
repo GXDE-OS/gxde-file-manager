@@ -64,7 +64,11 @@
 #include <QPushButton>
 #include <QWidgetAction>
 
+#if defined(DFM_USE_QT6)
+#include "shutil/dfm_xdgdesktopfile_compat.h"
+#else
 #include <XdgDesktopFile>
+#endif
 
 namespace DFileMenuData
 {
@@ -212,7 +216,11 @@ DFileMenu *DFileMenuManager::createNormalMenu(const DUrl &currentUrl, const DUrl
                 QMimeType fileMimeType = fileInfo->mimeType();
                 QString defaultAppDesktopFile = MimesAppsManager::getDefaultAppDesktopFileByMimeType(fileMimeType.name());
                 QSettings desktopFile(defaultAppDesktopFile, QSettings::IniFormat);
+                #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                // 在 Qt6 中 QSettings::setIniCodec()已经不可用了...
+                // 但没事，QSettings现在对INI默认以UTF-8编码读写
                 desktopFile.setIniCodec("UTF-8");
+                #endif
                 Properties mimeTypeList(defaultAppDesktopFile, "Desktop Entry");
                 supportedMimeTypes = mimeTypeList.value("MimeType").toString().split(';');
                 supportedMimeTypes.removeAll({});
@@ -540,7 +548,7 @@ QList<QAction *> DFileMenuManager::desktopToActions(const QString path, const DU
     /*for (QString i: data.split("\n")) {
         if (i.startsWith("X-DFM-MenuTypes=")) {
             desktopFile.value("X-DFM-MenuTypes=")
-            menuType = i.replace("X-DFM-MenuTypes=", "").split(";", QString::SkipEmptyParts).at(0);
+            menuType = i.replace("X-DFM-MenuTypes=", "").split(";", Qt::SkipEmptyParts).at(0);
         }
         else if (i.startsWith("MimeType=")) {
             mimeType = i.replace("MimeType=", "");

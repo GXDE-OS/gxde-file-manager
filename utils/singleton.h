@@ -29,9 +29,11 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+#include <type_traits>
+
 namespace _Singleton {
 template<typename T>
-static typename QtPrivate::QEnableIf<QtPrivate::AreArgumentsCompatible<T, QObject>::value>::Type
+static typename std::enable_if<std::is_base_of<QObject, T>::value, void>::type
 handleQObject(QObject *object)
 {
     if (qApp) {
@@ -40,7 +42,7 @@ handleQObject(QObject *object)
 }
 
 template<typename T>
-static typename QtPrivate::QEnableIf<!QtPrivate::AreArgumentsCompatible<T, QObject>::value>::Type
+static typename std::enable_if<!std::is_base_of<QObject, T>::value, void>::type
 handleQObject(void*) {}
 }
 
@@ -51,7 +53,7 @@ public:
     static T *instance() {
         static T instance;
 
-        if (QtPrivate::AreArgumentsCompatible<T, QObject>::value) {
+        if (std::is_base_of<QObject, T>::value) {
             _Singleton::handleQObject<T>(&instance);
         }
 

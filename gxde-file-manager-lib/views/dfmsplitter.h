@@ -22,6 +22,7 @@
 #define DFMSPLITTER_H
 
 #include <QSplitter>
+class QEnterEvent;
 #include <QSplitterHandle>
 
 class DFMSplitterHandle: public QSplitterHandle
@@ -32,7 +33,7 @@ public:
     explicit DFMSplitterHandle(Qt::Orientation orientation, QSplitter* parent);
 
 protected:
-    void enterEvent(QEvent*) override;
+    void enterEvent(QEnterEvent*) override;
     void leaveEvent(QEvent*) override;
 };
 

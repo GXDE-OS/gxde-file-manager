@@ -12,13 +12,12 @@ isEqual(EDITION, RACCOON) {
 
 DEFINES += DDE_DBUS_DISPLAY
 
-CONFIG(release, release|debug) {
-    PKGCONFIG += dtkwidget
+greaterThan(QT_MAJOR_VERSION, 5) {
+    # Qt6: dtk2widget was already added in the main .pro
 } else {
     PKGCONFIG += dtkwidget
+    load(dtk_qmake)
 }
-
-load(dtk_qmake)
 
 # add computer/trash icon on professional system
 deepin_professional: DEFINES += DDE_COMPUTER_TRASH DISABLE_AUTOMERGE

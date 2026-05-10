@@ -77,7 +77,8 @@ public:
 
         const QModelIndex &index = viewHelper->model()->index(menu_event.selectedUrls().first());
         const QRect &rect = viewHelper->parent()->visualRect(index);
-        QStyleOptionViewItem option = viewHelper->parent()->viewOptions();
+        QStyleOptionViewItem option;
+        viewHelper->parent()->initViewItemOption(&option);
 
         option.rect = rect;
 
@@ -500,12 +501,12 @@ void DFileViewHelper::initStyleOption(QStyleOptionViewItem *option, const QModel
     }
 
     if ((option->state & QStyle::State_HasFocus) && option->showDecorationSelected && selectedIndexsCount() > 1) {
-        option->palette.setColor(QPalette::Background, ThemeConfig::instace()->color("FileView", "background", ThemeConfig::Focus));
+        option->palette.setColor(QPalette::Window, ThemeConfig::instace()->color("FileView", "background", ThemeConfig::Focus));
 
         if (!transp)
             option->backgroundBrush = ThemeConfig::instace()->color("FileView", "background", ThemeConfig::Focus);
     } else {
-        option->palette.setColor(QPalette::Background, ThemeConfig::instace()->color("FileView", "background"));
+        option->palette.setColor(QPalette::Window, ThemeConfig::instace()->color("FileView", "background"));
 
         if (!transp)
             option->backgroundBrush = ThemeConfig::instace()->color("FileView", "background");
@@ -651,7 +652,8 @@ bool DFileViewHelper::isEmptyArea(const QPoint &pos) const
             return true;
         }
 
-        QStyleOptionViewItem option = parent()->viewOptions();
+        QStyleOptionViewItem option;
+        parent()->initViewItemOption(&option);
 
         option.rect = rect;
 

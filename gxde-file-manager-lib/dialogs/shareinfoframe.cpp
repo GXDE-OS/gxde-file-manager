@@ -32,6 +32,7 @@
 
 #include <QFormLayout>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QComboBox>
 #include <QCheckBox>
 #include <QLineEdit>
@@ -203,7 +204,7 @@ void ShareInfoFrame::updateShareInfo(const QString &filePath)
         m_permissoComBox->setCurrentIndex(0);
         m_anonymityCombox->setCurrentIndex(0);
 
-        const QString share_name = m_fileinfo->fileDisplayName().remove(QRegExp("[%<>*?|\\\\+=;:\",]"));
+        const QString share_name = m_fileinfo->fileDisplayName().remove(QRegularExpression("[%<>*?|\\\\+=;:\",]"));
 
         m_shareNamelineEdit->setText(share_name);
 

@@ -29,6 +29,7 @@
 #include <QLabel>
 #include <QIcon>
 
+class QEnterEvent;
 class DFileMenu;
 
 class DHoverButton : public QPushButton
@@ -38,7 +39,7 @@ public:
     DHoverButton(const QString &normal, const QString &hover, QWidget * parent = 0);
     void setMenu(DFileMenu *menu);
 protected:
-    void enterEvent(QEvent *e);
+    void enterEvent(QEnterEvent *e);
     void leaveEvent(QEvent *e);
     void mousePressEvent(QMouseEvent *e);
 private:

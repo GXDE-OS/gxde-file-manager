@@ -457,7 +457,7 @@ bool DFileService::setFileUrlHandler(const QString &scheme, const QString &host,
     }
 
     DFileServicePrivate::handlerHash[controller] = type;
-    DFileServicePrivate::controllerHash.insertMulti(type, controller);
+    DFileServicePrivate::controllerHash.insert(type, controller);
 
     return true;
 }
@@ -678,7 +678,7 @@ bool DFileService::makeTagsOfFiles(const QObject *sender, const DUrlList &urlLis
 {
     QStringList old_tagNames = getTagsThroughFiles(sender, urlList);//###: the mutual tags of multi files.
     QStringList dirty_tagNames; //###: for deleting.
-    const QSet<QString> tags_set = QSet<QString>::fromList(tags);
+    const QSet<QString> tags_set(tags.begin(), tags.end());
 
     for (const QString &tag : old_tagNames) {
         if (!tags_set.contains(tag) && (dirtyTagFilter.isEmpty() || dirtyTagFilter.contains(tag))) {
@@ -690,13 +690,13 @@ bool DFileService::makeTagsOfFiles(const QObject *sender, const DUrlList &urlLis
         QStringList tags_of_file = getTagsThroughFiles(sender, {url});
         QSet<QString> tags_of_file_set = tags_set;
 
-        tags_of_file_set += QSet<QString>::fromList(tags_of_file);
+        tags_of_file_set += QSet<QString>(tags_of_file.begin(), tags_of_file.end());
 
         for (const QString &dirty_tag : dirty_tagNames) {
             tags_of_file_set.remove(dirty_tag);
         }
 
-        QSharedPointer<DFMSetFileTagsEvent> event(new DFMSetFileTagsEvent(sender, url, tags_of_file_set.toList()));
+        QSharedPointer<DFMSetFileTagsEvent> event(new DFMSetFileTagsEvent(sender, url, tags_of_file_set.values()));
         bool result = DFMEventDispatcher::instance()->processEventWithEventLoop(event).toBool();
 
         if (!result)
@@ -871,7 +871,7 @@ QString DFileService::getSymlinkFileName(const DUrl &fileUrl, const QDir &target
 
 void DFileService::insertToCreatorHash(const HandlerType &type, const HandlerCreatorType &creator)
 {
-    DFileServicePrivate::controllerCreatorHash.insertMulti(type, creator);
+    DFileServicePrivate::controllerCreatorHash.insert(type, creator);
 }
 
 void DFileService::laterRequestSelectFiles(const DFMUrlListBaseEvent &event) const

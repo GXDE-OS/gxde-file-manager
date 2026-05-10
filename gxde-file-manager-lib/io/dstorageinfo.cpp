@@ -304,8 +304,7 @@ bool DStorageInfo::isLocalDevice(const QString &path)
 {
     static QRegularExpression regExp("^/run/user/\\d+/gvfs/.+$",
                                      QRegularExpression::DotMatchesEverythingOption
-                                     | QRegularExpression::DontCaptureOption
-                                     | QRegularExpression::OptimizeOnFirstUsageOption);
+                                     | QRegularExpression::DontCaptureOption);
 
     if (regExp.match(path, 0, QRegularExpression::NormalMatch, QRegularExpression::DontCheckSubjectStringMatchOption).hasMatch())
         return false;
@@ -317,8 +316,7 @@ bool DStorageInfo::isLowSpeedDevice(const QString &path)
 {
     static QRegularExpression regExp("^/run/user/\\d+/gvfs/(?'scheme'\\w+):.+/",
                                      QRegularExpression::DotMatchesEverythingOption
-                                     | QRegularExpression::DontCaptureOption
-                                     | QRegularExpression::OptimizeOnFirstUsageOption);
+                                     | QRegularExpression::DontCaptureOption);
 
     const QRegularExpressionMatch &match = regExp.match(path, 0, QRegularExpression::NormalMatch,
                                                         QRegularExpression::DontCheckSubjectStringMatchOption);

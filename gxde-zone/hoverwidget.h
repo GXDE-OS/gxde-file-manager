@@ -14,6 +14,8 @@
 #include <QEvent>
 #include <QMouseEvent>
 
+class QEnterEvent;
+
 class HoverWidget : public QWidget
 {
     Q_OBJECT
@@ -21,7 +23,7 @@ public:
     explicit HoverWidget(QWidget *parent = 0);
     ~HoverWidget();
 
-    void enterEvent(QEvent *);
+    void enterEvent(QEnterEvent *);
     void leaveEvent(QEvent *);
 signals:
     void mouseHasEntered();

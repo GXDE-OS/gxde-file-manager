@@ -178,7 +178,7 @@ void DFMGlobal::setUrlsToClipboard(const QList<QUrl> &list, DFMGlobal::Clipboard
 
     for(const QUrl &url : list) {
         ba.append("\n");
-        ba.append(url.toString());
+        ba.append(url.toString().toUtf8());
 
         const QString &path = url.toLocalFile();
 
@@ -299,8 +299,8 @@ void DFMGlobal::initGvfsMountClient()
 
 void DFMGlobal::initGvfsMountManager()
 {
-    QtConcurrent::run(QThreadPool::globalInstance(), gvfsMountManager,
-                                             &GvfsMountManager::startMonitor);
+    QtConcurrent::run(QThreadPool::globalInstance(), &GvfsMountManager::startMonitor,
+                                             gvfsMountManager);
 }
 
 void DFMGlobal::initSecretManager()
@@ -574,7 +574,7 @@ void DFMGlobal::elideText(QTextLayout *layout, const QSizeF &size, QTextOption::
             layout->endLayout();
             layout->setText(end_str);
 
-            if (layout->engine()->block.docHandle()) {
+            if (layout->engine()->block.isValid() && layout->engine()->block.document()) {
                 const_cast<QTextDocument*>(layout->engine()->block.document())->setPlainText(end_str);
             }
 
@@ -804,7 +804,11 @@ QByteArray DFMGlobal::detectCharset(const QByteArray &data, const QString &fileN
         QTextStream stream(data);
 
         pattern.setPatternOptions(QRegularExpression::DontCaptureOption | QRegularExpression::CaseInsensitiveOption);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        stream.setEncoding(QStringConverter::Latin1);
+#else
         stream.setCodec("latin1");
+#endif
 
         while (!stream.atEnd()) {
             const QString &_data = stream.readLine();
@@ -1113,7 +1117,7 @@ float codecConfidenceForData(const QTextCodec *codec, const QByteArray &data, co
             break;
         default:
             // full-width character, emoji, 常用标点, 拉丁文补充1，天城文及其补充，CJK符号和标点符号（如：【】）
-            if ((ch.unicode() >= 0xff00 && ch <= 0xffef)
+            if ((ch.unicode() >= 0xff00 && ch.unicode() <= 0xffef)
                     || (ch.unicode() >= 0x2600 && ch.unicode() <= 0x27ff)
                     || (ch.unicode() >= 0x2000 && ch.unicode() <= 0x206f)
                     || (ch.unicode() >= 0x80 && ch.unicode() <= 0xff)

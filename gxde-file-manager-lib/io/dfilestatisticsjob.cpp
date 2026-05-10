@@ -230,7 +230,7 @@ DFileStatisticsJob::State DFileStatisticsJob::state() const
 {
     Q_D(const DFileStatisticsJob);
 
-    return static_cast<DFileStatisticsJob::State>(d->state.load());
+    return static_cast<DFileStatisticsJob::State>(d->state.loadRelaxed());
 }
 
 DFileStatisticsJob::FileHints DFileStatisticsJob::fileHints() const
@@ -244,21 +244,21 @@ qint64 DFileStatisticsJob::totalSize() const
 {
     Q_D(const DFileStatisticsJob);
 
-    return d->totalSize.load();
+    return d->totalSize.loadRelaxed();
 }
 
 int DFileStatisticsJob::filesCount() const
 {
     Q_D(const DFileStatisticsJob);
 
-    return d->filesCount.load();
+    return d->filesCount.loadRelaxed();
 }
 
 int DFileStatisticsJob::directorysCount() const
 {
     Q_D(const DFileStatisticsJob);
 
-    return d->directoryCount.load();
+    return d->directoryCount.loadRelaxed();
 }
 
 void DFileStatisticsJob::start(const DUrlList &sourceUrls)
@@ -369,7 +369,7 @@ void DFileStatisticsJob::run()
     while (!directory_queue.isEmpty()) {
         const DUrl &directory_url = directory_queue.dequeue();
         const DDirIteratorPointer &iterator = DFileService::instance()->createDirIterator(nullptr, directory_url, QStringList(),
-                                              QDir::AllEntries | QDir::Hidden | QDir::System | QDir::NoDotAndDotDot, 0, true);
+                                              QDir::AllEntries | QDir::Hidden | QDir::System | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags, true);
 
         if (!iterator) {
             qWarning() << "Failed on create dir iterator, for url:" << directory_url;

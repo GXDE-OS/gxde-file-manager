@@ -132,7 +132,7 @@ bool SingleApplication::loadTranslator(QList<QLocale> localeFallback)
             }
         }
 
-        QStringList parseLocalNameList = locale.name().split("_", QString::SkipEmptyParts);
+        QStringList parseLocalNameList = locale.name().split("_", Qt::SkipEmptyParts);
         if (parseLocalNameList.length() > 0) {
             translateFilename = QString("%1_%2").arg(name)
                     .arg(parseLocalNameList.at(0));

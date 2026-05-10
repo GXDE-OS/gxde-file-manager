@@ -171,7 +171,7 @@ void DFMSideBarPrivate::initUI()
     // our main QVBoxLayout, which hold our `DFMSideBarItemGroup`s
     mainLayout = mainLayoutHolder->layout();
     mainLayout->setSpacing(0);
-    mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setAlignment(Qt::AlignTop);
     mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 

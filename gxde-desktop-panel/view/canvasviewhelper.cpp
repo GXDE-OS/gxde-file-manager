@@ -106,12 +106,12 @@ void CanvasViewHelper::initStyleOption(QStyleOptionViewItem *option, const QMode
     }
 
     if ((option->state & QStyle::State_HasFocus) && option->showDecorationSelected && selectedIndexsCount() > 1) {
-        option->palette.setColor(QPalette::Background, QColor("#0076F9"));
+        option->palette.setColor(QPalette::Window, QColor("#0076F9"));
 
         if (!transp)
             option->backgroundBrush = QColor("#0076F9");
     } else {
-        option->palette.setColor(QPalette::Background, QColor("#2da6f7"));
+        option->palette.setColor(QPalette::Window, QColor("#2da6f7"));
 
         if (!transp)
             option->backgroundBrush = QColor("#2da6f7");

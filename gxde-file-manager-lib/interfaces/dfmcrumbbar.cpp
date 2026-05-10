@@ -227,7 +227,7 @@ void DFMCrumbBarPrivate::initUI()
     crumbListScrollArea.setWidget(crumbListHolder);
 
     crumbListLayout = new QHBoxLayout;
-    crumbListLayout->setMargin(0);
+    crumbListLayout->setContentsMargins(0, 0, 0, 0);
     crumbListLayout->setSpacing(0);
     crumbListLayout->setAlignment(Qt::AlignLeft);
 //    crumbListLayout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -513,6 +513,7 @@ bool DFMCrumbBar::eventFilter(QObject *watched, QEvent *event)
     Q_D(DFMCrumbBar);
 
     if (event->type() == QEvent::Wheel && d && watched == d->crumbListHolder) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         class PublicQWheelEvent : public QWheelEvent
         {
         public:
@@ -523,6 +524,21 @@ bool DFMCrumbBar::eventFilter(QObject *watched, QEvent *event)
 
         e->modState = Qt::AltModifier;
         e->qt4O = Qt::Horizontal;
+#else
+        // Workaround: Qt6更改了QWheelEvent的内部机制...
+        QWheelEvent* we = static_cast<QWheelEvent*>(event);
+        if (we && we->angleDelta().y() != 0) {
+            QWheelEvent* forwarded = new QWheelEvent(
+                we->position(), we->globalPosition(),
+                we->pixelDelta(),
+                QPoint(we->angleDelta().y(), 0),
+                we->buttons(), Qt::AltModifier,
+                we->phase(), we->inverted(), we->source());
+            QApplication::postEvent(d->crumbListHolder, forwarded);
+            event->accept();
+            return true;
+        }
+#endif
     }
 
     return QFrame::eventFilter(watched, event);

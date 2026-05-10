@@ -27,7 +27,11 @@
 
 #include <QObject>
 #include <QCoreApplication>
+#if defined(DFM_USE_QT6)
+#include <polkit-qt6-1/PolkitQt1/Authority>
+#else
 #include <polkit-qt5-1/PolkitQt1/Authority>
+#endif
 
 using namespace PolkitQt1;
 

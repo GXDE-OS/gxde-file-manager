@@ -46,8 +46,8 @@ public:
 signals:
 
 public slots:
-    void onPlayStateChanged(const QMediaPlayer::State& state);
-    void onPlayStatusChanged(const QMediaPlayer::MediaStatus& status);
+    void onPlayStateChanged(QMediaPlayer::PlaybackState state);
+    void onPlayStatusChanged(QMediaPlayer::MediaStatus status);
     void onPlayControlButtonClicked();
     void updateProgress();
     void seekPosition(const int& pos);

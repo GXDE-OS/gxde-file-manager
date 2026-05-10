@@ -1,8 +1,15 @@
 PREFIX = /usr
 QT              += core widgets concurrent dbus
 TEMPLATE         = lib
-CONFIG          += plugin c++11 link_pkgconfig
-PKGCONFIG       += dtkwidget gio-2.0 udisks2-qt5
+CONFIG          += plugin c++17 link_pkgconfig
+PKGCONFIG       += gio-2.0
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += dtk2widget
+    PKGCONFIG += udisks2-qt6
+    DEFINES += DFM_USE_QT6
+} else {
+    PKGCONFIG += dtkwidget udisks2-qt5
+}
 
 INCLUDEPATH += /usr/include/gxde-dock
 INCLUDEPATH += $$PWD/../../gxde-file-manager-lib/interfaces \

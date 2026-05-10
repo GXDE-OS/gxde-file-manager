@@ -196,7 +196,7 @@ const QList<QUrl> DFMVfsManager::getVfsList()
         result << url;
     }
 
-    return result.toList();
+    return result.values();
 }
 
 bool DFMVfsManager::attach(const QUrl &url)

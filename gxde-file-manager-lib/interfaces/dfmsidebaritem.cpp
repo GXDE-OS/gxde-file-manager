@@ -678,7 +678,7 @@ void DFMSideBarItem::dropEvent(QDropEvent *event)
     }
 }
 
-void DFMSideBarItem::enterEvent(QEvent *event)
+void DFMSideBarItem::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
     Q_D(DFMSideBarItem);

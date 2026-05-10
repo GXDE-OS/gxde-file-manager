@@ -13,7 +13,11 @@
 #include <QScreen>
 #include <QGuiApplication>
 #include <QMediaPlayer>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QMediaPlaylist>
+#endif
+
 #include <QPainter>
 #include <QGSettings>
 #include <dapplication.h>
@@ -49,11 +53,16 @@ ZoneMainWindow::ZoneMainWindow(QWidget *parent)
 
     // check demo video gsettings value
     QGSettings gsetting("com.deepin.dde.desktop", "/com/deepin/dde/desktop/");
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (gsetting.keys().contains("enableHotzoneVideo") && gsetting.get("enable-hotzone-video").toBool()) {
         m_videoWidget = new DVideoWidget(this);
         m_videoWidget->setSourceVideoPixelRatio(devicePixelRatioF());
         QTimer::singleShot(1000, this, &ZoneMainWindow::onDemoVideo);
     }
+#else
+    Q_UNUSED(gsetting)
+    // DVideoWidget 暂未在 dtk2widget-qt6 中实现，禁用 hotzone 演示视频
+#endif
 
     // init corresponding QList for addButtons()
     m_ButtonNames << tr("Fast Screen Off")
@@ -141,22 +150,22 @@ void ZoneMainWindow::keyPressEvent(QKeyEvent *e)
 
 void ZoneMainWindow::onDemoVideo()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (!m_videoWidget) return;
 
     QMediaPlayer *player = new QMediaPlayer(this);
-
-    QMediaPlaylist *list = new QMediaPlaylist(this);
-
-    list->addMedia(QUrl("qrc:/images/Prompt.mov"));
-    list->setPlaybackMode(QMediaPlaylist::Loop);
 
     int x = (rect().right() - 450) / 2;
     int y = (rect().bottom() - 348) / 2;
     m_videoWidget->setGeometry(x, y, 450, 348);
 
     m_videoWidget->setSource(player);
+    QMediaPlaylist *list = new QMediaPlaylist(this);
+    list->addMedia(QUrl("qrc:/images/Prompt.mov"));
+    list->setPlaybackMode(QMediaPlaylist::Loop);
     player->setPlaylist(list);
     player->play();
+#endif
 }
 
 void ZoneMainWindow::paintEvent(QPaintEvent *e)

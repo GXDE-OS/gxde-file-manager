@@ -440,7 +440,7 @@ QStringList DFMSettings::keyList(const QString &group) const
         }
     }
 
-    keyList << keys.toList();
+    keyList << keys.values();
 
     return keyList;
 }

@@ -55,14 +55,15 @@ void MusicMessageView::initUI()
     m_imgLabel = new QLabel(this);
 
     QMediaPlayer* player = new QMediaPlayer(this);
-    connect(player, &QMediaPlayer::mediaStatusChanged, this, [=] (const QMediaPlayer::MediaStatus& status) {
+    connect(player, &QMediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
         if(status == QMediaPlayer::BufferedMedia || status == QMediaPlayer::LoadedMedia){
-            m_title = player->metaData(QMediaMetaData::Title).toString();
+            const QMediaMetaData md = player->metaData();
+            m_title = md.value(QMediaMetaData::Title).toString();
 
-            m_artist = player->metaData(QMediaMetaData::AlbumArtist).toString();
+            m_artist = md.value(QMediaMetaData::AlbumArtist).toString();
 
-            m_album = player->metaData(QMediaMetaData::AlbumTitle).toString();
-            QImage img = player->metaData(QMediaMetaData::CoverArtImage).value<QImage>();
+            m_album = md.value(QMediaMetaData::AlbumTitle).toString();
+            QImage img = md.value(QMediaMetaData::CoverArtImage).value<QImage>();
             if(img.isNull()){
                 img = QImage(":/icons/icons/default_music_cover.png");
             }
@@ -76,7 +77,7 @@ void MusicMessageView::initUI()
     });
 
 
-    player->setMedia(QUrl::fromUserInput(m_uri));
+    player->setSource(QUrl::fromUserInput(m_uri));
 
     QVBoxLayout* messageLayout = new QVBoxLayout;
     messageLayout->setSpacing(0);

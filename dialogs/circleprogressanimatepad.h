@@ -29,6 +29,8 @@
 #include <QTimer>
 #include <QColor>
 
+class QEnterEvent;
+
 class CircleProgressAnimatePad : public QWidget
 {
     Q_OBJECT
@@ -76,7 +78,7 @@ public slots:
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) override;
-    void enterEvent(QEvent *event) override;
+    void enterEvent(QEnterEvent *event) override;
     void leaveEvent(QEvent *event) override;
 
 private:

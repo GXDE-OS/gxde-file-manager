@@ -8,7 +8,7 @@
  **/
 
 #include <QDebug>
-#include <QX11Info>
+#include "qx11info_compat.h"
 
 #include <xcb/xcb.h>
 #include <xcb/xcb_ewmh.h>

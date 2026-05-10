@@ -180,8 +180,8 @@ QPixmap Tab::toPixmap(bool drawBorder)
     color.setNamedColor("#303030");
     pen.setColor(color);
     painter.setPen(pen);
-    painter.drawText((300-fm.width(str))/2,(m_height-fm.height())/2,
-                      fm.width(str),fm.height(),0,str);
+    painter.drawText((300-fm.horizontalAdvance(str))/2,(m_height-fm.height())/2,
+                      fm.horizontalAdvance(str),fm.height(),0,str);
 
     if (drawBorder) {
         QPainterPath path;
@@ -264,7 +264,7 @@ void Tab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidg
     font.setPixelSize(12);
 
     if (isChecked()){
-        font.setWeight(QFont::Normal + 10);
+        font.setWeight(static_cast<QFont::Weight>(QFont::Normal + 10));
     }else{
         font.setWeight(QFont::Normal);
     }
@@ -278,22 +278,22 @@ void Tab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidg
         painter->fillRect(boundingRect(), ThemeConfig::instace()->color("Tab", "background", ThemeConfig::Checked));
         pen.setColor(ThemeConfig::instace()->color("Tab", "color", ThemeConfig::Checked));
         painter->setPen(pen);
-        painter->drawText((m_width-fm.width(str))/2,(m_height-fm.height())/2,
-                          fm.width(str),fm.height(),0,str);
+        painter->drawText((m_width-fm.horizontalAdvance(str))/2,(m_height-fm.height())/2,
+                          fm.horizontalAdvance(str),fm.height(),0,str);
     }
     else if(m_hovered||(m_hovered&&!isChecked())){
         painter->fillRect(boundingRect(), ThemeConfig::instace()->color("Tab", "background", ThemeConfig::Hover));
         pen.setColor(ThemeConfig::instace()->color("Tab", "color", ThemeConfig::Hover));
         painter->setPen(pen);
-        painter->drawText((m_width-fm.width(str))/2,(m_height-fm.height())/2,
-                          fm.width(str),fm.height(),0,str);
+        painter->drawText((m_width-fm.horizontalAdvance(str))/2,(m_height-fm.height())/2,
+                          fm.horizontalAdvance(str),fm.height(),0,str);
     }
     else{
         painter->fillRect(boundingRect(), ThemeConfig::instace()->color("Tab", "background"));
         pen.setColor(ThemeConfig::instace()->color("Tab", "color"));
         painter->setPen(pen);
-        painter->drawText((m_width-fm.width(str))/2,(m_height-fm.height())/2,
-                          fm.width(str),fm.height(),0,str);
+        painter->drawText((m_width-fm.horizontalAdvance(str))/2,(m_height-fm.height())/2,
+                          fm.horizontalAdvance(str),fm.height(),0,str);
     }
 
     //draw line
@@ -724,7 +724,7 @@ void TabBar::onMoveNext(Tab *who)
 {
     if(m_tabs.indexOf(who) >= count()-1)
         return;
-    m_tabs.swap(m_tabs.indexOf(who),m_tabs.indexOf(who)+1);
+    m_tabs.swapItemsAt(m_tabs.indexOf(who),m_tabs.indexOf(who)+1);
     emit tabMoved(m_tabs.indexOf(who) -1,m_tabs.indexOf(who));
     setCurrentIndex(m_tabs.indexOf(who));
 }
@@ -733,7 +733,7 @@ void TabBar::onMovePrevius(Tab* who)
 {
     if(m_tabs.indexOf(who) <= 0)
         return;
-    m_tabs.swap(m_tabs.indexOf(who),m_tabs.indexOf(who)-1);
+    m_tabs.swapItemsAt(m_tabs.indexOf(who),m_tabs.indexOf(who)-1);
     emit tabMoved(m_tabs.indexOf(who)+1,m_tabs.indexOf(who));
     setCurrentIndex(m_tabs.indexOf(who));
 }

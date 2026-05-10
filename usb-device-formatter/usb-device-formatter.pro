@@ -4,9 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui concurrent network x11extras
+QT       += core gui concurrent network widgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+lessThan(QT_MAJOR_VERSION, 6): QT += x11extras
 
 TARGET = usb-device-formatter
 TEMPLATE = app
@@ -14,13 +14,16 @@ TEMPLATE = app
 include(../partman/partman.pri)
 
 PKGCONFIG += x11
-CONFIG(release, release|debug) {
-    PKGCONFIG += dtkwidget
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += dtk2widget
+    DEFINES += DFM_USE_QT6
 } else {
     PKGCONFIG += dtkwidget
 }
 
-CONFIG += c++11 link_pkgconfig
+CONFIG += c++17 link_pkgconfig
+
+INCLUDEPATH += $$PWD/../utils
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
     $$PWD/translations/$${TARGET}_zh_CN.ts

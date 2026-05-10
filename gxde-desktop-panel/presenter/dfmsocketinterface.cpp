@@ -96,7 +96,7 @@ DFMSocketInterface::DFMSocketInterface(QObject *parent) : QObject(parent), d_ptr
     QString socketPath = qgetenv("XDG_RUNTIME_DIR") + "/gxde-file-manager";
     socketPath = QString("/var/run/user/%1/gxde-file-manager").arg(getuid());
     qDebug() << "connect to socket" << socketPath;
-    connect(d->socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
+    connect(d->socket, &QLocalSocket::errorOccurred,
     this, [ = ](QLocalSocket::LocalSocketError socketError) {
         d->socket->close();
         d->socket->deleteLater();

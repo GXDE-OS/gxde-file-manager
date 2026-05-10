@@ -357,13 +357,13 @@ void DStatusBar::itemSelected(const DFMEvent &event, int number)
              QFutureWatcher<qint64>* fileWatcher = new QFutureWatcher<qint64>();
              connect(fileWatcher, SIGNAL(finished()), this, SLOT(handdleComputerFileSizeFinished()));
              // Start the computation.
-             QFuture<qint64> fileFuture = QtConcurrent::run(this, &DStatusBar::computerSize, event.fileUrlList());
+             QFuture<qint64> fileFuture = QtConcurrent::run(&DStatusBar::computerSize, this, event.fileUrlList());
              fileWatcher->setFuture(fileFuture);
 
              QFutureWatcher<int>* folderWatcher = new QFutureWatcher<int>();
              connect(folderWatcher, SIGNAL(finished()), this, SLOT(handdleComputerFolderContainsFinished()));
              // Start the computation.
-             QFuture<int> folderFuture = QtConcurrent::run(this, &DStatusBar::computerFolderContains, event.fileUrlList());
+             QFuture<int> folderFuture = QtConcurrent::run(&DStatusBar::computerFolderContains, this, event.fileUrlList());
              folderWatcher->setFuture(folderFuture);
         } else {
             m_fileStatisticsJob->start(event.fileUrlList());

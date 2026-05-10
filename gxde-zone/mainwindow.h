@@ -16,7 +16,14 @@
 
 #include "dbus/dbuszone.h"
 #include <QLabel>
-#include <DVideoWidget>
+#include <dtkwidget_global.h>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include <dvideowidget.h>
+#else
+DWIDGET_BEGIN_NAMESPACE
+class DVideoWidget;
+DWIDGET_END_NAMESPACE
+#endif
 
 DWIDGET_USE_NAMESPACE
 

@@ -180,7 +180,7 @@ int SearchFileInfo::userColumnWidth(int userColumnRole, const QFontMetrics &font
     if (userColumnRole == DFileSystemModel::FileUserRole + 1)
         return -1;
 
-    return fontMetrics.width("0000/00/00 00:00:00");;
+    return fontMetrics.horizontalAdvance("0000/00/00 00:00:00");
 }
 
 //int SearchFileInfo::userRowHeight(const QFontMetrics &fontMetrics) const

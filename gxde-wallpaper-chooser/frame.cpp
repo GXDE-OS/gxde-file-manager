@@ -41,7 +41,7 @@
 #include <dapplication.h>
 
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QKeyEvent>
 #include <QDebug>
 #include <QPainter>
@@ -430,7 +430,7 @@ void Frame::initUI()
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
     DThemeManager::instance()->setTheme(this, "dark");

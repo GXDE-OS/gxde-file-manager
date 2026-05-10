@@ -12,13 +12,15 @@ TARGET = gxde-file-manager-daemon
 CONFIG   += console
 CONFIG   -= app_bundle
 
-PKGCONFIG += x11 polkit-agent-1 polkit-qt5-1
-CONFIG(release, release|debug) {
-    PKGCONFIG += dtkwidget
+PKGCONFIG += x11
+greaterThan(QT_MAJOR_VERSION, 5) {
+    PKGCONFIG += polkit-qt6-1
+    QT += dtk2widget
+    DEFINES += DFM_USE_QT6
 } else {
-    PKGCONFIG += dtkwidget
+    PKGCONFIG += polkit-agent-1 polkit-qt5-1 dtkwidget
 }
-CONFIG += c++11 link_pkgconfig
+CONFIG += c++17 link_pkgconfig
 
 LIBS += -L$$OUT_PWD/../gxde-file-manager-lib -lgxde-file-manager
 

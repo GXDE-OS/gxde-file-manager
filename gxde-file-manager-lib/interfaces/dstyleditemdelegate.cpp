@@ -335,14 +335,14 @@ void DStyledItemDelegatePrivate::init()
 void DStyledItemDelegatePrivate::_q_onRowsInserted(const QModelIndex &parent, int first, int last)
 {
     if (editingIndex.isValid() && first <= editingIndex.row() && !editingIndex.parent().isValid()) {
-        editingIndex = parent.child(editingIndex.row() + last - first + 1, editingIndex.column());
+        editingIndex = parent.model() ? parent.model()->index(editingIndex.row() + last - first + 1, editingIndex.column(), parent) : QModelIndex();
     }
 }
 
 void DStyledItemDelegatePrivate::_q_onRowsRemoved(const QModelIndex &parent, int first, int last)
 {
     if (editingIndex.isValid() && first <= editingIndex.row() && !editingIndex.parent().isValid()) {
-        editingIndex = parent.child(editingIndex.row() - last + first - 1, editingIndex.column());
+        editingIndex = parent.model() ? parent.model()->index(editingIndex.row() - last + first - 1, editingIndex.column(), parent) : QModelIndex();
     }
 }
 

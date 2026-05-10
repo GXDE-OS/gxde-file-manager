@@ -43,8 +43,11 @@
 #include "shutil/fileutils.h"
 #include "deviceinfo/udisklistener.h"
 
+#include <algorithm>
 #include <memory>
+#include <QElapsedTimer>
 #include <QList>
+#include <QRegularExpression>
 #include <QDebug>
 #include <QMimeData>
 #include <QSharedPointer>
@@ -331,15 +334,15 @@ public:
     };
 
     LockFreeQueue() {
-        m_head.store(new Node());
-        m_head.load()->next.store(nullptr);
-        m_tail.store(m_head.load());
+        m_head.storeRelaxed(new Node());
+        m_head.loadRelaxed()->next.storeRelaxed(nullptr);
+        m_tail.storeRelaxed(m_head.loadRelaxed());
     }
 
     ~LockFreeQueue() {
         clear();
 
-        delete m_head.load();
+        delete m_head.loadRelaxed();
     }
 
     void clear()
@@ -351,7 +354,7 @@ public:
 
     bool isEmpty() const
     {
-        Node *head = m_head.load();
+        Node *head = m_head.loadRelaxed();
 
         return head->next == nullptr;
     }
@@ -361,14 +364,14 @@ public:
         Node *_head;
 
         do {
-            _head = m_head.load();
+            _head = m_head.loadRelaxed();
 
             if (_head->next == nullptr) {
                 std::abort();
             }
-        } while (!m_head.testAndSetAcquire(_head, _head->next.load()));
+        } while (!m_head.testAndSetAcquire(_head, _head->next.loadRelaxed()));
 
-        const T &data = _head->next.load()->data;
+        const T &data = _head->next.loadRelaxed()->data;
         delete _head;
 
         return data;
@@ -384,7 +387,7 @@ public:
         Node* _tail = nullptr;
 
         do {
-            _tail = m_tail.load();
+            _tail = m_tail.loadRelaxed();
         } while (!_tail->next.testAndSetAcquire(nullptr, node));
 
         m_tail = node;
@@ -392,17 +395,17 @@ public:
 
     T &head()
     {
-        return m_head.load();
+        return m_head.loadRelaxed();
     }
 
     const T &head() const
     {
-        return m_head.load();
+        return m_head.loadRelaxed();
     }
 
     Node *headNode()
     {
-        return m_head.load()->next.load();
+        return m_head.loadRelaxed()->next.loadRelaxed();
     }
 
     void removeNode(Node *node)
@@ -410,12 +413,12 @@ public:
         auto _head = &m_head;
 
         do {
-            if (!_head->load()->next.load()) {
+            if (!_head->load()->next.loadRelaxed()) {
                 std::abort();
             }
 
             _head = &_head->load()->next;
-        } while (!_head->testAndSetAcquire(node, node->next.load()));
+        } while (!_head->testAndSetAcquire(node, node->next.loadRelaxed()));
 
         delete node;
     }
@@ -528,7 +531,7 @@ private:
         QList<DAbstractFileInfoPointer> backlogFileInfoList;
         QList<DAbstractFileInfoPointer> backlogDirInfoList;
         // 使用计时器避免文件在批量插入列表中等待太久
-        QTime timerOfFileList, timerOfDirList;
+        QElapsedTimer timerOfFileList, timerOfDirList;
 
         auto insertInfoList = [&] (int index, const QList<DAbstractFileInfoPointer> &list) {
             DThreadUtil::runInThread(&semaphore, model()->thread(), model(), &DFileSystemModel::beginInsertRows,
@@ -551,7 +554,7 @@ private:
 
             DThreadUtil::runInThread(&semaphore, model()->thread(), model(), &DFileSystemModel::endInsertRows);
 
-            return enable.load();
+            return enable.loadRelaxed();
         };
 
         auto disposeBacklogFileList = [&] {
@@ -865,9 +868,11 @@ bool DFileSystemModelPrivate::passNameFilters(const FileSystemNodePointer &node)
         const Qt::CaseSensitivity caseSensitive = (filters & QDir::CaseSensitive) ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
         for (int i = 0; i < nameFilters.size(); ++i) {
-            QRegExp re(nameFilters.at(i), caseSensitive, QRegExp::Wildcard);
+            QRegularExpression re(QRegularExpression::wildcardToRegularExpression(nameFilters.at(i)),
+                                  caseSensitive == Qt::CaseInsensitive ? QRegularExpression::CaseInsensitiveOption
+                                                                       : QRegularExpression::NoPatternOption);
 
-            if (re.exactMatch(node->fileInfo->fileDisplayName())) {
+            if (re.match(node->fileInfo->fileDisplayName()).hasMatch()) {
                 return true;
             }
         }
@@ -1299,7 +1304,7 @@ QVariant DFileSystemModel::data(const QModelIndex &index, int role) const
         const QPoint &cursor_pos = parent()->parent()->mapFromGlobal(QCursor::pos());
         QStyleOptionViewItem option;
 
-        option.init(parent()->parent());
+        option.initFrom(parent()->parent());
         parent()->initStyleOption(&option, index);
         option.rect = parent()->parent()->visualRect(index);
         const QList<QRect> &geometries = parent()->itemDelegate()->paintGeomertys(option, index);
@@ -1311,7 +1316,7 @@ QVariant DFileSystemModel::data(const QModelIndex &index, int role) const
             if (rect.left() <= cursor_pos.x() && rect.right() >= cursor_pos.x()) {
                 const QString &tooltip = data(index, columnActiveRole(i - 1)).toString();
 
-                if (option.fontMetrics.width(tooltip, -1, Qt::Alignment(index.data(Qt::TextAlignmentRole).toInt())) > rect.width()) {
+                if (option.fontMetrics.horizontalAdvance(tooltip) > rect.width()) {
                     return tooltip;
                 } else {
                     break;
@@ -1846,36 +1851,36 @@ void DFileSystemModel::setAdvanceSearchFilter(const QMap<int, QVariant> &formDat
 
         switch (dateRange) { // see DFMAdvanceSearchBar::initUI() for all cases
         case 1:
-            advanceSearchFilter()->f_dateRangeStart = QDateTime(today);
-            advanceSearchFilter()->f_dateRangeEnd = QDateTime(tomorrow);
+            advanceSearchFilter()->f_dateRangeStart = today.startOfDay();
+            advanceSearchFilter()->f_dateRangeEnd = tomorrow.startOfDay();
             break;
         case 2:
-            advanceSearchFilter()->f_dateRangeStart = QDateTime(today).addDays(-1);
-            advanceSearchFilter()->f_dateRangeEnd = QDateTime(today);
+            advanceSearchFilter()->f_dateRangeStart = today.startOfDay().addDays(-1);
+            advanceSearchFilter()->f_dateRangeEnd = today.startOfDay();
             break;
         case 7:
-            advanceSearchFilter()->f_dateRangeStart = QDateTime(today).addDays(0 - dayDist);
-            advanceSearchFilter()->f_dateRangeEnd = QDateTime(tomorrow);
+            advanceSearchFilter()->f_dateRangeStart = today.startOfDay().addDays(0 - dayDist);
+            advanceSearchFilter()->f_dateRangeEnd = tomorrow.startOfDay();
             break;
         case 14:
-            advanceSearchFilter()->f_dateRangeStart = QDateTime(today).addDays(-7 - dayDist);
-            advanceSearchFilter()->f_dateRangeEnd = QDateTime(today).addDays(0 - dayDist);
+            advanceSearchFilter()->f_dateRangeStart = today.startOfDay().addDays(-7 - dayDist);
+            advanceSearchFilter()->f_dateRangeEnd = today.startOfDay().addDays(0 - dayDist);
             break;
         case 30:
-            advanceSearchFilter()->f_dateRangeStart = QDateTime(QDate(today.year(), today.month(), 1));
-            advanceSearchFilter()->f_dateRangeEnd = QDateTime(tomorrow);
+            advanceSearchFilter()->f_dateRangeStart = (QDate(today.year(), today.month(), 1)).startOfDay();
+            advanceSearchFilter()->f_dateRangeEnd = tomorrow.startOfDay();
             break;
         case 60:
-            advanceSearchFilter()->f_dateRangeStart = QDateTime(QDate(today.year(), today.month(), 1)).addMonths(-1);
-            advanceSearchFilter()->f_dateRangeEnd = QDateTime(QDate(today.year(), today.month(), 1));
+            advanceSearchFilter()->f_dateRangeStart = (QDate(today.year(), today.month(), 1)).startOfDay().addMonths(-1);
+            advanceSearchFilter()->f_dateRangeEnd = (QDate(today.year(), today.month(), 1)).startOfDay();
             break;
         case 365:
-            advanceSearchFilter()->f_dateRangeStart = QDateTime(QDate(today.year(), 1, 1));
-            advanceSearchFilter()->f_dateRangeEnd = QDateTime(tomorrow);
+            advanceSearchFilter()->f_dateRangeStart = (QDate(today.year(), 1, 1)).startOfDay();
+            advanceSearchFilter()->f_dateRangeEnd = tomorrow.startOfDay();
             break;
         case 730:
-            advanceSearchFilter()->f_dateRangeStart = QDateTime(QDate(today.year(), 1, 1)).addYears(-1);
-            advanceSearchFilter()->f_dateRangeEnd = QDateTime(QDate(today.year(), 1, 1));
+            advanceSearchFilter()->f_dateRangeStart = (QDate(today.year(), 1, 1)).startOfDay().addYears(-1);
+            advanceSearchFilter()->f_dateRangeEnd = (QDate(today.year(), 1, 1)).startOfDay();
             break;
         default:
             break;
@@ -2030,7 +2035,7 @@ bool DFileSystemModel::sort(bool emitDataChange)
     }
 
     if (QThread::currentThread() == qApp->thread()) {
-        QtConcurrent::run(QThreadPool::globalInstance(), this, &DFileSystemModel::sort);
+        QtConcurrent::run(QThreadPool::globalInstance(), static_cast<bool (DFileSystemModel::*)()>(&DFileSystemModel::sort), this);
 
         return false;
     }
@@ -2274,7 +2279,7 @@ void DFileSystemModel::updateChildrenOnNewThread(QList<DAbstractFileInfoPointer>
         QThreadPool::globalInstance()->setMaxThreadCount(QThreadPool::globalInstance()->maxThreadCount() + 10);
     }
 
-    d->updateChildrenFuture = QtConcurrent::run(QThreadPool::globalInstance(), this, &DFileSystemModel::updateChildren, list);
+    d->updateChildrenFuture = QtConcurrent::run(QThreadPool::globalInstance(), &DFileSystemModel::updateChildren, this, list);
 }
 
 void DFileSystemModel::refresh(const DUrl &fileUrl)
@@ -2321,7 +2326,7 @@ void DFileSystemModel::update()
         node->fileInfo->refresh();
     }
 
-    emit dataChanged(rootIndex.child(0, 0), rootIndex.child(rootIndex.row() - 1, 0));
+    emit dataChanged(rootIndex.model() ? rootIndex.model()->index(0, 0, rootIndex) : QModelIndex(), rootIndex.model() ? rootIndex.model()->index(rootIndex.row() - 1, 0, rootIndex) : QModelIndex());
 }
 
 void DFileSystemModel::toggleHiddenFiles(const DUrl &fileUrl)
@@ -2443,7 +2448,7 @@ bool DFileSystemModel::sort(const DAbstractFileInfoPointer &parentInfo, QList<Fi
         return false;
     }
 
-    qSort(list.begin(), list.end(), [sortFun, d](const FileSystemNode *node1, const FileSystemNode *node2) {
+    std::sort(list.begin(), list.end(), [sortFun, d](const FileSystemNode *node1, const FileSystemNode *node2) {
         return sortFun(node1->fileInfo, node2->fileInfo, d->srotOrder);
     });
 

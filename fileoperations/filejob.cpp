@@ -2269,7 +2269,8 @@ bool FileJob::deleteDir(const QString &dir)
     QDirIterator iterator(sourceDir, QDirIterator::Subdirectories);
 
     while (iterator.hasNext()) {
-        const QFileInfo &fileInfo = iterator.next();
+        iterator.next();
+        const QFileInfo fileInfo = iterator.fileInfo();
         if (fileInfo.exists() || fileInfo.isSymLink()){
             if (fileInfo.isFile() || fileInfo.isSymLink()) {
                 if (!deleteFile(fileInfo.filePath())) {
@@ -2431,13 +2432,13 @@ bool FileJob::writeTrashInfo(const QString &fileBaseName, const QString &path, c
 
     data.append("[Trash Info]\n");
     data.append("Path=").append(path.toUtf8().toPercentEncoding("/")).append("\n");
-    data.append("DeletionDate=").append(time).append("\n");
+    data.append("DeletionDate=").append(time.toUtf8()).append("\n");
 
     // save the file tag info
     const QStringList tag_name_list = TagManager::instance()->getTagsThroughFiles({DUrl::fromLocalFile(path)});
 
     if (!tag_name_list.isEmpty())
-        data.append("TagNameList=").append(tag_name_list.join(",")).append("\n");
+        data.append("TagNameList=").append(tag_name_list.join(",").toUtf8()).append("\n");
 
     qint64 size = metadata.write(data);
 
@@ -2490,7 +2491,7 @@ bool FileJob::checkDiskSpaceAvailable(const DUrlList &files, const DUrl &destina
 
 bool FileJob::checkTrashFileOutOf1GB(const DUrl &url)
 {
-    const QFileInfo &info(url.toLocalFile());
+    const QFileInfo info{url.toLocalFile()};
 
     if (info.isSymLink())
         return true;

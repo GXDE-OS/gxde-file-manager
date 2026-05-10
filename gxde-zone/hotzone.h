@@ -14,7 +14,7 @@
 #include "pushbuttonlist.h"
 
 #include <QWidget>
-#include <QMatrix>
+#include <QTransform>
 #include <QVBoxLayout>
 #include <QPropertyAnimation>
 #include <QPoint>
@@ -58,7 +58,7 @@ private:
     QPixmap m_pixmap;
     HoverWidget *m_hoverItem;
     HoverWidget *m_ButtonColumnItem;
-    QMatrix *m_matrix;
+    QTransform *m_matrix;
     PushButtonList *m_pushButtonList;
     QVBoxLayout *m_vLayout;
     QPropertyAnimation *m_animation;

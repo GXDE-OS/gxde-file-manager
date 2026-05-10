@@ -29,7 +29,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QCloseEvent>
 
 #include <ddialog.h>
@@ -1024,7 +1024,7 @@ void DTaskDialog::adjustSize()
         listHeight += h;
     }
 
-    if (listHeight < qApp->desktop()->availableGeometry().height() - 60) {
+    if (listHeight < qApp->primaryScreen()->availableGeometry().height() - 60) {
         m_taskListWidget->setFixedHeight(listHeight);
         setFixedHeight(listHeight + 60);
         MaxHeight = height();
@@ -1043,7 +1043,7 @@ void DTaskDialog::moveYCenter()
     if (parent()) {
         cp = static_cast<QWidget *>(parent())->geometry().center();
     } else {
-        cp = qApp->desktop()->availableGeometry().center();
+        cp = qApp->primaryScreen()->availableGeometry().center();
     }
     qr.moveCenter(cp);
     move(x(), qr.y());

@@ -11,6 +11,8 @@
 #include <QMouseEvent>
 #include <QPaintEvent>
 
+class QEnterEvent;
+
 class DRoundButton final : public QFrame
 {
     Q_OBJECT
@@ -51,7 +53,7 @@ signals:
     void checkedChanged();
 
 protected:
-    virtual void enterEvent(QEvent* event)override;
+    virtual void enterEvent(QEnterEvent* event)override;
     virtual void leaveEvent(QEvent* event)override;
     virtual void mousePressEvent(QMouseEvent* event)override;
     virtual void mouseReleaseEvent(QMouseEvent* event)override;

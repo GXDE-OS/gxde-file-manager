@@ -45,8 +45,9 @@ UsbFormatter::UsbFormatter(QObject *parent) : QObject(parent)
 bool UsbFormatter::mkfs(const QString &path, const QString &fs, const QString &label)
 {
     typedef bool (PartMan::PartitionManager::*mkfs) (const QString &, const QString & ,const QString &);
-    QFuture<bool> future = QtConcurrent::run(QThreadPool::globalInstance(), m_partitionManager,
+    QFuture<bool> future = QtConcurrent::run(QThreadPool::globalInstance(),
                                              static_cast<mkfs>(&PartMan::PartitionManager::mkfs),
+                                             m_partitionManager,
                                              path, fs, label);
     future.waitForFinished();
     bool ret = future.result();

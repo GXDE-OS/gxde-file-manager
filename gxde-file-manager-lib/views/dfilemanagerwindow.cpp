@@ -81,7 +81,7 @@
 #include <QResizeEvent>
 #include <QEvent>
 #include <QThread>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QStackedLayout>
 #include <QTabBar>
 #include <QPair>
@@ -779,7 +779,7 @@ void DFileManagerWindow::moveCenter(const QPoint &cp)
 void DFileManagerWindow::moveTopRight()
 {
     QRect pRect;
-    pRect = qApp->desktop()->availableGeometry();
+    pRect = qApp->primaryScreen()->availableGeometry();
     int x = pRect.width() - width();
     move(QPoint(x, 0));
 }
@@ -945,7 +945,7 @@ void DFileManagerWindow::initTitleFrame()
     d->titleFrame = new QFrame;
     d->titleFrame->setObjectName("TitleBar");
     QHBoxLayout *titleLayout = new QHBoxLayout;
-    titleLayout->setMargin(0);
+    titleLayout->setContentsMargins(0, 0, 0, 0);
     titleLayout->setSpacing(0);
     titleLayout->addSpacing(12);
     titleLayout->addWidget(d->logoButton);
@@ -1060,7 +1060,7 @@ void DFileManagerWindow::initRightView()
     d->emptyTrashButton->setObjectName("EmptyTrashButton");
 
     QHBoxLayout *tabBarLayout = new QHBoxLayout;
-    tabBarLayout->setMargin(0);
+    tabBarLayout->setContentsMargins(0, 0, 0, 0);
     tabBarLayout->setSpacing(0);
     tabBarLayout->addWidget(d->tabBar);
 

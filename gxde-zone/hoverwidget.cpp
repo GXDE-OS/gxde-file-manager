@@ -17,7 +17,7 @@ HoverWidget::~HoverWidget()
 {
 }
 
-void HoverWidget::enterEvent(QEvent *e)
+void HoverWidget::enterEvent(QEnterEvent *e)
 {
     emit mouseHasEntered();
     QWidget::enterEvent(e);

@@ -50,7 +50,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QApplication>
-#include <QX11Info>
+#include "qx11info_compat.h"
 #include <QScreen>
 #include <QWindow>
 #include <QTimer>

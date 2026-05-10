@@ -11,9 +11,17 @@ TEMPLATE = lib
 
 PKGCONFIG += taglib
 
-CONFIG += c++11 plugin link_pkgconfig
+CONFIG += c++17 plugin link_pkgconfig
 
 include(../../../common/common.pri)
+
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += dtk2widget
+    DEFINES += DFM_USE_QT6
+} else {
+    PKGCONFIG += dtkwidget
+}
+
 
 SOURCES += \
     toolbarframe.cpp \

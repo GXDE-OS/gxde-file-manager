@@ -141,7 +141,7 @@ MergedDesktopFileInfo::MergedDesktopFileInfo(const DUrl &url, const DUrl &parent
     QString realPath = desktopPath + QDir::separator() + fileName;
 
     if (path.startsWith(VIRTUALENTRY_PATH)) {
-        if (path.split('/', QString::SkipEmptyParts).count() != 2) {
+        if (path.split('/', Qt::SkipEmptyParts).count() != 2) {
             setProxy(DAbstractFileInfoPointer(DFileService::instance()->createFileInfo(nullptr, DUrl::fromLocalFile(realPath))));
         } else {
             setProxy(DAbstractFileInfoPointer(new VirtualEntryInfo(url)));

@@ -26,6 +26,7 @@
 #define WALLPAPERITEM_H
 
 #include <QFrame>
+class QEnterEvent;
 #include <QFutureWatcher>
 #include <QPropertyAnimation>
 
@@ -84,7 +85,7 @@ public slots:
 
 protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void enterEvent(QEnterEvent *event) Q_DECL_OVERRIDE;
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 

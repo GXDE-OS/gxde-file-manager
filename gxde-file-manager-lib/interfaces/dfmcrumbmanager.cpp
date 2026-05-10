@@ -162,7 +162,7 @@ void DFMCrumbManager::insertToCreatorHash(const DFMCrumbManager::KeyType &type, 
 {
     Q_D(DFMCrumbManager);
 
-    d->controllerCreatorHash.insertMulti(type, creator);
+    d->controllerCreatorHash.insert(type, creator);
 }
 
 DFM_END_NAMESPACE

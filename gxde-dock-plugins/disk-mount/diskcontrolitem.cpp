@@ -90,7 +90,7 @@ DiskControlItem::DiskControlItem(DAttachedDeviceInterface *attachedDevicePtr, QW
     unmountLayout->addLayout(infoLayout);
     unmountLayout->addWidget(m_unmountButton);
     unmountLayout->setSpacing(0);
-    unmountLayout->setMargin(0);
+    unmountLayout->setContentsMargins(0, 0, 0, 0);
 
     QVBoxLayout *progressLayout = new QVBoxLayout;
     progressLayout->addLayout(unmountLayout);

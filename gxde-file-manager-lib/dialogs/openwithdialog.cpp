@@ -39,7 +39,8 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QEnterEvent>
+#include <QScreen>
 #include <QWindow>
 #include <QDebug>
 #include <QLabel>
@@ -63,7 +64,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
-    void enterEvent(QEvent *e) Q_DECL_OVERRIDE;
+    void enterEvent(QEnterEvent *e) Q_DECL_OVERRIDE;
     void leaveEvent(QEvent *e) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
@@ -130,7 +131,7 @@ void OpenWithDialogListItem::resizeEvent(QResizeEvent *e)
     m_iconLabel->setPixmap(m_icon.pixmap(m_iconLabel->size()));
 }
 
-void OpenWithDialogListItem::enterEvent(QEvent *e)
+void OpenWithDialogListItem::enterEvent(QEnterEvent *e)
 {
     Q_UNUSED(e)
 

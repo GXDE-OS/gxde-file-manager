@@ -25,7 +25,7 @@
 #include "closealldialogindicator.h"
 #include <QHBoxLayout>
 #include <QDebug>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QApplication>
 #include <QKeyEvent>
 #include "shutil/fileutils.h"
@@ -84,7 +84,7 @@ void CloseAllDialogIndicator::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
 
-    QRect screenGeometry = qApp->desktop()->screenGeometry();
+    QRect screenGeometry = qApp->primaryScreen()->geometry();
 
     move((screenGeometry.width() - width()) / 2, screenGeometry.height() - height());
 

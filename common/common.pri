@@ -35,8 +35,13 @@ unix {
 
         DEFINES += DISABLE_QUIT_ON_LAST_WINDOW_CLOSED
     } else {
+        # 仅当系统装了 libjemalloc-dev 时才链接 jemalloc
         isEmpty(DISABLE_JEMALLOC) {
-            LIBS += -ljemalloc
+            !system(pkg-config --exists jemalloc 2>/dev/null) {
+                exists(/usr/lib/x86_64-linux-gnu/libjemalloc.so):LIBS += -ljemalloc
+            } else {
+                LIBS += -ljemalloc
+            }
         }
     }
 

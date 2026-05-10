@@ -218,7 +218,7 @@ void DMultiFilePropertyDialogPrivate::layoutItems()noexcept
 {
     m_mainLayout->setSpacing(0);
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
-    m_mainLayout->setMargin(0);
+    m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->addWidget(m_iconLabel, 0, Qt::AlignCenter);
     m_mainLayout->addSpacing(10);
     m_mainLayout->addWidget(std::get<0>(m_nameLabelAndLineLabel), 0, Qt::AlignCenter);

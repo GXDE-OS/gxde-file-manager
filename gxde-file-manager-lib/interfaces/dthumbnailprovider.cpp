@@ -282,7 +282,7 @@ QString DThumbnailProvider::thumbnailFilePath(const QFileInfo &info, Size size) 
 
     const QImage image = ir.read();
 
-    if (!image.isNull() && image.text(QT_STRINGIFY(Thumb::MTime)).toInt() != (int)info.lastModified().toTime_t()) {
+    if (!image.isNull() && image.text(QT_STRINGIFY(Thumb::MTime)).toInt() != (int)info.lastModified().toSecsSinceEpoch()) {
         QFile::remove(thumbnail);
 
         emit thumbnailChanged(absoluteFilePath, QString());
@@ -335,7 +335,7 @@ QString DThumbnailProvider::createThumbnail(const QFileInfo &info, DThumbnailPro
 //    if (QFile::exists(thumbnail)) {
 //        QImage image(thumbnail);
 
-//        if (image.text(QT_STRINGIFY(Thumb::MTime)).toInt() != (int)info.lastModified().toTime_t()) {
+//        if (image.text(QT_STRINGIFY(Thumb::MTime)).toInt() != (int)info.lastModified().toSecsSinceEpoch()) {
 //            QFile::remove(thumbnail);
 //        } else {
 //            return QString();
@@ -618,7 +618,7 @@ _return:
     }
 
     image->setText(QT_STRINGIFY(Thumb::URL), fileUrl);
-    image->setText(QT_STRINGIFY(Thumb::MTime), QString::number(info.lastModified().toTime_t()));
+    image->setText(QT_STRINGIFY(Thumb::MTime), QString::number(info.lastModified().toSecsSinceEpoch()));
 
     // create path
     QFileInfo(thumbnail).absoluteDir().mkpath(".");

@@ -14,13 +14,13 @@
 
 class QScreen;
 class DBusDisplay;
-class Display: public QObject, public Singleton<Display>
+class DesktopDisplay: public QObject, public Singleton<DesktopDisplay>
 {
     Q_OBJECT
 
-    friend class Singleton<Display>;
+    friend class Singleton<DesktopDisplay>;
 public:
-    explicit Display(QObject *parent = 0);
+    explicit DesktopDisplay(QObject *parent = 0);
 
     QScreen *primaryScreen();
 

@@ -14,7 +14,7 @@
 
 #include <dbus/dbusdisplay.h>
 
-Display::Display(QObject *parent) : QObject(parent)
+DesktopDisplay::DesktopDisplay(QObject *parent) : QObject(parent)
 {
 #ifdef DDE_DBUS_DISPLAY
     m_display = new DBusDisplay(this);
@@ -30,11 +30,11 @@ Display::Display(QObject *parent) : QObject(parent)
     });
 #else
     connect(qApp, &QApplication::primaryScreenChanged,
-            this, &Display::primaryScreenChanged);
+            this, &DesktopDisplay::primaryScreenChanged);
 #endif
 }
 
-QScreen *Display::primaryScreen()
+QScreen *DesktopDisplay::primaryScreen()
 {
 #ifdef DDE_DBUS_DISPLAY
     auto primaryName = m_display->primary();

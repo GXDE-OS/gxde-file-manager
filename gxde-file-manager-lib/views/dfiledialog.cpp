@@ -38,10 +38,11 @@
 
 #include <QEventLoop>
 #include <QPointer>
+#include <QRegularExpression>
 #include <QWhatsThis>
 #include <QShowEvent>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QPushButton>
 #include <QComboBox>
 #include <QLineEdit>
@@ -68,7 +69,7 @@ public:
 
     DFileView *view = Q_NULLPTR;
     int currentNameFilterIndex = -1;
-    QDir::Filters filters = 0;
+    QDir::Filters filters = QDir::Filters();
     QString currentInputName;
 
     FileDialogStatusBar *statusBar;
@@ -101,11 +102,9 @@ DFileDialog::DFileDialog(QWidget *parent)
 
     connect(statusBar()->acceptButton(), &QPushButton::clicked, this, &DFileDialog::onAcceptButtonClicked);
     connect(statusBar()->rejectButton(), &QPushButton::clicked, this, &DFileDialog::onRejectButtonClicked);
-    connect(statusBar()->comboBox(),
-            static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),
+    connect(statusBar()->comboBox(), &QComboBox::textActivated,
             this, &DFileDialog::selectNameFilter);
-    connect(statusBar()->comboBox(),
-            static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),
+    connect(statusBar()->comboBox(), &QComboBox::textActivated,
             this, &DFileDialog::selectedNameFilterChanged);
 }
 
@@ -210,8 +209,7 @@ QList<QUrl> DFileDialog::selectedUrls() const
         return QList<QUrl>() << fileUrl;
     }
 
-    if (list.isEmpty() && (d->fileMode == QFileDialog::Directory
-                           || d->fileMode == QFileDialog::DirectoryOnly)) {
+    if (list.isEmpty() && d->fileMode == QFileDialog::Directory) {
         if (directoryUrl().isLocalFile())
             list << directoryUrl();
     }
@@ -234,14 +232,14 @@ void DFileDialog::addDisableUrlScheme(const QString &scheme)
 QStringList qt_strip_filters(const QStringList &filters)
 {
     QStringList strippedFilters;
-    QRegExp r(QString::fromLatin1("^(.*)\\(([^()]*)\\)$"));
+    QRegularExpression r(QString::fromLatin1("^(.*)\\(([^()]*)\\)$"));
     const int numFilters = filters.count();
     strippedFilters.reserve(numFilters);
     for (int i = 0; i < numFilters; ++i) {
         QString filterName = filters[i];
-        int index = r.indexIn(filterName);
-        if (index >= 0) {
-            filterName = r.cap(1);
+        const QRegularExpressionMatch match = r.match(filterName);
+        if (match.hasMatch()) {
+            filterName = match.captured(1);
         }
         strippedFilters.append(filterName.simplified());
     }
@@ -336,9 +334,10 @@ void DFileDialog::selectNameFilterByIndex(int index)
         for (const QString &filter : newNameFilters) {
             newNameFilterExtension = db.suffixForFileName(filter);
 
-            QRegExp  re(newNameFilterExtension, Qt::CaseInsensitive, QRegExp::Wildcard);
+            QRegularExpression re(QRegularExpression::wildcardToRegularExpression(newNameFilterExtension),
+                                  QRegularExpression::CaseInsensitiveOption);
 
-            if (re.exactMatch(fileNameExtension)) {
+            if (re.match(fileNameExtension).hasMatch()) {
                 return getFileView()->setNameFilters(newNameFilters);
             }
         }
@@ -387,7 +386,7 @@ void DFileDialog::setFileMode(QFileDialog::FileMode mode)
 {
     D_D(DFileDialog);
 
-    if (d->fileMode == QFileDialog::DirectoryOnly
+    if (d->fileMode == QFileDialog::Directory
             || d->fileMode == QFileDialog::Directory) {
         // 清理只显示目录时对文件名添加的过滤条件
         getFileView()->setNameFilters(QStringList());
@@ -399,7 +398,6 @@ void DFileDialog::setFileMode(QFileDialog::FileMode mode)
     case QFileDialog::ExistingFiles:
         getFileView()->setEnabledSelectionModes(QSet<DFileView::SelectionMode>() << QAbstractItemView::ExtendedSelection);
         break;
-    case QFileDialog::DirectoryOnly:
     case QFileDialog::Directory:
         // 文件名中不可能包含 '/', 此处目的是过滤掉所有文件
         getFileView()->setNameFilters(QStringList("/"));
@@ -783,14 +781,22 @@ void DFileDialog::adjustPosition(QWidget *w)
         w = w->window();
     }
     QRect desk;
+    QScreen *targetScreen = nullptr;
     if (w) {
-        scrn = QApplication::desktop()->screenNumber(w);
-    } else if (QApplication::desktop()->isVirtualDesktop()) {
-        scrn = QApplication::desktop()->screenNumber(QCursor::pos());
+        targetScreen = w->screen();
     } else {
-        scrn = QApplication::desktop()->screenNumber(this);
+        // Qt6 没有 QDesktopWidget，借助 QGuiApplication 找到鼠标所在屏幕
+        targetScreen = QGuiApplication::screenAt(QCursor::pos());
+        if (!targetScreen) {
+            targetScreen = this->screen();
+        }
     }
-    desk = QApplication::desktop()->availableGeometry(scrn);
+    if (!targetScreen) {
+        targetScreen = QGuiApplication::primaryScreen();
+    }
+    scrn = QGuiApplication::screens().indexOf(targetScreen);
+    if (scrn < 0) scrn = 0;
+    desk = targetScreen->availableGeometry();
 
     QWidgetList list = QApplication::topLevelWidgets();
     for (int i = 0; (extraw == 0 || extrah == 0) && i < list.size(); ++i) {

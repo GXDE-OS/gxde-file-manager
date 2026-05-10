@@ -187,10 +187,9 @@ static QPixmap pixmapByPath(const QString &path, qreal scaleRatio)
         return QPixmap();
 
     const QString pixmap_key = QString("%1@%2").arg(path).arg(scaleRatio);
-    QPixmap *pixmap = QPixmapCache::find(pixmap_key);
-
-    if (pixmap)
-        return *pixmap;
+    QPixmap pixmap;
+    if (QPixmapCache::find(pixmap_key, &pixmap))
+        return pixmap;
 
     qreal sourceDevicePixelRatio = 1;
     QImageReader reader(qt_findAtNxFile(path, scaleRatio, &sourceDevicePixelRatio));
@@ -215,10 +214,9 @@ static QPixmap pixmapByIcon(const QIcon &icon, qreal scaleRatio)
         return QPixmap();
 
     const QString pixmap_key = QString("%1@%1").arg(icon.cacheKey()).arg(scaleRatio);
-    QPixmap *pixmap = QPixmapCache::find(pixmap_key);
-
-    if (pixmap)
-        return *pixmap;
+    QPixmap pixmap;
+    if (QPixmapCache::find(pixmap_key, &pixmap))
+        return pixmap;
 
     const QSize &size = icon.availableSizes().first();
     QPixmap p = icon.pixmap(size).scaledToHeight(size.height() * scaleRatio, Qt::SmoothTransformation);

@@ -14,10 +14,11 @@ isEmpty(TARGET) {
 }
 
 TEMPLATE = app
-CONFIG += c++11 link_pkgconfig
+CONFIG += c++17 link_pkgconfig
 PKGCONFIG += gio-unix-2.0
-CONFIG(release, release|debug) {
-    PKGCONFIG += dtkwidget
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += dtk2widget core5compat
+    DEFINES += DFM_USE_QT6
 } else {
     PKGCONFIG += dtkwidget
 }

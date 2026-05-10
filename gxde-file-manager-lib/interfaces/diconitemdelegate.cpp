@@ -473,7 +473,7 @@ QSize DIconItemDelegatePrivate::textSize(const QString &text, const QFontMetrics
     int height = 0;
 
     for (const QString &line : str.split('\n')) {
-        max_width = qMax(metrics.width(line), max_width);
+        max_width = qMax(metrics.horizontalAdvance(line), max_width);
 
         if (lineHeight > 0)
             height += lineHeight;
@@ -1196,7 +1196,7 @@ void DIconItemDelegate::initTextLayout(const QModelIndex &index, QTextLayout *la
     const QList<QColor> &colors = qvariant_cast<QList<QColor>>(ep.value("colored"));
 
     if (!colors.isEmpty()) {
-        if (!layout->engine()->block.docHandle()) {
+        if (!layout->engine()->block.isValid() || !layout->engine()->block.document()) {
             if (!d->document)
                 const_cast<DIconItemDelegatePrivate*>(d)->document = new QTextDocument(const_cast<DIconItemDelegate*>(this));
 

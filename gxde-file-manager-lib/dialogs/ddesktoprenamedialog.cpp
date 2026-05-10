@@ -31,6 +31,8 @@
 #include <QWindow>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QValidator>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -73,7 +75,7 @@ public:
     std::tuple<QLabel*, QLineEdit*, QHBoxLayout*> m_modeThreeItemsForFileName{};
     std::tuple<QLabel*, QLineEdit*, QHBoxLayout*> m_modeThreeItemsForSNNumber{};
     QPair<QVBoxLayout*, QFrame*> m_modeThreeLayout{};
-    QRegExpValidator* m_validator{ nullptr };
+    QRegularExpressionValidator* m_validator{ nullptr };
 
     QVBoxLayout* m_mainLayout{ nullptr };
     QFrame* m_mainFrame{ nullptr };
@@ -114,8 +116,8 @@ void DDesktopRenameDialogPrivate::initUi()
     m_modeThreeItemsForSNNumber = std::make_tuple(new QLabel{}, new QLineEdit{}, new QHBoxLayout{});
     m_modeThreeLayout = QPair<QVBoxLayout*, QFrame*>{new QVBoxLayout{}, new QFrame{}};
 
-    QRegExp regStr{ QString{"[0-9]+"} };
-    m_validator = new QRegExpValidator{ regStr };
+    QRegularExpression regStr{ QString{"[0-9]+"} };
+    m_validator = new QRegularExpressionValidator{ regStr };
 
     m_mainLayout = new QVBoxLayout{};
     m_mainFrame = new QFrame{};
@@ -256,7 +258,7 @@ void DDesktopRenameDialogPrivate::initUiLayout()
     hLayout->addWidget(tagLabel);
     hLayout->addSpacing(30);
     hLayout->addWidget(modeChoseBox);
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
 
 
     ///###: mode 1
@@ -267,7 +269,7 @@ void DDesktopRenameDialogPrivate::initUiLayout()
     hLayout->addWidget(tagLabel);
     hLayout->addSpacing(30);
     hLayout->addWidget(contentLineEdit);
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
 
 
     tagLabel = std::get<0>(m_modeOneItemsForReplacing);
@@ -283,7 +285,7 @@ void DDesktopRenameDialogPrivate::initUiLayout()
     m_modeOneLayout.first->addSpacing(10);
     m_modeOneLayout.first->addLayout(std::get<2>(m_modeOneItemsForReplacing));
     m_modeOneLayout.first->setSpacing(0);
-    m_modeOneLayout.first->setMargin(0);
+    m_modeOneLayout.first->setContentsMargins(0, 0, 0, 0);
     m_modeOneLayout.second->setLayout(m_modeOneLayout.first);
 
 
@@ -292,14 +294,14 @@ void DDesktopRenameDialogPrivate::initUiLayout()
     ///###: mode 2
     hLayout = std::get<2>(m_modeTwoItemsForAdding);
     hLayout->setSpacing(0);
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
     tagLabel = std::get<0>(m_modeTwoItemsForAdding);
     contentLineEdit = std::get<1>(m_modeTwoItemsForAdding);
     tagLabel->setBuddy(contentLineEdit);
     hLayout->addWidget(tagLabel);
     hLayout->addSpacing(30);
     hLayout->addWidget(contentLineEdit);
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
 
 
     tagLabel = std::get<0>(m_modeTwoItemsForLocating);
@@ -314,7 +316,7 @@ void DDesktopRenameDialogPrivate::initUiLayout()
     m_modeTwoLayout.first->addSpacing(10);
     m_modeTwoLayout.first->addLayout(std::get<2>(m_modeTwoItemsForLocating));
     m_modeTwoLayout.first->setSpacing(0);
-    m_modeTwoLayout.first->setMargin(0);
+    m_modeTwoLayout.first->setContentsMargins(0, 0, 0, 0);
     m_modeTwoLayout.second->setLayout(m_modeTwoLayout.first);
 
 
@@ -338,7 +340,7 @@ void DDesktopRenameDialogPrivate::initUiLayout()
     m_modeThreeLayout.first->addSpacing(20);
     m_modeThreeLayout.first->addLayout(std::get<2>(m_modeThreeItemsForSNNumber));
     m_modeThreeLayout.first->setSpacing(0);
-    m_modeThreeLayout.first->setMargin(0);
+    m_modeThreeLayout.first->setContentsMargins(0, 0, 0, 0);
     m_modeThreeLayout.second->setLayout(m_modeThreeLayout.first);
 
     ///###: total layout.
@@ -348,7 +350,7 @@ void DDesktopRenameDialogPrivate::initUiLayout()
     m_stackedLayout->setCurrentIndex(0);
 
     m_mainLayout->setSpacing(0);
-    m_mainLayout->setMargin(0);
+    m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->addWidget(m_titleLabel);
     m_mainLayout->addSpacing(30);
     m_mainLayout->addLayout(std::get<2>(m_itemsForSelecting));

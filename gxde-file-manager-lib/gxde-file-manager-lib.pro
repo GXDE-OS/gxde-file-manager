@@ -8,11 +8,25 @@
 
 include(../common/common.pri)
 
-QT       += core gui svg dbus x11extras concurrent multimedia dbus xml KCodecs
+QT       += core gui svg dbus concurrent multimedia xml widgets
 #private
 QT       += gui-private
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+# Qt6 端 DTK 仅保留 dtk2widget 的 Qt6 移植（同时拉入 dtk6core / dtk6gui）
+QT       += dtk2widget
+
+# Qt5 兼容：x11extras 仅在 Qt5 下加入；Qt6 已用 utils/qx11info_compat.h 自行封装
+lessThan(QT_MAJOR_VERSION, 6): QT += x11extras
+lessThan(QT_MAJOR_VERSION, 6): QT += KCodecs
+
+# KF6 KCodecs 在 Qt6 下没有 qmake 模块，需要手动接入头/库
+greaterThan(QT_MAJOR_VERSION, 5) {
+    INCLUDEPATH += /usr/include/KF6/KCodecs
+    LIBS += -lKF6Codecs
+    DEFINES += DFM_USE_QT6
+    # QTextCodec 在 Qt6 下迁到 Core5Compat 模块
+    QT += core5compat
+}
 
 TARGET = $$ProjectName
 
@@ -30,8 +44,17 @@ isEmpty(PREFIX){
     PREFIX = /usr
 }
 
-CONFIG += c++11 link_pkgconfig
-PKGCONFIG += gsettings-qt libsecret-1 gio-unix-2.0 poppler-cpp dtkwidget udisks2-qt5 disomaster Qt5Xdg
+CONFIG += c++17 link_pkgconfig
+
+# 公共 pkgconfig（不含 Qt 版本相关包）
+PKGCONFIG += libsecret-1 gio-unix-2.0 poppler-cpp disomaster
+
+# Qt 版本相关 pkgconfig 切换
+greaterThan(QT_MAJOR_VERSION, 5) {
+    PKGCONFIG += gsettings-qt6 udisks2-qt6
+} else {
+    PKGCONFIG += gsettings-qt udisks2-qt5 dtkwidget Qt5Xdg
+}
 #DEFINES += QT_NO_DEBUG_OUTPUT
 DEFINES += QT_MESSAGELOGCONTEXT
 

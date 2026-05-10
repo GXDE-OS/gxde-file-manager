@@ -33,6 +33,8 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QValidator>
 #include <QDebug>
 #include <QLabel>
@@ -185,7 +187,7 @@ public:
 
     QTuple<QLabel*, QLineEdit*, QLabel*, QLineEdit*, QLabel*> m_customOPeratorItems{};
     QPair<QHBoxLayout*, QFrame*> m_frameForLayoutCustomArea{};
-    QRegExpValidator* m_validator{ nullptr };
+    QRegularExpressionValidator* m_validator{ nullptr };
 
 
     QTuple<QPushButton*, QPushButton*, QHBoxLayout*, QFrame*> m_buttonsArea{};
@@ -221,8 +223,8 @@ void DRenameBarPrivate::initUi()
     m_customOPeratorItems = std::make_tuple(new QLabel, new QLineEdit, new QLabel, new QLineEdit, new QLabel);
     m_frameForLayoutCustomArea = QPair<QHBoxLayout*, QFrame*>{ new QHBoxLayout, new QFrame };
 
-    QRegExp regStr{ QString{"[0-9]+"} };
-    m_validator = new QRegExpValidator{ regStr };
+    QRegularExpression regStr{ QString{"[0-9]+"} };
+    m_validator = new QRegularExpressionValidator{ regStr };
 
     m_buttonsArea = std::make_tuple(new QPushButton, new QPushButton, new QHBoxLayout, new QFrame);
 }
@@ -322,7 +324,7 @@ void DRenameBarPrivate::layoutItems()noexcept
     hBoxLayout = m_frameForLayoutReplaceArea.first;
     frame = m_frameForLayoutReplaceArea.second;
     hBoxLayout->setSpacing(0);
-    hBoxLayout->setMargin(0);
+    hBoxLayout->setContentsMargins(0, 0, 0, 0);
     hBoxLayout->addWidget(std::get<0>(m_replaceOperatorItems));
     hBoxLayout->setSpacing(5);
     hBoxLayout->addWidget(std::get<1>(m_replaceOperatorItems));
@@ -338,7 +340,7 @@ void DRenameBarPrivate::layoutItems()noexcept
     hBoxLayout = m_frameForLayoutAddArea.first;
     frame = m_frameForLayoutAddArea.second;
     hBoxLayout->setSpacing(0);
-    hBoxLayout->setMargin(0);
+    hBoxLayout->setContentsMargins(0, 0, 0, 0);
     hBoxLayout->addWidget(std::get<0>(m_addOperatorItems));
     hBoxLayout->setSpacing(5);
     hBoxLayout->addWidget(std::get<1>(m_addOperatorItems));
@@ -354,7 +356,7 @@ void DRenameBarPrivate::layoutItems()noexcept
     hBoxLayout = m_frameForLayoutCustomArea.first;
     frame = m_frameForLayoutCustomArea.second;
     hBoxLayout->setSpacing(0);
-    hBoxLayout->setMargin(0);
+    hBoxLayout->setContentsMargins(0, 0, 0, 0);
     hBoxLayout->addWidget(std::get<0>(m_customOPeratorItems));
     hBoxLayout->setSpacing(5);
     hBoxLayout->addWidget(std::get<1>(m_customOPeratorItems));
@@ -371,7 +373,7 @@ void DRenameBarPrivate::layoutItems()noexcept
 
     hBoxLayout = std::get<2>(m_buttonsArea);
     hBoxLayout->setSpacing(0);
-    hBoxLayout->setMargin(0);
+    hBoxLayout->setContentsMargins(0, 0, 0, 0);
     frame = std::get<3>(m_buttonsArea); //###: !!!
     hBoxLayout->addWidget(std::get<0>(m_buttonsArea));
     hBoxLayout->addSpacing(10);

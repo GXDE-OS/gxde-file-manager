@@ -20,6 +20,8 @@
  */
 #include <gio/gio.h>
 
+#include <QFile>
+
 #include "dgiofiledevice.h"
 #include "private/dfiledevice_p.h"
 #include "dabstractfilewatcher.h"

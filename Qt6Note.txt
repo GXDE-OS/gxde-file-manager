@@ -1,0 +1,4 @@
+两个 Qt6 下被禁用的功能：
+
+dde-video-preview-plugin：依赖 libgxmr，目前只有 Qt5 版本
+桌面 hotzone 演示视频：DVideoWidget 在 dtk2widget-qt6 里有头文件但符号未实现

@@ -27,10 +27,12 @@
 #include <QWindow>
 #include <QTimer>
 #include <QMediaPlayer>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QMultimedia>
+#endif
 #include <QGuiApplication>
 #include <QCursor>
-#include <QDesktopWidget>
+#include <QScreen>
 
 DFM_BEGIN_NAMESPACE
 

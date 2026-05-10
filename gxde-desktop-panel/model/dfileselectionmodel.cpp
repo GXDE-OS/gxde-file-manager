@@ -73,7 +73,19 @@ QModelIndexList DFileSelectionModel::selectedIndexes() const
         }
 
         // remove repeated item
-        m_selectedList = m_selectedList.toSet().toList();
+        QSet<QModelIndex> alreadySeen;
+        QModelIndexList uniqueItems;
+
+        uniqueItems.reserve(m_selectedList.size());
+
+        for (const QModelIndex& cur : std::as_const(m_selectedList)) {
+            if (!alreadySeen.contains(cur)) {
+                alreadySeen.insert(cur);
+                uniqueItems.append(cur);
+            }
+        }
+
+        m_selectedList = uniqueItems;
     }
 
     return m_selectedList;

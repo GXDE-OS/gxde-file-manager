@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! -x /usr/bin/deepin-desktop-ts-convert ]; then
+    echo "The required deepin-desktop-ts-convert is NOT found, translation generation failed!!"
+    exit -1
+fi
+
 DESKTOP_COMPUTER_TEMP_FILE=data/applications/gxde-computer.desktop.tmp
 DESKTOP_COMPUTER_FILE=data/applications/gxde-computer.desktop
 DESKTOP_COMPUTER_TS_DIR=translations/gxde-computer-desktop/

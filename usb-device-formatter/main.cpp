@@ -23,7 +23,7 @@
  */
 
 #include <DApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <DLog>
 #include <QDebug>
 #include <QFile>
@@ -37,7 +37,7 @@
 #include "../partman/partition.h"
 #include "app/singletonapp.h"
 #include <QProcessEnvironment>
-#include <QX11Info>
+#include "qx11info_compat.h"
 #include <X11/Xlib.h>
 DCORE_USE_NAMESPACE
 //DWIDGET_BEGIN_NAMESPACE
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     MainWindow* w = new MainWindow(path);
     w->show();
     QRect rect = w->geometry();
-    rect.moveCenter(qApp->desktop()->geometry().center());
+    rect.moveCenter(qApp->primaryScreen()->geometry().center());
     w->move(rect.x(), rect.y());
 
     if(CMDManager::instance()->isSet("m")){

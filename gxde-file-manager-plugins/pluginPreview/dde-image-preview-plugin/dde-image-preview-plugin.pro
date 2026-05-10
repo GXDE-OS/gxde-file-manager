@@ -9,10 +9,18 @@ QT       += widgets
 TARGET = dde-image-preview-plugin
 TEMPLATE = lib
 
-CONFIG += plugin c++11 link_pkgconfig
-PKGCONFIG += dtkwidget
+CONFIG += plugin c++17 link_pkgconfig
+
 
 include(../../../common/common.pri)
+
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += dtk2widget
+    DEFINES += DFM_USE_QT6
+} else {
+    PKGCONFIG += dtkwidget
+}
+
 
 SOURCES += \
     imageview.cpp \

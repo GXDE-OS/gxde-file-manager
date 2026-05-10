@@ -115,7 +115,7 @@ public:
     DFileCopyMoveJob::Handle *handle = nullptr;
     DFileCopyMoveJob::Mode mode = DFileCopyMoveJob::CopyMode;
     DFileCopyMoveJob::Error error = DFileCopyMoveJob::NoError;
-    DFileCopyMoveJob::FileHints fileHints = 0;
+    DFileCopyMoveJob::FileHints fileHints = DFileCopyMoveJob::FileHints();
     QString errorString;
     QAtomicInt state = DFileCopyMoveJob::StoppedState;
     DFileCopyMoveJob::Action lastErrorHandleAction = DFileCopyMoveJob::NoAction;

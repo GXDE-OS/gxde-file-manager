@@ -28,7 +28,7 @@
 #include <dtitlebar.h>
 
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QWindow>
 #include <QShowEvent>
 #include <QDebug>

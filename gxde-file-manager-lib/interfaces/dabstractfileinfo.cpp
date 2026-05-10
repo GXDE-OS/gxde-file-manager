@@ -1080,7 +1080,7 @@ QList<int> DAbstractFileInfo::userColumnChildRoles(int column) const
 
 int DAbstractFileInfo::userColumnWidth(int userColumnRole) const
 {
-    return userColumnWidth(userColumnRole, qApp->fontMetrics());
+    return userColumnWidth(userColumnRole, QFontMetrics(qApp->font()));
 }
 
 int DAbstractFileInfo::userColumnWidth(int userColumnRole, const QFontMetrics &fontMetrics) const
@@ -1094,13 +1094,13 @@ int DAbstractFileInfo::userColumnWidth(int userColumnRole, const QFontMetrics &f
     case DFileSystemModel::FileMimeTypeRole:
         return 80;
     default:
-        return fontMetrics.width("0000/00/00 00:00:00");
+        return fontMetrics.horizontalAdvance("0000/00/00 00:00:00");
     }
 }
 
 int DAbstractFileInfo::userRowHeight() const
 {
-    return userRowHeight(qApp->fontMetrics());
+    return userRowHeight(QFontMetrics(qApp->font()));
 }
 
 int DAbstractFileInfo::userRowHeight(const QFontMetrics &fontMetrics) const
@@ -1598,7 +1598,11 @@ static QList<QAction *> getTemplateFileList()
             const QStringList &templateFileList = templateFolder.entryList(QStringList(QStringLiteral("*.desktop")), QDir::Files | QDir::Readable | QDir::NoSymLinks);
             for (const QString &filePath : templateFileList) {
                 QSettings desktopFile(templateFolder.absoluteFilePath(filePath), QSettings::IniFormat);
+                #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                // 在 Qt6 中 QSettings::setIniCodec()已经不可用了...
+                // 但没事，QSettings现在对INI默认以UTF-8编码读写
                 desktopFile.setIniCodec("UTF-8");
+                #endif
                 const QString entrySourcePath = templateFolder.absoluteFilePath(desktopFile.value("Desktop Entry/URL").toString());
                 const QString entryText = desktopFile.value(
                                             QString("Desktop Entry/Name[%1]").arg(QLocale::system().name()),

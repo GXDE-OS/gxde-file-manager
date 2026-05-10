@@ -171,7 +171,7 @@ void DFMAdvanceSearchBar::initUI()
     formLayout->addWidget(asbCombos[DATE_RANGE], 1, 4);
 
     formLayout->setSpacing(6);
-    formLayout->setMargin(6);
+    formLayout->setContentsMargins(6, 6, 6, 6);
 //    formLayout->setRowMinimumHeight(0, 36);
 //    formLayout->setRowMinimumHeight(1, 36);
 

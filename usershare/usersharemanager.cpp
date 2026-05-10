@@ -372,7 +372,11 @@ void UserShareManager::testUpdateUserShareInfo()
         writeCacheToFile(getCacehPath(), content);
         qDebug() << content;
         QSettings settings(getCacehPath(), QSettings::IniFormat);
+        #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        // 在 Qt6 中 QSettings::setIniCodec()已经不可用了...
+        // 但没事，QSettings现在对INI默认以UTF-8编码读写
         settings.setIniCodec("utf-8");
+        #endif
         qDebug() << settings.childGroups();
         foreach (QString group, settings.childGroups()) {
             settings.beginGroup(group);

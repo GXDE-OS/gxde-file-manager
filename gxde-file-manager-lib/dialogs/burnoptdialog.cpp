@@ -173,7 +173,7 @@ void BurnOptDialogPrivate::setupUi()
     QWidget *wpostburn = new QWidget();
     wpostburn->setLayout(new QHBoxLayout);
     w_content->layout()->addWidget(wpostburn);
-    wpostburn->layout()->setMargin(0);
+    wpostburn->layout()->setContentsMargins(0, 0, 0, 0);
 
     cb_checkdisc = new QCheckBox(QObject::tr("Verify data"));
     wpostburn->layout()->addWidget(cb_checkdisc);

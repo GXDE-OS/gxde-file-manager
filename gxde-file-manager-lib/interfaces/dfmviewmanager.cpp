@@ -151,7 +151,7 @@ void DFMViewManager::insertToCreatorHash(const DFMViewManager::KeyType &type, co
 {
     Q_D(DFMViewManager);
 
-    d->controllerCreatorHash.insertMulti(type, creator);
+    d->controllerCreatorHash.insert(type, creator);
 }
 
 DFM_END_NAMESPACE

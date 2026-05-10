@@ -51,10 +51,21 @@ inline bool qQPointLessThanKey(const QPoint &key1, const QPoint &key2)
            ((key1.x() ==  key2.x()) && (key1.y() < key2.y()));
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 template <> inline bool qMapLessThanKey(const QPoint &key1, const QPoint &key2)
 {
     return qQPointLessThanKey(key1, key2);
 }
+#else
+namespace std {
+template <>
+struct less<QPoint> {
+    bool operator()(const QPoint &lhs, const QPoint &rhs) const noexcept {
+        return qQPointLessThanKey(lhs, rhs);
+    }
+};
+}
+#endif
 
 
 // TODO: move all grid calc to GridCore

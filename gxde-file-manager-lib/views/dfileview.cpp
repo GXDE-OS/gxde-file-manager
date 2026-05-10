@@ -459,8 +459,8 @@ QModelIndex DFileView::indexAt(const QPoint &point) const
 
         index = row_index * column_count + column_index;
 
-        const QModelIndex &tmp_index = rootIndex().child(index, 0);
-        QStyleOptionViewItem option = viewOptions();
+        const QModelIndex &tmp_index = model()->index(index, 0, rootIndex());
+        QStyleOptionViewItem option; initViewItemOption(&option);
 
         option.rect = QRect(QPoint(column_index * item_width + ICON_VIEW_SPACING,
                                     row_index * (item_size.height()  + ICON_VIEW_SPACING * 2) + ICON_VIEW_SPACING),
@@ -475,7 +475,7 @@ QModelIndex DFileView::indexAt(const QPoint &point) const
         return QModelIndex();
     }
 
-    return rootIndex().child(index, 0);
+    return model()->index(index, 0, rootIndex());
 }
 
 QRect DFileView::visualRect(const QModelIndex &index) const
@@ -594,7 +594,9 @@ QSize DFileView::itemSizeHint() const
 {
     D_DC(DFileView);
 
-    return itemDelegate()->sizeHint(viewOptions(), rootIndex());
+    QStyleOptionViewItem opt;
+    initViewItemOption(&opt);
+    return itemDelegate()->sizeHint(opt, rootIndex());
 }
 
 bool DFileView::isDropTarget(const QModelIndex &index) const
@@ -631,7 +633,7 @@ bool DFileView::edit(const QModelIndex &index, QAbstractItemView::EditTrigger tr
     bool isCheckRenameAction = false;
 #endif
     if (trigger == SelectedClicked) {
-        QStyleOptionViewItem option = viewOptions();
+        QStyleOptionViewItem option; initViewItemOption(&option);
 
         option.rect = visualRect(index);
 
@@ -1651,13 +1653,13 @@ void DFileView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFl
         }
 
 #ifndef CLASSICAL_SECTION
-        return selectionModel()->select(QItemSelection(rootIndex().child(list.first().first, 0),
-                                                       rootIndex().child(list.last().second, 0)), flags);
+        return selectionModel()->select(QItemSelection(model()->index(list.first().first, 0, rootIndex()),
+                                                       model()->index(list.last().second, 0, rootIndex())), flags);
 #else
         QItemSelection selection;
 
         for (const RandeIndex &index : list) {
-            selection.append(QItemSelectionRange(rootIndex().child(index.first, 0), rootIndex().child(index.second, 0)));
+            selection.append(QItemSelectionRange(model()->index(index.first, 0, rootIndex()), model()->index(index.second, 0, rootIndex())));
         }
 
         return selectionModel()->select(selection, flags);
@@ -3022,7 +3024,7 @@ void DFileViewPrivate::_q_onSectionHandleDoubleClicked(int logicalIndex)
         return;
     }
 
-    QStyleOptionViewItem option = q->viewOptions();
+    QStyleOptionViewItem option; q->initViewItemOption(&option);
 
     option.rect.setWidth(QWIDGETSIZE_MAX);
     option.rect.setHeight(q->itemSizeHint().height());

@@ -27,15 +27,14 @@
 
 #include <QObject>
 
+#include "interfaces/durl.h"
+
 class DFileInfo;
 class DFMEvent;
 class DFMUrlBaseEvent;
 class DFMUrlListBaseEvent;
 class DAbstractFileInfo;
 class DeviceInfo;
-class DUrl;
-
-typedef QList<DUrl> DUrlList;
 
 
 
