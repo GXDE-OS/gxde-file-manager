@@ -4,6 +4,30 @@ Deepin File Manager is a file management tool independently developed by Deepin 
 
 Now DFM V4.x is forked and maintained by GXDE to provide filemanager and desktop for GXDE
 
+> **NOTE**: This branch is an attempt to migrate to Qt6.
+
+## Qt6 Migration Status
+### Overall Status
+There are 2 functions that are currently UNAVAILABLE:
+* **dde-video-preview-plugin**: Relys on `libgxmr` which is Qt5 only now.
+* **DVideoWidget**: The header files exist in `dtk2widget-qt6`, but the symbols are NOT YET implemented.
+
+### How to compile
+```bash
+mkdir -p ./build/all
+cd ./build/all
+qmake6 ../../filemanager.pro
+make
+```
+
+
+### How to run without installing to system path
+```bash
+LD_LIBRARY_PATH=/home/char/Desktop/Repository/GXDE/FileMan/gxde-file-manager/build/all/gxde-file-manager-lib:$LD_LIBRARY_PATH /home/char/Desktop/Repository/GXDE/FileMan/gxde-file-manager/build/all/gxde-file-manager/gxde-file-manager
+```
+
+> **WARN**: Above command is an example, you must replace the paths with the real path. Also, prepare to get [dtk2widget-qt6](https://gitee.com/GXDE-OS/dtk2widget-qt6) and [gxde-qt6-integration](https://gitee.com/GXDE-OS/gxde-qt6-integration) installed to your system, as they provide DTK2 port to Qt6 world.
+
 ### Dependencies
 
 ### Build dependencies
