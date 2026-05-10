@@ -1,4 +1,17 @@
+gxde-file-manager (6.0.0) UNRELEASED; urgency=medium
+
+  * 尝试移植到Qt6
+
+ -- CharOfString <markus_verify@126.com>  Sun, 10 May 2026 12:58:50 -0500
+
 gxde-file-manager (5.2.13) UNRELEASED; urgency=medium
+
+  * 打开本地软链接目录时保留软链接路径
+  * 修复在小小电脑上打开主目录文件崩溃的问题
+
+ -- gfdgd_xi <3025613752@qq.com>  Sat, 09 May 2026 15:46:35 +0800
+
+gxde-file-manager (5.2.12) UNRELEASED; urgency=medium
 
   * 打开本地软链接目录时保留软链接路径
   * 修复在小小电脑上打开主目录文件崩溃的问题
