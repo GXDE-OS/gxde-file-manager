@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=@PC_LIBDIR@
+includedir=@INCLUDE_INSTALL_DIR@
+
+Name: gxde-file-manager
+Description: DDE File Manager Header Files
+Version: @GXDE_VERSION@
+Libs: -L${libdir} -lgxde-file-manager
+Cflags: -I${includedir}
