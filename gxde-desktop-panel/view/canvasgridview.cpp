@@ -513,6 +513,15 @@ QRegion CanvasGridView::visualRegionForSelection(const QItemSelection &selection
 
 void CanvasGridView::mouseMoveEvent(QMouseEvent *event)
 {
+    if (event->buttons() == Qt::NoButton) {
+        auto index = indexAt(event->pos());
+        if (index != d->hoverIndex) {
+            d->hoverIndex = index;
+            viewport()->update();
+        }
+        return;
+    }
+
     if (event->buttons() != Qt::LeftButton) {
         event->ignore();
         return;
@@ -546,6 +555,12 @@ void CanvasGridView::mousePressEvent(QMouseEvent *event)
     d->mousePressed = true;
 
     bool leftButtonPressed = event->button() == Qt::LeftButton;
+
+    if (leftButtonPressed && index.isValid()) {
+        d->pressedIndex = index;
+        viewport()->update();
+    }
+
     bool showSelectFrame = leftButtonPressed;
     showSelectFrame &= !index.isValid();
     d->showSelectRect = showSelectFrame;
@@ -584,6 +599,7 @@ void CanvasGridView::mouseReleaseEvent(QMouseEvent *event)
 {
     QAbstractItemView::mouseReleaseEvent(event);
     d->mousePressed = false;
+    d->pressedIndex = QModelIndex();
     if (d->showSelectRect && d->selectRect.isValid()) {
         d->showSelectRect = false;
         d->selectRect = QRect();
@@ -795,6 +811,9 @@ void CanvasGridView::keyPressEvent(QKeyEvent *event)
 
 void CanvasGridView::dragEnterEvent(QDragEnterEvent *event)
 {
+    d->hoverIndex = QModelIndex();
+    d->pressedIndex = QModelIndex();
+
     if (event->source()) {
         if (!autoMerge()) {
             d->startDodge = true;
@@ -1133,6 +1152,23 @@ void CanvasGridView::paintEvent(QPaintEvent *event)
             }
         }
 
+        bool isHovered = d->hoverIndex.isValid() && d->hoverIndex == index;
+        bool isPressed = d->pressedIndex.isValid() && d->pressedIndex == index && d->mousePressed;
+
+        if (isHovered || isPressed) {
+            QPainterPath path;
+            QRect hoverRect = option.rect.adjusted(-2, -2, 2, 2);
+            path.addRoundedRect(hoverRect, 4, 4);
+
+            if (isPressed) {
+                painter.fillPath(path, QColor(43, 167, 248, 255 * 5 / 10));
+                painter.strokePath(path, QColor(30, 126, 255, 255 * 4 / 10));
+            } else {
+                painter.fillPath(path, QColor(43, 167, 248, 255 * 15 / 100));
+                painter.strokePath(path, QColor(30, 126, 255, 255 * 10 / 100));
+            }
+        }
+
         this->itemDelegate()->paint(&painter, option, index);
         DAbstractFileInfoPointer info = model()->fileInfo(index);
         if (info && info->scheme() == DFMMD_SCHEME && info->isVirtualEntry()) {
@@ -1198,6 +1234,9 @@ void CanvasGridView::focusOutEvent(QFocusEvent *event)
 {
     QAbstractItemView::focusOutEvent(event);
     d->startDodge = false;
+    d->hoverIndex = QModelIndex();
+    d->pressedIndex = QModelIndex();
+    viewport()->update();
 }
 
 void CanvasGridView::contextMenuEvent(QContextMenuEvent *event)
@@ -1244,6 +1283,12 @@ bool CanvasGridView::event(QEvent *event)
 {
     if (event->type() == QEvent::FontChange) {
         updateCanvas();
+    }
+
+    if (event->type() == QEvent::Leave) {
+        d->hoverIndex = QModelIndex();
+        d->pressedIndex = QModelIndex();
+        viewport()->update();
     }
 
     return QAbstractItemView::event(event);
@@ -1771,6 +1816,9 @@ void CanvasGridView::initUI()
 
     setAttribute(Qt::WA_TranslucentBackground);
     viewport()->setAttribute(Qt::WA_TranslucentBackground);
+
+    setMouseTracking(true);
+    viewport()->setMouseTracking(true);
 
     if (DApplication::isWayland()) {
         setWindowFlag(Qt::FramelessWindowHint, true);
