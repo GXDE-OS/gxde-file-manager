@@ -2229,9 +2229,9 @@ void DFileSystemModel::updateChildren(QList<DAbstractFileInfoPointer> list)
             break;
         }
 
-//        if (fileHash.contains(fileInfo->fileUrl())) {
-//            continue;
-//        }
+        if (fileHash.contains(fileInfo->fileUrl())) {
+            continue;
+        }
 
         const FileSystemNodePointer &chileNode = createNode(node.data(), fileInfo);
 
