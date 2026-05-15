@@ -136,9 +136,6 @@ public:
     // currentCursorIndex is not the mouse, it's the position move by keybord
     QModelIndex         currentCursorIndex;
 
-    QModelIndex         hoverIndex;
-    QModelIndex         pressedIndex;
-
     QPoint              lastMenuPos;
     QString             lastMenuNewFilepath;
 
