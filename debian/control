@@ -1,4 +1,4 @@
-Source: gxde-file-manager
+Source: gxde-file-manager-neo
 Section: libdevel
 Priority: optional
 Maintainer: gfdgd xi <3025613752@qq.com>
@@ -49,12 +49,12 @@ Build-Depends:
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
-Package: gxde-file-manager
+Package: gxde-file-manager-neo
 Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- libgxde-file-manager( =${binary:Version}),
+ libgxde-file-manager-neo( =${binary:Version}),
  socat,
  libdtk2widget6,
  libdtk6core,
@@ -62,42 +62,45 @@ Depends:
  libisoburn1,
  gxde-compressor,
 Provides:
- dde-file-manager
+ dde-file-manager,
+ gxde-file-manager
 Replaces:
  dde-file-manager,
+ gxde-file-manager
 Conflicts:
- dde-file-manager(>> 5.0.1-1)
+ dde-file-manager(>> 5.0.1-1),
+ gxde-file-manager
 Recommends: dde-qt6integration, avfs, gxde-file-manager-integration
 Description: File manager front end
  File manager front-end of Deepin OS
 
-Package: gxde-desktop-panel
+Package: gxde-desktop-panel-neo
 Architecture: any
-Depends: 
- ${shlibs:Depends}, 
- ${misc:Depends}, 
- libgxde-file-manager( =${binary:Version}),
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libgxde-file-manager-neo( =${binary:Version}),
  gxde-daemon,
-Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1)
-Provides: dde-desktop
-Replaces: dde-desktop
-Recommends: 
+Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1), gxde-desktop-panel
+Provides: dde-desktop, gxde-desktop-panel
+Replaces: dde-desktop, gxde-desktop-panel
+Recommends:
  deepin-screensaver,
  fantascene-dynamic-wallpaper,
  gxde-requ
 Description: deepin desktop-environment - desktop module
  Deepin Desktop Environment (DDE) - desktop module.
 
-Package: gxde-disk-mount-plugin
+Package: gxde-disk-mount-plugin-neo
 Architecture: any
-Provides: dde-disk-mount-plugin
-Conflicts: dde-disk-mount-plugin (>> 5.0.1-1)
-Replaces: dde-disk-mount-plugin
-Depends: ${shlibs:Depends}, ${misc:Depends}, libgxde-file-manager( =${binary:Version})
+Provides: dde-disk-mount-plugin, gxde-disk-mount-plugin
+Conflicts: dde-disk-mount-plugin (>> 5.0.1-1), gxde-disk-mount-plugin
+Replaces: dde-disk-mount-plugin, gxde-disk-mount-plugin
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgxde-file-manager-neo( =${binary:Version})
 Description: plugin of gxde-dock
  Disk mount plugin of gxde-dock which is created by libgxde-file-manager
 
-Package: libgxde-file-manager
+Package: libgxde-file-manager-neo
 Architecture: any
 Depends:
  ${shlibs:Depends},
@@ -107,20 +110,20 @@ Depends:
  cryptsetup,
  libkf6codecs6,
 # deepin-anything-libs
-Breaks: gxde-file-manager(<=1.2.3-3)
-Replaces: libdde-file-manager
-Conflicts: libdde-file-manager (>> 5.0.1-1)
-Provides: libdde-file-manager
+Breaks: gxde-file-manager-neo(<=1.2.3-3)
+Replaces: libdde-file-manager, libgxde-file-manager
+Conflicts: libdde-file-manager (>> 5.0.1-1), libgxde-file-manager
+Provides: libdde-file-manager, libgxde-file-manager
 Multi-Arch: same
 Description: DDE File Manager library
  This package contains the shared libraries.
 
-Package: libgxde-file-manager-dev
+Package: libgxde-file-manager-neo-dev
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libgxde-file-manager( =${binary:Version})
-Replaces: libdde-file-manager-dev
-Conflicts: libdde-file-manager-dev (>> 5.0.1-1)
-Provides: libdde-file-manager-dev
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgxde-file-manager-neo( =${binary:Version})
+Replaces: libdde-file-manager-dev, libgxde-file-manager-dev
+Conflicts: libdde-file-manager-dev (>> 5.0.1-1), libgxde-file-manager-dev
+Provides: libdde-file-manager-dev, libgxde-file-manager-dev
 Description: DDE File Manager Devel library
  This package contains the header files and static libraries
  of libgxde-file-manager

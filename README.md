@@ -1,5 +1,7 @@
 ## gxde-file-manager
 
+> **WARNING**: Installing this ported version will UNINSTALL your original version of `gxde-file-manager`, and this is a "work in progress" version, you shall consider if you really want to install the package or just conpile & run without installing!!
+
 Deepin File Manager is a file management tool independently developed by Deepin Technology, featured with searching, copying, trash, compression/decompression, file property and other file management functions.
 
 Now DFM V4.x is forked and maintained by GXDE to provide filemanager and desktop for GXDE
@@ -11,6 +13,30 @@ Now DFM V4.x is forked and maintained by GXDE to provide filemanager and desktop
 There are 2 functions that are currently UNAVAILABLE:
 * **dde-video-preview-plugin**: Relys on `libgxmr` which is Qt5 only now.
 * **DVideoWidget**: The header files exist in `dtk2widget-qt6`, but the symbols are NOT YET implemented.
+
+### Package rename (`-neo` suffix)
+To avoid conflicts with the upstream `gxde-file-manager` packages when installed side-by-side, every Debian binary/source package produced from this branch is suffixed with `-neo`. Whichever build system is used (QMake or CMake), the produced binaries land in the renamed deb packages — binary paths inside the packages (e.g. `/usr/bin/gxde-file-manager`, `libgxde-file-manager.so`) are unchanged.
+
+| Original name | Renamed (`-neo`) |
+| --- | --- |
+| `gxde-file-manager` (Source) | `gxde-file-manager-neo` |
+| `gxde-file-manager` | `gxde-file-manager-neo` |
+| `gxde-desktop-panel` | `gxde-desktop-panel-neo` |
+| `gxde-disk-mount-plugin` | `gxde-disk-mount-plugin-neo` |
+| `libgxde-file-manager` | `libgxde-file-manager-neo` |
+| `libgxde-file-manager-dev` | `libgxde-file-manager-neo-dev` |
+
+Each `-neo` package declares `Provides`/`Replaces`/`Conflicts` against its original counterpart, so installing a `-neo` package transparently replaces the upstream one. Reverse-dependencies that reference `dde-file-manager` or the original `gxde-*` names continue to resolve.
+
+Files changed for the rename:
+* `debian/control` — `Source:`, all `Package:` stanzas, plus inter-package `Depends`/`Provides`/`Replaces`/`Conflicts`.
+* `debian/changelog` — top entry's source name changed to `gxde-file-manager-neo`.
+* `debian/*.install`, `debian/*.postinst` — renamed to match the new package names (incl. architecture-specific variants `*.install.arm64` / `*.install.mips*` / `*.install.sw_64`).
+
+Files intentionally NOT changed:
+* Installed binary/library paths inside the deb packages (would break `.desktop`, DBus services, polkit policies, library SONAME).
+* `CMakeLists.txt` / `*.pro` — they build binaries, not Debian packages; CMake `project()` name is just a label.
+* `debian/copyright` `Upstream-Name` — still refers to the upstream project.
 
 ### How to compile
 ```bash
