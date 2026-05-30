@@ -72,7 +72,7 @@ void LayerShellHelper::setDesktopRole(QWidget* widget, QScreen* screen,
     LayerShellQt::Window* target_layer_shell_window = LayerShellQt::Window::get(window);
     if (!target_layer_shell_window) {
         qWarning() << "Failed to get layer-shell window for: " << widget
-            ", halted!!";
+            << ", halted!!";
         return;
     }
 
