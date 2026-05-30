@@ -22,6 +22,7 @@ TARGET      = gxde-desktop-panel
 DESTDIR     = $$BUILD_DIST
 CONFIG      += c++11 link_pkgconfig
 PKGCONFIG   += xcb xcb-ewmh xcb-shape gsettings-qt dframeworkdbus
+LIBS        += -lLayerShellQtInterface
 
 INCLUDEPATH += $$PWD/../gxde-file-manager-lib\
                $$PWD/../utils \
@@ -97,4 +98,3 @@ TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
 
 
 include($$PWD/development.pri)
-

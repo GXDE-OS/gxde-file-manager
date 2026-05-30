@@ -47,7 +47,8 @@ Build-Depends:
  libegl1-mesa-dev,
  libdisomaster-dev,
  libwebp-dev,
- libqt5xdg-dev
+ libqt5xdg-dev,
+ liblayershellqtinterface5-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
@@ -80,6 +81,7 @@ Depends:
  ${misc:Depends}, 
  libgxde-file-manager( =${binary:Version}),
  gxde-daemon,
+ layer-shell-qt5,
 Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1)
 Provides: dde-desktop
 Replaces: dde-desktop

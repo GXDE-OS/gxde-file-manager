@@ -30,6 +30,7 @@
 #endif
 
 #include "util/xcb/xcb.h"
+#include "util/wayland/layershellhelper.h"
 
 using WallpaperSettings = Frame;
 
@@ -97,8 +98,12 @@ void Desktop::onBackgroundEnableChanged()
         d->screenFrame.show();
 
         // 防止复制模式下主屏窗口被遮挡
-        background->activateWindow();
-        QMetaObject::invokeMethod(background, "raise", Qt::QueuedConnection);
+        // 目前只给X11用，Wayland下走layer-shell-qt5管理
+        // 在Wayland上手动把界面提到前面会让壁纸层被提到其它程序窗口的前面
+        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+            background->activateWindow();
+            QMetaObject::invokeMethod(background, "raise", Qt::QueuedConnection);
+        }
 
         // 隐藏完全重叠的窗口
         if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
@@ -116,10 +121,19 @@ void Desktop::onBackgroundEnableChanged()
         d->screenFrame.setParent(nullptr);
         setWindowFlag(&d->screenFrame, Qt::FramelessWindowHint, true);
         d->screenFrame.QWidget::setGeometry(qApp->primaryScreen()->geometry());
-        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+        if (Wayland::LayerShellHelper::isWayland()) {
+            // Treelan的Wayland会话支持
+            Wayland::LayerShellHelper::setDesktopRole(
+                &d->screenFrame, qApp->primaryScreen(),
+                QStringLiteral("dde-shell/desktop"));
+        } else {
+            // 传统X11会话支持
             Xcb::XcbMisc::instance().set_window_type(d->screenFrame.winId(), Xcb::XcbMisc::Desktop);
         }
-        QWindow::fromWinId(d->screenFrame.winId())->setOpacity(0.99);
+
+        if (QWindow* window = d->screenFrame.windowHandle()) {
+            window->setOpacity(0.99);
+        }
         d->screenFrame.show();
     }
 }
@@ -135,8 +149,12 @@ void Desktop::onBackgroundGeometryChanged(QWidget *l)
     qInfo() << "primaryBackground widget geometry: " << primaryBackground->geometry()
             << "changedBackground widget geometry:" << l->geometry();
 
-    primaryBackground->activateWindow();
-    QMetaObject::invokeMethod(primaryBackground, "raise", Qt::QueuedConnection);
+    if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+        // 仅在传统X11会话下允许主动把窗体raise到前面
+        // 原因请阅读Desktop::onBackgroundEnableChanged()函数的注释
+        primaryBackground->activateWindow();
+        QMetaObject::invokeMethod(primaryBackground, "raise", Qt::QueuedConnection);
+    }
 
     if (l != primaryBackground && primaryBackground->geometry().contains(l->geometry())) {
         l->hide();

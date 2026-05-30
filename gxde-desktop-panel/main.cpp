@@ -12,16 +12,20 @@
 #include <QDBusConnection>
 #include <QThreadPool>
 #include <QPixmapCache>
+#include <QEvent>
 
 #include <DLog>
 #include <DApplication>
 
 #include <unistd.h>
 
+#include <LayerShellQt/Shell>
+
 #include <dfmglobal.h>
 #include <dfmapplication.h>
 
 #include "util/dde/ddesession.h"
+#include "util/wayland/layershellhelper.h"
 
 #include "config/config.h"
 #include "desktop.h"
@@ -103,9 +107,42 @@ int main(int argc, char *argv[])
         qputenv("QT_QPA_PLATFORM_PLUGIN_PATH", "/usr/lib/gxde-desktop-panel/plugins/platform");
     }
 
-    DApplication::loadDXcbPlugin();
+    if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
+        // Wayland下不再使用D-XCB插件，改让layer-shell-qt接手
+        LayerShellQt::Shell::useLayerShell();
+    } else {
+        // 传统X11会话下仍然加载D-XCB插件
+        DApplication::loadDXcbPlugin();
+    }
 
     DApplication app(argc, argv);
+
+    // 要等平台插件初始完后，马上清除掉layer-shell环境变量
+    // 不然，panel拉的子进程（比如文件管理器之类的）会继承这个layer-shell导致糊在屏幕上还关不掉
+    if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
+        qunsetenv("QT_WAYLAND_SHELL_INTEGRATION");
+    }
+
+    // 别急，还有第二关：在Wayland下，弹出的右键菜单也会给认为是一个layer-shell surface，导致菜单占满全屏
+    // 表象就是菜单直接糊满全屏。
+    // 计划是安装一个事件过滤器，Popup类窗口一显示旧解掉其anchor
+    class PopupLayerShellPatcher : public QObject {
+    public:
+        using QObject::QObject;
+
+    protected:
+        bool eventFilter(QObject* obj, QEvent* event) override {
+            if (event->type() == QEvent::Show) {
+                QWidget* w = qobject_cast<QWidget*>(obj);
+                if (w && w->windowType() == Qt::Popup) {
+                    Wayland::LayerShellHelper::fixPopupLayerShell(w);
+                }
+            }
+            return QObject::eventFilter(obj, event);
+        }
+    };
+
+    app.installEventFilter(new PopupLayerShellPatcher(&app));
 
     bool preload = false;
     bool fileDialogOnly = false;
