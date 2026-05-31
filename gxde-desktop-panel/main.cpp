@@ -107,8 +107,16 @@ int main(int argc, char *argv[])
         qputenv("QT_QPA_PLATFORM_PLUGIN_PATH", "/usr/lib/gxde-desktop-panel/plugins/platform");
     }
 
+    // Treeland/startgxde会设置DTK2_XWAYLAND=dxcb
+    // 其与原生 Wayland + layer-shell不兼容，导致段错误
+    // 需要在DApplication构造期间暂时屏蔽，构造完再恢复
+    // 这样保证面板不走D-XCB，但叫子进程仍然能走D-XCB
+    const QByteArray savedDtk2XWayland = qgetenv("DTK2_XWAYLAND");
+
     if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
         // Wayland下不再使用D-XCB插件，改让layer-shell-qt接手
+        qunsetenv("DTK2_XWAYLAND");
+        qputenv("QT_QPA_PLATFORM", "wayland");
         LayerShellQt::Shell::useLayerShell();
     } else {
         // 传统X11会话下仍然加载D-XCB插件
@@ -117,10 +125,15 @@ int main(int argc, char *argv[])
 
     DApplication app(argc, argv);
 
-    // 要等平台插件初始完后，马上清除掉layer-shell环境变量
-    // 不然，panel拉的子进程（比如文件管理器之类的）会继承这个layer-shell导致糊在屏幕上还关不掉
     if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
+        // 平台插件已初始化完毕，恢复DTK2_XWAYLAND供子进程使用
+        if (!savedDtk2XWayland.isEmpty()) {
+            qputenv("DTK2_XWAYLAND", savedDtk2XWayland);
+        }
+        // 清除 layer-shell 和 QPA 平台环境变量
+        // 防止子进程，比如文件管理器等，继承后窗口行为异常
         qunsetenv("QT_WAYLAND_SHELL_INTEGRATION");
+        qunsetenv("QT_QPA_PLATFORM");
     }
 
     // 别急，还有第二关：在Wayland下，弹出的右键菜单也会给认为是一个layer-shell surface，导致菜单占满全屏

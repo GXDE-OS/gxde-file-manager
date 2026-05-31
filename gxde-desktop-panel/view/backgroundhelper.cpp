@@ -349,6 +349,12 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
         // 为了防止谁阴我一手，主动开FramelessWindowHint
         l->setWindowFlag(Qt::FramelessWindowHint, true);
 
+        // 壁纸在LayerBackground层，不应因鼠标点击而被激活或被提到前面
+        // Qt的 Wayland QPA在分发鼠标事件前会调requestActivatw
+        // 事件过滤器挡不住——需要窗口级别的DoesNotAcceptFocus标志
+        l->setWindowFlag(Qt::WindowDoesNotAcceptFocus, true);
+        l->setAttribute(Qt::WA_ShowWithoutActivating, true);
+
         // Treeland支持
         Wayland::LayerShellHelper::setDesktopRole(
             l, screen, QStringLiteral("dde-shell/desktop"));

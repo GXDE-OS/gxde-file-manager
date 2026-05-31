@@ -95,6 +95,10 @@ void Desktop::onBackgroundEnableChanged()
         d->screenFrame.setAttribute(Qt::WA_NativeWindow, false);
         d->screenFrame.setParent(background);
         d->screenFrame.move(0, 0);
+
+        // 桌面图标区域也收到鼠标事件后会触发activateOnMousePress
+        // 这会间接激活其父窗口，也就是壁纸，需要设置WA_ShowWithoutActivating
+        d->screenFrame.setAttribute(Qt::WA_ShowWithoutActivating, true);
         d->screenFrame.show();
 
         // 防止复制模式下主屏窗口被遮挡
@@ -121,6 +125,10 @@ void Desktop::onBackgroundEnableChanged()
         d->screenFrame.setParent(nullptr);
         setWindowFlag(&d->screenFrame, Qt::FramelessWindowHint, true);
         d->screenFrame.QWidget::setGeometry(qApp->primaryScreen()->geometry());
+
+        // 无壁纸模式：screenFrame 自身作为 LayerBackground 窗口，
+        // 需要阻止鼠标点击触发窗口激活，免得窗口被点击后被带到窗口前面
+        d->screenFrame.setAttribute(Qt::WA_ShowWithoutActivating, true);
         if (Wayland::LayerShellHelper::isWayland()) {
             // Treelan的Wayland会话支持
             Wayland::LayerShellHelper::setDesktopRole(
