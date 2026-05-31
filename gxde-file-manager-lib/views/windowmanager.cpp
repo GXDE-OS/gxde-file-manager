@@ -130,7 +130,7 @@ void WindowManager::loadWindowState(DFileManagerWindow *window)
     //   || normalGeo.height() > outputValidGeometry.height())
     //   surface->resize(outputValidGeometry.size());
 
-    // 所以，遍历一遍所有屏幕，窗口可能在任一屏幕上，若尺寸大于分辨率，则直接reset掉窗体状态里的宽高
+    // 所以，遍历一遍所有屏幕，只要窗口小于任一屏幕的分辨率则恢复状态 不然就清除保存的Window State里的宽高
     if (width > 0 && height > 0) {
         bool exceedsAllScreens = true;
         const auto screens = QGuiApplication::screens();
@@ -141,9 +141,13 @@ void WindowManager::loadWindowState(DFileManagerWindow *window)
                 break;
             }
         }
+
         if (exceedsAllScreens) {
-            DFMApplication::appObtuselySetting()->remove("WindowManager",
-                "WindowState");
+            QVariantMap cleaned = state;
+            cleaned.remove("width");
+            cleaned.remove("height");
+            DFMApplication::appObtuselySetting()->setValue("WindowManager",
+                "WindowState", cleaned);
             return;
         }
     }

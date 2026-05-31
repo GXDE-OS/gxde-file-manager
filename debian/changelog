@@ -1,6 +1,7 @@
 gxde-file-manager (5.2.13-1) UNRELEASED; urgency=medium
 
   * 新增Wayland适配，主要适配目标为DeepinMutter与Treeland
+  * 修复Treeland下文件管理器糊满屏幕,拽不动也无法最小化的问题
 
  -- CharOfString <markus_verify@126.com>  Sun, 31 May 2026 01:50:12 +0800
 
