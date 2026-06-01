@@ -16,6 +16,7 @@
 #include <QWindow>
 
 #include <LayerShellQt/Window>
+#include <DPlatformHandle>
 
 namespace Wayland {
 
@@ -127,6 +128,11 @@ void LayerShellHelper::fixPopupLayerShell(QWidget* popup) {
     target_layer_shell_window->setExclusiveZone(0);
     target_layer_shell_window->setKeyboardInteractivity(
         LayerShellQt::Window::KeyboardInteractivityOnDemand);
+
+    // popup菜单在Treeland下会被当作普通toplevel窗口装饰，
+    // 导致出现最小化/最大化/关闭按钮
+    // 通知合成器我们要求隐藏标题栏
+    DPlatformHandle::setEnabledNoTitlebarForWindow(window, true);
 }
 
 }  // namespace Wayland
