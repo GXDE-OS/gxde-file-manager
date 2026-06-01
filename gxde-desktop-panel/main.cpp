@@ -13,6 +13,8 @@
 #include <QThreadPool>
 #include <QPixmapCache>
 #include <QEvent>
+#include <QIcon>
+#include <QSettings>
 
 #include <DLog>
 #include <DApplication>
@@ -125,11 +127,29 @@ int main(int argc, char *argv[])
 
     DApplication app(argc, argv);
 
+    // 现在Desktop-panel在Wayland下是个纯Wayland app，测试时发现在Treeland下XSETTINGS
+    // selection无人持有导致DTreelandPlatformInterface返回空，于是DTK的DIconProxyEngine拿不到
+    // 主题的图标名
+    // 为这种情况兜底，发生这种情况直接读取配置文件，确保QIconLoader有图标可用
+    if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
+        QSettings qtSettings(QSettings::IniFormat, QSettings::UserScope,
+            "deepin", "qt-theme");
+        qtSettings.beginGroup("Theme");
+
+        const QString icon_theme = qtSettings.value("IconThemeName").toString();
+        if (!icon_theme.isEmpty()) {
+            qDebug() << "(Wayland mode) IconLoader: fallback icon theme from config:"
+                << icon_theme;
+            QIcon::setThemeName(icon_theme);
+        }
+    }
+
     if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
         // 平台插件已初始化完毕，恢复DTK2_XWAYLAND供子进程使用
         if (!savedDtk2XWayland.isEmpty()) {
             qputenv("DTK2_XWAYLAND", savedDtk2XWayland);
         }
+
         // 清除 layer-shell 和 QPA 平台环境变量
         // 防止子进程，比如文件管理器等，继承后窗口行为异常
         qunsetenv("QT_WAYLAND_SHELL_INTEGRATION");

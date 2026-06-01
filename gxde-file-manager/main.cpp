@@ -55,6 +55,8 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QIcon>
+#include <QSettings>
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QDir>
@@ -104,6 +106,21 @@ int main(int argc, char *argv[])
     SingleApplication::loadDXcbPlugin();
     SingleApplication::initSources();
     SingleApplication app(argc, argv);
+
+    // 测试时发现在Treeland下XSETTINGS selection无人持有导致DTreelandPlatformInterface
+    // 返回空，于是DTK的DIconProxyEngine拿不到主题的图标名
+    // 为这种情况兜底，发生这种情况直接读取配置文件，确保QIconLoader有图标可用
+    if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
+        QSettings qtSettings(QSettings::IniFormat, QSettings::UserScope,
+            "deepin", "qt-theme");
+        qtSettings.beginGroup("Theme");
+        const QString icon_theme = qtSettings.value("IconThemeName").toString();
+        if (!icon_theme.isEmpty()) {
+            qDebug() << "Wayland: fallback icon theme from config:"
+                << icon_theme;
+            QIcon::setThemeName(icon_theme);
+        }
+    }
 
     app.setOrganizationName(QMAKE_ORGANIZATION_NAME);
     app.setApplicationName(QMAKE_TARGET);

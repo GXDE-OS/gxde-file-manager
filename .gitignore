@@ -235,6 +235,17 @@ gxde-file-manager-lib/pkgconfig/
 gxde-file-manager/gxde-file-manager
 usb-device-formatter/usb-device-formatter
 
+# ---> Debian packaging
+debian/.debhelper/
+debian/files
+debian/*.debhelper.log
+debian/*.substvars
+debian/tmp/
+debian/gxde-*/
+debian/libgxde-*/
+
 # ---> Misc
 .qwen/*
+.claude/*
+.codex/*
 .lock
