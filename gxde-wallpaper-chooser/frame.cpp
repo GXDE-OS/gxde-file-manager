@@ -44,6 +44,8 @@
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QKeyEvent>
 #include <QDebug>
 #include <QPainter>
@@ -225,10 +227,33 @@ void Frame::hideEvent(QHideEvent *event)
     m_mouseArea->unregisterRegion();
 
     if (m_mode == WallpaperMode) {
-        if (!m_desktopWallpaper.isEmpty())
+        QDBusConnectionInterface* dbus_interface =
+            QDBusConnection::sessionBus().interface();
+        const bool appearanceAvailable = dbus_interface
+            && dbus_interface->isServiceRegistered(AppearanceServ).value();
+
+        if (!m_desktopWallpaper.isEmpty()) {
+            // Appearance服务可用时当然走原服务
             m_dbusAppearance->Set("background", m_desktopWallpaper);
-        else if (m_dbusDeepinWM)
+
+            // Treeland/Mutter等WM上可能遭遇Appearance服务不可用
+            // 使用后备方案：写入GSettings
+            // 壁纸由gxde-desktop-panel的BackgroundHelper在登录时从
+            // com.deepin.dde.appearance的background-uris按当前工作区索引读取
+            // (Treeland下可视作索引永远为0), 因此写入GSettings时把所选壁纸写入该列表首项。
+            if (!appearanceAvailable && m_gsettings) {
+                QStringList uris =
+                    m_gsettings->get("backgroundUris").toStringList();
+                if (uris.isEmpty()) {
+                    uris << m_desktopWallpaper;
+                } else {
+                    uris[0] = m_desktopWallpaper;
+                }
+                m_gsettings->set("backgroundUris", uris);
+            }
+        } else if (m_dbusDeepinWM) {
             m_dbusDeepinWM->SetTransientBackground("");
+        }
 
         if (!m_lockWallpaper.isEmpty())
             m_dbusAppearance->Set("greeterbackground", m_lockWallpaper);
