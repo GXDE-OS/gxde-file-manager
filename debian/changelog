@@ -1,9 +1,15 @@
 gxde-file-manager (5.2.13-1) UNRELEASED; urgency=medium
 
-  * 新增Wayland适配，主要适配目标为DeepinMutter与Treeland
-  * 修复Treeland下文件管理器糊满屏幕,拽不动也无法最小化的问题
+  * 把gxde-desktop-panel改造成原生Wayland程序（当然XCB下还是走传统X11协议，但一旦切换到Wayland会话它就会使用原生的layer-shell协议）
+  * 修复了Wayland下窗体宽高大于分辨率时无法拖动/也关不掉的赛博电灯泡问题
+  * 解决了壁纸预览加载不出来的问题
+  * 解决了Treeland下拿不到图标的问题
+  * 解决了Deepin-Mutter下壁纸加载不出来的问题（但是startgxde在Mutter下仍然会以XCB模式启动gxde-desktop-panel，登录后还需要手动pkill -f gxde-desktop-panel, 此时daemon会自动尝试重新拉起gxde-desktop-panel，此时壁纸就来了）
+  * 解决了Treeland/Mutter下壁纸保存无法持久化的问题
+  * 解决了Wayland下右键菜单出现最小化/最大化/关闭按钮以及标题栏的问题
+  * 解决gxde-wallpaper-chooser在Wayland下不工作的问题
 
- -- CharOfString <markus_verify@126.com>  Sun, 31 May 2026 01:50:12 +0800
+ -- CharOfString <markus_verify@126.com>  Tue, 02 June 2026 15:11:14 +0800
 
 gxde-file-manager (5.2.13) UNRELEASED; urgency=medium
 
