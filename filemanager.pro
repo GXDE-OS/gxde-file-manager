@@ -9,6 +9,7 @@ SUBDIRS  += \
     gxde-file-manager-plugins \
     gxde-dock-plugins\
     gxde-desktop-panel \
+    gxde-wallpaper-chooser \
     dde-file-thumbnail-tool
 
 isEqual(BUILD_MINIMUM, YES){

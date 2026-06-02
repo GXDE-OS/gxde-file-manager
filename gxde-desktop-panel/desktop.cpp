@@ -15,6 +15,7 @@
 #include <QStyleOptionViewItem>
 #include <QDir>
 #include <QDBusConnection>
+#include <QProcess>
 #include <QScreen>
 
 #include <durl.h>
@@ -183,6 +184,22 @@ void Desktop::loadView()
 
 void Desktop::showWallpaperSettings()
 {
+    // 两难困境：当前gxde-desktop-panel是一个Wayland程序，这当然是对的，毕竟它要支持Wayland WM，但是...
+    // gxde-wallpaper-chooser基本还是个XCB的窗口（它自己不是程序），主要点是这样的：gxde-desktop-panel启动完成后
+    // 会马上unset掉layer-shell相关的集成，导致gxde-wallpaper-chooser是个XCB窗口
+    // 你可能会说：那么，我不unset不就没事了吗？恰恰相反，unset是必须的
+    // 要不然其打开的所有子窗口（包括但不限于文件管理器、终端等）会继承这个layer-shell集成，然后也变成layer-shell从而糊满整个屏幕
+    // 所以，必须保留unset的设计，但是壁纸选择器必须是个例外...
+    // 备用方案: 在Wayland下改为以独立进程拉起选择器, 自己保持layer-shell集成
+    // 详见 gxde-wallpaper-chooser/main.cpp
+    if (Wayland::LayerShellHelper::isWayland()) {
+        // startDetached不会重复拉起新进程，无妨；选择器进程自身在关闭时退出
+        if (!QProcess::startDetached("gxde-wallpaper-chooser-wayland", {})) {
+            qWarning() << "Failed to launch: gxde-wallpaper-chooser-wayland";
+        }
+        return;
+    }
+
     if (d->wallpaperSettings) {
         d->wallpaperSettings->deleteLater();
         d->wallpaperSettings = nullptr;

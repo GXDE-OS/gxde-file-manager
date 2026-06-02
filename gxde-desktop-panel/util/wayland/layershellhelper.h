@@ -21,6 +21,10 @@ public:
     static bool isWayland();
     static void setDesktopRole(QWidget* widget, QScreen* screen,
         const QString& scope);
+    static void setChooserRole(QWidget* widget, QScreen* screen,
+        const QString& scope);
+    static void setPreviewBackdropRole(QWidget* widget, QScreen* screen,
+        const QString& scope);
     static void fixPopupLayerShell(QWidget* popup);
 };
 
