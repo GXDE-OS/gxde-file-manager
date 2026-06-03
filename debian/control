@@ -48,7 +48,8 @@ Build-Depends:
  libdisomaster-dev,
  libwebp-dev,
  libqt5xdg-dev,
- liblayershellqtinterface5-dev
+ liblayershellqtinterface5-dev,
+ libdtkgui-dev,
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
