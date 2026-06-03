@@ -9,7 +9,7 @@ gxde-file-manager (5.2.13-1) UNRELEASED; urgency=medium
   * 解决了Wayland下右键菜单出现最小化/最大化/关闭按钮以及标题栏的问题
   * 解决gxde-wallpaper-chooser在Wayland下不工作的问题
 
- -- CharOfString <markus_verify@126.com>  Tue, 02 June 2026 15:11:14 +0800
+ -- CharOfString <markus_verify@126.com>  Tue, 02 Jun 2026 15:11:14 +0800
 
 gxde-file-manager (5.2.13) UNRELEASED; urgency=medium
 
