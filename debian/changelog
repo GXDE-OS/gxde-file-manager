@@ -1,9 +1,13 @@
-gxde-file-manager-neo (6.0.0) UNRELEASED; urgency=medium
+gxde-file-manager-neo (6.0.0-1) UNRELEASED; urgency=medium
 
+  [ CharOfString ]
   * 尝试移植到Qt6
   * 重命名源码包及二进制包为 -neo 后缀，避免与上游冲突
 
- -- CharOfString <markus_verify@126.com>  Sun, 10 May 2026 12:58:50 -0500
+  [ gfdgd_xi ]
+  * 添加编译依赖qt6-scxml-dev
+
+ -- gfdgd_xi <3025613752@qq.com>  Sun, 07 Jun 2026 21:03:03 +0800
 
 gxde-file-manager (5.2.13) UNRELEASED; urgency=medium
 
