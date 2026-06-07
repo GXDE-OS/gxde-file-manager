@@ -45,7 +45,8 @@ Build-Depends:
  libfreetype6-dev,
  libegl1-mesa-dev,
  libdisomaster-dev,
- libwebp-dev
+ libwebp-dev,
+ qt6-scxml-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
