@@ -9,7 +9,6 @@ QT       += core gui widgets
 TARGET = dde-video-preview-plugin
 TEMPLATE = lib
 
-PKGCONFIG += libgxmr
 CONFIG += plugin link_pkgconfig c++17
 
 include(../../../common/common.pri)
@@ -17,8 +16,9 @@ include(../../../common/common.pri)
 greaterThan(QT_MAJOR_VERSION, 5) {
     QT += dtk2widget
     DEFINES += DFM_USE_QT6
+    PKGCONFIG += libgxmr-qt6
 } else {
-    PKGCONFIG += dtkwidget
+    PKGCONFIG += dtkwidget libgxmr
 }
 
 

@@ -20,7 +20,7 @@
  */
 #include "dfmfilepreviewplugin.h"
 #include "videopreview.h"
-#include "libgxmr/player_widget.h"
+#include <player_widget.h>
 
 DFM_BEGIN_NAMESPACE
 

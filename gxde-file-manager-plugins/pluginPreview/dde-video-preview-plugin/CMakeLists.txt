@@ -2,10 +2,11 @@ set(TARGET_NAME dde-video-preview-plugin)
 
 find_package(Qt${GXDE_QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(LIBGXMR REQUIRED IMPORTED_TARGET libgxmr)
 if(GXDE_QT_VERSION_MAJOR GREATER_EQUAL 6)
+    pkg_check_modules(LIBGXMR REQUIRED IMPORTED_TARGET libgxmr-qt6)
     pkg_check_modules(DTKWIDGET REQUIRED IMPORTED_TARGET dtk2widget)
 else()
+    pkg_check_modules(LIBGXMR REQUIRED IMPORTED_TARGET libgxmr)
     pkg_check_modules(DTKWIDGET REQUIRED IMPORTED_TARGET dtkwidget)
 endif()
 
