@@ -71,6 +71,8 @@ Replaces:
 Conflicts:
  dde-file-manager(>> 5.0.1-1),
  gxde-file-manager
+Breaks:
+ deepin-menu (<< 2:6.0.0),
 Recommends: dde-qt6integration, avfs, gxde-file-manager-integration
 Description: File manager front end
  File manager front-end of Deepin OS
