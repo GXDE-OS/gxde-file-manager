@@ -27,6 +27,7 @@ Makefile.*
 debug
 release
 build*
+!build-deb
 
 *.pro.user
 *.pro.user*
