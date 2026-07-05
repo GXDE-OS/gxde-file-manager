@@ -175,9 +175,9 @@ void DFMSideBarOpticalDevItem::reloadLabel()
             setText(blk->idLabel());
         } else {
             if (drv->opticalBlank()) {
-                setText(tr("Blank %1 disc").arg(mediamap[drv->media()]));
+                setText(tr("Blank %1 disc").arg(mediamap.value(drv->media())));
             } else {
-                setText(tr("%1 disc").arg(mediamap[drv->media()]));
+                setText(tr("%1 disc").arg(mediamap.value(drv->media())));
             }
         }
     } else {
@@ -185,8 +185,14 @@ void DFMSideBarOpticalDevItem::reloadLabel()
         while (mc.size() && (mc.back() == "optical_mrw" || mc.back() == "optical_mrw_w")) {
             mc.pop_back();
         }
-        Q_ASSERT(!mc.empty());
-        setText(tr("%1 drive").arg(mediamap[mc.back()]));
+        // We cannot assert that mc is not empty. Under VM testing, the cd drive lacks mc, then back() is UB.
+        // And it is wired that this Q_ASSERT does NOT work in release.
+        // Then I got a SIGSEGV. Hence we provide the fallback handle here
+        if (mc.isEmpty()) {
+            setText(tr("Optical drive"));
+        } else {
+            setText(tr("%1 drive").arg(mediamap.value(mc.back())));
+        }
     }
 }
 DFM_END_NAMESPACE
