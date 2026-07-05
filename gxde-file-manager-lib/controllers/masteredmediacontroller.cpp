@@ -20,6 +20,14 @@
 #include <QStandardPaths>
 #include <QProcess>
 
+// udisks2-qt6 returns ay byte array prop w/ C style NULL termintor.
+// Qt5 auto strips it but Qt6 keeps it as-is.
+// Manually sanitizing for Qt6...
+static inline QString sanitizeUDiskString(const QByteArray &value)
+{
+    return QString::fromUtf8(value).remove(QChar(u'\0'));
+}
+
 class DFMShadowedDirIterator : public DDirIterator
 {
 public:
@@ -34,7 +42,7 @@ public:
         QSharedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(udiskspath));
         QSharedPointer<DDiskDevice> diskdev(DDiskManager::createDiskDevice(blkdev->drive()));
         if (blkdev->mountPoints().size()) {
-            DUrl mnturl = DUrl::fromLocalFile(QString(blkdev->mountPoints().front()));
+            DUrl mnturl = DUrl::fromLocalFile(sanitizeUDiskString(blkdev->mountPoints().front()));
             mntpoint = mnturl.toLocalFile();
         }
         while (*mntpoint.rbegin() == '/') {
@@ -205,7 +213,7 @@ MasteredMediaFileWatcher::MasteredMediaFileWatcher(const DUrl &url, QObject *par
     QSharedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(udiskspath));
 
     if (blkdev->mountPoints().size()) {
-        DUrl url_mountpoint = DUrl::fromLocalFile(blkdev->mountPoints().front());
+        DUrl url_mountpoint = DUrl::fromLocalFile(sanitizeUDiskString(blkdev->mountPoints().front()));
         d->proxyOnDisk = QPointer<DAbstractFileWatcher>(new DFileWatcher(url_mountpoint.path()));
         d->proxyOnDisk->moveToThread(thread());
         d->proxyOnDisk->setParent(this);

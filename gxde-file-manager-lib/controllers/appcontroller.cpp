@@ -102,6 +102,14 @@
 
 using namespace Dtk::Widget;
 
+// udisks2-qt6 returns ay byte array prop w/ C style NULL termintor.
+// Qt5 auto strips it but Qt6 keeps it as-is.
+// Manually sanitizing for Qt6...
+static inline QString sanitizeUDiskString(const QByteArray &value)
+{
+    return QString::fromUtf8(value).remove(QChar(u'\0'));
+}
+
 ///###: be used for tag protocol.
 template<typename Ty>
 using iterator = typename QList<Ty>::iterator;
@@ -853,7 +861,7 @@ void AppController::actionStageFileForBurning()
     for(auto &blks : diskm.blockDevices()) {
         QScopedPointer<DBlockDevice> blkd(DDiskManager::createBlockDevice(blks));
         if (blkd->drive() == destdev) {
-            DUrl dest = DUrl::fromBurnFile(QString(blkd->device()) + "/" BURN_SEG_STAGING "/");
+            DUrl dest = DUrl::fromBurnFile(sanitizeUDiskString(blkd->device()) + "/" BURN_SEG_STAGING "/");
             fileService->pasteFile(action, DFMGlobal::CopyAction, dest, urlList);
             break;
         }

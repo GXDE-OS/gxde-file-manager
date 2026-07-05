@@ -33,6 +33,14 @@
 #include <QRegularExpression>
 #include "controllers/masteredmediacontroller.h"
 
+// udisks2-qt6 returns ay byte array prop w/ C style NULL termintor.
+// Qt5 auto strips it but Qt6 keeps it as-is.
+// Manually sanitizing for Qt6...
+static inline QString sanitizeUDiskString(const QByteArray &value)
+{
+    return QString::fromUtf8(value).remove(QChar(u'\0'));
+}
+
 MasteredMediaFileInfo::MasteredMediaFileInfo(const DUrl &url)
     : DAbstractFileInfo(url)
 {
@@ -51,7 +59,7 @@ MasteredMediaFileInfo::MasteredMediaFileInfo(const DUrl &url)
         }
 
         if (blkdev->mountPoints().size() > 0) {
-            QString mntpoint = QString(blkdev->mountPoints().front());
+            QString mntpoint = sanitizeUDiskString(blkdev->mountPoints().front());
             while (*mntpoint.rbegin() == '/') {
                 mntpoint.chop(1);
             }
@@ -118,7 +126,7 @@ QString MasteredMediaFileInfo::fileDisplayName() const
         QString udiskspath = fileUrl().burnDestDevice();
         udiskspath.replace("/dev/", "/org/freedesktop/UDisks2/block_devices/");
         QSharedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(udiskspath));
-        return blkdev->idLabel();
+        return blkdev->idLabel().remove(QChar(u'\0'));
     }
 
     if (!d->proxy)

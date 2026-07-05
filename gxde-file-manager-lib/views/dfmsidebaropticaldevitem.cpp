@@ -140,13 +140,9 @@ void DFMSideBarOpticalDevItem::itemOnClick()
         DUrl newUrl;
         newUrl.setQuery(sanitizeUDiskString(blk->device()));
         DFileManagerWindow *wnd = qobject_cast<DFileManagerWindow *>(topLevelWidget());
-        if (blk->mountPoints().size()) {
-            // If disc is already mounted (often auto-mounted by udisks)
-            // Then use real mount pt
-            wnd->cd(DUrl::fromLocalFile(sanitizeUDiskString(
-                blk->mountPoints().front())));
-        } else if (drv->opticalBlank()) {
-            wnd->cd(url());
+        if (blk->mountPoints().size() || drv->opticalBlank()) {
+            wnd->cd(DUrl::fromBurnFile(sanitizeUDiskString(
+                blk->device()) + "/" BURN_SEG_ONDISC));
         } else {
             appController->actionOpenDisk(dMakeEventPointer<DFMUrlBaseEvent>(this, newUrl));
         }
@@ -184,7 +180,7 @@ void DFMSideBarOpticalDevItem::reloadLabel()
     };
     if (drv->mediaAvailable()) {
         if (blk->idLabel().length()) {
-            setText(blk->idLabel());
+            setText(blk->idLabel().remove(QChar(u'\0')));
         } else {
             if (drv->opticalBlank()) {
                 setText(tr("Blank %1 disc").arg(mediamap.value(drv->media())));
