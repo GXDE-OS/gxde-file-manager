@@ -47,6 +47,7 @@ Build-Depends:
  libegl1-mesa-dev,
  libdisomaster-qt6-dev,
  libwebp-dev,
+ libgxmr-qt6-dev,
  qt6-scxml-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
@@ -114,6 +115,7 @@ Depends:
  gvfs-backends(>=1.27.3),
  cryptsetup,
  libkf6codecs6,
+ libgxmr-qt6,
 # deepin-anything-libs
 Breaks: gxde-file-manager-neo(<=1.2.3-3)
 Replaces: libdde-file-manager, libgxde-file-manager
