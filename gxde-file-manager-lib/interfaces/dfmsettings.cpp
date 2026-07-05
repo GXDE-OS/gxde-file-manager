@@ -466,13 +466,15 @@ QVariant DFMSettings::value(const QString &group, const QString &key, const QVar
 {
     Q_D(const DFMSettings);
 
-    QVariant value = d->writableData.values.value(group).value(key, QVariant::Invalid);
+    // The original default value is QVariant::Invalid, which is
+    // QVariant::Type enum == 0, and this is no longer avaliable in Qt6
+    QVariant value = d->writableData.values.value(group).value(key, QVariant());
 
     if (value.isValid()) {
         return value;
     }
 
-    value = d->fallbackData.values.value(group).value(key, QVariant::Invalid);
+    value = d->fallbackData.values.value(group).value(key, QVariant());
 
     if (value.isValid()) {
         return value;
