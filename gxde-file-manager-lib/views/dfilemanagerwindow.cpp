@@ -299,6 +299,14 @@ bool DFileManagerWindowPrivate::cdForTab(Tab *tab, const DUrl &fileUrl)
             }
 
             if (!fileInfo || !fileInfo->exists()) {
+                // VM debug: SIGSEGV for this line.
+                // current_view may be NULL, and this branch is also entered
+                // even if current_view is NULL. So just give up when
+                // current_view is NULL.
+                if (!current_view) {
+                    return false;
+                }
+
                 DUrl searchUrl = current_view->rootUrl();
 
                 if (searchUrl.isComputerFile()) {
