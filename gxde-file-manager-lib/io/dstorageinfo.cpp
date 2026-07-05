@@ -41,6 +41,21 @@ static QString preprocessPath(const QString &path, DStorageInfo::PathHints hints
 class DStorageInfoPrivate : public QSharedData
 {
 public:
+    DStorageInfoPrivate() = default;
+
+    // Here is a double free problem: The copy constructor used by
+    // QSharedDataPointer::detach() is doing a shallow copy. The two
+    // DStorageInfoPrivate will have the same gioInfo. gioInfo will be released
+    // through g_object_unref(), then you see that when the two copy is freed,
+    // the gioInfo is freed twice.
+    // Hence, we copy the reference.
+    DStorageInfoPrivate(const DStorageInfoPrivate &other)
+        : QSharedData(other)
+        , gioInfo(other.gioInfo ? static_cast<GFileInfo *>(g_object_ref(
+            other.gioInfo)) : nullptr)
+        , rootPath(other.rootPath)
+        , device(other.device) {}
+
     ~DStorageInfoPrivate() {
         if (gioInfo) {
             g_object_unref(gioInfo);
