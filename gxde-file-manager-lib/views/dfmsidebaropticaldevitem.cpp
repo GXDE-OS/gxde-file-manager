@@ -139,8 +139,13 @@ void DFMSideBarOpticalDevItem::itemOnClick()
     if (drv->mediaAvailable()) {
         DUrl newUrl;
         newUrl.setQuery(sanitizeUDiskString(blk->device()));
-        if (blk->mountPoints().size() || drv->opticalBlank()) {
-            DFileManagerWindow *wnd = qobject_cast<DFileManagerWindow *>(topLevelWidget());
+        DFileManagerWindow *wnd = qobject_cast<DFileManagerWindow *>(topLevelWidget());
+        if (blk->mountPoints().size()) {
+            // If disc is already mounted (often auto-mounted by udisks)
+            // Then use real mount pt
+            wnd->cd(DUrl::fromLocalFile(sanitizeUDiskString(
+                blk->mountPoints().front())));
+        } else if (drv->opticalBlank()) {
             wnd->cd(url());
         } else {
             appController->actionOpenDisk(dMakeEventPointer<DFMUrlBaseEvent>(this, newUrl));
