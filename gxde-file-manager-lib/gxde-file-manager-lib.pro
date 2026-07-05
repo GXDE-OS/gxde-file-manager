@@ -47,13 +47,14 @@ isEmpty(PREFIX){
 CONFIG += c++17 link_pkgconfig
 
 # 公共 pkgconfig（不含 Qt 版本相关包）
-PKGCONFIG += libsecret-1 gio-unix-2.0 poppler-cpp disomaster
+PKGCONFIG += libsecret-1 gio-unix-2.0 poppler-cpp
 
 # Qt 版本相关 pkgconfig 切换
+# disomaster 是 Qt 库：Qt6 用独立的 disomaster-qt6（libdisomaster6.so），避免拖入 Qt5
 greaterThan(QT_MAJOR_VERSION, 5) {
-    PKGCONFIG += gsettings-qt6 udisks2-qt6
+    PKGCONFIG += gsettings-qt6 udisks2-qt6 disomaster-qt6
 } else {
-    PKGCONFIG += gsettings-qt udisks2-qt5 dtkwidget Qt5Xdg
+    PKGCONFIG += gsettings-qt udisks2-qt5 dtkwidget Qt5Xdg disomaster
 }
 #DEFINES += QT_NO_DEBUG_OUTPUT
 DEFINES += QT_MESSAGELOGCONTEXT

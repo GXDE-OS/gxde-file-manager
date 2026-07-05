@@ -14,19 +14,20 @@ if(GXDE_QT_VERSION_MAJOR GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core5Compat)
 endif()
 
-# DTK (Qt6 端只用dtk2widget)
 pkg_check_modules(DTKWIDGET REQUIRED IMPORTED_TARGET dtk2widget)
 
 # 公共pkg-config依赖
 pkg_check_modules(LIBSECRET REQUIRED IMPORTED_TARGET libsecret-1)
 pkg_check_modules(GIO_UNIX REQUIRED IMPORTED_TARGET gio-unix-2.0)
 pkg_check_modules(POPPLER_CPP REQUIRED IMPORTED_TARGET poppler-cpp)
-pkg_check_modules(DISOMASTER REQUIRED IMPORTED_TARGET disomaster)
 
+# Use disomaster-qt6 instead of disomaster
 if(GXDE_QT_VERSION_MAJOR GREATER_EQUAL 6)
+    pkg_check_modules(DISOMASTER REQUIRED IMPORTED_TARGET disomaster-qt6)
     pkg_check_modules(GSETTINGS_QT REQUIRED IMPORTED_TARGET gsettings-qt6)
     pkg_check_modules(UDISKS2_QT REQUIRED IMPORTED_TARGET udisks2-qt6)
 else()
+    pkg_check_modules(DISOMASTER REQUIRED IMPORTED_TARGET disomaster)
     pkg_check_modules(GSETTINGS_QT REQUIRED IMPORTED_TARGET gsettings-qt)
     pkg_check_modules(UDISKS2_QT REQUIRED IMPORTED_TARGET udisks2-qt5)
     pkg_check_modules(QT5XDG REQUIRED IMPORTED_TARGET Qt5Xdg)

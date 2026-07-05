@@ -45,7 +45,7 @@ Build-Depends:
  libfontconfig1-dev,
  libfreetype6-dev,
  libegl1-mesa-dev,
- libdisomaster-dev,
+ libdisomaster-qt6-dev,
  libwebp-dev,
  qt6-scxml-dev
 Standards-Version: 3.9.8
@@ -60,7 +60,7 @@ Depends:
  socat,
  libdtk2widget6,
  libdtk6core,
- libdisomaster,
+ libdisomaster-qt6,
  libisoburn1,
  gxde-compressor,
 Provides:
