@@ -1,3 +1,12 @@
+gxde-file-manager-neo (6.1.0-gxde1) UNRELEASED; urgency=medium
+
+  * 修复了段错误问题
+  * 修复了打开文件管理器窗口后是空窗口的问题
+  * 修复了随机快速点击侧边栏项目崩溃的问题
+  * 将一批对应的依赖库升级到对应的Qt6版本
+
+ -- CharOfString <markus_verify@126.com>  Mon, 06 Jul 2026 00:09:00 +0800
+
 gxde-file-manager-neo (6.0.0-1) UNRELEASED; urgency=medium
 
   [ CharOfString ]
