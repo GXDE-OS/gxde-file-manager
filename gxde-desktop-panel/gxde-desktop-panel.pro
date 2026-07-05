@@ -22,7 +22,9 @@ CONFIG      += c++17 link_pkgconfig
 PKGCONFIG   += xcb xcb-ewmh xcb-shape
 greaterThan(QT_MAJOR_VERSION, 5) {
     QT += dtk2widget core5compat
-    PKGCONFIG += gsettings-qt6 dframeworkdbus
+    PKGCONFIG += gsettings-qt6
+    INCLUDEPATH += /usr/include/libdframeworkdbus-qt6-6.0
+    LIBS += -ldframeworkdbus-qt6
     DEFINES += DFM_USE_QT6
 } else {
     PKGCONFIG += gsettings-qt dframeworkdbus
