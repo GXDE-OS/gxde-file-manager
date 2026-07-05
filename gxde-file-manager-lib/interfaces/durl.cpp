@@ -550,7 +550,11 @@ DUrl DUrl::fromDeviceId(const QString &deviceId)
 {
     DUrl url;
     url.setScheme(DEVICE_SCHEME);
-    url.setPath(deviceId);
+
+    // udisks2-qt6 returns ay byte array prop w/ C style NULL termintor.
+    // Qt5 auto strips it but Qt6 keeps it as-is.
+    // Manually sanitizing for Qt6...
+    url.setPath(QString(deviceId).remove(QChar(u'\0')));
 
     return url;
 }

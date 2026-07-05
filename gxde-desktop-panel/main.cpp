@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QDBusError>
 #include <QDBusConnection>
+#include <QDBusMetaType>
 #include <QThreadPool>
 #include <QPixmapCache>
 
@@ -106,6 +107,14 @@ int main(int argc, char *argv[])
     DApplication::loadDXcbPlugin();
 
     DApplication app(argc, argv);
+
+    // The problem is that Qt6 does NOT auto register QByteArrayList w/
+    // Qt D-Bus any more. Hence, udisks2-qt6 property reads of ay list (e.g.
+    // Filesystem.MountPoints, etc.) SILENTLY returns empty, then it trys to
+    // re-mount, and meet fail of already mounted. So this is why optical
+    // drive is ALWAYS empty.
+    // Manually resitering it now.
+    qDBusRegisterMetaType<QByteArrayList>();
 
     bool preload = false;
     bool fileDialogOnly = false;

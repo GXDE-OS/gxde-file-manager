@@ -34,6 +34,13 @@
 
 DFM_BEGIN_NAMESPACE
 
+// udisks2-qt6 returns ay byte array prop w/ C style NULL termintor.
+// Qt5 auto strips it but Qt6 keeps it as-is.
+// Manually sanitizing for Qt6...
+static inline QString sanitizeUDiskString(const QByteArray &value) {
+    return QString::fromUtf8(value).remove(QChar(u'\0'));
+}
+
 DFMSideBarOpticalDevItem::DFMSideBarOpticalDevItem(DUrl url, QWidget *parent)
     : DFMSideBarItem(url, parent)
 {
@@ -71,7 +78,7 @@ QMenu *DFMSideBarOpticalDevItem::createStandardContextMenu() const
     bool shouldDisable = !WindowManager::tabAddableByWinId(wnd->windowId());
     DUrl deviceIdUrl;
 
-    deviceIdUrl.setQuery(blk->device());
+    deviceIdUrl.setQuery(sanitizeUDiskString(blk->device()));
 
     menu->addAction(QObject::tr("Open in new window"), [this, deviceIdUrl]() {
         if (blk->mountPoints().length() || drv->opticalBlank()) {
@@ -113,9 +120,9 @@ QMenu *DFMSideBarOpticalDevItem::createStandardContextMenu() const
 
     QAction *propertyAction = new QAction(QObject::tr("Disk info"), menu);
     connect(propertyAction, &QAction::triggered, this, [this]() {
-        DUrl mountPointUrl(blk->mountPoints().size() ? blk->mountPoints().front() : "");
+        DUrl mountPointUrl(blk->mountPoints().size() ? sanitizeUDiskString(blk->mountPoints().front()) : QString());
         mountPointUrl = mountPointUrl.isEmpty() ? url() : mountPointUrl;
-        mountPointUrl.setQuery(blk->device());
+        mountPointUrl.setQuery(sanitizeUDiskString(blk->device()));
         fileSignalManager->requestShowPropertyDialog(DFMUrlListBaseEvent(this, {mountPointUrl}));
     });
     propertyAction->setDisabled(blk->mountPoints().size() == 0);
@@ -131,7 +138,7 @@ void DFMSideBarOpticalDevItem::itemOnClick()
     }
     if (drv->mediaAvailable()) {
         DUrl newUrl;
-        newUrl.setQuery(blk->device());
+        newUrl.setQuery(sanitizeUDiskString(blk->device()));
         if (blk->mountPoints().size() || drv->opticalBlank()) {
             DFileManagerWindow *wnd = qobject_cast<DFileManagerWindow *>(topLevelWidget());
             wnd->cd(url());
