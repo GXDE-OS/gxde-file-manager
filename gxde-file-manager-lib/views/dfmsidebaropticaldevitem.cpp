@@ -189,7 +189,7 @@ void DFMSideBarOpticalDevItem::reloadLabel()
         // And it is wired that this Q_ASSERT does NOT work in release.
         // Then I got a SIGSEGV. Hence we provide the fallback handle here
         if (mc.isEmpty()) {
-            setText(tr("Optical drive"));
+            setText(tr("DVD-ROM drive"));
         } else {
             setText(tr("%1 drive").arg(mediamap.value(mc.back())));
         }
