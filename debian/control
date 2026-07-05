@@ -33,6 +33,7 @@ Build-Depends:
  libxcb-ewmh-dev,
  libxcb-shape0-dev,
  libgxframeworkdbus-dev,
+ libdframeworkdbus-qt6-dev,
  libxcb-util0-dev,
  deepin-gettext-tools,
  libkf6codecs-dev,
@@ -84,6 +85,7 @@ Depends:
  ${misc:Depends},
  libgxde-file-manager-neo( =${binary:Version}),
  gxde-daemon,
+ libdframeworkdbus-qt6,
 Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1), gxde-desktop-panel
 Provides: dde-desktop, gxde-desktop-panel
 Replaces: dde-desktop, gxde-desktop-panel
