@@ -29,6 +29,7 @@
 #include <dimagebutton.h>
 #include <dregionmonitor.h>
 #include <QActionGroup>
+#include <QGSettings>
 #include <QPushButton>
 
 DWIDGET_BEGIN_NAMESPACE
@@ -113,6 +114,7 @@ private:
 #endif
 
     ComDeepinDaemonAppearanceInterface * m_dbusAppearance = NULL;
+    QGSettings *m_gsettings = nullptr;
 #ifndef DISABLE_SCREENSAVER
     ComDeepinScreenSaverInterface *m_dbusScreenSaver = nullptr;
 #endif

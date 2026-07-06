@@ -1,4 +1,5 @@
 usr/bin/gxde-desktop-panel
+usr/bin/gxde-wallpaper-chooser-wayland
 usr/share/applications/gxde-computer.desktop
 usr/share/applications/gxde-trash.desktop
 usr/share/gxde-desktop-panel/translations/*.qm

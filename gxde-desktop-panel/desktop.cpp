@@ -15,6 +15,7 @@
 #include <QStyleOptionViewItem>
 #include <QDir>
 #include <QDBusConnection>
+#include <QProcess>
 #include <QScreen>
 
 #include <durl.h>
@@ -30,6 +31,7 @@
 #endif
 
 #include "util/xcb/xcb.h"
+#include "util/wayland/layershellhelper.h"
 
 using WallpaperSettings = Frame;
 
@@ -94,11 +96,19 @@ void Desktop::onBackgroundEnableChanged()
         d->screenFrame.setAttribute(Qt::WA_NativeWindow, false);
         d->screenFrame.setParent(background);
         d->screenFrame.move(0, 0);
+
+        // 桌面图标区域也收到鼠标事件后会触发activateOnMousePress
+        // 这会间接激活其父窗口，也就是壁纸，需要设置WA_ShowWithoutActivating
+        d->screenFrame.setAttribute(Qt::WA_ShowWithoutActivating, true);
         d->screenFrame.show();
 
         // 防止复制模式下主屏窗口被遮挡
-        background->activateWindow();
-        QMetaObject::invokeMethod(background, "raise", Qt::QueuedConnection);
+        // 目前只给X11用，Wayland下走layer-shell-qt5管理
+        // 在Wayland上手动把界面提到前面会让壁纸层被提到其它程序窗口的前面
+        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+            background->activateWindow();
+            QMetaObject::invokeMethod(background, "raise", Qt::QueuedConnection);
+        }
 
         // 隐藏完全重叠的窗口
         if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
@@ -116,10 +126,23 @@ void Desktop::onBackgroundEnableChanged()
         d->screenFrame.setParent(nullptr);
         setWindowFlag(&d->screenFrame, Qt::FramelessWindowHint, true);
         d->screenFrame.QWidget::setGeometry(qApp->primaryScreen()->geometry());
-        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+
+        // 无壁纸模式：screenFrame 自身作为 LayerBackground 窗口，
+        // 需要阻止鼠标点击触发窗口激活，免得窗口被点击后被带到窗口前面
+        d->screenFrame.setAttribute(Qt::WA_ShowWithoutActivating, true);
+        if (Wayland::LayerShellHelper::isWayland()) {
+            // Treelan的Wayland会话支持
+            Wayland::LayerShellHelper::setDesktopRole(
+                &d->screenFrame, qApp->primaryScreen(),
+                QStringLiteral("dde-shell/desktop"));
+        } else {
+            // 传统X11会话支持
             Xcb::XcbMisc::instance().set_window_type(d->screenFrame.winId(), Xcb::XcbMisc::Desktop);
         }
-        QWindow::fromWinId(d->screenFrame.winId())->setOpacity(0.99);
+
+        if (QWindow* window = d->screenFrame.windowHandle()) {
+            window->setOpacity(0.99);
+        }
         d->screenFrame.show();
     }
 }
@@ -135,8 +158,12 @@ void Desktop::onBackgroundGeometryChanged(QWidget *l)
     qInfo() << "primaryBackground widget geometry: " << primaryBackground->geometry()
             << "changedBackground widget geometry:" << l->geometry();
 
-    primaryBackground->activateWindow();
-    QMetaObject::invokeMethod(primaryBackground, "raise", Qt::QueuedConnection);
+    if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+        // 仅在传统X11会话下允许主动把窗体raise到前面
+        // 原因请阅读Desktop::onBackgroundEnableChanged()函数的注释
+        primaryBackground->activateWindow();
+        QMetaObject::invokeMethod(primaryBackground, "raise", Qt::QueuedConnection);
+    }
 
     if (l != primaryBackground && primaryBackground->geometry().contains(l->geometry())) {
         l->hide();
@@ -157,6 +184,22 @@ void Desktop::loadView()
 
 void Desktop::showWallpaperSettings()
 {
+    // 两难困境：当前gxde-desktop-panel是一个Wayland程序，这当然是对的，毕竟它要支持Wayland WM，但是...
+    // gxde-wallpaper-chooser基本还是个XCB的窗口（它自己不是程序），主要点是这样的：gxde-desktop-panel启动完成后
+    // 会马上unset掉layer-shell相关的集成，导致gxde-wallpaper-chooser是个XCB窗口
+    // 你可能会说：那么，我不unset不就没事了吗？恰恰相反，unset是必须的
+    // 要不然其打开的所有子窗口（包括但不限于文件管理器、终端等）会继承这个layer-shell集成，然后也变成layer-shell从而糊满整个屏幕
+    // 所以，必须保留unset的设计，但是壁纸选择器必须是个例外...
+    // 备用方案: 在Wayland下改为以独立进程拉起选择器, 自己保持layer-shell集成
+    // 详见 gxde-wallpaper-chooser/main.cpp
+    if (Wayland::LayerShellHelper::isWayland()) {
+        // startDetached不会重复拉起新进程，无妨；选择器进程自身在关闭时退出
+        if (!QProcess::startDetached("gxde-wallpaper-chooser-wayland", {})) {
+            qWarning() << "Failed to launch: gxde-wallpaper-chooser-wayland";
+        }
+        return;
+    }
+
     if (d->wallpaperSettings) {
         d->wallpaperSettings->deleteLater();
         d->wallpaperSettings = nullptr;

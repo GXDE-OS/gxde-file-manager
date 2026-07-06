@@ -20,6 +20,7 @@ TARGET      = gxde-desktop-panel
 DESTDIR     = $$BUILD_DIST
 CONFIG      += c++17 link_pkgconfig
 PKGCONFIG   += xcb xcb-ewmh xcb-shape
+LIBS        += -lLayerShellQtInterface
 greaterThan(QT_MAJOR_VERSION, 5) {
     QT += dtk2widget core5compat
     PKGCONFIG += gsettings-qt6
@@ -104,4 +105,3 @@ TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
 
 
 include($$PWD/development.pri)
-

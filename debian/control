@@ -48,7 +48,8 @@ Build-Depends:
  libdisomaster-qt6-dev,
  libwebp-dev,
  libgxmr-qt6-dev,
- qt6-scxml-dev
+ qt6-scxml-dev,
+ liblayershellqtinterface-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
@@ -87,6 +88,7 @@ Depends:
  libgxde-file-manager-neo( =${binary:Version}),
  gxde-daemon,
  libdframeworkdbus-qt6,
+ liblayershellqtinterface6,
 Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1), gxde-desktop-panel
 Provides: dde-desktop, gxde-desktop-panel
 Replaces: dde-desktop, gxde-desktop-panel

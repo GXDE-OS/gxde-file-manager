@@ -22,6 +22,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDir>
+
 #include "frame.h"
 #include "constants.h"
 #include "wallpaperlist.h"
@@ -42,6 +44,8 @@
 
 #include <QApplication>
 #include <QScreen>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QKeyEvent>
 #include <QDebug>
 #include <QPainter>
@@ -90,6 +94,8 @@ Frame::Frame(QFrame *parent)
 
     setBlendMode(DBlurEffectWidget::BehindWindowBlend);
     setMaskColor(DBlurEffectWidget::DarkColor);
+
+    m_gsettings = new QGSettings("com.deepin.dde.appearance", "", this);
 
     initUI();
     initSize();
@@ -221,10 +227,33 @@ void Frame::hideEvent(QHideEvent *event)
     m_mouseArea->unregisterRegion();
 
     if (m_mode == WallpaperMode) {
-        if (!m_desktopWallpaper.isEmpty())
+        QDBusConnectionInterface* dbus_interface =
+            QDBusConnection::sessionBus().interface();
+        const bool appearanceAvailable = dbus_interface
+            && dbus_interface->isServiceRegistered(AppearanceServ).value();
+
+        if (!m_desktopWallpaper.isEmpty()) {
+            // Appearance服务可用时当然走原服务
             m_dbusAppearance->Set("background", m_desktopWallpaper);
-        else if (m_dbusDeepinWM)
+
+            // Treeland/Mutter等WM上可能遭遇Appearance服务不可用
+            // 使用后备方案：写入GSettings
+            // 壁纸由gxde-desktop-panel的BackgroundHelper在登录时从
+            // com.deepin.dde.appearance的background-uris按当前工作区索引读取
+            // (Treeland下可视作索引永远为0), 因此写入GSettings时把所选壁纸写入该列表首项。
+            if (!appearanceAvailable && m_gsettings) {
+                QStringList uris =
+                    m_gsettings->get("backgroundUris").toStringList();
+                if (uris.isEmpty()) {
+                    uris << m_desktopWallpaper;
+                } else {
+                    uris[0] = m_desktopWallpaper;
+                }
+                m_gsettings->set("backgroundUris", uris);
+            }
+        } else if (m_dbusDeepinWM) {
             m_dbusDeepinWM->SetTransientBackground("");
+        }
 
         if (!m_lockWallpaper.isEmpty())
             m_dbusAppearance->Set("greeterbackground", m_lockWallpaper);
@@ -657,28 +686,60 @@ void Frame::refreshList()
         QDBusPendingCall call = m_dbusAppearance->List("background");
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, call] {
+            // 壁纸数组
+            QStringList strings;
+
             if (call.isError()) {
                 qWarning() << "failed to get all backgrounds: " << call.error().message();
+                
+                // 据我所知，Treeland下dde-session-daemon未运行/可能会崩溃 会导致壁纸获取的D-Bus不可用
+                // 这时候使用备选方案：按dde-session-daemon中appearance/background.List()
+                // 的逻辑直接扫描壁纸
+                static const char* wallpaper_dirs[] = {
+                    "/usr/share/wallpapers/deepin",
+                    "/usr/share/wallpapers/gxde"
+                };
+
+                // 扫描如下拓展名的图像
+                QStringList wallpaper_ext_name_filters;
+                wallpaper_ext_name_filters << "*.jpg" << "*.jpeg" << "*.png"
+                    << "*.bmp" << "*.tiff" << "*.tif" << "*.gif";
+
+                // 从目标目录获取壁纸路径
+                for (const char* current_dir_raw : wallpaper_dirs) {
+                    QDir current_dir(current_dir_raw);
+                    if (!current_dir.exists()) {
+                        continue;
+                    }
+
+                    const QStringList files = current_dir.entryList(
+                        wallpaper_ext_name_filters, QDir::Files);
+
+                    for (const QString& file : files) {
+                        strings << QUrl::fromLocalFile(
+                            current_dir.absoluteFilePath(file)).toString();
+                    }
+                }
             } else {
                 QDBusReply<QString> reply = call.reply();
                 QString value = reply.value();
-                QStringList strings = processListReply(value);
-
-                foreach (QString path, strings) {
-                    WallpaperItem * item = m_wallpaperList->addWallpaper(path);
-                    item->setData(item->getPath());
-                    item->setDeletable(m_deletableInfo.value(path));
-                    item->addButton(DESKTOP_BUTTON_ID, tr("Only desktop"));
-                    item->addButton(LOCK_SCREEN_BUTTON_ID, tr("Only lock screen"));
-                    item->show();
-
-                    connect(item, &WallpaperItem::buttonClicked, this, &Frame::onItemButtonClicked);
-                }
-
-                m_wallpaperList->setFixedWidth(width());
-                m_wallpaperList->updateItemThumb();
-                m_wallpaperList->show();
+                strings = processListReply(value);
             }
+
+            foreach (QString path, strings) {
+                WallpaperItem * item = m_wallpaperList->addWallpaper(path);
+                item->setData(item->getPath());
+                item->setDeletable(m_deletableInfo.value(path));
+                item->addButton(DESKTOP_BUTTON_ID, tr("Only desktop"));
+                item->addButton(LOCK_SCREEN_BUTTON_ID, tr("Only lock screen"));
+                item->show();
+
+                connect(item, &WallpaperItem::buttonClicked, this, &Frame::onItemButtonClicked);
+            }
+
+            m_wallpaperList->setFixedWidth(width());
+            m_wallpaperList->updateItemThumb();
+            m_wallpaperList->show();
         });
     }
 #ifndef DISABLE_SCREENSAVER

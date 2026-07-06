@@ -47,7 +47,13 @@ public:
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE
     {
-        if (m_pixmap.isNull()) return;
+        if (m_pixmap.isNull()) {
+            qDebug() << "(WallpaperItem) Skipping null wallpaper preview...";
+            return;
+        }
+
+        qDebug() << "(WallpaperItem) paintEvent: Drawing pixmap"
+            << m_pixmap.size() << "@" << m_pixmapBoxGeometry << ".";
 
         QRect pixmap_geometry = m_pixmapBoxGeometry;
 
@@ -116,6 +122,8 @@ void WallpaperItem::initAnimation()
 void WallpaperItem::initPixmap()
 {
     if (m_useThumbnailManager) {
+        qDebug() << "(WallpaperItem) initPixmap: using ThumbnailManager for"
+            << m_path << ".";
         refindPixmap();
     } else {
         QIcon icon(m_path);
@@ -275,8 +283,15 @@ QRect WallpaperItem::contentImageGeometry() const
 
 void WallpaperItem::onThumbnailFounded(const QString &key, const QPixmap &pixmap)
 {
-    if (key != QUrl::toPercentEncoding(m_path))
+    if (key != QUrl::toPercentEncoding(m_path)) {
+        qDebug() << "(WallpaperItem) Wallpaper preview: key mismatch -" << key
+            << " (VERSUS) " << QUrl::toPercentEncoding(m_path) << ".";
         return;
+    }
+
+    qDebug() << "(WallpaperItem) Wallpaper preview: found thumbnail" << m_path
+        << "; Pixmap size:" << pixmap.size() << "; IsNull:" << pixmap.isNull()
+        << ".";
 
     const qreal ratio = devicePixelRatioF();
 

@@ -20,6 +20,7 @@
  */
 #include "backgroundhelper.h"
 #include "util/xcb/xcb.h"
+#include "util/wayland/layershellhelper.h"
 
 #include <QNetworkReply>
 #include <QPushButton>
@@ -85,8 +86,15 @@ bool BackgroundHelper::isEnabled() const
     {
         return false;
     }
+
+    // Wayland
+    if (Wayland::LayerShellHelper::isWayland()) {
+        return true;
+    }
+
     // 只支持kwin，或未开启混成的桌面环境
-    return windowManagerHelper->windowManagerName() == DWindowManagerHelper::KWinWM || !windowManagerHelper->hasComposite();
+    return windowManagerHelper->windowManagerName() == DWindowManagerHelper::KWinWM ||
+        !windowManagerHelper->hasComposite();
 }
 
 void BackgroundHelper::setEnabled(bool enabled)
@@ -328,14 +336,43 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
     });
 
     if (m_previuew) {
-        l->setWindowFlags(l->windowFlags() | Qt::BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus);
+        Qt::WindowFlags flags =
+            l->windowFlags() | Qt::BypassWindowManagerHint;
+        // Wayland下预览背景需要接受鼠标点击 (点击空白处关闭选择器),
+        // 所以不设WindowDoesNotAcceptFocus
+        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+            flags |= Qt::WindowDoesNotAcceptFocus;
+        }
+        l->setWindowFlags(flags);
     } else {
         if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
             Xcb::XcbMisc::instance().set_window_type(l->winId(), Xcb::XcbMisc::Desktop);
         }
     }
-    if (DApplication::isWayland()) {
+
+    // Wayland补丁
+    if (Wayland::LayerShellHelper::isWayland()) {
+        // 理论上layer-shell会处理好窗口边框的事，但Wayland合成器实现众多...
+        // 为了防止谁阴我一手，主动开FramelessWindowHint
         l->setWindowFlag(Qt::FramelessWindowHint, true);
+
+        if (m_previuew) {
+            // 预览背景: 必须置于桌面壁纸)之上才可见,
+            // 且需要接受鼠标点击 (点击空白处关闭选择器)
+            l->setAttribute(Qt::WA_ShowWithoutActivating, false);
+            Wayland::LayerShellHelper::setPreviewBackdropRole(
+                l, screen, QStringLiteral("wallpaper-chooser-backdrop"));
+        } else {
+            // 真实桌面壁纸在LayerBackground层，不应因鼠标点击而被激活或被提到前面
+            // Qt的 Wayland QPA在分发鼠标事件前会调requestActivate
+            // 事件过滤器挡不住——需要窗口级别的DoesNotAcceptFocus标志
+            l->setWindowFlag(Qt::WindowDoesNotAcceptFocus, true);
+            l->setAttribute(Qt::WA_ShowWithoutActivating, true);
+
+            // Treeland支持
+            Wayland::LayerShellHelper::setDesktopRole(
+                l, screen, QStringLiteral("dde-shell/desktop"));
+        }
     }
 
     if (m_visible)

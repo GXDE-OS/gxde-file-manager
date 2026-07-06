@@ -31,6 +31,9 @@
 #include "dfmapplication.h"
 #include "dfmsettings.h"
 
+#include <QGuiApplication>
+#include <QScreen>
+
 #include "app/define.h"
 #include "app/filesignalmanager.h"
 #include "dfmevent.h"
@@ -116,6 +119,39 @@ void WindowManager::loadWindowState(DFileManagerWindow *window)
     int width = state.value("width").toInt();
     int height = state.value("height").toInt();
     int windowState = state.value("state").toInt();
+
+    // 校验保存的Window State中的窗口尺寸：如果超过所有已连接屏幕的分辨率则丢弃
+    // 为什么要丢弃？在实际开发中注意到如果窗口有一次缓存了大于分辨率的宽高会导致在Wayland下窗口糊满整个屏幕
+    // 虽然标题栏可见但是拽不动，最大化/最小化失效
+
+    // 弄了我两天我一直以为是layer-shell的问题没想到是Treeland的显示逻辑：
+    // Treeland源码: 窗口首次打开时如果超出有效屏幕区域会被 resize 到满屏
+    // if (normalGeo.width() > outputValidGeometry.width()
+    //   || normalGeo.height() > outputValidGeometry.height())
+    //   surface->resize(outputValidGeometry.size());
+
+    // 所以，遍历一遍所有屏幕，只要窗口小于任一屏幕的分辨率则恢复状态 不然就清除保存的Window State里的宽高
+    if (width > 0 && height > 0) {
+        bool exceedsAllScreens = true;
+        const auto screens = QGuiApplication::screens();
+        for (QScreen* s : screens) {
+            if (width <= s->geometry().width()
+                    && height <= s->geometry().height()) {
+                exceedsAllScreens = false;
+                break;
+            }
+        }
+
+        if (exceedsAllScreens) {
+            QVariantMap cleaned = state;
+            cleaned.remove("width");
+            cleaned.remove("height");
+            DFMApplication::appObtuselySetting()->setValue("WindowManager",
+                "WindowState", cleaned);
+            return;
+        }
+    }
+
     window->resize(width, height);
     window->setWindowState(static_cast<Qt::WindowState>(windowState));
 }
