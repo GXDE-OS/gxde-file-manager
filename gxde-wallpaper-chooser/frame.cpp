@@ -42,6 +42,8 @@
 #include <DWindowManagerHelper>
 #include <dapplication.h>
 
+#include "waylandutils.h"
+
 #include <QApplication>
 #include <QScreen>
 #include <QDBusConnection>
@@ -166,7 +168,12 @@ void Frame::show()
     if (m_dbusDeepinWM)
         m_dbusDeepinWM->RequestHideWindows();
 
-    m_mouseArea->registerRegion();
+    // DRegionMonitor走com.deepin.api.XEventMonitor(X11专用)，Wayland下该服务不存在，
+    // registerRegion()的RegisterFullScreen调用会阻塞到DBus默认25s超时(表现为选择器
+    // 拉起要十几秒)。Wayland下点击外部关闭已由main.cpp的OutsideClickCloser接管，
+    // 这里直接跳过注册。
+    if (!WaylandUtils::isWaylandPlatform())
+        m_mouseArea->registerRegion();
     auto actionList = m_wallpaperDisplayMethodChooserActionGroup->actions();
     auto method = m_backgroundHelper->getWallpaperDisplayMethods();
     if (actionList.count() >= method + 1) {
@@ -224,7 +231,8 @@ void Frame::hideEvent(QHideEvent *event)
 
     if (m_dbusDeepinWM)
         m_dbusDeepinWM->CancelHideWindows();
-    m_mouseArea->unregisterRegion();
+    if (!WaylandUtils::isWaylandPlatform())
+        m_mouseArea->unregisterRegion();
 
     if (m_mode == WallpaperMode) {
         QDBusConnectionInterface* dbus_interface =
@@ -233,15 +241,11 @@ void Frame::hideEvent(QHideEvent *event)
             && dbus_interface->isServiceRegistered(AppearanceServ).value();
 
         if (!m_desktopWallpaper.isEmpty()) {
-            // Appearance服务可用时当然走原服务
             m_dbusAppearance->Set("background", m_desktopWallpaper);
 
-            // Treeland/Mutter等WM上可能遭遇Appearance服务不可用
-            // 使用后备方案：写入GSettings
-            // 壁纸由gxde-desktop-panel的BackgroundHelper在登录时从
-            // com.deepin.dde.appearance的background-uris按当前工作区索引读取
-            // (Treeland下可视作索引永远为0), 因此写入GSettings时把所选壁纸写入该列表首项。
-            if (!appearanceAvailable && m_gsettings) {
+            // Also ensure GSettings
+            Q_UNUSED(appearanceAvailable);
+            if (m_gsettings) {
                 QStringList uris =
                     m_gsettings->get("backgroundUris").toStringList();
                 if (uris.isEmpty()) {
