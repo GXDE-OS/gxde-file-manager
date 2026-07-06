@@ -1,3 +1,10 @@
+gxde-file-manager-neo (6.2.0-gxde1) UNRELEASED; urgency=medium
+
+  * 新增对Wayland的支持
+  * 优化了文件管理器的窗口宽高记忆逻辑
+
+ -- CharOfString <markus_verify@126.com>  Mon, 06 Jul 2026 15:04:08 +0800
+
 gxde-file-manager-neo (6.1.0-gxde1) UNRELEASED; urgency=medium
 
   * 修复了段错误问题
@@ -5,8 +12,6 @@ gxde-file-manager-neo (6.1.0-gxde1) UNRELEASED; urgency=medium
   * 修复了随机快速点击侧边栏项目崩溃的问题
   * 将一批对应的依赖库升级到对应的Qt6版本
   * 修复了光盘无法识别的问题
-  * 新增Wayland适配，主要适配目标为DeepinMutter与Treeland
-  * 修复Treeland下文件管理器糊满屏幕,拽不动也无法最小化的问题
 
  -- CharOfString <markus_verify@126.com>  Mon, 06 Jul 2026 00:09:00 +0800
 
