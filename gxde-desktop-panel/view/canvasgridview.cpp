@@ -2510,7 +2510,7 @@ void CanvasGridView::showEmptyAreaMenu(const Qt::ItemFlags &/*indexFlags*/)
     }
 
     QAction display(menu);
-    display.setText(tr("DesktopDisplay Settings"));
+    display.setText(tr("Display Settings"));
     display.setData(DisplaySettings);
     menu->addAction(&display);
 
