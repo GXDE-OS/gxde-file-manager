@@ -364,10 +364,6 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
             Wayland::LayerShellHelper::setPreviewBackdropRole(
                 l, screen, QStringLiteral("wallpaper-chooser-backdrop"));
         } else {
-            // 真实桌面壁纸在LayerBackground层，不应因鼠标点击而被激活或被提到前面
-            // Qt的 Wayland QPA在分发鼠标事件前会调requestActivate
-            // 事件过滤器挡不住——需要窗口级别的DoesNotAcceptFocus标志
-            l->setWindowFlag(Qt::WindowDoesNotAcceptFocus, true);
             l->setAttribute(Qt::WA_ShowWithoutActivating, true);
 
             // Treeland支持
