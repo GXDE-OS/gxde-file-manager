@@ -21,6 +21,7 @@
 #include "backgroundhelper.h"
 #include "util/xcb/xcb.h"
 #include "util/wayland/layershellhelper.h"
+#include "waylandutils.h"
 
 #include <QNetworkReply>
 #include <QPushButton>
@@ -340,12 +341,12 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
             l->windowFlags() | Qt::BypassWindowManagerHint;
         // Wayland下预览背景需要接受鼠标点击 (点击空白处关闭选择器),
         // 所以不设WindowDoesNotAcceptFocus
-        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+        if (!WaylandUtils::isWaylandSession()) {
             flags |= Qt::WindowDoesNotAcceptFocus;
         }
         l->setWindowFlags(flags);
     } else {
-        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+        if (!WaylandUtils::isWaylandSession()) {
             Xcb::XcbMisc::instance().set_window_type(l->winId(), Xcb::XcbMisc::Desktop);
         }
     }

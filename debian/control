@@ -89,6 +89,7 @@ Depends:
  gxde-daemon,
  libdframeworkdbus-qt6,
  liblayershellqtinterface6,
+ layer-shell-qt,
 Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1), gxde-desktop-panel
 Provides: dde-desktop, gxde-desktop-panel
 Replaces: dde-desktop, gxde-desktop-panel

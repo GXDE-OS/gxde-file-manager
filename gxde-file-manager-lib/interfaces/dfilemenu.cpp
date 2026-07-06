@@ -25,6 +25,11 @@
 #include "dfilemenu.h"
 #include "dfmevent.h"
 
+#include "waylandutils.h"
+
+#include <QGuiApplication>
+#include <QCursor>
+
 DFileMenu::DFileMenu(QWidget *parent)
     : QMenu(parent)
 {
@@ -66,7 +71,10 @@ QAction *DFileMenu::actionAt(const QString &text) const
 
 QAction *DFileMenu::exec()
 {
-    return QMenu::exec(QCursor::pos());
+    QPoint pos = QCursor::pos();
+    if (WaylandUtils::isWaylandPlatform())
+        pos -= QPoint(16, 16);
+    return QMenu::exec(pos);
 }
 
 quint64 DFileMenu::eventId() const

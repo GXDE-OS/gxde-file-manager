@@ -235,6 +235,7 @@ gxde-file-manager-lib/pkgconfig/
 gxde-file-manager/gxde-file-manager
 usb-device-formatter/usb-device-formatter
 gxde-wallpaper-chooser/gxde-wallpaper-chooser-wayland
+gxde-rename-interface-treeland/gxde-rename-interface-treeland
 
 # ---> Debian packaging
 debian/.debhelper/

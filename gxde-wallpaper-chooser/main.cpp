@@ -1,15 +1,25 @@
-/**
- * Copyright (C) 2026 CharOfString
+/*
+ * Copyright (C) 2026 CharOfString <markus_verify@126.com>
  *
- * This program is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- **/
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include <QDebug>
 #include <QEvent>
+#include <QFile>
 #include <QIcon>
+#include <QLibraryInfo>
 #include <QLocale>
 #include <QSettings>
 #include <QTextCodec>
@@ -22,6 +32,7 @@
 
 #include "frame.h"
 #include "util/wayland/layershellhelper.h"
+#include "waylandutils.h"
 
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
@@ -72,15 +83,29 @@ int main(int argc, char* argv[])
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
-    const bool isWaylandSession =
-        qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland";
+    const bool isWaylandSession = WaylandUtils::isWaylandSession();
 
     // startgxde会设置DTK2_XWAYLAND=dxcb, 与原生 Wayland + layer-shell
     // 不兼容, 导致段错误。在构造期间临时屏蔽；构造完成无需恢复
     if (isWaylandSession) {
         qunsetenv("DTK2_XWAYLAND");
-        qputenv("QT_QPA_PLATFORM", "wayland");
-        LayerShellQt::Shell::useLayerShell();
+        const QString dwaylandPlugin = QLibraryInfo::location(QLibraryInfo::PluginsPath)
+            + QStringLiteral("/platforms/libdwayland.so");
+
+        // 更新: 并不能安全地假设GXDE总是支持DWayland
+        if (QFile::exists(dwaylandPlugin)) {
+            qputenv("QT_QPA_PLATFORM", "dwayland");
+        } else {
+            qputenv("QT_QPA_PLATFORM", "wayland");
+        }
+
+        // 仅在layer-shell的QtWayland集成插件可用时才启用layer-shell，
+        // 否则wayland平台插件会因找不到"layer-shell"集成而初始化失败并abort
+        if (WaylandUtils::layerShellIntegrationAvailable()) {
+            LayerShellQt::Shell::useLayerShell();
+        } else {
+            qWarning() << "[Wayland] 缺少layer-shell集成插件，已禁用layer-shell以避免崩溃";
+        }
     } else {
         DApplication::loadDXcbPlugin();
     }

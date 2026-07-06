@@ -25,6 +25,7 @@
 #include "dfilemanagerwindow.h"
 #include "dtoolbar.h"
 #include "dfileview.h"
+#include "waylandutils.h"
 #include "fileviewhelper.h"
 #include "ddetailview.h"
 #include "dfilemenu.h"
@@ -477,7 +478,11 @@ DFileManagerWindow::DFileManagerWindow(const DUrl &fileUrl, QWidget *parent)
 
     /// init global AppController
 //    Q_UNUSED(AppController::instance());
-    setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
+    // 显式带上min/max/close的窗口hint，否则Wayland下min/max/close不可见
+    setWindowFlags(windowFlags() | Qt::FramelessWindowHint
+        | Qt::WindowMinimizeButtonHint
+        | Qt::WindowMaximizeButtonHint
+        | Qt::WindowCloseButtonHint);
     setWindowIcon(QIcon(":/images/images/gxde-file-manager.svg"));
 
     initData();
@@ -1003,7 +1008,9 @@ void DFileManagerWindow::initTitleBar()
     if (app) {
         isDXcbPlatform = app->isDXcbPlatform();
     }
-    if (DApplication::isWayland()) {
+    // 原生 Wayland(如 Treeland)下也用 D-XCB 风格的自定义标题栏(地址栏内嵌)。这里用
+    // platformName 判断而非 DApplication::isWayland()：后者在 DTK2_XWAYLAND 恢复后会变 false。
+    if (WaylandUtils::isWaylandPlatform()) {
         isDXcbPlatform = true;
     }
 

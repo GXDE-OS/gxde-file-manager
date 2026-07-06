@@ -213,7 +213,10 @@ void WindowManager::showNewWindow(const DUrl &url, const bool& isNewWindow)
         }
     }
 
-    QX11Info::setAppTime(QX11Info::appUserTime());
+    if (QX11Info::isPlatformX11()) {
+        QX11Info::setAppTime(QX11Info::appUserTime());
+    }
+
     DFileManagerWindow *window = new DFileManagerWindow(url.isEmpty() ? DFMApplication::instance()->appUrlAttribute(DFMApplication::AA_UrlOfNewWindow) : url);
     loadWindowState(window);
     window->setAttribute(Qt::WA_DeleteOnClose);

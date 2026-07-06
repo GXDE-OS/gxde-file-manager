@@ -42,6 +42,7 @@
 #include "dialogs/dialogmanager.h"
 #include "shutil/fileutils.h"
 #include "shutil/mimesappsmanager.h"
+#include "waylandutils.h"
 #include "dialogs/openwithdialog.h"
 #include "controllers/appcontroller.h"
 #include "singleton.h"
@@ -104,7 +105,30 @@ int main(int argc, char *argv[])
         DApplication::customQtThemeConfigPathByUserHome(getpwuid(pkexecUID)->pw_dir);
     }
 
-    SingleApplication::loadDXcbPlugin();
+    // Wayland会话下启用原生Wayland，若显式指定QT_QPA_PLATFORM=dxcb则不使用Wayland
+    // 优先检测dwayland QPA插件（Deepin Wayland集成），可用时强制dwayland，
+    // 否则回退到原生wayland
+    // 如果使用原生Wayland则不恢复DTK2_XWAYLAND，使DApplication::isWayland()返回真，这样DTK走
+    // Wayland的窗体装饰路径
+    const bool waylandSession = WaylandUtils::isWaylandSession();
+    const bool userForcedPlatform = !qEnvironmentVariable("QT_QPA_PLATFORM").isEmpty();
+    if (waylandSession && !userForcedPlatform) {
+        qunsetenv("DTK2_XWAYLAND");
+        const QString currentDE = qEnvironmentVariable("XDG_CURRENT_DESKTOP").toLower();
+        const QString dwaylandPlugin = QLibraryInfo::location(QLibraryInfo::PluginsPath)
+            + QStringLiteral("/platforms/libdwayland.so");
+
+        // 更新: 并不能安全地假设GXDE总是支持DWayland
+        if (QFile::exists(dwaylandPlugin)) {
+            qputenv("QT_QPA_PLATFORM", "dwayland");
+            qInfo() << "(DWayland) Startup: Setting DWayland...";
+        } else {
+            qputenv("QT_QPA_PLATFORM", "wayland");
+            qInfo() << "(Wayland) Startup: Falling back to wayland...";
+        }
+    } else {
+        SingleApplication::loadDXcbPlugin();
+    }
     SingleApplication::initSources();
     SingleApplication app(argc, argv);
 
@@ -119,7 +143,7 @@ int main(int argc, char *argv[])
     // 测试时发现在Treeland下XSETTINGS selection无人持有导致DTreelandPlatformInterface
     // 返回空，于是DTK的DIconProxyEngine拿不到主题的图标名
     // 为这种情况兜底，发生这种情况直接读取配置文件，确保QIconLoader有图标可用
-    if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
+    if (WaylandUtils::isWaylandSession()) {
         QSettings qtSettings(QSettings::IniFormat, QSettings::UserScope,
             "deepin", "qt-theme");
         qtSettings.beginGroup("Theme");

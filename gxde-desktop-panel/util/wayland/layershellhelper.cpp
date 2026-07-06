@@ -18,25 +18,18 @@
 #include <LayerShellQt/Window>
 #include <DPlatformHandle>
 
+#include "waylandutils.h"
+
 namespace Wayland {
 
+// 运行时(平台级)判定：这里的调用都发生在QGuiApplication之后，用平台插件名
 bool LayerShellHelper::isWayland() {
-    if (!qGuiApp) {
-        return false;
-    }
+    return WaylandUtils::isWaylandPlatform();
+}
 
-    const QString plat_name = QGuiApplication::platformName().toLower();
-    bool result = false;
-
-    if (plat_name == "wayland") {
-        result = true;
-    } else if (plat_name == "dwayland") {
-        result = true;
-    } else if (plat_name.contains("wayland")) {
-        result = true;
-    }
-
-    return result;
+// 检测是否是Treeland：先确认真的跑在Wayland平台上，再看会话标识
+bool LayerShellHelper::isTreeland() {
+    return isWayland() && WaylandUtils::isTreeland();
 }
 
 void LayerShellHelper::setDesktopRole(QWidget* widget, QScreen* screen,
@@ -94,7 +87,7 @@ void LayerShellHelper::setDesktopRole(QWidget* widget, QScreen* screen,
     target_layer_shell_window->setAnchors(anchors);
     target_layer_shell_window->setExclusiveZone(-1);
     target_layer_shell_window->setKeyboardInteractivity(
-        LayerShellQt::Window::KeyboardInteractivityNone);
+        LayerShellQt::Window::KeyboardInteractivityOnDemand);
 }
 
 void LayerShellHelper::setChooserRole(QWidget* widget, QScreen* screen,
@@ -247,14 +240,27 @@ void LayerShellHelper::fixPopupLayerShell(QWidget* popup) {
         return;
     }
 
-    // popup不设任何anchor
-
-    // 其它属性
-    target_layer_shell_window->setAnchors({});
+    // 把菜单定位到它期望出现的位置, 即右键光标处
+    // 坏消息是若不设anchor，Treeland 会把它摆到屏幕正中
+    // 备用方案: 锚定左上角，再用 margin 偏移到鼠标位置
+    // 注: popup->pos()为QMenu请求的弹出位置
+    const QPoint pos = popup->pos();
+    LayerShellQt::Window::Anchors anchors;
+    anchors |= LayerShellQt::Window::AnchorTop;
+    anchors |= LayerShellQt::Window::AnchorLeft;
+    target_layer_shell_window->setAnchors(anchors);
+    target_layer_shell_window->setMargins(QMargins(pos.x(), pos.y(), 0, 0));
     target_layer_shell_window->setLayer(LayerShellQt::Window::LayerOverlay);
     target_layer_shell_window->setExclusiveZone(0);
+
+    // 子菜单(有 transient parent，如「用…打开」展开项)设为 None：不要键盘交互
+    // 否则它作为独立 layer surface 会 requestActive 抢走激活态
+    // Treeland 会把父菜单setActivate(false))，且关闭时 requestInactive把激活
+    // 甩给别的窗口，后果就是整条菜单关掉
+    const bool isSubMenu = window->transientParent() != nullptr;
     target_layer_shell_window->setKeyboardInteractivity(
-        LayerShellQt::Window::KeyboardInteractivityOnDemand);
+        isSubMenu ? LayerShellQt::Window::KeyboardInteractivityNone
+            : LayerShellQt::Window::KeyboardInteractivityOnDemand);
 
     // popup菜单在Treeland下会被当作普通toplevel窗口装饰，
     // 导致出现最小化/最大化/关闭按钮

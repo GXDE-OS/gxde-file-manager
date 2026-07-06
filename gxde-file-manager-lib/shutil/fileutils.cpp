@@ -593,7 +593,8 @@ bool FileUtils::launchAppByDBus(const QString &desktopFile, const QStringList &f
 {
     if (appController->hasLaunchAppInterface()){
         qDebug() << "launchApp by dbus:" << desktopFile << filePaths;
-        appController->startManagerInterface()->LaunchApp(desktopFile, QX11Info::getTimestamp(), filePaths);
+        const quint32 launchTime = QX11Info::isPlatformX11() ? QX11Info::getTimestamp() : 0;
+        appController->startManagerInterface()->LaunchApp(desktopFile, launchTime, filePaths);
         return true;
     }
     return false;

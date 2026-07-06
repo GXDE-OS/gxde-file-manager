@@ -13,9 +13,18 @@
 #include <QDBusMetaType>
 #include <QThreadPool>
 #include <QPixmapCache>
+#include <QApplication>
 #include <QEvent>
+#include <QGuiApplication>
 #include <QIcon>
+#include <QLibraryInfo>
 #include <QSettings>
+#include <QWidget>
+#include <QWindow>
+#include <QElapsedTimer>
+#include <QCursor>
+#include <QMouseEvent>
+#include <QSet>
 
 #include <DLog>
 #include <DApplication>
@@ -29,6 +38,7 @@
 
 #include "util/dde/ddesession.h"
 #include "util/wayland/layershellhelper.h"
+#include "waylandutils.h"
 
 #include "config/config.h"
 #include "desktop.h"
@@ -102,6 +112,11 @@ static bool registerFileManager1DBus()
 
 int main(int argc, char *argv[])
 {
+    // Treeland下遇到了桌面文件重命名/ESC键失效的问题
+    // 具体原因分析请见: ./doc/notes/treeland-desktop-panel-key-focus-issue.md
+    // 打了补丁，当前Treeland下的重命名由子项目gxde-rename-interface-treeland负责
+    // 其它WM的重命名依然走原版逻辑
+
     // Fixed the locale codec to utf-8
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
@@ -116,11 +131,28 @@ int main(int argc, char *argv[])
     // 这样保证面板不走D-XCB，但叫子进程仍然能走D-XCB
     const QByteArray savedDtk2XWayland = qgetenv("DTK2_XWAYLAND");
 
-    if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
+    if (WaylandUtils::isWaylandSession()) {
         // Wayland下不再使用D-XCB插件，改让layer-shell-qt接手
         qunsetenv("DTK2_XWAYLAND");
-        qputenv("QT_QPA_PLATFORM", "wayland");
-        LayerShellQt::Shell::useLayerShell();
+        const QString dwaylandPlugin = QLibraryInfo::location(QLibraryInfo::PluginsPath)
+            + QStringLiteral("/platforms/libdwayland.so");
+
+        // 更新: 并不能安全地假设GXDE总是支持DWayland
+        if (QFile::exists(dwaylandPlugin)) {
+            qputenv("QT_QPA_PLATFORM", "dwayland");
+        } else {
+            qputenv("QT_QPA_PLATFORM", "wayland");
+        }
+
+        // 仅在layer-shell的QtWayland集成插件可用时才启用layer-shell。
+        // 否则wayland平台插件会因找不到"layer-shell"集成而初始化失败并abort(黑屏)。
+        if (WaylandUtils::layerShellIntegrationAvailable()) {
+            LayerShellQt::Shell::useLayerShell();
+        } else {
+            qWarning() << "[Wayland] 缺少layer-shell的QtWayland集成插件"
+                          "(wayland-shell-integration/liblayer-shell.so)，"
+                          "已禁用layer-shell以避免崩溃；壁纸/桌面需要该插件才能作为背景层显示。";
+        }
     } else {
         // 传统X11会话下仍然加载D-XCB插件
         DApplication::loadDXcbPlugin();
@@ -140,7 +172,7 @@ int main(int argc, char *argv[])
     // selection无人持有导致DTreelandPlatformInterface返回空，于是DTK的DIconProxyEngine拿不到
     // 主题的图标名
     // 为这种情况兜底，发生这种情况直接读取配置文件，确保QIconLoader有图标可用
-    if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
+    if (WaylandUtils::isWaylandSession()) {
         QSettings qtSettings(QSettings::IniFormat, QSettings::UserScope,
             "deepin", "qt-theme");
         qtSettings.beginGroup("Theme");
@@ -153,35 +185,168 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
-        // 平台插件已初始化完毕，恢复DTK2_XWAYLAND供子进程使用
-        if (!savedDtk2XWayland.isEmpty()) {
-            qputenv("DTK2_XWAYLAND", savedDtk2XWayland);
-        }
+    // 注意：不能在这里清理 layer-shell 环境变量。此时壁纸等窗口尚未创建
+    // 此时unset壁纸窗口就不会成为layer-shell表面，不仅乱飞还会被dock裁掉底部的那一块
 
-        // 清除 layer-shell 和 QPA 平台环境变量
-        // 防止子进程，比如文件管理器等，继承后窗口行为异常
-        qunsetenv("QT_WAYLAND_SHELL_INTEGRATION");
-        qunsetenv("QT_QPA_PLATFORM");
-    }
+    // 此处原有unset的相关代码，被我挪到 Show() 创建窗口之后去了
 
     // 别急，还有第二关：在Wayland下，弹出的右键菜单也会给认为是一个layer-shell surface，导致菜单占满全屏
     // 表象就是菜单直接糊满全屏。
     // 计划是安装一个事件过滤器，Popup类窗口一显示旧解掉其anchor
+
+    // 第三关(仅 Treeland)：带子菜单的项(如「用…打开」) hover出子菜单后往下移，整条菜单消失
+    // 调试发现: 子菜单(layer 表面)关闭时，QtWayland 会同步给父菜单发一个
+    // QEvent::Close (独立 layer 表面没有,xdg_popup的grab链，Qt的popup链判定把父菜单一起关了)，
+    // 全程没有 WindowDeactivate/FocusOut。对策：拦掉这个**误发**的 Close ——
+    // 当「刚有子菜单活动」且「没有鼠标/键盘触发关闭」且「鼠标仍在菜单链区域内」
+    // 时，吞掉父菜单的 Close。
+    // 真正的关闭 (点外部、点击菜单项、Esc/键盘操作) 不满足条件，照常放行。
     class PopupLayerShellPatcher : public QObject {
     public:
         using QObject::QObject;
 
     protected:
         bool eventFilter(QObject* obj, QEvent* event) override {
-            if (event->type() == QEvent::Show) {
-                QWidget* w = qobject_cast<QWidget*>(obj);
-                if (w && w->windowType() == Qt::Popup) {
+            QWidget* w = qobject_cast<QWidget*>(obj);
+            if (w && w->windowType() == Qt::Popup) {
+                QWindow* wh = w->windowHandle();
+                const bool hasTransientParent = wh && wh->transientParent();
+                const bool isKnownSubMenu = hasTransientParent
+                    || m_subMenuPopups.contains(w);
+
+                if (event->type() == QEvent::Show) {
+                    const bool isSubMenu = hasTransientParent
+                        || hasOtherVisiblePopup(w);
+
+                    m_visiblePopups.insert(w);
+                    if (isSubMenu) {
+                        m_subMenuPopups.insert(w);
+                        m_subMenuActivityTimer.restart();
+                        m_lastSubMenuRect = w->geometry();
+                    } else {
+                        m_rootPopups.insert(w);
+                    }
+
                     Wayland::LayerShellHelper::fixPopupLayerShell(w);
+                } else if (event->type() == QEvent::MouseMove) {
+                    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+                    m_lastCursorPos = mouseEvent->globalPos();
+                    m_lastCursorPosTimer.restart();
+                } else if (event->type() == QEvent::MouseButtonPress
+                           || event->type() == QEvent::MouseButtonRelease
+                           || event->type() == QEvent::MouseButtonDblClick) {
+                    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+                    m_lastCursorPos = mouseEvent->globalPos();
+                    m_lastCursorPosTimer.restart();
+                    m_lastMouseButtonTimer.restart();
+                } else if (event->type() == QEvent::KeyPress
+                           || event->type() == QEvent::ShortcutOverride) {
+                    m_lastKeyEventTimer.restart();
+                } else if (event->type() == QEvent::Move
+                           || event->type() == QEvent::Resize) {
+                    if (isKnownSubMenu) {
+                        m_lastSubMenuRect = w->geometry();
+                    }
+                } else if (event->type() == QEvent::Close && !isKnownSubMenu
+                           && Wayland::LayerShellHelper::isTreeland()) {
+                    const QPoint cursorPos =
+                        m_lastCursorPosTimer.isValid() && m_lastCursorPosTimer.elapsed() < 1000
+                            ? m_lastCursorPos : QCursor::pos();
+                    const QRect menuGuardRect = popupChainRect(w)
+                        .marginsAdded(QMargins(32, 32, 32, 32));
+                    const bool subMenuRecentlyActive =
+                        hasVisibleSubMenu()
+                        || (m_subMenuActivityTimer.isValid()
+                            && m_subMenuActivityTimer.elapsed() < 1500);
+                    const bool noRecentMouseButton =
+                        !m_lastMouseButtonTimer.isValid()
+                        || m_lastMouseButtonTimer.elapsed() > 350;
+                    const bool noRecentKey =
+                        !m_lastKeyEventTimer.isValid()
+                        || m_lastKeyEventTimer.elapsed() > 350;
+
+                    if (subMenuRecentlyActive && noRecentMouseButton && noRecentKey
+                            && menuGuardRect.contains(cursorPos)
+                            && QGuiApplication::mouseButtons() == Qt::NoButton) {
+                        // 必须 ignore() 把 QCloseEvent 标记为未接受，QWidget::close() 才会放弃隐藏；
+                        // 只 return true(拦截分发)不改 accepted 标志，菜单照样会关。
+                        event->ignore();
+                        return true;
+                    }
+                } else if ((event->type() == QEvent::Close || event->type() == QEvent::Hide)
+                           && isKnownSubMenu) {
+                    // 记下「子菜单刚关闭」的时刻，用于识别紧随其后的父菜单误关 Close
+                    m_subMenuActivityTimer.restart();
+                    m_lastSubMenuRect = w->geometry();
+                    if (event->type() == QEvent::Hide) {
+                        m_visiblePopups.remove(w);
+                    }
+                } else if (event->type() == QEvent::Hide) {
+                    m_visiblePopups.remove(w);
+                } else if (event->type() == QEvent::Destroy) {
+                    m_visiblePopups.remove(w);
+                    m_rootPopups.remove(w);
+                    m_subMenuPopups.remove(w);
                 }
             }
             return QObject::eventFilter(obj, event);
         }
+
+    private:
+        bool hasOtherVisiblePopup(QWidget* current) const {
+            for (QWidget* popup : m_visiblePopups) {
+                if (popup && popup != current && popup->isVisible()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool hasVisibleSubMenu() const {
+            for (QWidget* popup : m_subMenuPopups) {
+                if (popup && popup->isVisible()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        QRect popupChainRect(QWidget* closingPopup) const {
+            QRect rect;
+            for (QWidget* popup : QApplication::topLevelWidgets()) {
+                if (!popup || popup->windowType() != Qt::Popup
+                        || !popup->isVisible()) {
+                    continue;
+                }
+
+                rect = rect.isNull() ? popup->geometry()
+                    : rect.united(popup->geometry());
+            }
+
+            if (closingPopup) {
+                rect = rect.isNull() ? closingPopup->geometry()
+                    : rect.united(closingPopup->geometry());
+            }
+
+            if (!m_lastSubMenuRect.isNull()
+                    && m_subMenuActivityTimer.isValid()
+                    && m_subMenuActivityTimer.elapsed() < 1500) {
+                rect = rect.isNull() ? m_lastSubMenuRect
+                    : rect.united(m_lastSubMenuRect);
+            }
+
+            return rect;
+        }
+
+        QSet<QWidget*> m_visiblePopups;
+        QSet<QWidget*> m_rootPopups;
+        QSet<QWidget*> m_subMenuPopups;
+        QElapsedTimer m_subMenuActivityTimer;
+        QElapsedTimer m_lastCursorPosTimer;
+        QElapsedTimer m_lastMouseButtonTimer;
+        QElapsedTimer m_lastKeyEventTimer;
+        QPoint m_lastCursorPos;
+        QRect m_lastSubMenuRect;
     };
 
     app.installEventFilter(new PopupLayerShellPatcher(&app));
@@ -273,6 +438,18 @@ int main(int argc, char *argv[])
             Desktop::instance()->Show();
             Desktop::instance()->loadView();
         }
+    }
+
+    if (WaylandUtils::isWaylandSession()) {
+        // 平台插件已初始化完毕，恢复DTK2_XWAYLAND供子进程使用
+        if (!savedDtk2XWayland.isEmpty()) {
+            qputenv("DTK2_XWAYLAND", savedDtk2XWayland);
+        }
+
+        // 清除 layer-shell 和 QPA 平台环境变量
+        // 防止子进程，比如文件管理器等，继承后窗口行为异常
+        qunsetenv("QT_WAYLAND_SHELL_INTEGRATION");
+        qunsetenv("QT_QPA_PLATFORM");
     }
 
     DFMGlobal::autoLoadDefaultPlugins();

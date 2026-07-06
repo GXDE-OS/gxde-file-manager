@@ -1,6 +1,8 @@
 usr/bin/gxde-desktop-panel
+usr/bin/gxde-rename-interface-treeland
 usr/bin/gxde-wallpaper-chooser-wayland
 usr/share/applications/gxde-computer.desktop
 usr/share/applications/gxde-trash.desktop
 usr/share/gxde-desktop-panel/translations/*.qm
+usr/share/gxde-rename-interface-treeland/translations/*.qm
 usr/share/dbus-1/services/com.deepin.dde.desktop.service

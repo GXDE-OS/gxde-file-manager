@@ -23,6 +23,7 @@ class DesktopItemDelegate;
 class DFileSystemModel;
 class DFileSelectionModel;
 class CanvasViewPrivate;
+class QProcess;
 class CanvasGridView: public QAbstractItemView
 {
     Q_OBJECT
@@ -184,6 +185,8 @@ private:
 
     void showEmptyAreaMenu(const Qt::ItemFlags &indexFlags);
     void showNormalMenu(const QModelIndex &index, const Qt::ItemFlags &indexFlags);
+    void launchRenameHelper(const QModelIndex &index);
+    QProcess *m_renameProc = nullptr;
     bool isIndexEmpty();
     QModelIndex moveCursorGrid(CursorAction cursorAction, Qt::KeyboardModifiers modifiers);
 

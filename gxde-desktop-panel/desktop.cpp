@@ -32,6 +32,7 @@
 
 #include "util/xcb/xcb.h"
 #include "util/wayland/layershellhelper.h"
+#include "waylandutils.h"
 
 using WallpaperSettings = Frame;
 
@@ -105,13 +106,13 @@ void Desktop::onBackgroundEnableChanged()
         // 防止复制模式下主屏窗口被遮挡
         // 目前只给X11用，Wayland下走layer-shell-qt5管理
         // 在Wayland上手动把界面提到前面会让壁纸层被提到其它程序窗口的前面
-        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+        if (!WaylandUtils::isWaylandSession()) {
             background->activateWindow();
             QMetaObject::invokeMethod(background, "raise", Qt::QueuedConnection);
         }
 
         // 隐藏完全重叠的窗口
-        if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+        if (!WaylandUtils::isWaylandSession()) {
             for (QLabel *l : d->background->allBackgrounds()) {
                 if (l != background) {
                     Xcb::XcbMisc::instance().set_window_transparent_input(l->winId(), true);
@@ -158,7 +159,7 @@ void Desktop::onBackgroundGeometryChanged(QWidget *l)
     qInfo() << "primaryBackground widget geometry: " << primaryBackground->geometry()
             << "changedBackground widget geometry:" << l->geometry();
 
-    if (qgetenv("XDG_SESSION_TYPE") != "wayland") {
+    if (!WaylandUtils::isWaylandSession()) {
         // 仅在传统X11会话下允许主动把窗体raise到前面
         // 原因请阅读Desktop::onBackgroundEnableChanged()函数的注释
         primaryBackground->activateWindow();

@@ -24,6 +24,14 @@ extern "C" {
 
 class QX11Info {
   public:
+    // Qt6没有QX11Info::isPlatformX11()，用平台插件名判定
+    static bool isPlatformX11() {
+        if (auto* app = qGuiApp) {
+            return app->platformName() == QLatin1String("xcb");
+        }
+        return false;
+    }
+
     static Display* display() {
         if (auto* app = qGuiApp) {
             if (auto* ni = app->platformNativeInterface()) {

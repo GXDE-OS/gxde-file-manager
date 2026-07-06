@@ -59,6 +59,7 @@
 
 #include "interfaces/private/mergeddesktop_common_p.h"
 #include "util/xcb/xcb.h"
+#include "util/wayland/layershellhelper.h"
 #include "private/canvasviewprivate.h"
 #include "canvasviewhelper.h"
 #include "watermaskframe.h"
@@ -1543,6 +1544,45 @@ bool CanvasGridView::edit(const QModelIndex &index, QAbstractItemView::EditTrigg
         }
     }
 
+    // Treeland下遇到了桌面文件重命名/ESC键失效的问题
+    // 具体原因分析请见: ./doc/notes/treeland-desktop-panel-key-focus-issue.md
+    // 打了补丁，当前Treeland下的重命名由子项目gxde-rename-interface-treeland负责
+    // 其它WM的重命名依然走原版逻辑
+    if (Wayland::LayerShellHelper::isTreeland()) {
+        // 检查是否触发重命名，满足任一即可: 菜单(AllEditTriggers),
+        // F2(EditKeyPressed)、以及双击名字 (慢双击) (SelectedClicked)
+        bool allow = trigger == QAbstractItemView::AllEditTriggers
+            || trigger == QAbstractItemView::EditKeyPressed
+            || trigger == QAbstractItemView::SelectedClicked;
+
+        // 右键释放时基类的mouseReleaseEvent也会以SelectedClicked调用edit()
+        // 必须排除这种情况，否则一对图标点右键就会触发重命名
+        // 让SelectedClicked只认左键
+        if (allow && trigger == QAbstractItemView::SelectedClicked && event
+                && (event->type() == QEvent::MouseButtonPress
+                    || event->type() == QEvent::MouseButtonRelease
+                    || event->type() == QEvent::MouseButtonDblClick)) {
+            // 开始检查是不是左键
+            if (static_cast<QMouseEvent *>(event)->button() != Qt::LeftButton) {
+                allow = false;
+            }
+        }
+
+        if (!allow) {
+            return false;
+        }
+
+        // 检查是否可以重命名
+        Qt::ItemFlags flags = model()->flags(index);
+        if (((flags & Qt::ItemIsEditable) == 0) || ((flags & Qt::ItemIsEnabled) == 0)) {
+            return false;
+        }
+
+        // (仅Treeland) 拉起重命名小帮手
+        launchRenameHelper(index);
+        return true;
+    }
+
     if (QWidget *w = indexWidget(index)) {
         Qt::ItemFlags flags = model()->flags(index);
         if (((flags & Qt::ItemIsEditable) == 0) || ((flags & Qt::ItemIsEnabled) == 0)) {
@@ -1572,6 +1612,50 @@ bool CanvasGridView::edit(const QModelIndex &index, QAbstractItemView::EditTrigg
     }
 
     return tmp;
+}
+
+void CanvasGridView::launchRenameHelper(const QModelIndex &index) {
+    // 同一时刻只允许一个重命名输入子进程
+    if (m_renameProc) {
+        return;
+    }
+
+    const DAbstractFileInfoPointer info = model()->fileInfo(index);
+    if (!info) {
+        return;
+    }
+
+    auto* proc = new QProcess(this);
+    m_renameProc = proc;
+    const QPersistentModelIndex pIndex(index);
+    connect(proc,
+            static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            this, [this, proc, pIndex](int code, QProcess::ExitStatus) {
+        const QString newName = QString::fromUtf8(proc->readAllStandardOutput()).trimmed();
+        m_renameProc = nullptr;
+        proc->deleteLater();
+
+        // 如果进程异常退出或校验结果非法，不要尝试读取回传的数据
+        if (code != 0 || newName.isEmpty() || !pIndex.isValid()) {
+            return;
+        }
+
+        // 再检查一下...
+        if (newName == "." || newName == ".." || newName.contains(QLatin1Char('/'))) {
+            return;
+        }
+
+        const DAbstractFileInfoPointer info = model()->fileInfo(pIndex);
+        if (!info || info->fileName() == newName) {
+            return;
+        }
+
+        DFileService::instance()->renameFile(this, info->fileUrl(),
+            info->getUrlByNewFileName(newName));
+    });
+
+    proc->start(QStringLiteral("gxde-rename-interface-treeland"),
+        QStringList{ info->fileName() });
 }
 
 void CanvasGridView::setDodgeDuration(double dodgeDuration)

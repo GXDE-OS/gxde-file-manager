@@ -19,6 +19,7 @@ namespace Wayland {
 class LayerShellHelper {
 public:
     static bool isWayland();
+    static bool isTreeland();
     static void setDesktopRole(QWidget* widget, QScreen* screen,
         const QString& scope);
     static void setChooserRole(QWidget* widget, QScreen* screen,
