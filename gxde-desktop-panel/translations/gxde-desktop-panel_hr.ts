@@ -1,50 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
+<?xml version='1.0' encoding='utf-8'?>
 <TS version="2.1" language="hr">
 <context>
     <name>CanvasGridView</name>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2443"/>
+        <location filename="../view/canvasgridview.cpp" line="2443" />
         <source>Icon size</source>
         <translation>Veličina ikone</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2449"/>
+        <location filename="../view/canvasgridview.cpp" line="2449" />
         <source>Auto merge</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatsko spajanje</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2458"/>
+        <location filename="../view/canvasgridview.cpp" line="2458" />
         <source>Auto arrange</source>
         <translation>Samouređivanje</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2467"/>
+        <location filename="../view/canvasgridview.cpp" line="2467" />
         <source>Hide Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Sakrij ikonu</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2520"/>
+        <location filename="../view/canvasgridview.cpp" line="2520" />
         <source>Set Wallpaper</source>
         <translation>Postavi tapetu</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2522"/>
+        <location filename="../view/canvasgridview.cpp" line="2522" />
         <source>Wallpaper and Screensaver</source>
         <translation>Tapeta i čuvar zaslona</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2603"/>
+        <location filename="../view/canvasgridview.cpp" line="2603" />
         <source>Properties</source>
         <translation>Svojstva</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2506"/>
+        <location filename="../view/canvasgridview.cpp" line="2506" />
         <source>Display Settings</source>
         <translation>Postavke prikaza</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2513"/>
+        <location filename="../view/canvasgridview.cpp" line="2513" />
         <source>Corner Settings</source>
         <translation>Postavke kutova</translation>
     </message>
@@ -52,27 +51,27 @@
 <context>
     <name>DesktopItemDelegate</name>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="38"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="38" />
         <source>Tiny</source>
-        <translation type="unfinished"></translation>
+        <translation>Mali</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="39"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="39" />
         <source>Small</source>
         <translation>Malo</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="40"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="40" />
         <source>Medium</source>
         <translation>Srednje</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="41"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="41" />
         <source>Large</source>
         <translation>Veliko</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="42"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="42" />
         <source>Super large</source>
         <translation>Izuzetno veliko</translation>
     </message>
@@ -80,92 +79,92 @@
 <context>
     <name>Frame</name>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440" />
         <source>Wallpaper Slideshow</source>
         <translation>Klizni prikaz tapete</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443" />
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikazna rezolucija</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444" />
         <source>Show weather report</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži izvješće o vremenu</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470" />
         <source>When login</source>
-        <translation type="unfinished"></translation>
+        <translation>Prijava</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472" />
         <source>When wakeup</source>
-        <translation type="unfinished"></translation>
+        <translation>Budite.</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490" />
         <source>Keep Aspect Ratio By Expanding</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadrži omjer stranica proširivanjem</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491" />
         <source>Ignore Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Zanemari omjer stranica</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492" />
         <source>Keep Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadrži omjer stranica</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493" />
         <source>Center</source>
-        <translation type="unfinished"></translation>
+        <translation>Centar</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494" />
         <source>Background Spanned</source>
-        <translation type="unfinished"></translation>
+        <translation>Pozadina</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555" />
         <source>Require a password on wakeup</source>
-        <translation type="unfinished"></translation>
+        <translation>Zahtijeva lozinku pri probudjenju</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580" />
         <source>Never</source>
         <translation>Nikada</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581" />
         <source>Wait:</source>
         <translation>Pričekajte:</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609" />
         <source>Wallpaper</source>
         <translation>Tapeta</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609" />
         <source>Screensaver</source>
         <translation>Čuvar zaslona</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671" />
         <source>Only desktop</source>
         <translation>Samo radna površina</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672" />
         <source>Only lock screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Samo zaključaj ekran</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700" />
         <source>Apply</source>
         <translation>Primjeni</translation>
     </message>
@@ -173,72 +172,72 @@
 <context>
     <name>ZoneMainWindow</name>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="60"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="60" />
         <source>Control Center</source>
         <translation>Kontrolni centar</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="61"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="61" />
         <source>All Windows</source>
         <translation>Svi prozori</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="62"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="62" />
         <source>Launcher</source>
         <translation>Pokretač</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="63"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="63" />
         <source>Desktop</source>
         <translation>Radna površina</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="69" />
         <source>Color Picker</source>
-        <translation type="unfinished"></translation>
+        <translation>Boja izabirnik</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="71" />
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>Sustavski nadzor</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="72" />
         <source>Notify Center</source>
-        <translation type="unfinished"></translation>
+        <translation>Obavijesti Centar</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="73" />
         <source>None</source>
         <translation>Nijedan</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="59"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="59" />
         <source>Fast Screen Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Brzo isključi ekran</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="65" />
         <source>Screen Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Snimak zaslona</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="66" />
         <source>Screen Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisi zaslona</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="67" />
         <source>Screen OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaslon OCR</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="68" />
         <source>Screen Scroll</source>
-        <translation type="unfinished"></translation>
+        <translation>Ekran se pomiče</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="102"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="102" />
         <source>Close Window</source>
         <translation>Zatvori prozor</translation>
     </message>

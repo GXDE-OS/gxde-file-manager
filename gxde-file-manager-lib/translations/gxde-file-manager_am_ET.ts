@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
+<?xml version='1.0' encoding='utf-8'?>
 <TS version="2.1" language="am_ET">
 <context>
     <name>AppController</name>
     <message>
-        <location filename="../controllers/appcontroller.cpp" line="371"/>
+        <location filename="../controllers/appcontroller.cpp" line="371" />
         <source>New Folder</source>
         <translation>አዲስ ፎልደር</translation>
     </message>
@@ -12,12 +11,12 @@
 <context>
     <name>CloseAllDialogIndicator</name>
     <message>
-        <location filename="../dialogs/closealldialogindicator.cpp" line="51"/>
+        <location filename="../dialogs/closealldialogindicator.cpp" line="51" />
         <source>Close all</source>
         <translation>ሁሉንም መዝጊያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/closealldialogindicator.cpp" line="71"/>
+        <location filename="../dialogs/closealldialogindicator.cpp" line="71" />
         <source>Total size is %1, contains %2 files</source>
         <translation>ጠቅላላ መጠን %1, የያዘው %2 ፋይሎች</translation>
     </message>
@@ -25,47 +24,47 @@
 <context>
     <name>ComputerPropertyDialog</name>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="61"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="61" />
         <source>Computer</source>
         <translation>ኮምፒዩተር</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="72"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="72" />
         <source>Basic Info</source>
         <translation>መሰረታዊ መረጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="81"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="81" />
         <source>Computer Name</source>
         <translation>የ ኮምፒዩተር ስም</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="82"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="82" />
         <source>Version</source>
         <translation>እትም:</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="83"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="83" />
         <source>Type</source>
         <translation>አይነት</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="84"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="84" />
         <source>Processor</source>
         <translation>ሂደት</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="85"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="85" />
         <source>Memory</source>
         <translation>ማስታወሻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="86"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="86" />
         <source>Disk</source>
         <translation>ዲስክ</translation>
     </message>
     <message>
-        <location filename="../dialogs/computerpropertydialog.cpp" line="149"/>
+        <location filename="../dialogs/computerpropertydialog.cpp" line="149" />
         <source>Bit</source>
         <translation>ቢት</translation>
     </message>
@@ -73,17 +72,17 @@
 <context>
     <name>ComputerView</name>
     <message>
-        <location filename="../views/computerview.cpp" line="573"/>
+        <location filename="../views/computerview.cpp" line="573" />
         <source>My Directories</source>
         <translation>የ እኔ ዳይሬክቶሪዎች</translation>
     </message>
     <message>
-        <location filename="../views/computerview.cpp" line="579"/>
+        <location filename="../views/computerview.cpp" line="579" />
         <source>Internal Disk</source>
         <translation>የ ውስጥ ዲስክ</translation>
     </message>
     <message>
-        <location filename="../views/computerview.cpp" line="585"/>
+        <location filename="../views/computerview.cpp" line="585" />
         <source>External Disk</source>
         <translation>የ ውጪ ዲስክ</translation>
     </message>
@@ -91,7 +90,7 @@
 <context>
     <name>DFMAddressBar</name>
     <message>
-        <location filename="../views/dfmaddressbar.cpp" line="354"/>
+        <location filename="../views/dfmaddressbar.cpp" line="354" />
         <source>Search or enter address</source>
         <translation>መፈለጊያ ወይንም አድራሻ ያስገቡ</translation>
     </message>
@@ -99,294 +98,294 @@
 <context>
     <name>DFMAdvanceSearchBar</name>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="102"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="102" />
         <source>Search:</source>
-        <translation type="unfinished"></translation>
+        <translation>ፈልግ</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="103"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="103" />
         <source>File Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>ፋይል አይነት:</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="104"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="104" />
         <source>File Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ስምምንት:</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="105"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="105" />
         <source>Time Modified:</source>
-        <translation type="unfinished"></translation>
+        <translation>የሰኝት የተቀየረበት ሰዓት</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="107"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="107" />
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>አጠፋል</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="121"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="121" />
         <source>All subdirectories</source>
-        <translation type="unfinished"></translation>
+        <translation>አንድ የተለያዩ ዳይረክቶሪዎች</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="122"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="122" />
         <source>Current directory</source>
-        <translation type="unfinished"></translation>
+        <translation>የአሁን የተማርኩ የተማርኩ ዘርፍ</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="139"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="139" />
         <source>0 ~ 100 KB</source>
-        <translation type="unfinished"></translation>
+        <translation>ከ 0 እስከ 100 KB</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="140"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="140" />
         <source>100 KB ~ 1 MB</source>
-        <translation type="unfinished"></translation>
+        <translation>100 KB የብርት ~ 1 MB</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="141"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="141" />
         <source>1 MB ~ 10 MB</source>
-        <translation type="unfinished"></translation>
+        <translation>1 መጠን የብርት ~ 10 መጠን የብርት</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="142"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="142" />
         <source>10 MB ~ 100 MB</source>
-        <translation type="unfinished"></translation>
+        <translation>10 መጠኞች ~ 100 መጠኞች</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="143"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="143" />
         <source>100 MB ~ 1 GB</source>
-        <translation type="unfinished"></translation>
+        <translation>100 መጋቢት ~ 1 ጋባይት</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="144"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="144" />
         <source>&gt; 1 GB</source>
-        <translation type="unfinished"></translation>
+        <translation>1 ጋብያ</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="147"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="147" />
         <source>Today</source>
-        <translation type="unfinished"></translation>
+        <translation>የስምንት</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="148"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="148" />
         <source>Yesterday</source>
-        <translation type="unfinished"></translation>
+        <translation>የነሐራ</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="149"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="149" />
         <source>This week</source>
-        <translation type="unfinished"></translation>
+        <translation>የስልክ ስምንት</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="150"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="150" />
         <source>Last week</source>
-        <translation type="unfinished"></translation>
+        <translation>አስርተኛ ሳምንት</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="151"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="151" />
         <source>This month</source>
-        <translation type="unfinished"></translation>
+        <translation>የዚህ ወር</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="152"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="152" />
         <source>Last month</source>
-        <translation type="unfinished"></translation>
+        <translation>አስርተኛ ወር</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="153"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="153" />
         <source>This year</source>
-        <translation type="unfinished"></translation>
+        <translation>የዚህ አመት</translation>
     </message>
     <message>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="154"/>
+        <location filename="../views/dfmadvancesearchbar.cpp" line="154" />
         <source>Last year</source>
-        <translation type="unfinished"></translation>
+        <translation>የትኛው አመት</translation>
     </message>
 </context>
 <context>
     <name>DFMPreviewSidebar</name>
     <message>
-        <location filename="../views/dfmpreviewsidebar.cpp" line="23"/>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="23" />
         <source>File Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ስምምንት:</translation>
     </message>
     <message>
-        <location filename="../views/dfmpreviewsidebar.cpp" line="32"/>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="32" />
         <source>File Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ስም</translation>
     </message>
     <message>
-        <location filename="../views/dfmpreviewsidebar.cpp" line="36"/>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="36" />
         <source>Mimetype:</source>
-        <translation type="unfinished"></translation>
+        <translation>የምድብል አይነት:</translation>
     </message>
     <message>
-        <location filename="../views/dfmpreviewsidebar.cpp" line="38"/>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="38" />
         <source>Time read:</source>
-        <translation type="unfinished"></translation>
+        <translation>የማንቃል ጊዜ</translation>
     </message>
     <message>
-        <location filename="../views/dfmpreviewsidebar.cpp" line="40"/>
+        <location filename="../views/dfmpreviewsidebar.cpp" line="40" />
         <source>Time modified:</source>
-        <translation type="unfinished"></translation>
+        <translation>የወቅት የተቀየረው</translation>
     </message>
 </context>
 <context>
     <name>DFMSideBarOpticalDevItem</name>
     <message>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="178"/>
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="178" />
         <source>Blank %1 disc</source>
-        <translation type="unfinished"></translation>
+        <translation>የተለያየ ድስክ</translation>
     </message>
     <message>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="180"/>
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="180" />
         <source>%1 disc</source>
-        <translation type="unfinished"></translation>
+        <translation>ከዚህ የተሰራ ደረጃ የሆነ የድስት ደረጃ ነው።</translation>
     </message>
     <message>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="189"/>
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="189" />
         <source>%1 drive</source>
-        <translation type="unfinished"></translation>
+        <translation>አንድ የማስከላከል ማስከላከል</translation>
     </message>
 </context>
 <context>
     <name>DFMTagCrumbController</name>
     <message>
-        <location filename="../controllers/dfmtagcrumbcontroller.cpp" line="55"/>
+        <location filename="../controllers/dfmtagcrumbcontroller.cpp" line="55" />
         <source>Tag information</source>
-        <translation type="unfinished"></translation>
+        <translation>ሽልክ ምስሎ</translation>
     </message>
 </context>
 <context>
     <name>DFileCopyMoveJob</name>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="163"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="163" />
         <source>Permission error</source>
-        <translation type="unfinished"></translation>
+        <translation>ምንዛሪ ጥበቃ</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="165"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="165" />
         <source>The action is denied</source>
-        <translation type="unfinished"></translation>
+        <translation>የድርጊት የሚያስፈልግ አካል የሚያስፈልግ አካል የሚያስፈልግ አካል</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="171"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="171" />
         <source>Failed to open the file</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል መፅሄት አልተቻለም</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="173"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="173" />
         <source>Failed to read the file</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል መታወቂያ አልተቻለም</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="175"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="175" />
         <source>Failed to write the file</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ማስቀረት አልተሳካም</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="177"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="177" />
         <source>Failed to create the directory</source>
-        <translation type="unfinished"></translation>
+        <translation>የዳይረክቶሪ የሆነ የተስማሙ አልተከናወነም</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="179"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="179" />
         <source>Failed to delete the file</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ማጥፋት አልተሳካም</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="181"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="181" />
         <source>Failed to move the file</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ማስገባት አልተሳካም</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="183"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="183" />
         <source>Original file does not exist</source>
-        <translation type="unfinished"></translation>
+        <translation>የስራ የተሳሳተ ፋይል ስለ ሆነ አልተገኘም</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="185"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="185" />
         <source>Failed, file size must be less than 4GB</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ሂደት ከ4GB በታች ነው ብሎ የሚያስፈልግ አይደለም</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="187"/>
-        <source>Target disk doesn&apos;t have enough space</source>
-        <translation type="unfinished"></translation>
+        <location filename="../io/dfilecopymovejob.cpp" line="187" />
+        <source>Target disk doesn't have enough space</source>
+        <translation>የማስተኛ ድስታ እንደተለያዩ የሚያስፈልግ የስፖስ ያልተገኘ ነው</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="189"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="189" />
         <source>File integrity was damaged</source>
-        <translation type="unfinished"></translation>
+        <translation>ፋይል የተጠቃሚ ደረጃ አልቋል።</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="191"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="191" />
         <source>The target device is read only</source>
-        <translation type="unfinished"></translation>
+        <translation>የማስታወሻ ስርዓት በማንበብ ይጠቀምላል</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="193"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="193" />
         <source>Target folder is inside the source folder</source>
-        <translation type="unfinished"></translation>
+        <translation>የማስገባት ክፍል የስራ ክፍል ከስራ ክፍል ውስጥ ነው</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="505"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="505" />
         <source>copy</source>
         <comment>Extra name added to new file name when used for file name.</comment>
         <translation>ኮፒ</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="807"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="807" />
         <source>Failed to create the directory, cause: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>በተጠቃሚ የተሞላ እንደሆነ ተጠቃሚ የስርዓት ይፍተህ</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="904"/>
-        <location filename="../io/dfilecopymovejob.cpp" line="926"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="904" />
+        <location filename="../io/dfilecopymovejob.cpp" line="926" />
         <source>Failed to open the file, cause: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>በግልጽ አቅራቢያ አትችሉ፥ ሰንደቅ: %1</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="995"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="995" />
         <source>Failed to read the file, cause: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል መጠቀም አልተቻለም, ምክንያት: %1</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="1051"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="1051" />
         <source>Failed to write the file, cause: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ማስቀረት አልተሳካም, ምክንያት: %1</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="1135"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="1135" />
         <source>File integrity was damaged, cause: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>ፋይል የተማርቆ ማስተማር አልቋል። ሰውነት: %1</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="1194"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="1194" />
         <source>Failed to delete the file, cause: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>በፎይል ማጥፋት አልተሳካም, ምክንያት: %1</translation>
     </message>
     <message>
-        <location filename="../io/dfilecopymovejob.cpp" line="1254"/>
+        <location filename="../io/dfilecopymovejob.cpp" line="1254" />
         <source>Fail to create symlink, cause: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>የስምልንክ የስራ ስራት አልተከናወነም, ምክንያት: %1</translation>
     </message>
 </context>
 <context>
     <name>DFileDialog</name>
     <message>
-        <location filename="../views/dfiledialog.cpp" line="1018"/>
+        <location filename="../views/dfiledialog.cpp" line="1018" />
         <source>%1 already exists, do you want to replace it?</source>
-        <translation type="unfinished"></translation>
+        <translation>እባክዎ አለበት ይህ የሚገኝበት ነው። እርስዎን ለማስተካከል ይፈልጋሉ።</translation>
     </message>
     <message>
-        <location filename="../views/dfiledialog.cpp" line="1019"/>
+        <location filename="../views/dfiledialog.cpp" line="1019" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../views/dfiledialog.cpp" line="1020"/>
+        <location filename="../views/dfiledialog.cpp" line="1020" />
         <source>Replace</source>
         <translation>መቀየሪያ</translation>
     </message>
@@ -394,49 +393,49 @@
 <context>
     <name>DFileManagerWindow</name>
     <message>
-        <location filename="../views/dfilemanagerwindow.cpp" line="959"/>
+        <location filename="../views/dfilemanagerwindow.cpp" line="959" />
         <source>Dark theme</source>
-        <translation type="unfinished"></translation>
+        <translation>ደስታ ጣልቃ</translation>
     </message>
 </context>
 <context>
     <name>DFileSystemModel</name>
     <message>
-        <location filename="../interfaces/dfilesystemmodel.cpp" line="1377"/>
-        <location filename="../models/trashfileinfo.cpp" line="331"/>
+        <location filename="../interfaces/dfilesystemmodel.cpp" line="1377" />
+        <location filename="../models/trashfileinfo.cpp" line="331" />
         <source>Name</source>
         <translation>ስም</translation>
     </message>
     <message>
-        <location filename="../interfaces/dabstractfileinfo.cpp" line="1034"/>
-        <location filename="../interfaces/dfilesystemmodel.cpp" line="1379"/>
-        <location filename="../models/searchfileinfo.cpp" line="121"/>
+        <location filename="../interfaces/dabstractfileinfo.cpp" line="1034" />
+        <location filename="../interfaces/dfilesystemmodel.cpp" line="1379" />
+        <location filename="../models/searchfileinfo.cpp" line="121" />
         <source>Time modified</source>
         <translation>የ ተሻሻለበት ጊዜ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilesystemmodel.cpp" line="1381"/>
+        <location filename="../interfaces/dfilesystemmodel.cpp" line="1381" />
         <source>Size</source>
         <translation>መጠን</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilesystemmodel.cpp" line="1383"/>
+        <location filename="../interfaces/dfilesystemmodel.cpp" line="1383" />
         <source>Type</source>
         <translation>አይነት</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilesystemmodel.cpp" line="1385"/>
+        <location filename="../interfaces/dfilesystemmodel.cpp" line="1385" />
         <source>Time created</source>
         <translation>የ ተፈጠረበት ጊዜ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="924"/>
-        <location filename="../interfaces/dfilesystemmodel.cpp" line="1387"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="924" />
+        <location filename="../interfaces/dfilesystemmodel.cpp" line="1387" />
         <source>Last access</source>
-        <translation type="unfinished"></translation>
+        <translation>የቅርብ ጊዜ</translation>
     </message>
     <message>
-        <location filename="../models/searchfileinfo.cpp" line="119"/>
+        <location filename="../models/searchfileinfo.cpp" line="119" />
         <source>Path</source>
         <translation>መንገድ</translation>
     </message>
@@ -444,7 +443,7 @@
 <context>
     <name>DFileView</name>
     <message>
-        <location filename="../views/dfileview.cpp" line="2749"/>
+        <location filename="../views/dfileview.cpp" line="2749" />
         <source>(Reverse)</source>
         <translation>(እንደ ነበር መመለሻ)</translation>
     </message>
@@ -452,70 +451,70 @@
 <context>
     <name>DFileViewHelper</name>
     <message>
-        <location filename="../interfaces/dfileviewhelper.cpp" line="560"/>
-        <source>Add tag &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../interfaces/dfileviewhelper.cpp" line="560" />
+        <source>Add tag "%1"</source>
+        <translation>የታግ መዝገብ "%1" ያክልን</translation>
     </message>
 </context>
 <context>
     <name>DStatusBar</name>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="66"/>
+        <location filename="../views/dstatusbar.cpp" line="66" />
         <source>%1 item</source>
         <translation>%1 እቃ</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="67"/>
+        <location filename="../views/dstatusbar.cpp" line="67" />
         <source>%1 items</source>
         <translation>%1 እቃዎች</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="68"/>
+        <location filename="../views/dstatusbar.cpp" line="68" />
         <source>%1 item selected</source>
         <translation>%1 እቃ ተመርጧል</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="69"/>
+        <location filename="../views/dstatusbar.cpp" line="69" />
         <source>%1 items selected</source>
         <translation>%1 እቃዎች ተመርጠዋል</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="70"/>
+        <location filename="../views/dstatusbar.cpp" line="70" />
         <source>%1 folder selected (contains %2)</source>
         <translation>%1 ፎልደር ተመርጧል (የያዛቸው %2)</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="71"/>
+        <location filename="../views/dstatusbar.cpp" line="71" />
         <source>%1 folders selected (contains %2)</source>
         <translation>%1 ፎልደሮች ተመርጠዋል (የያዙት %2)</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="72"/>
+        <location filename="../views/dstatusbar.cpp" line="72" />
         <source>%1 file selected (%2)</source>
         <translation>%1 ፋይል ተመርጧል (%2)</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="73"/>
+        <location filename="../views/dstatusbar.cpp" line="73" />
         <source>%1 files selected (%2)</source>
         <translation>%1 ፋይሎች ተመርጠዋል (%2)</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="74"/>
+        <location filename="../views/dstatusbar.cpp" line="74" />
         <source>%1 folder selected</source>
         <translation>%1 ፎልደር ተመርጧል</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="174"/>
+        <location filename="../views/dstatusbar.cpp" line="174" />
         <source>Filter</source>
         <translation>ማጣሪያ</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="184"/>
+        <location filename="../views/dstatusbar.cpp" line="184" />
         <source>Save as:</source>
         <translation>ማስቀመጫ እንደ:</translation>
     </message>
     <message>
-        <location filename="../views/dstatusbar.cpp" line="491"/>
+        <location filename="../views/dstatusbar.cpp" line="491" />
         <source>Loading...</source>
         <translation>በ መጫን ላይ...</translation>
     </message>
@@ -523,346 +522,346 @@
 <context>
     <name>DTaskDialog</name>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="83"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="83" />
         <source>This action is not supported</source>
-        <translation type="unfinished"></translation>
+        <translation>ይህ አልተሳካምንም</translation>
     </message>
 </context>
 <context>
     <name>DeepinStorage</name>
     <message>
-        <location filename="../devicemanagement/dfmudisks2deviceinfo.cpp" line="114"/>
-        <location filename="../devicemanagement/dfmudisks2deviceinfo.cpp" line="129"/>
+        <location filename="../devicemanagement/dfmudisks2deviceinfo.cpp" line="114" />
+        <location filename="../devicemanagement/dfmudisks2deviceinfo.cpp" line="129" />
         <source>%1 Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>የአንድ አንድ አንድ</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="53"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="53" />
         <source>Data Disk</source>
         <comment>Data Partition</comment>
-        <translation type="unfinished"></translation>
+        <translation>የዳታ ዲስክ</translation>
     </message>
 </context>
 <context>
     <name>DialogManager</name>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="342"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="957"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="972"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="342" />
+        <location filename="../dialogs/dialogmanager.cpp" line="957" />
+        <location filename="../dialogs/dialogmanager.cpp" line="972" />
         <source>Operation failed!</source>
         <translation>ተግባሩ አልተሳካም!</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="343"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="343" />
         <source>Target folder is inside the source folder!</source>
         <translation>ኢላማው ፎልደር በ ምንጭ ፎልደር ውስጥ ነው!</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="345"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="540"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="879"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="892"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="901"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="919"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="964"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="975"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="1321"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="345" />
+        <location filename="../dialogs/dialogmanager.cpp" line="540" />
+        <location filename="../dialogs/dialogmanager.cpp" line="879" />
+        <location filename="../dialogs/dialogmanager.cpp" line="892" />
+        <location filename="../dialogs/dialogmanager.cpp" line="901" />
+        <location filename="../dialogs/dialogmanager.cpp" line="919" />
+        <location filename="../dialogs/dialogmanager.cpp" line="964" />
+        <location filename="../dialogs/dialogmanager.cpp" line="975" />
+        <location filename="../dialogs/dialogmanager.cpp" line="1321" />
         <source>OK</source>
         <translation>እሺ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="368"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="368" />
         <source>Do you want to run %1 or display its content?</source>
         <translation>እርስዎ ማስኬድ ነው %1 ወይንም ማሳየት የሚፈልጉት?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="369"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="369" />
         <source>It is an executable text file.</source>
         <translation>የሚፈጸም የ ጽሁፍ ፋይል ነው</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="372"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="396"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="412"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="442"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="468"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="557"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="615"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="758"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="787"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="1042"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="1119"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="372" />
+        <location filename="../dialogs/dialogmanager.cpp" line="396" />
+        <location filename="../dialogs/dialogmanager.cpp" line="412" />
+        <location filename="../dialogs/dialogmanager.cpp" line="442" />
+        <location filename="../dialogs/dialogmanager.cpp" line="468" />
+        <location filename="../dialogs/dialogmanager.cpp" line="557" />
+        <location filename="../dialogs/dialogmanager.cpp" line="615" />
+        <location filename="../dialogs/dialogmanager.cpp" line="758" />
+        <location filename="../dialogs/dialogmanager.cpp" line="787" />
+        <location filename="../dialogs/dialogmanager.cpp" line="1042" />
+        <location filename="../dialogs/dialogmanager.cpp" line="1119" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="372"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="398"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="413"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="372" />
+        <location filename="../dialogs/dialogmanager.cpp" line="398" />
+        <location filename="../dialogs/dialogmanager.cpp" line="413" />
         <source>Run</source>
         <translation>ማስኬጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="372"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="397"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="372" />
+        <location filename="../dialogs/dialogmanager.cpp" line="397" />
         <source>Run in terminal</source>
         <translation>በ ተርሚናል ውስጥ ማስኬጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="372"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="372" />
         <source>Display</source>
         <translation>ማሳያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="395"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="395" />
         <source>It is an executable file.</source>
         <translation>የሚፈጸም የ ጽሁፍ ፋይል ነው</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="411"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="411" />
         <source>This file is not executable, do you want to add the execute permission and run?</source>
-        <translation type="unfinished"></translation>
+        <translation>ይህ ፋይል እንደ የሚያጠፋ አይደለም፤ እርግጥ የሚያጠፋ አካል ይጨምራልና ይደረግላል።</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="425"/>
-        <source>&quot;%1&quot; already exists, please use another name.</source>
-        <translation>&quot;%1&quot; ቀደም ብሎ ነበር: እባክዎን ሌላ ስም ይጠቀሙ</translation>
+        <location filename="../dialogs/dialogmanager.cpp" line="425" />
+        <source>"%1" already exists, please use another name.</source>
+        <translation>"%1" ቀደም ብሎ ነበር: እባክዎን ሌላ ስም ይጠቀሙ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="427"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="529"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="787"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="1004"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="1141"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="1262"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="427" />
+        <location filename="../dialogs/dialogmanager.cpp" line="529" />
+        <location filename="../dialogs/dialogmanager.cpp" line="787" />
+        <location filename="../dialogs/dialogmanager.cpp" line="1004" />
+        <location filename="../dialogs/dialogmanager.cpp" line="1141" />
+        <location filename="../dialogs/dialogmanager.cpp" line="1262" />
         <source>Confirm</source>
         <translation>ማረጋገጫ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="437"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="437" />
         <source>Are you sure you want to erase all data on the disc?</source>
-        <translation type="unfinished"></translation>
+        <translation>እንደዚህ የሚያጠፋበት የድስታችን ሁሉንም የደብቅ ዳታ ማስፋት እንደሆነ እንደሆነ ነዎት?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="442"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="442" />
         <source>Erase</source>
-        <translation type="unfinished"></translation>
+        <translation>ሰርዝ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="464"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="464" />
         <source>How do you want to use this disc?</source>
-        <translation type="unfinished"></translation>
+        <translation>እንደዚህ ድስክ እንዴት እንደሚያግዙ ይፈልጋሉ?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="468"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="468" />
         <source>Burn image</source>
-        <translation type="unfinished"></translation>
+        <translation>የስካን ስካን የሚያስቀምጥ ስካን</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="468"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="468" />
         <source>Burn files</source>
-        <translation type="unfinished"></translation>
+        <translation>የምንቀር ፋይላችን</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="495"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="495" />
         <source>Disc erase failed</source>
-        <translation type="unfinished"></translation>
+        <translation>የዲስክ ማጥፋት አልተሳካም</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="499"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="499" />
         <source>Burn process failed</source>
-        <translation type="unfinished"></translation>
+        <translation>የማስተካከያ ድርጊት አልተሳካም</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="502"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="502" />
         <source>%1: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>አንድ: አንድ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="518"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="528"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="518" />
+        <location filename="../dialogs/dialogmanager.cpp" line="528" />
         <source>Show details</source>
-        <translation type="unfinished"></translation>
+        <translation>የዝርዝር ያሳያል</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="522"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="522" />
         <source>Hide details</source>
-        <translation type="unfinished"></translation>
+        <translation>የዚህ የተለያዩ የተገኝተት ይቀርባል</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="523"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="523" />
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>ስህተት</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="550"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="550" />
         <source>Permanently delete %1?</source>
         <translation>በ ቋሚነት ላጥፋው %1?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="551"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="551" />
         <source>Permanently delete %1 items?</source>
         <translation>በ ቋሚነት ላጥፋ %1 እቃዎቹን?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="557"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="557" />
         <source>Delete</source>
         <translation>ማጥፊያ </translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="568"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="568" />
         <source>Empty</source>
         <translation>ባዶ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="612"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="612" />
         <source>Sorry, unable to locate your bookmark directory, remove it?</source>
         <translation>አዝናለሁ የ እርስዎን ምልክት ማድረጊያ ዳይሬክቶሪ ማግኘት አልተቻለም: ላስወግደው?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="615"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="615" />
         <source>Remove</source>
         <translation>ማስወገጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="756"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="756" />
         <source>Name: </source>
         <translation>ስም: </translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="758"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="758" />
         <source>Force unmount</source>
         <translation>አስገድዶ ማውረጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="781"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="781" />
         <source>%1 that this shortcut refers to has been changed or moved</source>
         <translation>%1 ይህ አቋራጭ የሚያመሳከረው ተቀይሯል ወይንም ተንቀሳቅሷል</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="785"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="785" />
         <source>Do you want to delete this shortcut？</source>
         <translation>ይህን አቋራጭ ቁልፍ ማጥፋት ይፈልጋሉ?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="815"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="815" />
         <source>Version:</source>
         <translation>እትም:</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="817"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="817" />
         <source>File Manager is a file management tool independently developed by Deepin Technology, featured with searching, copying, trash, compression/decompression, file property and other file management functions.</source>
         <translation>ፋይል አስተዳዳሪ በ ዲፕኢን ውስጥ የ ፋይል አስተዳዳሪ ነው: የ ፋይል አስተዳዳሪ ለ ፋይል መፈለጊያ: ኮፒ: ማመቂያ/ማራገፊያ: የ ፋይል ባህሪዎች እና ሌሎች አገልግሎቶች የሚሰጥ ነው</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="878"/>
-        <source>Target disk doesn&apos;t have enough space, unable to copy!</source>
+        <location filename="../dialogs/dialogmanager.cpp" line="878" />
+        <source>Target disk doesn't have enough space, unable to copy!</source>
         <translation>የታለመው ዲስክ  በቂ ነፃ ቦታ የለውም: ኮፒ ማድረግ አልተቻለም!</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="890"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="890" />
         <source>Failed, file size must be less than 4GB.</source>
         <translation>ወድቋል: የ ፋይል መጠን ከ 4ጌባ ማነስ አለበት </translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="899"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="899" />
         <source>Fail to create symlink, cause:</source>
         <translation>አገናኝ መፍጠር አልተቻለም: ምክንያቱም:</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="917"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="917" />
         <source>The selected files contain system file/directory, and it cannot be deleted</source>
         <translation>የ ተመረጠው ፋይል የያዘው የ ስርአት ፋይል / ዳይሬክቶሪ ነው: እና ማጥፋት አይቻልም</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="959"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="959" />
         <source>Target file removed or location changed</source>
         <translation>የ ታለመው ፋይል ተወግዷል ወይንም አካባቢው ተቀይሯል</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="961"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="961" />
         <source>%1 files failed to restore, target file removed or location changed</source>
         <translation>%1 ፋይሎቹን እንደ ነበር መመለስ አልተቻለም: የታለመው ፋይል ተወግዷል ወይንም አካባቢው ተቀይሯል</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="973"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="995"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="973" />
+        <location filename="../dialogs/dialogmanager.cpp" line="995" />
         <source>You do not have permission to operate file/folder!</source>
         <translation>እዚህ ፋይል / ፎልደር ጋር ለ መድረስ በቂ ፍቃድ የሎትም</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1015"/>
-        <source>Sorry, you don&apos;t have permission to operate the following %1 file/folder(s)!</source>
+        <location filename="../dialogs/dialogmanager.cpp" line="1015" />
+        <source>Sorry, you don't have permission to operate the following %1 file/folder(s)!</source>
         <translation>አዝናለሁ: እዚህ  %1 ፋይል / ፎልደር(ሮች) ጋር ለ መድረስ በቂ ፍቃድ የሎትም</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1102"/>
-        <source>2. Uncheck &quot;Turn on fast startup&quot; and &quot;Hibernate&quot; in shutdown settings and reboot</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/dialogmanager.cpp" line="1102" />
+        <source>2. Uncheck "Turn on fast startup" and "Hibernate" in shutdown settings and reboot</source>
+        <translation>ፈሳሽ የሚያገለግል እና ስራ የሚያገለግል የስራ ስርዓት ምክንያት ውስጥ እንደሚያስፈልግ ስር ይቀርባል።</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1319"/>
-        <source>Share folder can&apos;t be named after the current username</source>
+        <location filename="../dialogs/dialogmanager.cpp" line="1319" />
+        <source>Share folder can't be named after the current username</source>
         <translation>የሚካፈሉት ፋይል ከ አሁኑ ተጠቃሚ ስም ጋር ተመሳሳይ መሆን የለበትም</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1043"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="1043" />
         <source>View</source>
         <translation>መመልከቻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="394"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="394" />
         <source>Do you want to run %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>እንደዚህ የተሰራበት ይስሩባል?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="548"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="548" />
         <source>Are you sure you want to empty %1 item?</source>
-        <translation type="unfinished"></translation>
+        <translation>እንደዚህ የሚያጠፋት የ%1 እቃ እንደሆነ እንደሆነ ነዎት?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="549"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="549" />
         <source>Are you sure you want to empty %1 items?</source>
-        <translation type="unfinished"></translation>
+        <translation>እንደዚህ እንደሆነ ነው? %1 እቃዎችን በቂ ማጥፋት ይፈልጋሉ?</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="451"/>
-        <location filename="../dialogs/dialogmanager.cpp" line="599"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="451" />
+        <location filename="../dialogs/dialogmanager.cpp" line="599" />
         <source>This action cannot be undone</source>
-        <translation type="unfinished"></translation>
+        <translation>ይህ አልገባበርም አይችሉም</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="755"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="755" />
         <source>Disk is busy, cannot unmount now</source>
-        <translation type="unfinished"></translation>
+        <translation>ደስክ በእርግጥ ነው, እርስዎ እንደዚህ ጊዜ የሚጫን አይችሉም</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1087"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="1087" />
         <source>Mount partition%1 to be read only</source>
         <translation>ክፍልፋይ መጫኛ %1 ለ ንባብ ብቻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1091"/>
-        <source>Disks in Windows will be unable to read and write normally if check &quot;Turn on fast startup (recommended)&quot; in Shutdown settings</source>
-        <translation>ዲስኮች በ መስኮት ውስጥ ማንበብ እና መጻፍ አይችሉም በ መደበኛ መመርመሪያው &quot;በፍጥነት ከ በራ በፍጥነት በሚያስጀምሩ ጊዜ (እንመክራለን)&quot; በ ማጥፊያ ማሰናጃ ውስጥ</translation>
+        <location filename="../dialogs/dialogmanager.cpp" line="1091" />
+        <source>Disks in Windows will be unable to read and write normally if check "Turn on fast startup (recommended)" in Shutdown settings</source>
+        <translation>ዲስኮች በ መስኮት ውስጥ ማንበብ እና መጻፍ አይችሉም በ መደበኛ መመርመሪያው "በፍጥነት ከ በራ በፍጥነት በሚያስጀምሩ ጊዜ (እንመክራለን)" በ ማጥፊያ ማሰናጃ ውስጥ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1095"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="1095" />
         <source>Please restore by the following steps to normally access Windows disk</source>
         <translation>እባክዎን እንደ ነበር ይመልሱ በሚቀጥሉት ደረጃዎች በ መደበኛ የ መስኮቶች ዲስክ መድረሻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1101"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="1101" />
         <source>1. Reboot to enter Windows</source>
         <translation>1. እንደገና ያስጀምሩ ወደ መስኮት ውስጥ ለ መግባት</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1103"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="1103" />
         <source>3. Reboot and enter deepin</source>
         <translation>3. እንደገና ያስጀምሩ ወደ ዲፕኢን ውስጥ ለ መግባት</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1120"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="1120" />
         <source>Reboot</source>
         <translation>እንደገና ማስጀመሪያ</translation>
     </message>
@@ -881,37 +880,37 @@
 <context>
     <name>FileDialogStatusBar</name>
     <message>
-        <location filename="../views/filedialogstatusbar.cpp" line="30"/>
+        <location filename="../views/filedialogstatusbar.cpp" line="30" />
         <source>File Name</source>
         <translation>የ ፋይል ስም</translation>
     </message>
     <message>
-        <location filename="../views/filedialogstatusbar.cpp" line="31"/>
+        <location filename="../views/filedialogstatusbar.cpp" line="31" />
         <source>Format</source>
         <translation>አቀራረብ</translation>
     </message>
     <message>
-        <location filename="../views/filedialogstatusbar.cpp" line="47"/>
+        <location filename="../views/filedialogstatusbar.cpp" line="47" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../views/filedialogstatusbar.cpp" line="68"/>
+        <location filename="../views/filedialogstatusbar.cpp" line="68" />
         <source>Save</source>
         <translation>ማስቀመጫ</translation>
     </message>
     <message>
-        <location filename="../views/filedialogstatusbar.cpp" line="68"/>
+        <location filename="../views/filedialogstatusbar.cpp" line="68" />
         <source>Open</source>
         <translation>መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../views/filedialogstatusbar.cpp" line="73"/>
+        <location filename="../views/filedialogstatusbar.cpp" line="73" />
         <source>Save File</source>
         <translation>ፋይል ማስቀመጫ</translation>
     </message>
     <message>
-        <location filename="../views/filedialogstatusbar.cpp" line="73"/>
+        <location filename="../views/filedialogstatusbar.cpp" line="73" />
         <source>Open File</source>
         <translation>ፋይል መክፈቻ</translation>
     </message>
@@ -919,341 +918,341 @@
 <context>
     <name>FileJob</name>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="164"/>
+        <location filename="../../fileoperations/filejob.cpp" line="164" />
         <source>copy</source>
         <translation>ኮፒ</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="691"/>
-        <location filename="../../fileoperations/filejob.cpp" line="751"/>
+        <location filename="../../fileoperations/filejob.cpp" line="691" />
+        <location filename="../../fileoperations/filejob.cpp" line="751" />
         <source>Data verification successful.</source>
-        <translation type="unfinished"></translation>
+        <translation>የዳታ ማረጋገጫ በተሳካ ሁኔታ ተጠናቀቀል።</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="691"/>
-        <location filename="../../fileoperations/filejob.cpp" line="751"/>
+        <location filename="../../fileoperations/filejob.cpp" line="691" />
+        <location filename="../../fileoperations/filejob.cpp" line="751" />
         <source>Data verification failed.</source>
-        <translation type="unfinished"></translation>
+        <translation>የዳታ ማረጋገጫ አልተሳካም</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="693"/>
-        <location filename="../../fileoperations/filejob.cpp" line="753"/>
+        <location filename="../../fileoperations/filejob.cpp" line="693" />
+        <location filename="../../fileoperations/filejob.cpp" line="753" />
         <source>Burn process completed</source>
-        <translation type="unfinished"></translation>
+        <translation>የእርሳት የሚያስቀምጥ ድርጊት ተጠናቀቀ</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="867"/>
+        <location filename="../../fileoperations/filejob.cpp" line="867" />
         <source>%1 s</source>
         <translation>%1 ሰ</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="871"/>
+        <location filename="../../fileoperations/filejob.cpp" line="871" />
         <source>%1 m %2 s</source>
         <translation>%1 ደ %2 ሰ</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="877"/>
+        <location filename="../../fileoperations/filejob.cpp" line="877" />
         <source>%1 h %2 m %3 s</source>
         <translation>%1 ሰ %2 ደ %3 ሰ</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="886"/>
+        <location filename="../../fileoperations/filejob.cpp" line="886" />
         <source>%1 d %2 h %3 m %4 s</source>
         <translation>%1 ቀ %2 ሰ %3 ደ %4 ሰ</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="2613"/>
+        <location filename="../../fileoperations/filejob.cpp" line="2613" />
         <source>%1 is a duplicate file.</source>
-        <translation type="unfinished"></translation>
+        <translation>የ%1 የተወሰኑ የፋይል ነው።</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="2616"/>
+        <location filename="../../fileoperations/filejob.cpp" line="2616" />
         <source>Insufficient disc space.</source>
-        <translation type="unfinished"></translation>
+        <translation>የድስክ ምንዛሪ አልቋልም</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="2619"/>
+        <location filename="../../fileoperations/filejob.cpp" line="2619" />
         <source>Lost connection to drive.</source>
-        <translation type="unfinished"></translation>
+        <translation>የድራይ ያለው ግንኙነት የተረፈ።</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="2622"/>
+        <location filename="../../fileoperations/filejob.cpp" line="2622" />
         <source>The CD/DVD drive is not ready. Try another disc.</source>
-        <translation type="unfinished"></translation>
+        <translation>የክዱ/ዲቭዲ የሚያጠፋ አይደለም። እንደ ደግሞ የሌላ ድስታ ይፈልጋሉ።</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="2625"/>
+        <location filename="../../fileoperations/filejob.cpp" line="2625" />
         <source>The CD/DVD drive is busy. Exit the program using the drive, and insert the drive again.</source>
-        <translation type="unfinished"></translation>
+        <translation>የክዱ/ዲቭዲ የሚያስቀምጥ ስርዓት በሚከተል ነው። የሚያስቀምጥ ስርዓት የሚያስቀምጥ ሽልማት ውጣ። እንደገና የሚያስቀምጥ ስርዓት እንደገና ያክል።</translation>
     </message>
     <message>
-        <location filename="../../fileoperations/filejob.cpp" line="2628"/>
+        <location filename="../../fileoperations/filejob.cpp" line="2628" />
         <source>Unknown error</source>
-        <translation type="unfinished"></translation>
+        <translation>የልምድ ስህተት</translation>
     </message>
 </context>
 <context>
     <name>GenerateSettingTranslate</name>
     <message>
-        <location filename="../configure/global-setting-template.js" line="5"/>
+        <location filename="../configure/global-setting-template.js" line="5" />
         <source>Basic</source>
         <translation>መሰረታዊ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="9"/>
+        <location filename="../configure/global-setting-template.js" line="9" />
         <source>Open behavior</source>
         <translation>ባህሪ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="14"/>
+        <location filename="../configure/global-setting-template.js" line="14" />
         <source>Always open folder in new window</source>
         <translation>ሁል ጊዜ ፎልደር በ አዲስ መስኮት ውስጥ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="19"/>
+        <location filename="../configure/global-setting-template.js" line="19" />
         <source>Open file:</source>
         <translation>ፋይል መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="22"/>
+        <location filename="../configure/global-setting-template.js" line="22" />
         <source>Click</source>
         <translation>ይጫኑ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="23"/>
+        <location filename="../configure/global-setting-template.js" line="23" />
         <source>Double click</source>
         <translation>ሁለት ጊዜ ይጫኑ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="31"/>
+        <location filename="../configure/global-setting-template.js" line="31" />
         <source>New window and tab</source>
         <translation>አዲስ መስኮት እና tab</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="35"/>
+        <location filename="../configure/global-setting-template.js" line="35" />
         <source>Open from default window:</source>
         <translation>ከ ነባር መስኮት ውስጥ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="39"/>
-        <location filename="../configure/global-setting-template.js" line="68"/>
+        <location filename="../configure/global-setting-template.js" line="39" />
+        <location filename="../configure/global-setting-template.js" line="68" />
         <source>Computer</source>
         <translation>ኮምፒዩተር</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="40"/>
-        <location filename="../configure/global-setting-template.js" line="69"/>
+        <location filename="../configure/global-setting-template.js" line="40" />
+        <location filename="../configure/global-setting-template.js" line="69" />
         <source>Home</source>
         <translation>ቤት</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="41"/>
-        <location filename="../configure/global-setting-template.js" line="70"/>
+        <location filename="../configure/global-setting-template.js" line="41" />
+        <location filename="../configure/global-setting-template.js" line="70" />
         <source>Desktop</source>
         <translation>ዴስክቶፕ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="42"/>
-        <location filename="../configure/global-setting-template.js" line="71"/>
+        <location filename="../configure/global-setting-template.js" line="42" />
+        <location filename="../configure/global-setting-template.js" line="71" />
         <source>Videos</source>
         <translation>ቪዲዮዎች</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="43"/>
-        <location filename="../configure/global-setting-template.js" line="72"/>
+        <location filename="../configure/global-setting-template.js" line="43" />
+        <location filename="../configure/global-setting-template.js" line="72" />
         <source>Music</source>
         <translation>ሙዚቃ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="44"/>
-        <location filename="../configure/global-setting-template.js" line="73"/>
+        <location filename="../configure/global-setting-template.js" line="44" />
+        <location filename="../configure/global-setting-template.js" line="73" />
         <source>Pictures</source>
         <translation>ስእሎች</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="45"/>
-        <location filename="../configure/global-setting-template.js" line="74"/>
+        <location filename="../configure/global-setting-template.js" line="45" />
+        <location filename="../configure/global-setting-template.js" line="74" />
         <source>Documents</source>
         <translation>ሰነዶች</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="46"/>
-        <location filename="../configure/global-setting-template.js" line="75"/>
+        <location filename="../configure/global-setting-template.js" line="46" />
+        <location filename="../configure/global-setting-template.js" line="75" />
         <source>Downloads</source>
         <translation>የ ወረዱ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="63"/>
+        <location filename="../configure/global-setting-template.js" line="63" />
         <source>Open in new tab:</source>
         <translation>በ አዲስ tab ውስጥ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="67"/>
+        <location filename="../configure/global-setting-template.js" line="67" />
         <source>Current Directory</source>
         <translation>የ አሁኑ ዳይሬክቶሪ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="95"/>
+        <location filename="../configure/global-setting-template.js" line="95" />
         <source>View</source>
         <translation>መመልከቻ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="99"/>
+        <location filename="../configure/global-setting-template.js" line="99" />
         <source>Default size:</source>
         <translation>ነባር መጠን:</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="102"/>
+        <location filename="../configure/global-setting-template.js" line="102" />
         <source>Extra small</source>
         <translation>በጣም ትንሽ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="103"/>
+        <location filename="../configure/global-setting-template.js" line="103" />
         <source>Small</source>
         <translation>ትንሽ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="104"/>
+        <location filename="../configure/global-setting-template.js" line="104" />
         <source>Medium</source>
         <translation>መካከለኛ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="105"/>
+        <location filename="../configure/global-setting-template.js" line="105" />
         <source>Large</source>
         <translation>ትልቅ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="106"/>
+        <location filename="../configure/global-setting-template.js" line="106" />
         <source>Extra large</source>
         <translation>በጣም ትልቅ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="112"/>
+        <location filename="../configure/global-setting-template.js" line="112" />
         <source>Default view:</source>
         <translation>ነባር መመልከቻ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="116"/>
+        <location filename="../configure/global-setting-template.js" line="116" />
         <source>Icon</source>
         <translation>ምልክት</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="117"/>
+        <location filename="../configure/global-setting-template.js" line="117" />
         <source>List</source>
         <translation>ዝርዝር</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="129"/>
+        <location filename="../configure/global-setting-template.js" line="129" />
         <source>Hidden files</source>
         <translation>የ ተደበቁ ፋይሎች</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="133"/>
+        <location filename="../configure/global-setting-template.js" line="133" />
         <source>Show hidden files</source>
         <translation>የ ተደበቁ ፋይሎች ማሳያ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="139"/>
+        <location filename="../configure/global-setting-template.js" line="139" />
         <source>Hide file extension when rename</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል ስም የሚያድርግ ምክንያት የሚያደርግ ምክንያት</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="145"/>
+        <location filename="../configure/global-setting-template.js" line="145" />
         <source>Display recent file entry in left panel</source>
-        <translation type="unfinished"></translation>
+        <translation>የቅርብ የፋይል የሚከተሉትን የቀረበ የሚያሳዩ የባልደራ ገጽ ውስጥ ያሳዩታል</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="157"/>
+        <location filename="../configure/global-setting-template.js" line="157" />
         <source>Advanced</source>
         <translation>የ ረቀቀ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="161"/>
+        <location filename="../configure/global-setting-template.js" line="161" />
         <source>Index</source>
-        <translation type="unfinished"></translation>
+        <translation>የዳርጋ ዳርጋ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="165"/>
+        <location filename="../configure/global-setting-template.js" line="165" />
         <source>Auto index internal disk</source>
-        <translation type="unfinished"></translation>
+        <translation>የአቶማቲክ የባህል ደረጃ የተከሰተ የባህል ደረጃ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="171"/>
+        <location filename="../configure/global-setting-template.js" line="171" />
         <source>Index external storage device after connected to computer</source>
-        <translation type="unfinished"></translation>
+        <translation>የበረታተ ስታጃድ ስራ አጠቃቀም ከኮምፕዩተር ጋር የተከሰተ በኋላ የሚያደርግ ስራ እንደሚያደርግ ይጠቀምቃል።</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="258"/>
+        <location filename="../configure/global-setting-template.js" line="258" />
         <source>Other</source>
         <translation>ሌላ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="262"/>
+        <location filename="../configure/global-setting-template.js" line="262" />
         <source>Hide my directories</source>
-        <translation type="unfinished"></translation>
+        <translation>የአካላትያችንን ደረጃ አስቀምጥ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="268"/>
+        <location filename="../configure/global-setting-template.js" line="268" />
         <source>Hide system disk</source>
-        <translation type="unfinished"></translation>
+        <translation>የስስተም ደብዳቤ ምስል</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="183"/>
+        <location filename="../configure/global-setting-template.js" line="183" />
         <source>Show hidden files in search results</source>
         <translation>የ ተደበቁ ፋይሎች ማሳያ በ መፈለጊያ ውጤት ውስጥ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="192"/>
+        <location filename="../configure/global-setting-template.js" line="192" />
         <source>Preview</source>
         <translation>ቅድመ እይታ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="196"/>
+        <location filename="../configure/global-setting-template.js" line="196" />
         <source>Compress file preview</source>
         <translation>ፋይል ማመቂያ ለ ቅድመ እይታ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="202"/>
+        <location filename="../configure/global-setting-template.js" line="202" />
         <source>Text preview</source>
         <translation>የ ጽሁፍ ቅድመ እይታ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="208"/>
+        <location filename="../configure/global-setting-template.js" line="208" />
         <source>Document preview</source>
         <translation>የ ሰነድ ቅድመ እይታ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="214"/>
+        <location filename="../configure/global-setting-template.js" line="214" />
         <source>Image preview</source>
         <translation>የ ምስል ቅድመ እይታ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="220"/>
+        <location filename="../configure/global-setting-template.js" line="220" />
         <source>Video preview</source>
         <translation>የ ቪዲዮ ቅድመ እይታ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="228"/>
+        <location filename="../configure/global-setting-template.js" line="228" />
         <source>Mount</source>
         <translation>መጫኛ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="232"/>
+        <location filename="../configure/global-setting-template.js" line="232" />
         <source>Auto mount</source>
         <translation>በራሱ መጫኛ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="238"/>
+        <location filename="../configure/global-setting-template.js" line="238" />
         <source>Open after auto mount</source>
         <translation>በራሱ ከ ተጫነ በኋላ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="246"/>
+        <location filename="../configure/global-setting-template.js" line="246" />
         <source>Dialog</source>
         <translation>ንግግር</translation>
     </message>
     <message>
-        <location filename="../configure/global-setting-template.js" line="250"/>
+        <location filename="../configure/global-setting-template.js" line="250" />
         <source>Use the file chooser dialog of Deepin File Manager</source>
         <translation>ይምረጡ የ ፋይል መምረጫ ንግግር ለ ዲፕኢን ፋይል አስተዳዳሪ</translation>
     </message>
@@ -1261,195 +1260,195 @@
 <context>
     <name>GvfsMountClient</name>
     <message>
-        <location filename="../gvfs/gvfsmountclient.cpp" line="149"/>
+        <location filename="../gvfs/gvfsmountclient.cpp" line="149" />
         <source>Mounting device error</source>
-        <translation type="unfinished"></translation>
+        <translation>የድርጊት ስራ ስልጣን ስህተት</translation>
     </message>
 </context>
 <context>
     <name>GvfsMountManager</name>
     <message>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1337"/>
-        <source>The disk is mounted by user &quot;%1&quot;, you cannot unmount it.</source>
-        <translation type="unfinished"></translation>
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1337" />
+        <source>The disk is mounted by user "%1", you cannot unmount it.</source>
+        <translation>የደስታ ቁጥር በተጠቃሚ "%1" የተሰነጠው ነው፤ አንድ ተጠቃሚ እንደዚህ የሚያስቀምጥ አይችሉም።</translation>
     </message>
     <message>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1340"/>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1350"/>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1379"/>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1500"/>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1531"/>
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1340" />
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1350" />
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1379" />
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1500" />
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1531" />
         <source>Confirm</source>
         <translation>ማረጋገጫ</translation>
     </message>
     <message>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1347"/>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1528"/>
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1347" />
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1528" />
         <source>Cannot find the mounting device</source>
-        <translation type="unfinished"></translation>
+        <translation>አልተገኝም የማንተን የሚያገኙ የስርዓት ስርጭት</translation>
     </message>
     <message>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1376"/>
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1376" />
         <source>Cannot unmount the device</source>
-        <translation type="unfinished"></translation>
+        <translation>አይችሉም የድብቅ ማስቀለጥ</translation>
     </message>
     <message>
-        <location filename="../gvfs/gvfsmountmanager.cpp" line="1496"/>
-        <source>Cannot eject the device &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../gvfs/gvfsmountmanager.cpp" line="1496" />
+        <source>Cannot eject the device "%1"</source>
+        <translation>አይችሉም የሚጠብቁበት ስርዓት "%1"</translation>
     </message>
 </context>
 <context>
     <name>MergedDesktopController</name>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="387"/>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="407"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="387" />
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="407" />
         <source>Pictures</source>
-        <translation type="unfinished">ስእሎች</translation>
+        <translation>ፎቶግራፎች</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="389"/>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="409"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="389" />
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="409" />
         <source>Music</source>
-        <translation type="unfinished">ሙዚቃ</translation>
+        <translation>ሙዚቃ</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="391"/>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="411"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="391" />
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="411" />
         <source>Applications</source>
-        <translation type="unfinished"></translation>
+        <translation>አገልግሎቶች</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="393"/>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="413"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="393" />
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="413" />
         <source>Videos</source>
-        <translation type="unfinished">ቪዲዮዎች</translation>
+        <translation>የቪዲዮዎች</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="395"/>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="415"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="395" />
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="415" />
         <source>Documents</source>
-        <translation type="unfinished">ሰነዶች</translation>
+        <translation>የማዕደም ምስሎች</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="397"/>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="417"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="397" />
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="417" />
         <source>Others</source>
-        <translation type="unfinished">ሌሎች</translation>
+        <translation>ሁለት</translation>
     </message>
 </context>
 <context>
     <name>MimeTypeDisplayManager</name>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="451"/>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="53"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="451" />
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="53" />
         <source>Directory</source>
-        <translation type="unfinished"></translation>
+        <translation>ዳይረክቶሪ</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="441"/>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="54"/>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="129"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="441" />
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="54" />
+        <location filename="../views/dfmadvancesearchbar.cpp" line="129" />
         <source>Application</source>
-        <translation type="unfinished"></translation>
+        <translation>የስራ ይዞች</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="447"/>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="55"/>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="130"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="447" />
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="55" />
+        <location filename="../views/dfmadvancesearchbar.cpp" line="130" />
         <source>Video</source>
-        <translation type="unfinished"></translation>
+        <translation>የቫይዮ ቪዲዮ</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="445"/>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="56"/>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="131"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="445" />
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="56" />
+        <location filename="../views/dfmadvancesearchbar.cpp" line="131" />
         <source>Audio</source>
-        <translation type="unfinished"></translation>
+        <translation>ስልክ</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="443"/>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="57"/>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="132"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="443" />
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="57" />
+        <location filename="../views/dfmadvancesearchbar.cpp" line="132" />
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>ሥራት</translation>
     </message>
     <message>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="58"/>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="133"/>
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="58" />
+        <location filename="../views/dfmadvancesearchbar.cpp" line="133" />
         <source>Archive</source>
-        <translation type="unfinished"></translation>
+        <translation>የታሪክ ቤት</translation>
     </message>
     <message>
-        <location filename="../controllers/mergeddesktopcontroller.cpp" line="449"/>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="59"/>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="134"/>
+        <location filename="../controllers/mergeddesktopcontroller.cpp" line="449" />
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="59" />
+        <location filename="../views/dfmadvancesearchbar.cpp" line="134" />
         <source>Text</source>
         <translation>ጽሁፍ</translation>
     </message>
     <message>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="60"/>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="135"/>
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="60" />
+        <location filename="../views/dfmadvancesearchbar.cpp" line="135" />
         <source>Executable</source>
-        <translation type="unfinished"></translation>
+        <translation>የተጠቃምያዊ ፎርማት</translation>
     </message>
     <message>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="61"/>
-        <location filename="../views/dfmadvancesearchbar.cpp" line="136"/>
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="61" />
+        <location filename="../views/dfmadvancesearchbar.cpp" line="136" />
         <source>Backup file</source>
-        <translation type="unfinished"></translation>
+        <translation>የተጠቃሚ ዳይረክቶሪ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dabstractfileinfo.cpp" line="621"/>
-        <location filename="../shutil/mimetypedisplaymanager.cpp" line="62"/>
+        <location filename="../interfaces/dabstractfileinfo.cpp" line="621" />
+        <location filename="../shutil/mimetypedisplaymanager.cpp" line="62" />
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>ልባችን የሆነ</translation>
     </message>
 </context>
 <context>
     <name>MountAskPasswordDialog</name>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="48"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="48" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="48"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="48" />
         <source>Connect</source>
         <translation>መገናኛ</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="54"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="54" />
         <source>Log in as</source>
         <translation>መግቢያ እንደ</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="61"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="61" />
         <source>Anonymous</source>
         <translation>የማይታወቅ</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="67"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="67" />
         <source>Registered user</source>
         <translation>የ ተመዘገበ ተጠቃሚ</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="78"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="78" />
         <source>Username</source>
         <translation>የ ተጠቃሚ ስም</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="88"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="88" />
         <source>Domain</source>
         <translation>ግዛት</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="97"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="97" />
         <source>Password</source>
         <translation>የ መግቢያ ቃል</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountaskpassworddialog.cpp" line="111"/>
+        <location filename="../gvfs/mountaskpassworddialog.cpp" line="111" />
         <source>Remember password</source>
         <translation>የ መግቢያ ቃል አስታውስ</translation>
     </message>
@@ -1457,197 +1456,197 @@
 <context>
     <name>MountSecretDiskAskPasswordDialog</name>
     <message>
-        <location filename="../gvfs/mountsecretdiskaskpassworddialog.cpp" line="48"/>
+        <location filename="../gvfs/mountsecretdiskaskpassworddialog.cpp" line="48" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountsecretdiskaskpassworddialog.cpp" line="48"/>
+        <location filename="../gvfs/mountsecretdiskaskpassworddialog.cpp" line="48" />
         <source>UnLock</source>
         <translation>መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../gvfs/mountsecretdiskaskpassworddialog.cpp" line="52"/>
+        <location filename="../gvfs/mountsecretdiskaskpassworddialog.cpp" line="52" />
         <source>Input password to decrypt the disk</source>
-        <translation type="unfinished"></translation>
+        <translation>የድስታን ግንኙነት ለማንበቃት የይለፍ ቃል እንግረዝ</translation>
     </message>
 </context>
 <context>
     <name>MoveCopyTaskWidget</name>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="355"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="355" />
         <source>Skip</source>
         <translation>መዝለያ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="354"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="354" />
         <source>Keep both</source>
         <translation>ሁለቱንም ማስቀመጫ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="356"/>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="505"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="356" />
+        <location filename="../../dialogs/dtaskdialog.cpp" line="505" />
         <source>Replace</source>
         <translation>መቀየሪያ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="377"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="377" />
         <source>Do not ask again</source>
         <translation>በድጋሚ አትጠይቀኝ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="503"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="503" />
         <source>merge</source>
         <translation>ማዋሀጃ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="473"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="473" />
         <source>Copying %1</source>
         <translation>ኮፒ በ ማድረግ ላይ %1</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="413"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="413" />
         <source>Erasing disc %1, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>የድስክ የሚልክ የሚያደርግ ነው %1, እባክዎን ይጠቀሙ...</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="414"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="414" />
         <source>Burning disc %1, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>የድስክ የሚያደርግ የተለያዩ አካል %1 እባክዎን ይጠቀሙ...</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="419"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="419" />
         <source>Writing data...</source>
-        <translation type="unfinished"></translation>
+        <translation>የደረጃ ማስቀመጥ...</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="420"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="420" />
         <source>Verifying data...</source>
-        <translation type="unfinished"></translation>
+        <translation>የደስታ ያረጋግጥዎት...</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="474"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="474" />
         <source>Copy to %2</source>
         <translation>ኮፒ ማድረጊያ ወደ %2</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="477"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="477" />
         <source>Moving %1</source>
         <translation>በ ማንቀሳቀስ ላይ ወደ %1</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="478"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="478" />
         <source>Move to %2</source>
         <translation>ማንቀሳቀሻ ወደ %2</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="480"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="480" />
         <source>Restoring %1</source>
         <translation>እንደ ነበር በ መመለስ ላይ %1</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="481"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="481" />
         <source>Restore to %2</source>
         <translation>እንደ ነበር በ መመለስ ላይ ወደ %2</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="483"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="483" />
         <source>Deleting %1</source>
         <translation>በ ማጥፋት ላይ %1</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="486"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="486" />
         <source>Trashing %1</source>
         <translation>ወደ ቆሻሻ በ መጣል ላይ %1</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="494"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="494" />
         <source>Calculating space, please wait</source>
         <translation>እባክዎን ይቆዩ ቦታውን በ ማስላት ላይ ነው</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="497"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="497" />
         <source>File named %1 already exists in target folder</source>
         <translation>ፋይል በዚህ ስም %1 ቀደም ብሎ ነበር በ ታለመው ፎልደር ውስጥ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="498"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="498" />
         <source>Original path %1 target path %2</source>
         <translation>ዋናው መንገድ %1 የ ታለመው መንገድ %2</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="513"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="513" />
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>እንደገና ይሞክሩ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="607"/>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="619"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="607" />
+        <location filename="../../dialogs/dtaskdialog.cpp" line="619" />
         <source>Time modified:%1</source>
         <translation>ሰአት ተሻሽሏል:%1</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="609"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="609" />
         <source>Original folder</source>
-        <translation type="unfinished"></translation>
+        <translation>የቅዱስ ፎልደር</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="610"/>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="623"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="610" />
+        <location filename="../../dialogs/dtaskdialog.cpp" line="623" />
         <source>Contains:%1</source>
         <translation>የ ያዘው %1 </translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="612"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="612" />
         <source>Original file</source>
-        <translation type="unfinished"></translation>
+        <translation>የቅዱስ ፋይል</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="613"/>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="626"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="613" />
+        <location filename="../../dialogs/dtaskdialog.cpp" line="626" />
         <source>Size:%1</source>
         <translation>መጠን:%1</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="622"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="622" />
         <source>Target folder</source>
-        <translation type="unfinished"></translation>
+        <translation>ደስታን የተለያዩ የፋይል የተለያዩ የፋይል</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="625"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="625" />
         <source>Target file</source>
-        <translation type="unfinished"></translation>
+        <translation>የማስተማር ዳይረክቶሪ</translation>
     </message>
 </context>
 <context>
     <name>MoveToTrashConflictDialog</name>
     <message>
-        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="37"/>
+        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="37" />
         <source>This file is too large to put into trash</source>
         <translation>ይህ ፋይል በጣም ትልቅ ነው ወደ ቆሻሻ ውስጥ ለ መጣል</translation>
     </message>
     <message>
-        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="38"/>
+        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="38" />
         <source>Are you sure you want to permanently delete %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>እንደዚህ እስከመጣችሁ እንደሚጠፋ እንደሚያስቀምጥ እንደ %1 አስቀምጥ አለብኝ?</translation>
     </message>
     <message>
-        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="41"/>
+        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="41" />
         <source>Files are too large to put into trash</source>
         <translation>ይህ ፋይል በጣም ትልቅ ነው ወደ ቆሻሻ ውስጥ ለ መጣል</translation>
     </message>
     <message>
-        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="42"/>
+        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="42" />
         <source>Are you sure you want to permanently delete %1 files?</source>
-        <translation type="unfinished"></translation>
+        <translation>እንደዚህ የሚያስፈልግ የሚችሉ የ%1 የፋይል ማስወገድ አለብዎት?</translation>
     </message>
     <message>
-        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="66"/>
+        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="66" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="67"/>
+        <location filename="../dialogs/movetotrashconflictdialog.cpp" line="67" />
         <source>Delete</source>
         <translation>ማጥፊያ </translation>
     </message>
@@ -1655,37 +1654,37 @@
 <context>
     <name>OpenWithDialog</name>
     <message>
-        <location filename="../dialogs/openwithdialog.cpp" line="212"/>
+        <location filename="../dialogs/openwithdialog.cpp" line="212" />
         <source>Open with</source>
         <translation>መክፈቻ በ</translation>
     </message>
     <message>
-        <location filename="../dialogs/openwithdialog.cpp" line="231"/>
+        <location filename="../dialogs/openwithdialog.cpp" line="231" />
         <source>Add other programs</source>
         <translation>ሌላ ፕሮግራም መጨመሪያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/openwithdialog.cpp" line="232"/>
+        <location filename="../dialogs/openwithdialog.cpp" line="232" />
         <source>Set as default</source>
         <translation>እንደ ነባር ማሰናጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/openwithdialog.cpp" line="234"/>
+        <location filename="../dialogs/openwithdialog.cpp" line="234" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../dialogs/openwithdialog.cpp" line="235"/>
+        <location filename="../dialogs/openwithdialog.cpp" line="235" />
         <source>Choose</source>
         <translation>ይምረጡ</translation>
     </message>
     <message>
-        <location filename="../dialogs/openwithdialog.cpp" line="239"/>
+        <location filename="../dialogs/openwithdialog.cpp" line="239" />
         <source>Recommended Applications</source>
         <translation>የምንመክረው መተግበሪያዎች</translation>
     </message>
     <message>
-        <location filename="../dialogs/openwithdialog.cpp" line="241"/>
+        <location filename="../dialogs/openwithdialog.cpp" line="241" />
         <source>Other Applications</source>
         <translation>ሌሎች መተግበሪያዎች</translation>
     </message>
@@ -1693,117 +1692,117 @@
 <context>
     <name>PathManager</name>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="55"/>
-        <location filename="../dialogs/propertydialog.cpp" line="309"/>
+        <location filename="../controllers/pathmanager.cpp" line="55" />
+        <location filename="../dialogs/propertydialog.cpp" line="309" />
         <source>Home</source>
         <translation>ቤት</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="56"/>
+        <location filename="../controllers/pathmanager.cpp" line="56" />
         <source>Desktop</source>
         <translation>ዴስክቶፕ</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="57"/>
+        <location filename="../controllers/pathmanager.cpp" line="57" />
         <source>Videos</source>
         <translation>ቪዲዮዎች</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="58"/>
+        <location filename="../controllers/pathmanager.cpp" line="58" />
         <source>Music</source>
         <translation>ሙዚቃ</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="59"/>
+        <location filename="../controllers/pathmanager.cpp" line="59" />
         <source>Pictures</source>
         <translation>ስእሎች</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="60"/>
+        <location filename="../controllers/pathmanager.cpp" line="60" />
         <source>Documents</source>
         <translation>ሰነዶች</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="61"/>
+        <location filename="../controllers/pathmanager.cpp" line="61" />
         <source>Downloads</source>
         <translation>የ ወረዱ</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="62"/>
-        <location filename="../models/trashfileinfo.cpp" line="103"/>
+        <location filename="../controllers/pathmanager.cpp" line="62" />
+        <location filename="../models/trashfileinfo.cpp" line="103" />
         <source>Trash</source>
         <translation>ቆሻሻ</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="63"/>
+        <location filename="../controllers/pathmanager.cpp" line="63" />
         <source>System Disk</source>
         <translation>የ ስርአት ዲስክ</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="64"/>
+        <location filename="../controllers/pathmanager.cpp" line="64" />
         <source>Computers in LAN</source>
         <translation>ኮምፒዩተር በ LAN ውስጥ</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="65"/>
+        <location filename="../controllers/pathmanager.cpp" line="65" />
         <source>My Shares</source>
         <translation>እኔ የማካፍላቸው</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="66"/>
+        <location filename="../controllers/pathmanager.cpp" line="66" />
         <source>Computer</source>
         <translation>ኮምፒዩተር</translation>
     </message>
     <message>
-        <location filename="../controllers/pathmanager.cpp" line="67"/>
+        <location filename="../controllers/pathmanager.cpp" line="67" />
         <source>Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>አንድቀት</translation>
     </message>
 </context>
 <context>
     <name>PropertyDialog</name>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="267"/>
+        <location filename="../dialogs/propertydialog.cpp" line="267" />
         <source>Basic info</source>
         <translation>መሰረታዊ መረጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="268"/>
+        <location filename="../dialogs/propertydialog.cpp" line="268" />
         <source>Open with</source>
         <translation>መክፈቻ በ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="269"/>
+        <location filename="../dialogs/propertydialog.cpp" line="269" />
         <source>Share Management</source>
         <translation>የ ማካፈያ አስተዳዳሪ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="270"/>
+        <location filename="../dialogs/propertydialog.cpp" line="270" />
         <source>Permission Management</source>
-        <translation type="unfinished"></translation>
+        <translation>ምስራቅ ማስተዳደር</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="307"/>
+        <location filename="../dialogs/propertydialog.cpp" line="307" />
         <source>System Disk</source>
         <translation>የ ስርአት ዲስክ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="334"/>
+        <location filename="../dialogs/propertydialog.cpp" line="334" />
         <source>%1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>ከፍተኛ ስለሆነ አይደለም እንደሆነ አይደለም እንደሆነ አይደለም</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="335"/>
+        <location filename="../dialogs/propertydialog.cpp" line="335" />
         <source>%1 / %2</source>
-        <translation type="unfinished"></translation>
+        <translation>አንድ / አንድ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1212"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1212" />
         <source>Allow to execute as program</source>
         <translation>እንደ ፕሮግራም መፈጸሚያ ማስቻያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="987"/>
+        <location filename="../dialogs/propertydialog.cpp" line="987" />
         <source>Local disk</source>
         <translation>የ አካባቢ ዲስክ</translation>
     </message>
@@ -1811,972 +1810,972 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="870"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="920"/>
+        <location filename="../dialogs/propertydialog.cpp" line="870" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="920" />
         <source>Size</source>
         <translation>መጠን</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="893"/>
-        <location filename="../dialogs/propertydialog.cpp" line="992"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1019"/>
+        <location filename="../dialogs/propertydialog.cpp" line="893" />
+        <location filename="../dialogs/propertydialog.cpp" line="992" />
+        <location filename="../dialogs/propertydialog.cpp" line="1019" />
         <source>Contains</source>
         <translation>የያዘው</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="871"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="921"/>
+        <location filename="../dialogs/propertydialog.cpp" line="871" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="921" />
         <source>Type</source>
         <translation>አይነት</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="872"/>
+        <location filename="../dialogs/propertydialog.cpp" line="872" />
         <source>Time read</source>
         <translation>ሰአት አንባቢ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="873"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="923"/>
+        <location filename="../dialogs/propertydialog.cpp" line="873" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="923" />
         <source>Time modified</source>
         <translation>የ ተሻሻለበት ጊዜ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="905"/>
+        <location filename="../dialogs/propertydialog.cpp" line="905" />
         <source>Link path</source>
         <translation>የ አገናኝ መንገድ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="987"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1014"/>
+        <location filename="../dialogs/propertydialog.cpp" line="987" />
+        <location filename="../dialogs/propertydialog.cpp" line="1014" />
         <source>Device type</source>
         <translation>የ አካሉ አይነት</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="993"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1020"/>
+        <location filename="../dialogs/propertydialog.cpp" line="993" />
+        <location filename="../dialogs/propertydialog.cpp" line="1020" />
         <source>Free space</source>
         <translation>ነፃ ቦታ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="988"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1015"/>
+        <location filename="../dialogs/propertydialog.cpp" line="988" />
+        <location filename="../dialogs/propertydialog.cpp" line="1015" />
         <source>Total space</source>
         <translation>ጠቅላላ ቦታ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="990"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1017"/>
+        <location filename="../dialogs/propertydialog.cpp" line="990" />
+        <location filename="../dialogs/propertydialog.cpp" line="1017" />
         <source>Filesystem</source>
-        <translation type="unfinished"></translation>
+        <translation>የፎርማት ስርዓት</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1124"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1124" />
         <source>Access denied</source>
-        <translation type="unfinished"></translation>
+        <translation>የግባይ መቅሰፍት ተሰማ።</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1125"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1135"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1125" />
+        <location filename="../dialogs/propertydialog.cpp" line="1135" />
         <source>Executable</source>
-        <translation type="unfinished"></translation>
+        <translation>የተጠቃምያዊ ፎርማት</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1126"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1127"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1126" />
+        <location filename="../dialogs/propertydialog.cpp" line="1127" />
         <source>Write only</source>
-        <translation type="unfinished"></translation>
+        <translation>አንድን ተስፋ ይፃፍ።</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1128"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1129"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1128" />
+        <location filename="../dialogs/propertydialog.cpp" line="1129" />
         <source>Read only</source>
         <translation>ለ ንባብ ብቻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1130"/>
-        <location filename="../dialogs/propertydialog.cpp" line="1131"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1130" />
+        <location filename="../dialogs/propertydialog.cpp" line="1131" />
         <source>Read-write</source>
-        <translation type="unfinished"></translation>
+        <translation>ስራዎች እና ማእከላዊያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1207"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1207" />
         <source>Others</source>
         <translation>ሌሎች</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1205"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1205" />
         <source>Owner</source>
         <translation>ባለቤቱ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="1206"/>
+        <location filename="../dialogs/propertydialog.cpp" line="1206" />
         <source>Group</source>
         <translation>ቡድን</translation>
     </message>
     <message>
-        <location filename="../dialogs/filepreviewdialog.cpp" line="77"/>
-        <location filename="../dialogs/previewdialog.cpp" line="157"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="870"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="873"/>
+        <location filename="../dialogs/filepreviewdialog.cpp" line="77" />
+        <location filename="../dialogs/previewdialog.cpp" line="157" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="870" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="873" />
         <source>Open</source>
         <translation>መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/filepreviewdialog.cpp" line="190"/>
-        <location filename="../dialogs/filepreviewdialog.cpp" line="210"/>
+        <location filename="../dialogs/filepreviewdialog.cpp" line="190" />
+        <location filename="../dialogs/filepreviewdialog.cpp" line="210" />
         <source>Size: %1</source>
         <translation>መጠን:%1</translation>
     </message>
     <message>
-        <location filename="../dialogs/filepreviewdialog.cpp" line="191"/>
+        <location filename="../dialogs/filepreviewdialog.cpp" line="191" />
         <source>Type: %1</source>
         <translation>አይነት: %1</translation>
     </message>
     <message>
-        <location filename="../dialogs/filepreviewdialog.cpp" line="203"/>
+        <location filename="../dialogs/filepreviewdialog.cpp" line="203" />
         <source>Size: 0</source>
         <translation>መጠን: 0</translation>
     </message>
     <message>
-        <location filename="../dialogs/filepreviewdialog.cpp" line="209"/>
+        <location filename="../dialogs/filepreviewdialog.cpp" line="209" />
         <source>Items: %1</source>
         <translation>እቃዎች: %1</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="871"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="874"/>
-        <location filename="../interfaces/dfmcrumbitem.cpp" line="135"/>
-        <location filename="../interfaces/dfmsidebaritem.cpp" line="505"/>
-        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="78"/>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="94"/>
-        <location filename="../views/dfmsidebarhomeitem.cpp" line="50"/>
-        <location filename="../views/dfmsidebarnetworkitem.cpp" line="43"/>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="76"/>
-        <location filename="../views/dfmsidebarrecentitem.cpp" line="55"/>
-        <location filename="../views/dfmsidebarrootitem.cpp" line="53"/>
-        <location filename="../views/dfmsidebartagitem.cpp" line="52"/>
-        <location filename="../views/dfmsidebartrashitem.cpp" line="49"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="871" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="874" />
+        <location filename="../interfaces/dfmcrumbitem.cpp" line="135" />
+        <location filename="../interfaces/dfmsidebaritem.cpp" line="505" />
+        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="78" />
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="94" />
+        <location filename="../views/dfmsidebarhomeitem.cpp" line="50" />
+        <location filename="../views/dfmsidebarnetworkitem.cpp" line="43" />
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="76" />
+        <location filename="../views/dfmsidebarrecentitem.cpp" line="55" />
+        <location filename="../views/dfmsidebarrootitem.cpp" line="53" />
+        <location filename="../views/dfmsidebartagitem.cpp" line="52" />
+        <location filename="../views/dfmsidebartrashitem.cpp" line="49" />
         <source>Open in new window</source>
         <translation>በ አዲስ መስኮት ውስጥ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="872"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="875"/>
-        <location filename="../interfaces/dfmcrumbitem.cpp" line="139"/>
-        <location filename="../interfaces/dfmsidebaritem.cpp" line="509"/>
-        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="82"/>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="102"/>
-        <location filename="../views/dfmsidebarhomeitem.cpp" line="54"/>
-        <location filename="../views/dfmsidebarnetworkitem.cpp" line="47"/>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="84"/>
-        <location filename="../views/dfmsidebarrecentitem.cpp" line="59"/>
-        <location filename="../views/dfmsidebarrootitem.cpp" line="57"/>
-        <location filename="../views/dfmsidebartagitem.cpp" line="56"/>
-        <location filename="../views/dfmsidebartrashitem.cpp" line="53"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="872" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="875" />
+        <location filename="../interfaces/dfmcrumbitem.cpp" line="139" />
+        <location filename="../interfaces/dfmsidebaritem.cpp" line="509" />
+        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="82" />
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="102" />
+        <location filename="../views/dfmsidebarhomeitem.cpp" line="54" />
+        <location filename="../views/dfmsidebarnetworkitem.cpp" line="47" />
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="84" />
+        <location filename="../views/dfmsidebarrecentitem.cpp" line="59" />
+        <location filename="../views/dfmsidebarrootitem.cpp" line="57" />
+        <location filename="../views/dfmsidebartagitem.cpp" line="56" />
+        <location filename="../views/dfmsidebartrashitem.cpp" line="53" />
         <source>Open in new tab</source>
         <translation>በ አዲስ tab ውስጥ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="877"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="877" />
         <source>Open with</source>
         <translation>መክፈቻ በ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="880"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="880" />
         <source>Compress</source>
         <translation>ማመቂያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="881"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="881" />
         <source>Extract</source>
         <translation>ማራገፊያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="882"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="882" />
         <source>Extract here</source>
         <translation>እዚህ ማራገፊያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="883"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="883" />
         <source>Cut</source>
         <translation>መቁረጫ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="884"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="884" />
         <source>Copy</source>
         <translation>ኮፒ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="886"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="886" />
         <source>Paste</source>
         <translation>መለጠፊያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="383"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="887"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="888"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="949"/>
-        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="88"/>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="113"/>
-        <location filename="../views/dfmsidebartagitem.cpp" line="60"/>
-        <location filename="../views/drenamebar.cpp" line="300"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="383" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="887" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="888" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="949" />
+        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="88" />
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="113" />
+        <location filename="../views/dfmsidebartagitem.cpp" line="60" />
+        <location filename="../views/drenamebar.cpp" line="300" />
         <source>Rename</source>
         <translation>እንደገና መሰየሚያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="918"/>
-        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="93"/>
-        <location filename="../views/dfmsidebartagitem.cpp" line="65"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="918" />
+        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="93" />
+        <location filename="../views/dfmsidebartagitem.cpp" line="65" />
         <source>Remove</source>
         <translation>ማስወገጃ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="890"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="890" />
         <source>Create link</source>
         <translation>አገናኝ መፍጠሪያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="885"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="885" />
         <source>Copy Path</source>
-        <translation type="unfinished"></translation>
+        <translation>ስለ የታች ማስተካከያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="891"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="891" />
         <source>Send to desktop</source>
         <translation>ወደ ዴስክቶፕ መላኪያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="892"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="892" />
         <source>Send to</source>
         <translation>መላኪያ ወደ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="893"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="893" />
         <source>Add to bookmark</source>
         <translation>ወደ ምልክት ማድረጊያ መላኪያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="896"/>
-        <location filename="../interfaces/dfmsidebaritem.cpp" line="513"/>
-        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="99"/>
-        <location filename="../views/dfmsidebarhomeitem.cpp" line="73"/>
-        <location filename="../views/dfmsidebartrashitem.cpp" line="68"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="896" />
+        <location filename="../interfaces/dfmsidebaritem.cpp" line="513" />
+        <location filename="../views/dfmsidebarbookmarkitem.cpp" line="99" />
+        <location filename="../views/dfmsidebarhomeitem.cpp" line="73" />
+        <location filename="../views/dfmsidebartrashitem.cpp" line="68" />
         <source>Properties</source>
         <translation>ባህሪዎች</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="898"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="898" />
         <source>New folder</source>
         <translation>አዲስ ፎልደር</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="899"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="899" />
         <source>New window</source>
         <translation>አዲስ መስኮት</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="900"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="900" />
         <source>Select all</source>
         <translation>ሁሉንም መምረጫ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="901"/>
-        <location filename="../views/dfmsidebarrecentitem.cpp" line="65"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="901" />
+        <location filename="../views/dfmsidebarrecentitem.cpp" line="65" />
         <source>Clear recent history</source>
         <translation>የ ቅርብ ጊዜ ታሪክ ማጽጃ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="902"/>
-        <location filename="../views/dfmsidebartrashitem.cpp" line="59"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="902" />
+        <location filename="../views/dfmsidebartrashitem.cpp" line="59" />
         <source>Empty Trash</source>
         <translation>ቆሻሻ ባዶ ማድረጊያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="903"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="903" />
         <source>Display as</source>
         <translation>ማሳያ እንደ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="904"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="904" />
         <source>Sort by</source>
         <translation>መለያ በ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="905"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="905" />
         <source>New document</source>
         <translation>አዲስ ሰነድ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="910"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="910" />
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>የማይንተርኔት የሚያደርግ አንድ ጊዜ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="922"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="922" />
         <source>Time created</source>
         <translation>የ ተፈጠረበት ጊዜ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="933"/>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="168"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="933" />
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="168" />
         <source>Log out and unmount</source>
         <translation>መውጫ እና ማውረጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/propertydialog.cpp" line="874"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="935"/>
+        <location filename="../dialogs/propertydialog.cpp" line="874" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="935" />
         <source>Source path</source>
         <translation>የ ምንጩ መንገድ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="937"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="937" />
         <source>Share folder</source>
         <translation>ፎልደር ማካፈያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="938"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="938" />
         <source>Cancel sharing</source>
         <translation>ማካፈያ መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="939"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="939" />
         <source>Set share password</source>
         <translation>የ ማካፈያ የ መግቢያ ቃል ማሰናጃ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="940"/>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="154"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="940" />
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="154" />
         <source>Format</source>
         <translation>አቀራረብ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="941"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="941" />
         <source>Set file manager background</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል መንገድ ባክግሩድ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="942"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="942" />
         <source>Remove file manager background</source>
-        <translation type="unfinished"></translation>
+        <translation>የፋይል መንገዶች ባክግሮውን አስወግድ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="945"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="945" />
         <source>Tag information</source>
-        <translation type="unfinished"></translation>
+        <translation>ሽልክ ምስሎ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="876"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="876" />
         <source>Open in new window as admin</source>
         <translation>በ አዲስ መስኮት ውስጥ እንደ አስተዳዳሪ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="878"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="878" />
         <source>Select default program</source>
         <translation>ነባር ፕሮግራም ይምረጡ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="879"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="879" />
         <source>Open file location</source>
         <translation>የ ፋይል አካባቢ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="889"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="889" />
         <source>Remove bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>የቤት ባክምርን አስጠናቂ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="894"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="895"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="947"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="894" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="895" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="947" />
         <source>Delete</source>
         <translation>ማጥፊያ </translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="906"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="906" />
         <source>Office Text</source>
-        <translation type="unfinished"></translation>
+        <translation>አገልግሎት ጽሑፍ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="907"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="907" />
         <source>Spreadsheets</source>
-        <translation type="unfinished"></translation>
+        <translation>የስፖርትሽይት ዳግም ማዕከል</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="909"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="909" />
         <source>Plain Text</source>
-        <translation type="unfinished"></translation>
+        <translation>ቃል ባህል</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="911"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="911" />
         <source>Open in terminal</source>
         <translation>በ ተርሚናል ውስጥ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="912"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="912" />
         <source>Restore</source>
         <translation>እንደ ነበር መመለሻ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="913"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="913" />
         <source>Restore all</source>
         <translation>ሁሉንም እንደ ነበር መመለሻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dfmsettingdialog.cpp" line="356"/>
+        <location filename="../dialogs/dfmsettingdialog.cpp" line="356" />
         <source>Auto mount</source>
         <translation>በራሱ መጫኛ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dfmsettingdialog.cpp" line="394"/>
+        <location filename="../dialogs/dfmsettingdialog.cpp" line="394" />
         <source>Open after auto mount</source>
         <translation>በራሱ ከ ተጫነ በኋላ መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="914"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="951"/>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="132"/>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="95"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="914" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="951" />
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="132" />
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="95" />
         <source>Mount</source>
         <translation>መጫኛ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="915"/>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="146"/>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="103"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="915" />
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="146" />
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="103" />
         <source>Unmount</source>
         <translation>ማውረጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/burnoptdialog.cpp" line="138"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="952"/>
-        <location filename="../views/dfmopticalmediawidget.cpp" line="69"/>
+        <location filename="../dialogs/burnoptdialog.cpp" line="138" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="952" />
+        <location filename="../views/dfmopticalmediawidget.cpp" line="69" />
         <source>Burn</source>
-        <translation type="unfinished"></translation>
+        <translation>የስርዓት የሚያስደርስ</translation>
     </message>
     <message>
-        <location filename="../dialogs/burnoptdialog.cpp" line="145"/>
+        <location filename="../dialogs/burnoptdialog.cpp" line="145" />
         <source>Disc name:</source>
-        <translation type="unfinished"></translation>
+        <translation>የዳስካ ስም:</translation>
     </message>
     <message>
-        <location filename="../dialogs/burnoptdialog.cpp" line="156"/>
-        <location filename="../dialogs/burnoptdialog.cpp" line="158"/>
+        <location filename="../dialogs/burnoptdialog.cpp" line="156" />
+        <location filename="../dialogs/burnoptdialog.cpp" line="158" />
         <source>Maximum</source>
-        <translation type="unfinished"></translation>
+        <translation>የሚጠቀምበት በአንድ በዓል ውስጥ የተሰራየበት የጥበቃ ደረጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/burnoptdialog.cpp" line="169"/>
+        <location filename="../dialogs/burnoptdialog.cpp" line="169" />
         <source>Allow files to be added later</source>
-        <translation type="unfinished"></translation>
+        <translation>የፎቶችን በኋላ የሚያግዙ እንደሚችል ይጠቀምጣል</translation>
     </message>
     <message>
-        <location filename="../dialogs/burnoptdialog.cpp" line="178"/>
+        <location filename="../dialogs/burnoptdialog.cpp" line="178" />
         <source>Verify data</source>
-        <translation type="unfinished"></translation>
+        <translation>የዳታ ማረጋገጫ</translation>
     </message>
     <message>
-        <location filename="../dialogs/burnoptdialog.cpp" line="152"/>
+        <location filename="../dialogs/burnoptdialog.cpp" line="152" />
         <source>Write speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>የማስታወሻ አባት</translation>
     </message>
     <message>
-        <location filename="../dialogs/burnoptdialog.cpp" line="181"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="916"/>
+        <location filename="../dialogs/burnoptdialog.cpp" line="181" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="916" />
         <source>Eject</source>
         <translation>ማውጫ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="917"/>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="126"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="917" />
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="126" />
         <source>Safely Remove</source>
         <translation>በ ጥንቃቄ ማስወገጃ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="919"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="919" />
         <source>Name</source>
         <translation>ስም</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="925"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="925" />
         <source>Settings</source>
         <translation>ማሰናጃ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="926"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="926" />
         <source>Help</source>
         <translation>እርዳታ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="927"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="927" />
         <source>About</source>
         <translation>ስለ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="928"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="928" />
         <source>Exit</source>
         <translation>መውጫ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="929"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="929" />
         <source>Icon</source>
         <translation>ምልክት</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="930"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="930" />
         <source>List</source>
         <translation>ዝርዝር</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="931"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="931" />
         <source>Extend</source>
         <translation>ማስፊያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="932"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="932" />
         <source>Set as wallpaper</source>
         <translation>እንደ ግድግዳ ወረቀት ማሰናጃ</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="294"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="294" />
         <source>Local disk</source>
         <translation>የ አካባቢ ዲስክ</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="296"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="296" />
         <source>Removable disk</source>
         <translation>የሚወልቅ ዲስክ</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="298"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="298" />
         <source>Network shared directory</source>
         <translation>ኔትዎርክ የሚካፈለው ዳይሬክቶሪ</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="300"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="300" />
         <source>Android mobile device</source>
         <translation>አንድሮይድ ተንቀሳቃሽ አካል</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="302"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="302" />
         <source>Apple mobile device</source>
         <translation>አፕል ተንቀሳቃሽ አካል</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="304"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="304" />
         <source>Camera</source>
         <translation>ካሜራ</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="306"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="306" />
         <source>DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>ዲቭዲ</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="308"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="308" />
         <source>Unknown device</source>
         <translation>ያልታወቀ አካል</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="315"/>
-        <location filename="../dialogs/propertydialog.cpp" line="960"/>
-        <location filename="../interfaces/dabstractfileinfo.cpp" line="641"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="315" />
+        <location filename="../dialogs/propertydialog.cpp" line="960" />
+        <location filename="../interfaces/dabstractfileinfo.cpp" line="641" />
         <source>%1 item</source>
         <translation>%1 እቃ</translation>
     </message>
     <message>
-        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="317"/>
-        <location filename="../dialogs/propertydialog.cpp" line="960"/>
-        <location filename="../interfaces/dabstractfileinfo.cpp" line="643"/>
+        <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="317" />
+        <location filename="../dialogs/propertydialog.cpp" line="960" />
+        <location filename="../interfaces/dabstractfileinfo.cpp" line="643" />
         <source>%1 items</source>
         <translation>%1 እቃዎች</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfileservices.cpp" line="827"/>
+        <location filename="../interfaces/dfileservices.cpp" line="827" />
         <source>Shortcut</source>
         <translation>አቋራጭ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfileservices.cpp" line="620"/>
+        <location filename="../interfaces/dfileservices.cpp" line="620" />
         <source>Create symlink</source>
         <translation>አገናኝ መፍጠሪያ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="936"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="936" />
         <source>Path</source>
         <translation>መንገድ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="934"/>
-        <location filename="../models/trashfileinfo.cpp" line="335"/>
-        <location filename="../models/trashfileinfo.cpp" line="343"/>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="934" />
+        <location filename="../models/trashfileinfo.cpp" line="335" />
+        <location filename="../models/trashfileinfo.cpp" line="343" />
         <source>Time deleted</source>
         <translation>የ ጠፋበት ጊዜ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dabstractfileinfo.cpp" line="1243"/>
+        <location filename="../interfaces/dabstractfileinfo.cpp" line="1243" />
         <source>Loading...</source>
         <translation>በ መጫን ላይ...</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfileinfo.cpp" line="754"/>
+        <location filename="../interfaces/dfileinfo.cpp" line="754" />
         <source>File has been moved or deleted</source>
         <translation>ፋይሉ ተንቀሳቅሷል ወይንም ጠፍቷል</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfileinfo.cpp" line="756"/>
-        <location filename="../interfaces/dfileinfo.cpp" line="764"/>
-        <location filename="../interfaces/dfileinfo.cpp" line="770"/>
+        <location filename="../interfaces/dfileinfo.cpp" line="756" />
+        <location filename="../interfaces/dfileinfo.cpp" line="764" />
+        <location filename="../interfaces/dfileinfo.cpp" line="770" />
         <source>You do not have permission to access this folder</source>
         <translation>እዚህ ፎልደር ጋር ለ መድረስ በቂ ፍቃድ የሎትም</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfileinfo.cpp" line="774"/>
-        <location filename="../models/recentfileinfo.cpp" line="191"/>
-        <location filename="../models/trashfileinfo.cpp" line="376"/>
+        <location filename="../interfaces/dfileinfo.cpp" line="774" />
+        <location filename="../models/recentfileinfo.cpp" line="191" />
+        <location filename="../models/trashfileinfo.cpp" line="376" />
         <source>Folder is empty</source>
         <translation>ፎልደሩ ባዶ ነው</translation>
     </message>
     <message>
-        <location filename="../models/searchfileinfo.cpp" line="124"/>
+        <location filename="../models/searchfileinfo.cpp" line="124" />
         <source>Path</source>
         <comment>SearchFileInfo</comment>
         <translation>መንገድ</translation>
     </message>
     <message>
-        <location filename="../models/searchfileinfo.cpp" line="313"/>
+        <location filename="../models/searchfileinfo.cpp" line="313" />
         <source>Searching...</source>
         <translation>በ መፈለግ ላይ...</translation>
     </message>
     <message>
-        <location filename="../models/searchfileinfo.cpp" line="318"/>
+        <location filename="../models/searchfileinfo.cpp" line="318" />
         <source>No results</source>
         <translation>ምንም ውጤት የለም</translation>
     </message>
     <message>
-        <location filename="../models/trashfileinfo.cpp" line="339"/>
+        <location filename="../models/trashfileinfo.cpp" line="339" />
         <source>Source Path</source>
         <comment>TrashFileInfo</comment>
         <translation>የ ምንጩ መንገድ</translation>
     </message>
     <message>
-        <location filename="../controllers/appcontroller.cpp" line="438"/>
+        <location filename="../controllers/appcontroller.cpp" line="438" />
         <source>Document</source>
         <translation>ሰነድ</translation>
     </message>
     <message>
-        <location filename="../controllers/appcontroller.cpp" line="445"/>
+        <location filename="../controllers/appcontroller.cpp" line="445" />
         <source>Spreadsheet</source>
         <translation>ሰንጠረዥ</translation>
     </message>
     <message>
-        <location filename="../controllers/appcontroller.cpp" line="452"/>
-        <location filename="../interfaces/dfilemenumanager.cpp" line="908"/>
+        <location filename="../controllers/appcontroller.cpp" line="452" />
+        <location filename="../interfaces/dfilemenumanager.cpp" line="908" />
         <source>Presentation</source>
         <translation>ማቅረቢያ</translation>
     </message>
     <message>
-        <location filename="../controllers/appcontroller.cpp" line="459"/>
+        <location filename="../controllers/appcontroller.cpp" line="459" />
         <source>Text</source>
         <translation>ጽሁፍ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="921"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="921" />
         <source>1 task in progress</source>
         <translation>1 ስራ በ ሂደት ላይ</translation>
     </message>
     <message>
-        <location filename="../../dialogs/dtaskdialog.cpp" line="923"/>
+        <location filename="../../dialogs/dtaskdialog.cpp" line="923" />
         <source>%1 tasks in progress</source>
         <translation>%1 ስራዎች በ ሂደት ላይ</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="142"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="142" />
         <source>Mode:</source>
         <translation>ዘዴ:</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="144"/>
-        <location filename="../views/drenamebar.cpp" line="234"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="144" />
+        <location filename="../views/drenamebar.cpp" line="234" />
         <source>Replace Text</source>
         <translation>ጽሁፍ መቀየሪያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="144"/>
-        <location filename="../views/drenamebar.cpp" line="234"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="144" />
+        <location filename="../views/drenamebar.cpp" line="234" />
         <source>Add Text</source>
         <translation>ጽሁፍ መጨመሪያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="144"/>
-        <location filename="../views/drenamebar.cpp" line="234"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="144" />
+        <location filename="../views/drenamebar.cpp" line="234" />
         <source>Custom Text</source>
         <translation>ጽሁፍ ማስተካከያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="150"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="150" />
         <source>Find:</source>
         <translation>መፈለጊያ:</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="171"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="171" />
         <source>Replace:</source>
         <translation>መቀየሪያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="173"/>
-        <location filename="../views/drenamebar.cpp" line="251"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="173" />
+        <location filename="../views/drenamebar.cpp" line="251" />
         <source>Optional</source>
         <translation>በ ምርጫ</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="190"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="190" />
         <source>Add:</source>
         <translation>መጨመሪያ:</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="209"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="209" />
         <source>Location:</source>
         <translation>አካባቢ:</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="216"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="216" />
         <source>File name:</source>
         <translation>የ ፋይል ስም:</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="233"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="233" />
         <source>+SN:</source>
         <translation>+SN:</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="153"/>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="192"/>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="218"/>
-        <location filename="../views/drenamebar.cpp" line="243"/>
-        <location filename="../views/drenamebar.cpp" line="260"/>
-        <location filename="../views/drenamebar.cpp" line="276"/>
-        <location filename="../views/drenamebar.cpp" line="286"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="153" />
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="192" />
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="218" />
+        <location filename="../views/drenamebar.cpp" line="243" />
+        <location filename="../views/drenamebar.cpp" line="260" />
+        <location filename="../views/drenamebar.cpp" line="276" />
+        <location filename="../views/drenamebar.cpp" line="286" />
         <source>Required</source>
         <translation>ያስፈልጋል</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="211"/>
-        <location filename="../views/drenamebar.cpp" line="269"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="211" />
+        <location filename="../views/drenamebar.cpp" line="269" />
         <source>Before file name</source>
         <translation>ከ ፋይል ስም በፊት:</translation>
     </message>
     <message>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="211"/>
-        <location filename="../views/drenamebar.cpp" line="269"/>
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="211" />
+        <location filename="../views/drenamebar.cpp" line="269" />
         <source>After file name</source>
         <translation>ከ ፋይል ስም በኋላ:</translation>
     </message>
     <message>
-        <location filename="../views/drenamebar.cpp" line="241"/>
+        <location filename="../views/drenamebar.cpp" line="241" />
         <source>Find</source>
         <translation>መፈለጊያ:</translation>
     </message>
     <message>
-        <location filename="../views/drenamebar.cpp" line="250"/>
+        <location filename="../views/drenamebar.cpp" line="250" />
         <source>Replace</source>
         <translation>መቀየሪያ</translation>
     </message>
     <message>
-        <location filename="../views/drenamebar.cpp" line="259"/>
+        <location filename="../views/drenamebar.cpp" line="259" />
         <source>Add</source>
         <translation>መጨመሪያ:</translation>
     </message>
     <message>
-        <location filename="../views/drenamebar.cpp" line="268"/>
+        <location filename="../views/drenamebar.cpp" line="268" />
         <source>Location</source>
         <translation>አካባቢ:</translation>
     </message>
     <message>
-        <location filename="../views/drenamebar.cpp" line="275"/>
+        <location filename="../views/drenamebar.cpp" line="275" />
         <source>File name</source>
         <translation>የ ፋይል ስም:</translation>
     </message>
     <message>
-        <location filename="../views/drenamebar.cpp" line="284"/>
+        <location filename="../views/drenamebar.cpp" line="284" />
         <source>+SN</source>
         <translation>+SN</translation>
     </message>
     <message>
-        <location filename="../views/drenamebar.cpp" line="292"/>
+        <location filename="../views/drenamebar.cpp" line="292" />
         <source>Tips: Sort by selected file order</source>
         <translation>ጠቃሚ ምክር: በ ተመረጠው ፋይል ቅደም ተከተል</translation>
     </message>
     <message>
-        <location filename="../dialogs/burnoptdialog.cpp" line="137"/>
-        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="382"/>
-        <location filename="../views/drenamebar.cpp" line="297"/>
+        <location filename="../dialogs/burnoptdialog.cpp" line="137" />
+        <location filename="../dialogs/ddesktoprenamedialog.cpp" line="382" />
+        <location filename="../views/drenamebar.cpp" line="297" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dialogmanager.cpp" line="1285"/>
+        <location filename="../dialogs/dialogmanager.cpp" line="1285" />
         <source>Rename %1 Files</source>
         <translation>እንደገና መሰየሚያ %1 ፋይሎች</translation>
     </message>
     <message>
-        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="150"/>
+        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="150" />
         <source>Multiple Files</source>
         <translation>በርካታ ፋይሎች</translation>
     </message>
     <message>
-        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="159"/>
+        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="159" />
         <source>Basic info</source>
         <translation>መሰረታዊ መረጃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="167"/>
+        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="167" />
         <source>Total size</source>
         <translation>ጠቅላላ መጠን</translation>
     </message>
     <message>
-        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="168"/>
+        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="168" />
         <source>Number of files</source>
         <translation>የ ፋይሎች ቁጥር</translation>
     </message>
     <message>
-        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="168"/>
+        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="168" />
         <source>%1 file(s), %2 folder(s)</source>
         <translation>%1 ፋይል(ሎች), %2 ፎልደር(ሮች)</translation>
     </message>
     <message>
-        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="173"/>
+        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="173" />
         <source>Access time</source>
         <translation>መድረሻ ጊዜ</translation>
     </message>
     <message>
-        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="174"/>
+        <location filename="../dialogs/dmultifilepropertydialog.cpp" line="174" />
         <source>Modify time</source>
         <translation>የ ተሻሻለበት ጊዜ</translation>
     </message>
     <message>
-        <location filename="../tag/tagutil.cpp" line="49"/>
+        <location filename="../tag/tagutil.cpp" line="49" />
         <source>Orange</source>
-        <translation type="unfinished"></translation>
+        <translation>አንበሳ</translation>
     </message>
     <message>
-        <location filename="../tag/tagutil.cpp" line="50"/>
+        <location filename="../tag/tagutil.cpp" line="50" />
         <source>Red</source>
-        <translation type="unfinished"></translation>
+        <translation>አካል</translation>
     </message>
     <message>
-        <location filename="../tag/tagutil.cpp" line="51"/>
+        <location filename="../tag/tagutil.cpp" line="51" />
         <source>Purple</source>
-        <translation type="unfinished"></translation>
+        <translation>ወርቅ</translation>
     </message>
     <message>
-        <location filename="../tag/tagutil.cpp" line="52"/>
+        <location filename="../tag/tagutil.cpp" line="52" />
         <source>Navy-blue</source>
-        <translation type="unfinished"></translation>
+        <translation>አንበሳ ቀለም</translation>
     </message>
     <message>
-        <location filename="../tag/tagutil.cpp" line="53"/>
+        <location filename="../tag/tagutil.cpp" line="53" />
         <source>Azure</source>
-        <translation type="unfinished"></translation>
+        <translation>አዝየር</translation>
     </message>
     <message>
-        <location filename="../tag/tagutil.cpp" line="54"/>
+        <location filename="../tag/tagutil.cpp" line="54" />
         <source>Green</source>
-        <translation type="unfinished"></translation>
+        <translation>የብርቱ ባለሥልጣን</translation>
     </message>
     <message>
-        <location filename="../tag/tagutil.cpp" line="55"/>
+        <location filename="../tag/tagutil.cpp" line="55" />
         <source>Yellow</source>
-        <translation type="unfinished"></translation>
+        <translation>የልባ</translation>
     </message>
     <message>
-        <location filename="../tag/tagutil.cpp" line="56"/>
+        <location filename="../tag/tagutil.cpp" line="56" />
         <source>Gray</source>
-        <translation type="unfinished"></translation>
+        <translation>ግራይ</translation>
     </message>
     <message>
-        <location filename="../views/dtagedit.cpp" line="91"/>
+        <location filename="../views/dtagedit.cpp" line="91" />
         <source>Input tag info, such as work, family. A comma is used between two tags.</source>
-        <translation type="unfinished"></translation>
+        <translation>የስራ ወይም የቤተሰብ የተጠቃሚ ምስል ያስገቡ። ሁለት ምስል አካባቢ ውስጥ ፣ የተሰኘውን ይጠቀሙ።</translation>
     </message>
     <message>
-        <location filename="../controllers/dfmbookmarkcrumbcontroller.cpp" line="46"/>
+        <location filename="../controllers/dfmbookmarkcrumbcontroller.cpp" line="46" />
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>ስራች ባልባል</translation>
     </message>
     <message>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="160"/>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="107"/>
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="160" />
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="107" />
         <source>Erase</source>
-        <translation type="unfinished"></translation>
+        <translation>ሰርዝ</translation>
     </message>
     <message>
-        <location filename="../views/dfmsidebardeviceitem.cpp" line="175"/>
-        <location filename="../views/dfmsidebarhomeitem.cpp" line="62"/>
-        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="114"/>
-        <location filename="../views/dfmsidebarrootitem.cpp" line="61"/>
+        <location filename="../views/dfmsidebardeviceitem.cpp" line="175" />
+        <location filename="../views/dfmsidebarhomeitem.cpp" line="62" />
+        <location filename="../views/dfmsidebaropticaldevitem.cpp" line="114" />
+        <location filename="../views/dfmsidebarrootitem.cpp" line="61" />
         <source>Disk info</source>
-        <translation type="unfinished"></translation>
+        <translation>ድስክ ምስሎ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfmcrumbitem.cpp" line="130"/>
+        <location filename="../interfaces/dfmcrumbitem.cpp" line="130" />
         <source>Copy path</source>
-        <translation type="unfinished"></translation>
+        <translation>ባሕር እንደዚያ እንደሚፈልግ ይጠቀሙ</translation>
     </message>
     <message>
-        <location filename="../interfaces/dfmcrumbitem.cpp" line="145"/>
+        <location filename="../interfaces/dfmcrumbitem.cpp" line="145" />
         <source>Edit address</source>
-        <translation type="unfinished"></translation>
+        <translation>አድራሻን ያስቀምጥ</translation>
     </message>
     <message>
-        <location filename="../views/dfmopticalmediawidget.cpp" line="96"/>
+        <location filename="../views/dfmopticalmediawidget.cpp" line="96" />
         <source>Free Space %1</source>
-        <translation type="unfinished"></translation>
+        <translation>የተጠቃምያ አካል %1</translation>
     </message>
     <message>
-        <location filename="../controllers/filecontroller.cpp" line="763"/>
+        <location filename="../controllers/filecontroller.cpp" line="763" />
         <source>Files are being processed</source>
-        <translation type="unfinished"></translation>
+        <translation>ፋይል በመጠቀም እየሆኑ ነው</translation>
     </message>
 </context>
 <context>
     <name>ShareInfoFrame</name>
     <message>
-        <location filename="../dialogs/shareinfoframe.cpp" line="58"/>
+        <location filename="../dialogs/shareinfoframe.cpp" line="58" />
         <source>Share this folder</source>
         <translation>ይህን ፎልደር ማካፈያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/shareinfoframe.cpp" line="67"/>
+        <location filename="../dialogs/shareinfoframe.cpp" line="67" />
         <source>Share name:</source>
         <translation>ስም ማካፈያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/shareinfoframe.cpp" line="74"/>
+        <location filename="../dialogs/shareinfoframe.cpp" line="74" />
         <source>Permission:</source>
         <translation>ፍቃድ:</translation>
     </message>
     <message>
-        <location filename="../dialogs/shareinfoframe.cpp" line="80"/>
+        <location filename="../dialogs/shareinfoframe.cpp" line="80" />
         <source>Read and write</source>
         <translation>መጻፊያ እና ማንበቢያ</translation>
     </message>
     <message>
-        <location filename="../dialogs/shareinfoframe.cpp" line="80"/>
+        <location filename="../dialogs/shareinfoframe.cpp" line="80" />
         <source>Read only</source>
         <translation>ለ ንባብ ብቻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/shareinfoframe.cpp" line="83"/>
+        <location filename="../dialogs/shareinfoframe.cpp" line="83" />
         <source>Anonymous:</source>
         <translation>የማይታወቅ:</translation>
     </message>
     <message>
-        <location filename="../dialogs/shareinfoframe.cpp" line="89"/>
+        <location filename="../dialogs/shareinfoframe.cpp" line="89" />
         <source>Not allow</source>
         <translation>አትፍቀድ</translation>
     </message>
     <message>
-        <location filename="../dialogs/shareinfoframe.cpp" line="89"/>
+        <location filename="../dialogs/shareinfoframe.cpp" line="89" />
         <source>Allow</source>
         <translation>መፍቀጃ</translation>
     </message>
@@ -2784,377 +2783,377 @@
 <context>
     <name>Shortcut</name>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="34"/>
+        <location filename="../shutil/shortcut.cpp" line="34" />
         <source>Item</source>
         <translation>እቃ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="35"/>
+        <location filename="../shutil/shortcut.cpp" line="35" />
         <source>Select to the first item</source>
         <translation>የ መጀመሪያውን እቃ ይምረጡ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="35"/>
+        <location filename="../shutil/shortcut.cpp" line="35" />
         <source>Shift + Home </source>
         <translation>Shift + Home </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="36"/>
+        <location filename="../shutil/shortcut.cpp" line="36" />
         <source>Select to the last item</source>
         <translation>የ መጨረሻውን እቃ ይምረጡ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="36"/>
+        <location filename="../shutil/shortcut.cpp" line="36" />
         <source>Shift + End </source>
         <translation>Shift + End </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="37"/>
+        <location filename="../shutil/shortcut.cpp" line="37" />
         <source>Select leftwards</source>
         <translation>ይምረጡ ወደ ግራ በኩል </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="37"/>
+        <location filename="../shutil/shortcut.cpp" line="37" />
         <source>Shift + Left </source>
         <translation>Shift + Left </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="38"/>
+        <location filename="../shutil/shortcut.cpp" line="38" />
         <source>Select rightwards</source>
         <translation>ይምረጡ ወደ ቀኝ በኩል </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="38"/>
+        <location filename="../shutil/shortcut.cpp" line="38" />
         <source>Shift + Right </source>
         <translation>Shift + Right </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="39"/>
+        <location filename="../shutil/shortcut.cpp" line="39" />
         <source>Select to upper row</source>
         <translation>ይምረጡ የ ላይኛውን ረድፍ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="39"/>
+        <location filename="../shutil/shortcut.cpp" line="39" />
         <source>Shift + Up </source>
         <translation>Shift + Up </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="40"/>
+        <location filename="../shutil/shortcut.cpp" line="40" />
         <source>Select to lower row</source>
         <translation>ይምረጡ የ ታችኛውን ረድፍ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="40"/>
+        <location filename="../shutil/shortcut.cpp" line="40" />
         <source>Shift + Down </source>
         <translation>Shift + Down </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="41"/>
+        <location filename="../shutil/shortcut.cpp" line="41" />
         <source>Open</source>
         <translation>መክፈቻ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="41"/>
+        <location filename="../shutil/shortcut.cpp" line="41" />
         <source>Ctrl + Down </source>
         <translation>Ctrl + Down </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="42"/>
+        <location filename="../shutil/shortcut.cpp" line="42" />
         <source>To parent directory</source>
         <translation>ወደ ወላጅ ዳይሬክቶሪ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="42"/>
+        <location filename="../shutil/shortcut.cpp" line="42" />
         <source>Ctrl + Up </source>
         <translation>Ctrl + Up </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="43"/>
+        <location filename="../shutil/shortcut.cpp" line="43" />
         <source>Permanently delete</source>
         <translation>በ ቋሚነት ማጥፊያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="43"/>
+        <location filename="../shutil/shortcut.cpp" line="43" />
         <source>Shift + Delete </source>
         <translation>Shift + Delete </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="44"/>
+        <location filename="../shutil/shortcut.cpp" line="44" />
         <source>Delete file</source>
         <translation>ፋይል ማጥፊያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="44"/>
+        <location filename="../shutil/shortcut.cpp" line="44" />
         <source>Delete</source>
         <translation>ማጥፊያ </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="45"/>
+        <location filename="../shutil/shortcut.cpp" line="45" />
         <source>Select all</source>
         <translation>ሁሉንም መምረጫ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="45"/>
+        <location filename="../shutil/shortcut.cpp" line="45" />
         <source>Ctrl + a </source>
         <translation>Ctrl + a </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="46"/>
+        <location filename="../shutil/shortcut.cpp" line="46" />
         <source>Copy</source>
         <translation>ኮፒ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="46"/>
+        <location filename="../shutil/shortcut.cpp" line="46" />
         <source>Ctrl + c </source>
         <translation>Ctrl + c </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="47"/>
+        <location filename="../shutil/shortcut.cpp" line="47" />
         <source>Cut</source>
         <translation>መቁረጫ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="47"/>
+        <location filename="../shutil/shortcut.cpp" line="47" />
         <source>Ctrl + x </source>
         <translation>Ctrl + x </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="48"/>
+        <location filename="../shutil/shortcut.cpp" line="48" />
         <source>Paste</source>
         <translation>መለጠፊያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="48"/>
+        <location filename="../shutil/shortcut.cpp" line="48" />
         <source>Ctrl + v </source>
         <translation>Ctrl + v </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="49"/>
+        <location filename="../shutil/shortcut.cpp" line="49" />
         <source>Rename</source>
         <translation>እንደገና መሰየሚያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="49"/>
+        <location filename="../shutil/shortcut.cpp" line="49" />
         <source>F2 </source>
         <translation>F2 </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="50"/>
+        <location filename="../shutil/shortcut.cpp" line="50" />
         <source>New/Search</source>
         <translation>አዲስ / መፈለጊያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="51"/>
+        <location filename="../shutil/shortcut.cpp" line="51" />
         <source>New window</source>
         <translation>አዲስ መስኮት</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="51"/>
+        <location filename="../shutil/shortcut.cpp" line="51" />
         <source>Ctrl + n </source>
         <translation>Ctrl + n </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="52"/>
+        <location filename="../shutil/shortcut.cpp" line="52" />
         <source>New folder</source>
         <translation>አዲስ ፎልደር</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="52"/>
+        <location filename="../shutil/shortcut.cpp" line="52" />
         <source>Ctrl + Shift + n </source>
         <translation>Ctrl + Shift + n </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="53"/>
+        <location filename="../shutil/shortcut.cpp" line="53" />
         <source>Search</source>
         <translation>መፈለጊያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="53"/>
+        <location filename="../shutil/shortcut.cpp" line="53" />
         <source>Ctrl + f</source>
         <translation>Ctrl + f</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="54"/>
+        <location filename="../shutil/shortcut.cpp" line="54" />
         <source>New tab</source>
         <translation>አዲስ tab</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="54"/>
+        <location filename="../shutil/shortcut.cpp" line="54" />
         <source>Ctrl + t </source>
         <translation>Ctrl + t </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="55"/>
+        <location filename="../shutil/shortcut.cpp" line="55" />
         <source>View</source>
         <translation>መመልከቻ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="56"/>
+        <location filename="../shutil/shortcut.cpp" line="56" />
         <source>Item information</source>
         <translation>የ እቃ መረጃ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="56"/>
+        <location filename="../shutil/shortcut.cpp" line="56" />
         <source>Ctrl + i </source>
         <translation>Ctrl + i </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="57"/>
+        <location filename="../shutil/shortcut.cpp" line="57" />
         <source>Help</source>
         <translation>እርዳታ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="57"/>
+        <location filename="../shutil/shortcut.cpp" line="57" />
         <source>F1 </source>
         <translation>F1 </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="58"/>
+        <location filename="../shutil/shortcut.cpp" line="58" />
         <source>Keyboard shortcuts</source>
         <translation>የ ፊደል ገበታ አቋራጭ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="58"/>
+        <location filename="../shutil/shortcut.cpp" line="58" />
         <source>Ctrl + Shift + / </source>
         <translation>Ctrl + Shift + / </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="59"/>
+        <location filename="../shutil/shortcut.cpp" line="59" />
         <source>Switch display status</source>
         <translation>የ ማሳያ ሁኔታ መቀየሪያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="60"/>
+        <location filename="../shutil/shortcut.cpp" line="60" />
         <source>Hide item</source>
         <translation>እቃ መደበቂያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="60"/>
+        <location filename="../shutil/shortcut.cpp" line="60" />
         <source>Ctrl + h </source>
         <translation>Ctrl + h </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="61"/>
+        <location filename="../shutil/shortcut.cpp" line="61" />
         <source>Input in address bar</source>
         <translation>በ አድራሻ መደርደሪያ ላይ ማስገቢያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="61"/>
+        <location filename="../shutil/shortcut.cpp" line="61" />
         <source>Ctrl + l </source>
         <translation>Ctrl + l </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="62"/>
+        <location filename="../shutil/shortcut.cpp" line="62" />
         <source>Switch to icon view</source>
-        <translation type="unfinished"></translation>
+        <translation>የአይኮን እውቀት እንደሚያደርግ ቀይር ይቀርባል</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="62"/>
+        <location filename="../shutil/shortcut.cpp" line="62" />
         <source>Ctrl + 1 </source>
-        <translation type="unfinished"></translation>
+        <translation>ኮንቶል + 1</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="63"/>
+        <location filename="../shutil/shortcut.cpp" line="63" />
         <source>Switch to list view</source>
-        <translation type="unfinished"></translation>
+        <translation>የዝርዝር የተለያዩ ገጽ እንዲሁም ይቀርባል</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="63"/>
+        <location filename="../shutil/shortcut.cpp" line="63" />
         <source>Ctrl + 2 </source>
-        <translation type="unfinished"></translation>
+        <translation>ኮንቶል + 2</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="64"/>
+        <location filename="../shutil/shortcut.cpp" line="64" />
         <source>Others</source>
         <translation>ሌሎች</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="65"/>
+        <location filename="../shutil/shortcut.cpp" line="65" />
         <source>Close</source>
         <translation>መዝጊያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="65"/>
+        <location filename="../shutil/shortcut.cpp" line="65" />
         <source>Alt + F4 </source>
         <translation>Alt + F4 </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="66"/>
+        <location filename="../shutil/shortcut.cpp" line="66" />
         <source>Close current tab</source>
         <translation>የ አሁኑን tab መዝጊያ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="66"/>
+        <location filename="../shutil/shortcut.cpp" line="66" />
         <source>Ctrl + w</source>
         <translation>Ctrl + w</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="67"/>
+        <location filename="../shutil/shortcut.cpp" line="67" />
         <source>Back</source>
         <translation>ወደ ኋላ</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="67"/>
+        <location filename="../shutil/shortcut.cpp" line="67" />
         <source>Alt + Left </source>
         <translation>Alt + Left </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="68"/>
+        <location filename="../shutil/shortcut.cpp" line="68" />
         <source>Alt + Right </source>
         <translation>Alt + Right </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="69"/>
+        <location filename="../shutil/shortcut.cpp" line="69" />
         <source>Switch to next tab</source>
         <translation>መቀየሪያ ወደሚቀጥለው tab</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="69"/>
+        <location filename="../shutil/shortcut.cpp" line="69" />
         <source>Ctrl + Tab </source>
         <translation>Ctrl + Tab </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="70"/>
+        <location filename="../shutil/shortcut.cpp" line="70" />
         <source>Ctrl + Shift + Tab </source>
         <translation>Ctrl + Shift + Tab </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="70"/>
+        <location filename="../shutil/shortcut.cpp" line="70" />
         <source>Switch to previous tab</source>
         <translation>መቀየሪያ ወዳለፈው tab</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="71"/>
+        <location filename="../shutil/shortcut.cpp" line="71" />
         <source>Next file</source>
         <translation>የሚቀጥለው ፋይል</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="71"/>
+        <location filename="../shutil/shortcut.cpp" line="71" />
         <source>Tab </source>
         <translation>Tab </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="72"/>
+        <location filename="../shutil/shortcut.cpp" line="72" />
         <source>Previous file</source>
         <translation>ያለፈው ፋይል</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="72"/>
+        <location filename="../shutil/shortcut.cpp" line="72" />
         <source>Shift + Tab </source>
         <translation>Shift + Tab </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="73"/>
+        <location filename="../shutil/shortcut.cpp" line="73" />
         <source>Switch tab by specified number between 1 to 8</source>
         <translation>መቀየሪያ tab በ ተወነው ቁጥር በ 1 እስከ 8 መካከል</translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="73"/>
+        <location filename="../shutil/shortcut.cpp" line="73" />
         <source>Alt + [1-8] </source>
         <translation>Alt + [1-8] </translation>
     </message>
     <message>
-        <location filename="../shutil/shortcut.cpp" line="68"/>
+        <location filename="../shutil/shortcut.cpp" line="68" />
         <source>Forward</source>
         <translation>ወደ ፊት</translation>
     </message>
@@ -3162,22 +3161,22 @@
 <context>
     <name>TrashPropertyDialog</name>
     <message>
-        <location filename="../dialogs/trashpropertydialog.cpp" line="68"/>
+        <location filename="../dialogs/trashpropertydialog.cpp" line="68" />
         <source>Trash</source>
         <translation>ቆሻሻ</translation>
     </message>
     <message>
-        <location filename="../dialogs/trashpropertydialog.cpp" line="72"/>
+        <location filename="../dialogs/trashpropertydialog.cpp" line="72" />
         <source>item</source>
         <translation>እቃ</translation>
     </message>
     <message>
-        <location filename="../dialogs/trashpropertydialog.cpp" line="74"/>
+        <location filename="../dialogs/trashpropertydialog.cpp" line="74" />
         <source>items</source>
         <translation>እቃዎች</translation>
     </message>
     <message>
-        <location filename="../dialogs/trashpropertydialog.cpp" line="77"/>
+        <location filename="../dialogs/trashpropertydialog.cpp" line="77" />
         <source>Contains %1 %2</source>
         <translation>የያዘው %1 %2</translation>
     </message>
@@ -3185,15 +3184,15 @@
 <context>
     <name>UDiskListener</name>
     <message>
-        <location filename="../deviceinfo/udisklistener.cpp" line="187"/>
+        <location filename="../deviceinfo/udisklistener.cpp" line="187" />
         <source>Failed to rename the label</source>
-        <translation type="unfinished"></translation>
+        <translation>የላብል ስም ለማስከበር አልተሳካም</translation>
     </message>
 </context>
 <context>
     <name>UnknownPreviewWidget</name>
     <message>
-        <location filename="../dialogs/previewdialog.cpp" line="561"/>
+        <location filename="../dialogs/previewdialog.cpp" line="561" />
         <source>Type</source>
         <translation>አይነት</translation>
     </message>
@@ -3201,30 +3200,30 @@
 <context>
     <name>UserShareManager</name>
     <message>
-        <location filename="../../usershare/usersharemanager.cpp" line="420"/>
+        <location filename="../../usershare/usersharemanager.cpp" line="420" />
         <source>Kindly Reminder</source>
-        <translation type="unfinished"></translation>
+        <translation>አንድንቀር አስተያየት</translation>
     </message>
     <message>
-        <location filename="../../usershare/usersharemanager.cpp" line="420"/>
+        <location filename="../../usershare/usersharemanager.cpp" line="420" />
         <source>Please firstly install samba to continue</source>
-        <translation type="unfinished"></translation>
+        <translation>እባክዎ ስምባ ከፍተል በኋላ ይጠቀሙ</translation>
     </message>
 </context>
 <context>
     <name>UserSharePasswordSettingDialog</name>
     <message>
-        <location filename="../dialogs/usersharepasswordsettingdialog.cpp" line="37"/>
+        <location filename="../dialogs/usersharepasswordsettingdialog.cpp" line="37" />
         <source>Please enter share password</source>
         <translation>እባክዎን የ ማካፈያ የ መግቢያ ቃል ያስገቡ</translation>
     </message>
     <message>
-        <location filename="../dialogs/usersharepasswordsettingdialog.cpp" line="48"/>
+        <location filename="../dialogs/usersharepasswordsettingdialog.cpp" line="48" />
         <source>Cancel</source>
         <translation>መሰረዣ</translation>
     </message>
     <message>
-        <location filename="../dialogs/usersharepasswordsettingdialog.cpp" line="48"/>
+        <location filename="../dialogs/usersharepasswordsettingdialog.cpp" line="48" />
         <source>Confirm</source>
         <translation>ማረጋገጫ</translation>
     </message>

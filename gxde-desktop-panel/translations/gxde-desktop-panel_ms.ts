@@ -1,50 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
+<?xml version='1.0' encoding='utf-8'?>
 <TS version="2.1" language="ms">
 <context>
     <name>CanvasGridView</name>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2443"/>
+        <location filename="../view/canvasgridview.cpp" line="2443" />
         <source>Icon size</source>
         <translation>Saiz ikon</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2449"/>
+        <location filename="../view/canvasgridview.cpp" line="2449" />
         <source>Auto merge</source>
         <translation>Auto gabung</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2458"/>
+        <location filename="../view/canvasgridview.cpp" line="2458" />
         <source>Auto arrange</source>
         <translation>Auto susun</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2467"/>
+        <location filename="../view/canvasgridview.cpp" line="2467" />
         <source>Hide Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Sembunyikan Ikon</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2520"/>
+        <location filename="../view/canvasgridview.cpp" line="2520" />
         <source>Set Wallpaper</source>
         <translation>Tetapkan Kertas Dinding</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2522"/>
+        <location filename="../view/canvasgridview.cpp" line="2522" />
         <source>Wallpaper and Screensaver</source>
         <translation>Kertas Dinding dan Penyelamat Skrin</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2603"/>
+        <location filename="../view/canvasgridview.cpp" line="2603" />
         <source>Properties</source>
         <translation>Sifat</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2506"/>
+        <location filename="../view/canvasgridview.cpp" line="2506" />
         <source>Display Settings</source>
         <translation>Tetapan Paparan</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2513"/>
+        <location filename="../view/canvasgridview.cpp" line="2513" />
         <source>Corner Settings</source>
         <translation>Tetapan Bucu</translation>
     </message>
@@ -52,27 +51,27 @@
 <context>
     <name>DesktopItemDelegate</name>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="38"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="38" />
         <source>Tiny</source>
         <translation>Sangat kecil</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="39"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="39" />
         <source>Small</source>
         <translation>Kecil</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="40"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="40" />
         <source>Medium</source>
         <translation>Sederhana</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="41"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="41" />
         <source>Large</source>
         <translation>Besar</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="42"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="42" />
         <source>Super large</source>
         <translation>Sangat besar</translation>
     </message>
@@ -80,92 +79,92 @@
 <context>
     <name>Frame</name>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440" />
         <source>Wallpaper Slideshow</source>
         <translation>Paparan Slaid Kertas Dinding</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443" />
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Mod Penampilan</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444" />
         <source>Show weather report</source>
-        <translation type="unfinished"></translation>
+        <translation>Paparkan laporan cuaca</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470" />
         <source>When login</source>
         <translation>Bila daftar masuk</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472" />
         <source>When wakeup</source>
         <translation>Bila bangun</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490" />
         <source>Keep Aspect Ratio By Expanding</source>
-        <translation type="unfinished"></translation>
+        <translation>Simpan Nisbah Aspek Dengan Memperluaskan</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491" />
         <source>Ignore Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Abai nisbah aspek</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492" />
         <source>Keep Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Tetap Nisbah Aspek</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493" />
         <source>Center</source>
-        <translation type="unfinished"></translation>
+        <translation>Pusat</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494" />
         <source>Background Spanned</source>
-        <translation type="unfinished"></translation>
+        <translation>Latar belakang</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555" />
         <source>Require a password on wakeup</source>
         <translation>Perlukan kata laluan ketika bangun</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580" />
         <source>Never</source>
         <translation>Tidak Sesekali</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581" />
         <source>Wait:</source>
         <translation>Tunggu:</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609" />
         <source>Wallpaper</source>
         <translation>Kertas Dinding</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609" />
         <source>Screensaver</source>
         <translation>Penyelamat Skrin</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671" />
         <source>Only desktop</source>
         <translation>Desktop sahaja</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672" />
         <source>Only lock screen</source>
         <translation>Skrin kunci sahaja</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700" />
         <source>Apply</source>
         <translation>Laksana</translation>
     </message>
@@ -173,72 +172,72 @@
 <context>
     <name>ZoneMainWindow</name>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="59"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="59" />
         <source>Fast Screen Off</source>
         <translation>Skrin Pantas Mati</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="60"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="60" />
         <source>Control Center</source>
         <translation>Pusat Kawalan</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="61"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="61" />
         <source>All Windows</source>
         <translation>Semua Tetingkap</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="62"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="62" />
         <source>Launcher</source>
         <translation>Pelancar</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="63"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="63" />
         <source>Desktop</source>
         <translation>Desktop</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="65" />
         <source>Screen Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrin Shot</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="66" />
         <source>Screen Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrin Rakaman</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="67" />
         <source>Screen OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrin OCR</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="68" />
         <source>Screen Scroll</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrin Skrol</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="69" />
         <source>Color Picker</source>
-        <translation type="unfinished"></translation>
+        <translation>Warna Picker</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="71" />
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>Monitor Sistem</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="72" />
         <source>Notify Center</source>
-        <translation type="unfinished"></translation>
+        <translation>Pusat Notifikasi</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="73" />
         <source>None</source>
         <translation>Tiada</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="102"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="102" />
         <source>Close Window</source>
         <translation>Tutup Tetingkap</translation>
     </message>

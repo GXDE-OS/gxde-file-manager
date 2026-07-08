@@ -1,50 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
+<?xml version='1.0' encoding='utf-8'?>
 <TS version="2.1" language="ja">
 <context>
     <name>CanvasGridView</name>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2443"/>
+        <location filename="../view/canvasgridview.cpp" line="2443" />
         <source>Icon size</source>
         <translation>アイコンサイズ</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2449"/>
+        <location filename="../view/canvasgridview.cpp" line="2449" />
         <source>Auto merge</source>
         <translation>自動的にまとめる</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2458"/>
+        <location filename="../view/canvasgridview.cpp" line="2458" />
         <source>Auto arrange</source>
         <translation>自動整列</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2467"/>
+        <location filename="../view/canvasgridview.cpp" line="2467" />
         <source>Hide Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンを非表示</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2520"/>
+        <location filename="../view/canvasgridview.cpp" line="2520" />
         <source>Set Wallpaper</source>
         <translation>壁紙を設定</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2522"/>
+        <location filename="../view/canvasgridview.cpp" line="2522" />
         <source>Wallpaper and Screensaver</source>
         <translation>壁紙とスクリーンセーバー</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2603"/>
+        <location filename="../view/canvasgridview.cpp" line="2603" />
         <source>Properties</source>
         <translation>プロパテイ</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2506"/>
+        <location filename="../view/canvasgridview.cpp" line="2506" />
         <source>Display Settings</source>
         <translation>ディスプレイ設定</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2513"/>
+        <location filename="../view/canvasgridview.cpp" line="2513" />
         <source>Corner Settings</source>
         <translation>コーナー設定</translation>
     </message>
@@ -52,27 +51,27 @@
 <context>
     <name>DesktopItemDelegate</name>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="38"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="38" />
         <source>Tiny</source>
         <translation>細</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="39"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="39" />
         <source>Small</source>
         <translation>小</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="40"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="40" />
         <source>Medium</source>
         <translation>中</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="41"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="41" />
         <source>Large</source>
         <translation>大</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="42"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="42" />
         <source>Super large</source>
         <translation>極大</translation>
     </message>
@@ -80,92 +79,92 @@
 <context>
     <name>Frame</name>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440" />
         <source>Wallpaper Slideshow</source>
         <translation>壁紙をスライドショーにする</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443" />
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>表示モード</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444" />
         <source>Show weather report</source>
-        <translation type="unfinished"></translation>
+        <translation>天気予報を表示</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470" />
         <source>When login</source>
         <translation>ログイン時</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472" />
         <source>When wakeup</source>
         <translation>再開時</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490" />
         <source>Keep Aspect Ratio By Expanding</source>
-        <translation type="unfinished"></translation>
+        <translation>アスペクト比を保持するために拡大</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491" />
         <source>Ignore Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>無視アスペクト比</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492" />
         <source>Keep Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>アスペクト比を維持する</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493" />
         <source>Center</source>
-        <translation type="unfinished"></translation>
+        <translation>センター</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494" />
         <source>Background Spanned</source>
-        <translation type="unfinished"></translation>
+        <translation>背景にわたる</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555" />
         <source>Require a password on wakeup</source>
         <translation>再開時にパスワードを入力</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580" />
         <source>Never</source>
         <translation>使用しない</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581" />
         <source>Wait:</source>
         <translation>開始まで:</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609" />
         <source>Wallpaper</source>
         <translation>壁紙</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609" />
         <source>Screensaver</source>
         <translation>スクリーンセーバー</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671" />
         <source>Only desktop</source>
         <translation>デスクトップのみ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672" />
         <source>Only lock screen</source>
         <translation>ロック画面のみ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700" />
         <source>Apply</source>
         <translation>適用</translation>
     </message>
@@ -173,72 +172,72 @@
 <context>
     <name>ZoneMainWindow</name>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="59"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="59" />
         <source>Fast Screen Off</source>
         <translation>すぐに画面を切る</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="60"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="60" />
         <source>Control Center</source>
         <translation>コントロールセンター</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="61"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="61" />
         <source>All Windows</source>
         <translation>すべてのウインドウ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="62"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="62" />
         <source>Launcher</source>
         <translation>ランチャー</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="63"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="63" />
         <source>Desktop</source>
         <translation>デスクトップ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="65" />
         <source>Screen Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーンショット</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="66" />
         <source>Screen Record</source>
-        <translation type="unfinished"></translation>
+        <translation>画面録画</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="67" />
         <source>Screen OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>画面OCR</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="68" />
         <source>Screen Scroll</source>
-        <translation type="unfinished"></translation>
+        <translation>スクリーン スクロール</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="69" />
         <source>Color Picker</source>
-        <translation type="unfinished"></translation>
+        <translation>カラーピッカー</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="71" />
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>システムモニター</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="72" />
         <source>Notify Center</source>
-        <translation type="unfinished"></translation>
+        <translation>通知センター</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="73" />
         <source>None</source>
         <translation>なにもしない</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="102"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="102" />
         <source>Close Window</source>
         <translation>ウインドウを閉じる</translation>
     </message>

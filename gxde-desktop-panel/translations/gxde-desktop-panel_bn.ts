@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="bn">
+<TS version="2.1" language="bn_BD">
 <context>
     <name>CanvasGridView</name>
     <message>
@@ -11,7 +11,7 @@
     <message>
         <location filename="../view/canvasgridview.cpp" line="2449"/>
         <source>Auto merge</source>
-        <translation type="unfinished"></translation>
+        <translation>স্বয়ংক্রিয় মিশ্রণ</translation>
     </message>
     <message>
         <location filename="../view/canvasgridview.cpp" line="2458"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../view/canvasgridview.cpp" line="2467"/>
         <source>Hide Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>আইকন লুকানো</translation>
     </message>
     <message>
         <location filename="../view/canvasgridview.cpp" line="2520"/>
@@ -31,7 +31,7 @@
     <message>
         <location filename="../view/canvasgridview.cpp" line="2522"/>
         <source>Wallpaper and Screensaver</source>
-        <translation type="unfinished"></translation>
+        <translation>ওয়ালপেপার এবং স্ক্রিনসেভার</translation>
     </message>
     <message>
         <location filename="../view/canvasgridview.cpp" line="2603"/>
@@ -82,77 +82,77 @@
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
         <source>Wallpaper Slideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>ওয়ালপেপার স্লাইডশো</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>ডিসপ্লে মোড</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
         <source>Show weather report</source>
-        <translation type="unfinished"></translation>
+        <translation>মétéo দেখান</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
         <source>When login</source>
-        <translation type="unfinished"></translation>
+        <translation>লগইন করার সময়</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
         <source>When wakeup</source>
-        <translation type="unfinished"></translation>
+        <translation>জাগার সময়</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
         <source>Keep Aspect Ratio By Expanding</source>
-        <translation type="unfinished"></translation>
+        <translation>ব্যপ্তি করেই অ্যাসপেক্ট রেশিও রাখুন</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
         <source>Ignore Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>অ্যাসপেক্ট রেশিও উপেক্ষা করুন</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
         <source>Keep Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>অ্যাসপেক্ট রেশিও রাখুন</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
         <source>Center</source>
-        <translation type="unfinished"></translation>
+        <translation>কেন্দ্র</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
         <source>Background Spanned</source>
-        <translation type="unfinished"></translation>
+        <translation>পটভূমি স্প্যানড</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
         <source>Require a password on wakeup</source>
-        <translation type="unfinished"></translation>
+        <translation>জাগার সময় একটি পাসওয়ার্ড প্রয়োজন</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>কখনো না</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
         <source>Wait:</source>
-        <translation type="unfinished"></translation>
+        <translation>অপেক্ষা করুন:</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Wallpaper</source>
-        <translation type="unfinished"></translation>
+        <translation>ওয়ালপেপার</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Screensaver</source>
-        <translation type="unfinished"></translation>
+        <translation>স্ক্রিনসেভার</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
@@ -167,7 +167,7 @@
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>প্রয়োগ করুন</translation>
     </message>
 </context>
 <context>
@@ -200,37 +200,37 @@
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
         <source>Screen Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>স্ক্রিন শট</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
         <source>Screen Record</source>
-        <translation type="unfinished"></translation>
+        <translation>স্ক্রিন রেকর্ড</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
         <source>Screen OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>স্ক্রিন ওসিআর</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
         <source>Screen Scroll</source>
-        <translation type="unfinished"></translation>
+        <translation>স্ক্রিন স্ক্রোল</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
         <source>Color Picker</source>
-        <translation type="unfinished"></translation>
+        <translation>রঙ পিকার</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>সিস্টেম মনিটর</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
         <source>Notify Center</source>
-        <translation type="unfinished"></translation>
+        <translation>নোটিফাই সেন্টার</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>

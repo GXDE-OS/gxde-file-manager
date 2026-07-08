@@ -1,50 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
+<?xml version='1.0' encoding='utf-8'?>
 <TS version="2.1" language="pa">
 <context>
     <name>CanvasGridView</name>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2443"/>
+        <location filename="../view/canvasgridview.cpp" line="2443" />
         <source>Icon size</source>
-        <translation type="unfinished"></translation>
+        <translation>ਆਈਕਾਨ ਸਾਈਜ਼</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2449"/>
+        <location filename="../view/canvasgridview.cpp" line="2449" />
         <source>Auto merge</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto merge</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2458"/>
+        <location filename="../view/canvasgridview.cpp" line="2458" />
         <source>Auto arrange</source>
         <translation>ਆਪੇ ਇੰਤਜ਼ਾਮ ਕਰੋ</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2467"/>
+        <location filename="../view/canvasgridview.cpp" line="2467" />
         <source>Hide Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Chhupāva Icon</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2520"/>
+        <location filename="../view/canvasgridview.cpp" line="2520" />
         <source>Set Wallpaper</source>
-        <translation type="unfinished"></translation>
+        <translation>Set Wallpaper</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2522"/>
+        <location filename="../view/canvasgridview.cpp" line="2522" />
         <source>Wallpaper and Screensaver</source>
-        <translation type="unfinished"></translation>
+        <translation>ਵਾਲਪੇਪਰ ਅਤੇ ਸਕਰੀਨਸੇਵਰ</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2603"/>
+        <location filename="../view/canvasgridview.cpp" line="2603" />
         <source>Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2506"/>
+        <location filename="../view/canvasgridview.cpp" line="2506" />
         <source>Display Settings</source>
         <translation>ਡਿਸਪਲੇਅ ਸੈਟਿੰਗਾਂ</translation>
     </message>
     <message>
-        <location filename="../view/canvasgridview.cpp" line="2513"/>
+        <location filename="../view/canvasgridview.cpp" line="2513" />
         <source>Corner Settings</source>
         <translation>ਕੋਨਾ ਸੈਟਿੰਗਾਂ</translation>
     </message>
@@ -52,195 +51,195 @@
 <context>
     <name>DesktopItemDelegate</name>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="38"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="38" />
         <source>Tiny</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiny</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="39"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="39" />
         <source>Small</source>
-        <translation type="unfinished"></translation>
+        <translation>ਛੋਟਾ</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="40"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="40" />
         <source>Medium</source>
-        <translation type="unfinished"></translation>
+        <translation>ਮੀਡੀਅਮ</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="41"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="41" />
         <source>Large</source>
-        <translation type="unfinished"></translation>
+        <translation>ਵੱਡਾ</translation>
     </message>
     <message>
-        <location filename="../view/desktopitemdelegate.cpp" line="42"/>
+        <location filename="../view/desktopitemdelegate.cpp" line="42" />
         <source>Super large</source>
-        <translation type="unfinished"></translation>
+        <translation>ਸੁਪਰ ਵੱਡਾ</translation>
     </message>
 </context>
 <context>
     <name>Frame</name>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440" />
         <source>Wallpaper Slideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>ਵਾਲਪੇਪਰ ਸਲਾਈਡਸ਼ੋ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443" />
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>ਡਿਸਪਲ ਮੋਡ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444" />
         <source>Show weather report</source>
-        <translation type="unfinished"></translation>
+        <translation>ਵੇਦਰ ਰਿਪੋਰਟ ਦਿਖਾਓ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470" />
         <source>When login</source>
-        <translation type="unfinished"></translation>
+        <translation>ਲਾਗਇਨ ਕਰਦੇ ਸਮੇਂ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472" />
         <source>When wakeup</source>
-        <translation type="unfinished"></translation>
+        <translation>ਜਾਗਣ 'ਤੇ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490" />
         <source>Keep Aspect Ratio By Expanding</source>
-        <translation type="unfinished"></translation>
+        <translation>ਰੇਖਾ ਅਨੁਪਾਤ ਨੂੰ ਵਧਾਉਣ ਨਾਲ ਬਣਾਈ ਰੱਖੋ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491" />
         <source>Ignore Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>ਨਿਗਰਾਨ ਅਸਪੈਕਟ ਰੇਸ਼ੀਓ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492" />
         <source>Keep Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>ਰੇਖਾ ਅਨੁਪਾਤ ਬਣਾਉਣਾ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493" />
         <source>Center</source>
-        <translation type="unfinished"></translation>
+        <translation>ਸੈਂਟਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494" />
         <source>Background Spanned</source>
-        <translation type="unfinished"></translation>
+        <translation>ਪਿਛਲੇ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555" />
         <source>Require a password on wakeup</source>
-        <translation type="unfinished"></translation>
+        <translation>ਪਾਸਵਰਡ ਲਾਉਣ ਦੀ ਲੋੜ ਹੈ ਜਦੋਂ ਵੇਕ ਅੱਪ ਹੁੰਦਾ ਹੈ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580" />
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>ਨਹੀਂ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581" />
         <source>Wait:</source>
-        <translation type="unfinished"></translation>
+        <translation>ਅਟਹਿ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609" />
         <source>Wallpaper</source>
-        <translation type="unfinished"></translation>
+        <translation>ਵਾਲਪੇਪਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609" />
         <source>Screensaver</source>
-        <translation type="unfinished"></translation>
+        <translation>ਸਕਰੀਨਸੇਵਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671" />
         <source>Only desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>ਸਿਰਫ਼ ਡੈਸਕਟਾਪ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="672" />
         <source>Only lock screen</source>
-        <translation type="unfinished"></translation>
+        <translation>ਕੇਵਲ ਲਾਕ ਸਕਰੀਨ</translation>
     </message>
     <message>
-        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
+        <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700" />
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>ਲਾਗੂ ਕਰੋ</translation>
     </message>
 </context>
 <context>
     <name>ZoneMainWindow</name>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="59"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="59" />
         <source>Fast Screen Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Fast Screen Off</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="60"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="60" />
         <source>Control Center</source>
-        <translation type="unfinished"></translation>
+        <translation>ਕੰਟਰੋਲ ਸੈਂਟਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="61"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="61" />
         <source>All Windows</source>
-        <translation type="unfinished"></translation>
+        <translation>All Windows</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="62"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="62" />
         <source>Launcher</source>
-        <translation type="unfinished"></translation>
+        <translation>ਲਾਂਚਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="63"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="63" />
         <source>Desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>ਕੰਪਿਊਟਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="65" />
         <source>Screen Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>ਸਕਰੀਨ ਸ਼ਾਟ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="66" />
         <source>Screen Record</source>
-        <translation type="unfinished"></translation>
+        <translation>ਰਿਕਾਰਡ ਕਰੋ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="67" />
         <source>Screen OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>ਕ੍ਰੀਨ ਓਸੀਆਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="68" />
         <source>Screen Scroll</source>
-        <translation type="unfinished"></translation>
+        <translation>ਕ੍ਰੀਨ ਸਕ੍ਰੋਲ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="69" />
         <source>Color Picker</source>
-        <translation type="unfinished"></translation>
+        <translation>ਰੰਗ ਚੁਣਣ ਵਾਲਾ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="71" />
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>ਸਿਸਟਮ ਮਾਨੀਟਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="72" />
         <source>Notify Center</source>
-        <translation type="unfinished"></translation>
+        <translation>ਨੋਟੀਫਿਕੇਸ਼ਨ ਸੈਂਟਰ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="73" />
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>ਕੋਈ</translation>
     </message>
     <message>
-        <location filename="../../gxde-zone/mainwindow.cpp" line="102"/>
+        <location filename="../../gxde-zone/mainwindow.cpp" line="102" />
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>ਬੰਦ ਕਰੋ ਵਿੰਡੋ</translation>
     </message>
 </context>
 </TS>

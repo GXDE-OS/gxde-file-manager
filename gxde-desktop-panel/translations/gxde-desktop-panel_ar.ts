@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ar">
+<TS version="2.1" language="ar_EG">
 <context>
     <name>CanvasGridView</name>
     <message>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../view/canvasgridview.cpp" line="2467"/>
         <source>Hide Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>إخفاء الأيقونة</translation>
     </message>
     <message>
         <location filename="../view/canvasgridview.cpp" line="2520"/>
@@ -87,12 +87,12 @@
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>وضع العرض</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
         <source>Show weather report</source>
-        <translation type="unfinished"></translation>
+        <translation>إظهار تقرير الطقس</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
@@ -107,27 +107,27 @@
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
         <source>Keep Aspect Ratio By Expanding</source>
-        <translation type="unfinished"></translation>
+        <translation>حفظ نسبة العرض إلى الارتفاع من خلال التوسع</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
         <source>Ignore Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>تجاهل نسبة العرض إلى الارتفاع</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
         <source>Keep Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>حفظ نسبة العرض إلى الارتفاع</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
         <source>Center</source>
-        <translation type="unfinished"></translation>
+        <translation>مركز</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
         <source>Background Spanned</source>
-        <translation type="unfinished"></translation>
+        <translation>الخلفية الممتدة</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
@@ -200,37 +200,37 @@
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
         <source>Screen Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>لقطة الشاشة</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
         <source>Screen Record</source>
-        <translation type="unfinished"></translation>
+        <translation>تسجيل الشاشة</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
         <source>Screen OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>OCR الشاشة</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
         <source>Screen Scroll</source>
-        <translation type="unfinished"></translation>
+        <translation>تمرير الشاشة</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
         <source>Color Picker</source>
-        <translation type="unfinished"></translation>
+        <translation>اختيار اللون</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>مراقب النظام</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
         <source>Notify Center</source>
-        <translation type="unfinished"></translation>
+        <translation>مركز الإشعارات</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>

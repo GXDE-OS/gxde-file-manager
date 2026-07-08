@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="da">
+<TS version="2.1" language="da_DK">
 <context>
     <name>CanvasGridView</name>
     <message>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../view/canvasgridview.cpp" line="2467"/>
         <source>Hide Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Skjul ikon</translation>
     </message>
     <message>
         <location filename="../view/canvasgridview.cpp" line="2520"/>
@@ -87,12 +87,12 @@
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Visningsmode</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
         <source>Show weather report</source>
-        <translation type="unfinished"></translation>
+        <translation>Vis vejrrapport</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
@@ -107,27 +107,27 @@
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
         <source>Keep Aspect Ratio By Expanding</source>
-        <translation type="unfinished"></translation>
+        <translation>Bevar aspektforhold ved at udvide</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
         <source>Ignore Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorer aspektforhold</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
         <source>Keep Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>Bevar aspektforhold</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
         <source>Center</source>
-        <translation type="unfinished"></translation>
+        <translation>Center</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
         <source>Background Spanned</source>
-        <translation type="unfinished"></translation>
+        <translation>Baggrund spændt</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
@@ -200,37 +200,37 @@
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
         <source>Screen Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Skærmbillede</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
         <source>Screen Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Skærmoptagelse</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
         <source>Screen OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>Skærm OCR</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
         <source>Screen Scroll</source>
-        <translation type="unfinished"></translation>
+        <translation>Skærmrulle</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
         <source>Color Picker</source>
-        <translation type="unfinished"></translation>
+        <translation>Farvevælger</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>Systemmonitor</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
         <source>Notify Center</source>
-        <translation type="unfinished"></translation>
+        <translation>Meddelelsescenter</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>

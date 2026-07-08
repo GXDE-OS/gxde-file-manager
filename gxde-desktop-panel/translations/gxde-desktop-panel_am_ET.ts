@@ -11,7 +11,7 @@
     <message>
         <location filename="../view/canvasgridview.cpp" line="2449"/>
         <source>Auto merge</source>
-        <translation type="unfinished"></translation>
+        <translation>አቶ መርግ</translation>
     </message>
     <message>
         <location filename="../view/canvasgridview.cpp" line="2458"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../view/canvasgridview.cpp" line="2467"/>
         <source>Hide Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>አይምሉ አይኮን</translation>
     </message>
     <message>
         <location filename="../view/canvasgridview.cpp" line="2520"/>
@@ -31,7 +31,7 @@
     <message>
         <location filename="../view/canvasgridview.cpp" line="2522"/>
         <source>Wallpaper and Screensaver</source>
-        <translation type="unfinished"></translation>
+        <translation>ስንፍ እና ስክርንሳቭር</translation>
     </message>
     <message>
         <location filename="../view/canvasgridview.cpp" line="2603"/>
@@ -82,77 +82,77 @@
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="440"/>
         <source>Wallpaper Slideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>የጫፍ ቀለም የሚያሳይ ጫፍ</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="443"/>
         <source>Display Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>የስክርዳን አይነት</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="444"/>
         <source>Show weather report</source>
-        <translation type="unfinished"></translation>
+        <translation>የህዋም ሪፖርት ማነጋገር</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="470"/>
         <source>When login</source>
-        <translation type="unfinished"></translation>
+        <translation>ከማግኘት በፊት</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="472"/>
         <source>When wakeup</source>
-        <translation type="unfinished"></translation>
+        <translation>ከማስተካከል በፊት</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="490"/>
         <source>Keep Aspect Ratio By Expanding</source>
-        <translation type="unfinished"></translation>
+        <translation>በማስተካከል የአስፔክት ቅዱ ማስተካከል</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="491"/>
         <source>Ignore Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>የአስፔክት ቅዱ ማስተካከል አግኝቶ</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="492"/>
         <source>Keep Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>የአስፔክት ቅዱ ማስተካከል</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="493"/>
         <source>Center</source>
-        <translation type="unfinished"></translation>
+        <translation>ማንሳት</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="494"/>
         <source>Background Spanned</source>
-        <translation type="unfinished"></translation>
+        <translation>የባህል ባሕር የሚያሳይ ጫፍ</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="555"/>
         <source>Require a password on wakeup</source>
-        <translation type="unfinished"></translation>
+        <translation>ከማስተካከል በፊት የይለፍ ቃል አስፈላጊ</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="580"/>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>አይሰምም</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="581"/>
         <source>Wait:</source>
-        <translation type="unfinished"></translation>
+        <translation>ደግሞ ይጠቀሙ:</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Wallpaper</source>
-        <translation type="unfinished"></translation>
+        <translation>ጫፍ</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="609"/>
         <source>Screensaver</source>
-        <translation type="unfinished"></translation>
+        <translation>የስክርዳን ማስተካከል</translation>
     </message>
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="671"/>
@@ -167,7 +167,7 @@
     <message>
         <location filename="../../gxde-wallpaper-chooser/frame.cpp" line="700"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>መግባት</translation>
     </message>
 </context>
 <context>
@@ -200,37 +200,37 @@
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="65"/>
         <source>Screen Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>ስክርን ሾት</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="66"/>
         <source>Screen Record</source>
-        <translation type="unfinished"></translation>
+        <translation>ስክርን ሪኮርድ</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="67"/>
         <source>Screen OCR</source>
-        <translation type="unfinished"></translation>
+        <translation>ስክርን OCR</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="68"/>
         <source>Screen Scroll</source>
-        <translation type="unfinished"></translation>
+        <translation>ስክርን ስኮል</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="69"/>
         <source>Color Picker</source>
-        <translation type="unfinished"></translation>
+        <translation>ስንት ማስገባት</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="71"/>
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>ስስተም ማስተካከል</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="72"/>
         <source>Notify Center</source>
-        <translation type="unfinished"></translation>
+        <translation>ማስታወቂያ ማኅደር</translation>
     </message>
     <message>
         <location filename="../../gxde-zone/mainwindow.cpp" line="73"/>
