@@ -37,8 +37,6 @@ Build-Depends:
  libxcb-util0-dev,
  deepin-gettext-tools,
  libkf6codecs-dev,
-# deepin-anything-dev,
-# deepin-anything-server-dev,
  libudisks2-qt6-dev,
  libxrender-dev,
  libmtdev-dev,
@@ -49,7 +47,8 @@ Build-Depends:
  libwebp-dev,
  libgxmr-qt6-dev,
  qt6-scxml-dev,
- liblayershellqtinterface-dev
+ liblayershellqtinterface-dev,
+ libdtk6gui-dev,
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
