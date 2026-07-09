@@ -478,8 +478,8 @@ DFileManagerWindow::DFileManagerWindow(const DUrl &fileUrl, QWidget *parent)
 
     /// init global AppController
 //    Q_UNUSED(AppController::instance());
-    // 显式带上min/max/close的窗口hint，否则Wayland下min/max/close不可见
-    setWindowFlags(windowFlags() | Qt::FramelessWindowHint
+    // Handle window border.
+    setWindowFlags(windowFlags()
         | Qt::WindowMinimizeButtonHint
         | Qt::WindowMaximizeButtonHint
         | Qt::WindowCloseButtonHint);

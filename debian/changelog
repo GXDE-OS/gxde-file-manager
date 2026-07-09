@@ -4,8 +4,10 @@ gxde-file-manager-neo (6.2.0-gxde1) UNRELEASED; urgency=medium
   * 文件管理器主窗口新增Wayland适配
   * 修复Treeland下无法重命名、右键菜单位置与显示异常等问题
   * 优化了文件管理器的窗口宽高记忆逻辑
+  * Wayland下修复圆角、阴影、原生最大化/恢复动画
+  * 优化了Wayland平台判定逻辑
 
- -- CharOfString <markus_verify@126.com>  Mon, 06 Jul 2026 15:04:08 +0800
+ -- CharOfString <markus_verify@126.com>  Fri, 10 Jul 2026 02:26:41 +0800
 
 gxde-file-manager-neo (6.1.0-gxde2) UNRELEASED; urgency=medium
 

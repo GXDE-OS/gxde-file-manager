@@ -111,8 +111,13 @@ int main(int argc, char *argv[])
     // 如果使用原生Wayland则不恢复DTK2_XWAYLAND，使DApplication::isWayland()返回真，这样DTK走
     // Wayland的窗体装饰路径
     const bool waylandSession = WaylandUtils::isWaylandSession();
-    const bool userForcedPlatform = !qEnvironmentVariable("QT_QPA_PLATFORM").isEmpty();
-    if (waylandSession && !userForcedPlatform) {
+
+    // New wayland platform judgement: Only if user specify X11 plugin, otherwise it is wayland.
+    const QString forcedPlatform = qEnvironmentVariable("QT_QPA_PLATFORM").trimmed();
+    const bool userForcedX11 = (forcedPlatform == QLatin1String("dxcb")
+                                || forcedPlatform == QLatin1String("xcb"));
+
+    if (waylandSession && !userForcedX11) {
         qunsetenv("DTK2_XWAYLAND");
         const QString currentDE = qEnvironmentVariable("XDG_CURRENT_DESKTOP").toLower();
         const QString dwaylandPlugin = QLibraryInfo::location(QLibraryInfo::PluginsPath)

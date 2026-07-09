@@ -33,6 +33,7 @@
 #include "views/filedialogstatusbar.h"
 
 #include <DTitlebar>
+#include <DApplication>
 #include <ddialog.h>
 #include <DPlatformWindowHandle>
 
@@ -106,6 +107,20 @@ DFileDialog::DFileDialog(QWidget *parent)
             this, &DFileDialog::selectNameFilter);
     connect(statusBar()->comboBox(), &QComboBox::textActivated,
             this, &DFileDialog::selectedNameFilterChanged);
+
+    // 这个「对话框」其实是 DFileManagerWindow 的子类，而且谁都没给它设过初始尺寸：
+    // DFileDialogHandle 只是 new 出来直接 show()，也不走 WindowManager::loadWindowState()。
+    // X11 下窗管会替未指定尺寸的窗口兜底；Wayland 下 xdg-toplevel 的首帧 configure
+    // 是 0x0（意思是「你自己定」），Qt 便直接采用 sizeHint —— 侧边栏加文件视图撑出来的
+    // 那个值会让对话框铺满整个屏幕。所以仅在 Wayland 下给一个合理的默认尺寸。
+    if (Dtk::Widget::DApplication::isWayland()) {
+        QSize available(1280, 800);
+        if (QScreen *screen = QGuiApplication::primaryScreen())
+            available = screen->availableSize();
+
+        resize(qMin(1000, available.width() * 3 / 4),
+               qMin(680, available.height() * 3 / 4));
+    }
 }
 
 DFileDialog::~DFileDialog()
