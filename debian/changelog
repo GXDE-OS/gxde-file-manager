@@ -1,9 +1,10 @@
-gxde-file-manager (5.2.13) UNRELEASED; urgency=medium
+gxde-file-manager (5.2.14) UNRELEASED; urgency=medium
 
   * 打开本地软链接目录时保留软链接路径
   * 修复在小小电脑上打开主目录文件崩溃的问题
+  * Revert "TODO:替换当前的点击选中效果，改为让被点击时hover的背景常驻而不是让字体变蓝"
 
- -- gfdgd_xi <3025613752@qq.com>  Sat, 09 May 2026 15:46:35 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Sat, 11 Jul 2026 13:41:37 +0800
 
 gxde-file-manager (5.2.11) UNRELEASED; urgency=medium
 
