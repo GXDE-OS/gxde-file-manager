@@ -1769,6 +1769,11 @@ static inline QList<QRect> wm_strut_partial_rect_list(xcb_ewmh_wm_strut_partial_
 
 static inline QRect fix_available_geometry()
 {
+    if (!Xcb::XcbMisc::instance().isValid()) {
+        qDebug() << "(X11) EWMH Check: Unavailable, skipped!!";
+        return QRect();
+    }
+
     QList<QRect> strutParialRectList;
 
     auto screens = qApp->screens();

@@ -22,8 +22,15 @@ namespace Xcb
 
 XcbMisc::XcbMisc()
 {
-    xcb_intern_atom_cookie_t *cookie = xcb_ewmh_init_atoms(QX11Info::connection(), &m_ewmh_connection);
+    xcb_connection_t *connection = QX11Info::connection();
+    if (!connection) {
+        qDebug() << "XcbMisc: no xcb connection (non-X11 session), EWMH disabled";
+        return;
+    }
+
+    xcb_intern_atom_cookie_t *cookie = xcb_ewmh_init_atoms(connection, &m_ewmh_connection);
     xcb_ewmh_init_atoms_replies(&m_ewmh_connection, cookie, Q_NULLPTR);
+    m_valid = true;
 }
 
 XcbMisc::~XcbMisc()
@@ -39,6 +46,10 @@ XcbMisc &XcbMisc::instance()
 
 void XcbMisc::set_window_type(WId winId, WindowType winType)
 {
+    if (!m_valid) {
+        return;
+    }
+
     xcb_atom_t atoms[1];
 
     switch (winType) {
@@ -56,6 +67,10 @@ void XcbMisc::set_window_type(WId winId, WindowType winType)
 
 xcb_ewmh_wm_strut_partial_t XcbMisc::get_strut_partial(xcb_window_t winId)
 {
+    if (!m_valid) {
+        return xcb_ewmh_wm_strut_partial_t {};
+    }
+
     xcb_get_property_cookie_t cookie = xcb_ewmh_get_wm_strut_partial(&m_ewmh_connection, winId);
 
     xcb_ewmh_wm_strut_partial_t strut;
@@ -71,6 +86,10 @@ xcb_ewmh_wm_strut_partial_t XcbMisc::get_strut_partial(xcb_window_t winId)
 
 void XcbMisc::set_window_transparent_input(WId winId, bool transparent)
 {
+    if (!m_valid) {
+        return;
+    }
+
     if (transparent) {
         xcb_shape_rectangles(QX11Info::connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT,
                              XCB_CLIP_ORDERING_YX_BANDED, winId, 0, 0, 0, 0);
@@ -82,6 +101,10 @@ void XcbMisc::set_window_transparent_input(WId winId, bool transparent)
 
 bool XcbMisc::is_dock_window(xcb_window_t winId)
 {
+    if (!m_valid) {
+        return false;
+    }
+
     bool is_dock = false;
     xcb_ewmh_get_atoms_reply_t name;
     xcb_generic_error_t *e;
@@ -104,6 +127,10 @@ bool XcbMisc::is_dock_window(xcb_window_t winId)
 QList<DockInfo> XcbMisc::find_dock_window()
 {
     QList<DockInfo> docks;
+
+    if (!m_valid) {
+        return docks;
+    }
 
     for (int i = 0; i < m_ewmh_connection.nb_screens; ++i) {
         xcb_ewmh_get_windows_reply_t clients;
