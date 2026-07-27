@@ -1,3 +1,13 @@
+gxde-file-manager-neo (6.3.0-gxde1) UNRELEASED; urgency=medium
+
+  * 修复了Wayland下壁纸无法通过壁纸选择器选择的问题
+  * 修复了Wayland下无法通过鼠标右键菜单设置壁纸的问题
+  * 修复了Wayland下图标绘制到顶栏和Dock下方的问题
+  * 修复了Wayland高分辨率下文件管理器侧栏图表抗锯齿失效问题
+  * 修复了Wayland下文件选择器糊满屏幕且无法拖拽的问题
+
+ -- CharOfString <root@charofstring.cc>  Tue, 28 Jul 2026 00:53:07 +0800
+
 gxde-file-manager-neo (6.2.0-gxde2) UNRELEASED; urgency=medium
 
   * 修复了Wayland下段错误的问题
