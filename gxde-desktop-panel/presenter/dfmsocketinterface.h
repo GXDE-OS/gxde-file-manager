@@ -11,6 +11,7 @@
 
 #include <QObject>
 #include <QScopedPointer>
+#include <QUrl>
 #include "../global/singleton.h"
 
 class DFMSocketInterfacePrivate;
@@ -25,10 +26,10 @@ public:
 signals:
 
 public slots:
-    void showProperty(const QStringList &paths);
+    void showProperty(const QStringList& paths);
+    void showProperty(const QList<QUrl>& urls);
 
 private:
     QScopedPointer<DFMSocketInterfacePrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), DFMSocketInterface)
 };
-

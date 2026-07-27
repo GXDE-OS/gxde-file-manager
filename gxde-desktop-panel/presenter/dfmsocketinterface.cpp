@@ -14,6 +14,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QProcess>
 
 #include <sys/types.h>
 #include <dirent.h>
@@ -120,4 +121,18 @@ void DFMSocketInterface::showProperty(const QStringList &paths)
     Q_D(DFMSocketInterface);
 
     DDesktopServices::showFileItemProperties(paths);
+}
+
+void DFMSocketInterface::showProperty(const QList<QUrl>& urls) {
+    QStringList arguments;
+    arguments.append(QStringLiteral("-p"));
+    for (const QUrl &url : urls) {
+        arguments.append(url.toString());
+    }
+
+    if (QProcess::startDetached(QStringLiteral("file-manager.sh"), arguments)) {
+        return;
+    }
+
+    QProcess::startDetached(QStringLiteral("gxde-file-manager"), arguments);
 }

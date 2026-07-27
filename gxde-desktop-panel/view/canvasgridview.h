@@ -185,6 +185,7 @@ private:
 
     void showEmptyAreaMenu(const Qt::ItemFlags &indexFlags);
     void showNormalMenu(const QModelIndex &index, const Qt::ItemFlags &indexFlags);
+    void showProperties(QWidget* parent, const DUrlList& urls);
     void launchRenameHelper(const QModelIndex &index);
     QProcess *m_renameProc = nullptr;
     bool isIndexEmpty();

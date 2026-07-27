@@ -752,7 +752,7 @@ void CanvasGridView::keyPressEvent(QKeyEvent *event)
             return;
         }
         case Qt::Key_I:
-            DFMGlobal::showPropertyDialog(nullptr, selectUrls);
+            showProperties(nullptr, selectUrls);
             return;
         default:
             break;
@@ -1346,6 +1346,25 @@ void CanvasGridView::openUrl(const DUrl &url)
     }
 
     DFileService::instance()->openFile(this, url);
+}
+
+void CanvasGridView::showProperties(QWidget *parent, const DUrlList &urls)
+{
+    if (!Wayland::LayerShellHelper::isWayland()) {
+        DFMGlobal::showPropertyDialog(parent, urls);
+        return;
+    }
+
+    QList<QUrl> propertyUrls;
+    propertyUrls.reserve(urls.size());
+    for (const DUrl &url : urls) {
+        propertyUrls.append(url);
+    }
+
+    // Ensure that desktop panel's created subwindow is regular ones and does
+    // NOT inherit the layer-shell integration.
+    // Now I have a little headache about the layer-shell thing...
+    DFMSocketInterface::instance()->showProperty(propertyUrls);
 }
 
 bool CanvasGridView::setCurrentUrl(const DUrl &url)
@@ -2729,7 +2748,7 @@ void CanvasGridView::showNormalMenu(const QModelIndex &index, const Qt::ItemFlag
         break;
         case FileManagerProperty: {
 
-            DFMGlobal::showPropertyDialog(this, this->selectedUrls());
+            showProperties(this, this->selectedUrls());
             break;
         }
         case MenuAction::Rename: {
