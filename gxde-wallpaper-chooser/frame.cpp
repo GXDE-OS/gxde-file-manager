@@ -45,6 +45,7 @@
 #include "waylandutils.h"
 
 #include <QApplication>
+#include <QDirIterator>
 #include <QScreen>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -52,7 +53,9 @@
 #include <QDebug>
 #include <QPainter>
 #include <QScrollBar>
+#include <QSet>
 #include <QScreen>
+#include <QStandardPaths>
 #include <QVBoxLayout>
 #include <QCheckBox>
 #include <QComboBox>
@@ -485,11 +488,15 @@ void Frame::initUI()
     QByteArrayList array_policy {"30", "60", "300", "600", "900", "1800", "3600", "login", "wakeup"};
 
     {
-        int current_policy_index = array_policy.indexOf(m_dbusAppearance->wallpaperSlideShow().toLatin1());
+        const bool isWayland = WaylandUtils::isWaylandPlatform();
+        const QString currentPolicy = isWayland
+            ? m_gsettings->get("wallpaperSlideshow").toString()
+            : m_dbusAppearance->wallpaperSlideShow();
+        int current_policy_index = array_policy.indexOf(currentPolicy.toLatin1());
 
         // 当值不存在此列表时插入此值
         if (current_policy_index < 0) {
-            const QString &policy = m_dbusAppearance->wallpaperSlideShow();
+            const QString &policy = currentPolicy;
 
             if (!policy.isEmpty()) {
                 array_policy.prepend(policy.toLatin1());
@@ -547,14 +554,24 @@ void Frame::initUI()
     connect(m_wallpaperCarouselCheckBox, &QCheckBox::clicked, this, [this, array_policy] (bool checked) {
         m_wallpaperCarouselControl->setVisible(checked);
 
+        QString policy;
         if (!checked) {
-            m_dbusAppearance->setWallpaperSlideShow(QString());
+            policy.clear();
         } else if (m_wallpaperCarouselControl->currentIndex() >= 0) {
-            m_dbusAppearance->setWallpaperSlideShow(array_policy.at(m_wallpaperCarouselControl->currentIndex()));
+            policy = array_policy.at(m_wallpaperCarouselControl->currentIndex());
         }
+
+        if (WaylandUtils::isWaylandPlatform())
+            m_gsettings->set("wallpaperSlideshow", policy);
+        else
+            m_dbusAppearance->setWallpaperSlideShow(policy);
     });
     connect(m_wallpaperCarouselControl, &DSegmentedControl::currentChanged, this, [this, array_policy] (int index) {
-        m_dbusAppearance->setWallpaperSlideShow(array_policy.at(index));
+        const QString policy = array_policy.at(index);
+        if (WaylandUtils::isWaylandPlatform())
+            m_gsettings->set("wallpaperSlideshow", policy);
+        else
+            m_dbusAppearance->setWallpaperSlideShow(policy);
     });
     connect(m_wallpaperDisplayMethodChooser, &QPushButton::clicked, this, [this, menu](){
         menu->exec(QPoint(QCursor::pos().x() - menu->sizeHint().width(),
@@ -695,11 +712,101 @@ void Frame::initListView()
 
 }
 
+QStringList Frame::localWallpaperPaths() const {
+    QStringList result;
+    QSet<QString> knownPaths;
+
+    const auto appendFile = [&result, &knownPaths](const QString &pathOrUrl) {
+        const QUrl url(pathOrUrl);
+        const QString localPath = url.isLocalFile() ? url.toLocalFile() : pathOrUrl;
+        const QFileInfo info(localPath);
+        if (!info.isFile() || !info.isReadable())
+            return;
+
+        const QString canonicalPath = info.canonicalFilePath();
+        if (canonicalPath.isEmpty() || knownPaths.contains(canonicalPath))
+            return;
+
+        knownPaths.insert(canonicalPath);
+        result.append(QUrl::fromLocalFile(canonicalPath).toString());
+    };
+
+    if (m_gsettings) {
+        const QStringList configured =
+            m_gsettings->get("backgroundUris").toStringList()
+            + m_gsettings->get("extraPictureUris").toStringList();
+        for (const QString &path : configured)
+            appendFile(path);
+    }
+
+    const QString genericData =
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+    const QString genericCache =
+        QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation);
+    const QStringList roots {
+        QStringLiteral("/usr/share/wallpapers"),
+        QStringLiteral("/usr/local/share/wallpapers"),
+        QStringLiteral("/usr/share/backgrounds"),
+        QStringLiteral("/usr/local/share/backgrounds"),
+        genericData + QStringLiteral("/wallpapers"),
+        genericData + QStringLiteral("/backgrounds"),
+        genericCache + QStringLiteral("/deepin/dde-daemon/appearance/custom-wallpapers")
+    };
+    const QStringList filters {
+        QStringLiteral("*.jpg"), QStringLiteral("*.jpeg"),
+        QStringLiteral("*.png"), QStringLiteral("*.bmp"),
+        QStringLiteral("*.tiff"), QStringLiteral("*.tif"),
+        QStringLiteral("*.gif")
+    };
+
+    QStringList scannedFiles;
+    for (const QString &root : roots) {
+        if (!QDir(root).exists())
+            continue;
+
+        QDirIterator it(root, filters, QDir::Files | QDir::Readable,
+                        QDirIterator::Subdirectories);
+        while (it.hasNext())
+            scannedFiles.append(it.next());
+    }
+    scannedFiles.sort(Qt::CaseInsensitive);
+    for (const QString &path : scannedFiles)
+        appendFile(path);
+
+    return result;
+}
+
+void Frame::populateWallpaperList(const QStringList &paths) {
+    for (const QString &path : paths) {
+        WallpaperItem *item = m_wallpaperList->addWallpaper(path);
+        item->setData(item->getPath());
+        item->setDeletable(m_deletableInfo.value(path));
+        item->addButton(DESKTOP_BUTTON_ID, tr("Only desktop"));
+        item->addButton(LOCK_SCREEN_BUTTON_ID, tr("Only lock screen"));
+        item->show();
+
+        connect(item, &WallpaperItem::buttonClicked,
+            this, &Frame::onItemButtonClicked);
+    }
+
+    m_wallpaperList->setFixedWidth(width());
+    m_wallpaperList->updateItemThumb();
+    m_wallpaperList->show();
+}
+
 void Frame::refreshList()
 {
     m_wallpaperList->clear();
 
     if (m_mode == WallpaperMode) {
+        // The Appearance daemon is an X11-era dependency.  In a Wayland
+        // session it may own its D-Bus name without replying, making List()
+        // wait for the default D-Bus timeout and leaving the chooser empty.
+        if (WaylandUtils::isWaylandPlatform()) {
+            populateWallpaperList(localWallpaperPaths());
+            return;
+        }
+
         QDBusPendingCall call = m_dbusAppearance->List("background");
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, call] {
@@ -743,20 +850,7 @@ void Frame::refreshList()
                 strings = processListReply(value);
             }
 
-            foreach (QString path, strings) {
-                WallpaperItem * item = m_wallpaperList->addWallpaper(path);
-                item->setData(item->getPath());
-                item->setDeletable(m_deletableInfo.value(path));
-                item->addButton(DESKTOP_BUTTON_ID, tr("Only desktop"));
-                item->addButton(LOCK_SCREEN_BUTTON_ID, tr("Only lock screen"));
-                item->show();
-
-                connect(item, &WallpaperItem::buttonClicked, this, &Frame::onItemButtonClicked);
-            }
-
-            m_wallpaperList->setFixedWidth(width());
-            m_wallpaperList->updateItemThumb();
-            m_wallpaperList->show();
+            populateWallpaperList(strings);
         });
     }
 #ifndef DISABLE_SCREENSAVER

@@ -44,6 +44,7 @@
 #include <QProcess>
 #include <QGSettings>
 #include <QFileDialog>
+#include <QGuiApplication>
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QDesktopServices>
@@ -701,6 +702,37 @@ QString FileUtils::defaultTerminalPath()
 
 bool FileUtils::setBackground(const QString &pictureFilePath)
 {
+    const QFileInfo pictureInfo(pictureFilePath);
+    if (!pictureInfo.isFile() || !pictureInfo.isReadable())
+        return false;
+
+    const QString platformName = QGuiApplication::platformName();
+    const bool isWayland = platformName.contains(QStringLiteral("wayland"),
+        Qt::CaseInsensitive)
+        || qEnvironmentVariable("XDG_SESSION_TYPE").compare(
+               QStringLiteral("wayland"), Qt::CaseInsensitive) == 0;
+
+    if (isWayland) {
+        static const QByteArray appearanceSchema("com.deepin.dde.appearance");
+        if (!QGSettings::isSchemaInstalled(appearanceSchema)) {
+            qWarning() << "Cannot set wallpaper: missing GSettings schema"
+                       << appearanceSchema;
+            return false;
+        }
+
+        QGSettings settings(appearanceSchema);
+        QStringList uris = settings.get("backgroundUris").toStringList();
+        const QString wallpaperUri = QUrl::fromLocalFile(
+            pictureInfo.canonicalFilePath()).toString();
+
+        if (uris.isEmpty())
+            uris.append(wallpaperUri);
+        else
+            uris[0] = wallpaperUri;
+
+        return settings.trySet("backgroundUris", uris);
+    }
+
     QDBusMessage msg = QDBusMessage::createMethodCall("com.deepin.daemon.Appearance", "/com/deepin/daemon/Appearance", "com.deepin.daemon.Appearance", "Set");
     msg.setArguments({"Background", pictureFilePath});
     QDBusConnection::sessionBus().asyncCall(msg);

@@ -130,6 +130,8 @@ private:
     void initSize();
     void initListView();
     void refreshList();
+    QStringList localWallpaperPaths() const;
+    void populateWallpaperList(const QStringList &paths);
     void onItemPressed(const QString &data);
     void onItemButtonClicked(const QString &buttonID);
     QStringList processListReply(const QString &reply);
