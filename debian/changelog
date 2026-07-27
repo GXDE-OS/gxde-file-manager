@@ -1,3 +1,9 @@
+gxde-file-manager-neo (6.3.0-gxde2) UNRELEASED; urgency=medium
+
+  * 修复了Wayland下右键「属性」后弹窗占满全屏的问题
+
+ -- CharOfString <root@charofstring.cc>  Tue, 28 Jul 2026 01:21:43 +0800
+
 gxde-file-manager-neo (6.3.0-gxde1) UNRELEASED; urgency=medium
 
   * 修复了Wayland下壁纸无法通过壁纸选择器选择的问题
