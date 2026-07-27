@@ -153,12 +153,14 @@ void DFMSideBarItemPrivate::init()
 
 QPixmap DFMSideBarItemPrivate::icon() const
 {
-    return ThemeConfig::instace()->pixmap(iconGroup, iconKey, getState());
+    return ThemeConfig::instace()->pixmap(
+        iconGroup, iconKey, getState(), q_ptr->devicePixelRatioF());
 }
 
 QPixmap DFMSideBarItemPrivate::icon(ThemeConfig::State state) const
 {
-    return ThemeConfig::instace()->pixmap(iconGroup, iconKey, state);
+    return ThemeConfig::instace()->pixmap(
+        iconGroup, iconKey, state, q_ptr->devicePixelRatioF());
 }
 
 QPixmap DFMSideBarItemPrivate::reorderLine() const

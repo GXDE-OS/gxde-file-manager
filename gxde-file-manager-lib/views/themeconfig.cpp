@@ -213,15 +213,16 @@ static QPixmap pixmapByIcon(const QIcon &icon, qreal scaleRatio)
     if (icon.isNull())
         return QPixmap();
 
-    const QString pixmap_key = QString("%1@%1").arg(icon.cacheKey()).arg(scaleRatio);
+    const QString pixmap_key = QString("%1@%2").arg(icon.cacheKey()).arg(scaleRatio);
     QPixmap pixmap;
     if (QPixmapCache::find(pixmap_key, &pixmap))
         return pixmap;
 
-    const QSize &size = icon.availableSizes().first();
-    QPixmap p = icon.pixmap(size).scaledToHeight(size.height() * scaleRatio, Qt::SmoothTransformation);
+    const QList<QSize> sizes = icon.availableSizes();
+    const QSize logicalSize = sizes.isEmpty() ? QSize(16, 16) : sizes.first();
 
-    p.setDevicePixelRatio(scaleRatio);
+    // Fix icon tearing under HDPI
+    QPixmap p = icon.pixmap(logicalSize, scaleRatio);
 
     if (QPixmapCache::insert(pixmap_key, p))
         _ThemeConfig::cachedPixmap.append(pixmap_key);
