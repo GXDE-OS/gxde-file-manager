@@ -24,7 +24,11 @@
 #include <QElapsedTimer>
 #include <QCursor>
 #include <QMouseEvent>
+#include <QMenu>
+#include <QPointer>
+#include <QResizeEvent>
 #include <QSet>
+#include <QTimer>
 
 #include <DLog>
 #include <DApplication>
@@ -32,6 +36,7 @@
 #include <unistd.h>
 
 #include <LayerShellQt/Shell>
+#include <LayerShellQt/Window>
 
 #include <dfmglobal.h>
 #include <dfmapplication.h>
@@ -219,16 +224,49 @@ int main(int argc, char *argv[])
 
     protected:
         bool eventFilter(QObject* obj, QEvent* event) override {
+            QWindow* popupWindow = qobject_cast<QWindow*>(obj);
+            if (popupWindow && event->type() == QEvent::Resize) {
+                const QSize targetSize = popupWindow
+                    ->property("_gxde_popup_target_size").toSize();
+                const QSize requestedSize =
+                    static_cast<QResizeEvent*>(event)->size();
+                if (targetSize.isValid() && requestedSize != targetSize
+                        && !popupWindow
+                            ->property("_gxde_popup_size_correcting").toBool()) {
+                    qWarning() << "GXDE_POPUP_TRACE resizeCorrect"
+                               << "requested" << requestedSize
+                               << "target" << targetSize;
+                    popupWindow->setProperty(
+                        "_gxde_popup_size_correcting", true);
+                    popupWindow->resize(targetSize);
+                    popupWindow->setProperty(
+                        "_gxde_popup_size_correcting", false);
+                }
+            }
+
             QWidget* w = qobject_cast<QWidget*>(obj);
             if (w && w->windowType() == Qt::Popup) {
                 QWindow* wh = w->windowHandle();
+                const bool isRootPopup =
+                    !w->property("_gxde_popup_screen").toString().isEmpty();
                 const bool hasTransientParent = wh && wh->transientParent();
-                const bool isKnownSubMenu = hasTransientParent
-                    || m_subMenuPopups.contains(w);
+                const bool isKnownSubMenu = !isRootPopup && (hasTransientParent
+                    || m_subMenuPopups.contains(w));
 
                 if (event->type() == QEvent::Show) {
-                    const bool isSubMenu = hasTransientParent
-                        || hasOtherVisiblePopup(w);
+                    const bool isSubMenu = !isRootPopup && (hasTransientParent
+                        || hasOtherVisiblePopup(w));
+
+                    if (isSubMenu) {
+                        const QPointer<QMenu> subMenu(qobject_cast<QMenu*>(w));
+                        QTimer::singleShot(0, this, [this, subMenu]() {
+                            if (!subMenu || !subMenu->isVisible()) {
+                                return;
+                            }
+
+                            adjustFlippedSubMenuLayerMargin(subMenu);
+                        });
+                    }
 
                     m_visiblePopups.insert(w);
                     if (isSubMenu) {
@@ -239,7 +277,32 @@ int main(int argc, char *argv[])
                         m_rootPopups.insert(w);
                     }
 
-                    Wayland::LayerShellHelper::fixPopupLayerShell(w);
+                    QScreen* popupScreen = nullptr;
+                    if (isSubMenu) {
+                        QMenu* subMenu = qobject_cast<QMenu*>(w);
+                        QMenu* parentMenu = parentMenuFor(subMenu);
+                        QWindow* parentWindow = parentMenu
+                            ? parentMenu->windowHandle() : nullptr;
+                        if (parentWindow) {
+                            popupScreen = parentWindow->screen();
+                        } else if (wh && wh->transientParent()) {
+                            popupScreen = wh->transientParent()->screen();
+                        }
+                    } else {
+                        const QString requestedScreen =
+                            w->property("_gxde_popup_screen").toString();
+                        for (QScreen* screen : QGuiApplication::screens()) {
+                            if (screen && screen->name() == requestedScreen) {
+                                popupScreen = screen;
+                                break;
+                            }
+                        }
+                    }
+                    if (!popupScreen) {
+                        popupScreen = QGuiApplication::screenAt(QCursor::pos());
+                    }
+
+                    Wayland::LayerShellHelper::fixPopupLayerShell(w, popupScreen);
                 } else if (event->type() == QEvent::MouseMove) {
                     QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
                     m_lastCursorPos = mouseEvent->globalPos();
@@ -305,6 +368,61 @@ int main(int argc, char *argv[])
         }
 
     private:
+        QMenu* parentMenuFor(QMenu* subMenu) const {
+            if (!subMenu) {
+                return nullptr;
+            }
+
+            for (QWidget* popup : m_visiblePopups) {
+                QMenu* menu = qobject_cast<QMenu*>(popup);
+                QAction* action = menu ? menu->activeAction() : nullptr;
+                if (action && action->menu() == subMenu) {
+                    return menu;
+                }
+            }
+
+            return nullptr;
+        }
+
+        // For menu flipped left, there is a gap between parent and sub.
+        // We force cancel its shadow and move rightward (equal amount of shadow margin)
+        void adjustFlippedSubMenuLayerMargin(QMenu* subMenu) const {
+            if (!subMenu || !Wayland::LayerShellHelper::isWayland()) {
+                return;
+            }
+
+            QMenu* parentMenu = parentMenuFor(subMenu);
+            QAction* parentAction = parentMenu ? parentMenu->activeAction() : nullptr;
+            if (!parentAction) {
+                return;
+            }
+
+            QWindow* parentWindow = parentMenu->windowHandle();
+            QWindow* subMenuWindow = subMenu->windowHandle();
+            LayerShellQt::Window* parentLayer = parentWindow
+                ? LayerShellQt::Window::get(parentWindow) : nullptr;
+            LayerShellQt::Window* subMenuLayer = subMenuWindow
+                ? LayerShellQt::Window::get(subMenuWindow) : nullptr;
+            if (!parentLayer || !subMenuLayer) {
+                return;
+            }
+
+            const QMargins parentLayerMargins = parentLayer->margins();
+            QMargins subMenuLayerMargins = subMenuLayer->margins();
+            if (subMenuLayerMargins.left() >= parentLayerMargins.left()) {
+                return;
+            }
+
+            // QWidget::move() does not determine the final position of an
+            // independent layer surface.  Keep DTK's contents margins intact
+            // (QMenu action geometry depends on them), and overlap both shadow
+            // margins by shifting the actual layer surface instead.
+            subMenuLayerMargins.setLeft(subMenuLayerMargins.left()
+                + subMenu->contentsMargins().right()
+                + parentMenu->contentsMargins().left());
+            subMenuLayer->setMargins(subMenuLayerMargins);
+        }
+
         bool hasOtherVisiblePopup(QWidget* current) const {
             for (QWidget* popup : m_visiblePopups) {
                 if (popup && popup != current && popup->isVisible()) {

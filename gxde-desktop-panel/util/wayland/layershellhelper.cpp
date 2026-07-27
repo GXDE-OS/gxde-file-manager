@@ -9,6 +9,7 @@
 
 #include "layershellhelper.h"
 
+#include <QCursor>
 #include <QDebug>
 #include <QGuiApplication>
 #include <QScreen>
@@ -263,7 +264,7 @@ void LayerShellHelper::setPreviewBackdropRole(QWidget* widget,
         LayerShellQt::Window::KeyboardInteractivityNone);
 }
 
-void LayerShellHelper::fixPopupLayerShell(QWidget* popup) {
+void LayerShellHelper::fixPopupLayerShell(QWidget* popup, QScreen* screen) {
     if (popup == nullptr) {
         qWarning() << "The popup pointer that needs a desktop role passed in"
             << "is a null pointer!!";
@@ -284,21 +285,107 @@ void LayerShellHelper::fixPopupLayerShell(QWidget* popup) {
         return;
     }
 
+    // A layer surface belongs to one wl_output and its margins are relative to
+    // that output, not to Qt's virtual-desktop origin.  In a multi-monitor
+    // layout popup->pos() is still a global position, so using it directly can
+    // produce an out-of-range margin on a non-primary output.  Treeland may
+    // then move the popup to another output and stretch it to satisfy the
+    // anchors.
+    if (!screen && window->transientParent()) {
+        screen = window->transientParent()->screen();
+    }
+    if (!screen) {
+        screen = QGuiApplication::screenAt(QCursor::pos());
+    }
+    if (!screen) {
+        screen = window->screen();
+    }
+    if (!screen) {
+        screen = QGuiApplication::primaryScreen();
+    }
+    if (screen) {
+        window->setScreen(screen);
+
+        // QMenu performs another popup-screen selection after the QWidget
+        // Show event.  With mixed-DPI adjacent outputs that late selection can
+        // overwrite the screen fixed above before LayerShellQt creates the
+        // layer surface.  Lock the popup to the requested output for its whole
+        // lifetime; the direct screenChanged callback runs before
+        // get_layer_surface reads QWindow::screen().
+        if (!window->property("_gxde_popup_screen_locked").toBool()) {
+            window->setProperty("_gxde_popup_screen_locked", true);
+            const QString targetScreenName = screen->name();
+            const QSize targetPopupSize = popup->size();
+            window->setProperty("_gxde_popup_target_size", targetPopupSize);
+            QObject::connect(window, &QWindow::screenChanged, popup,
+                [window, targetScreenName, targetPopupSize](QScreen* changedScreen) {
+                    qWarning() << "GXDE_POPUP_TRACE screenChanged"
+                               << "changedTo" << (changedScreen
+                                      ? changedScreen->name() : QString())
+                               << "lockedTo" << targetScreenName;
+                    if (changedScreen
+                            && changedScreen->name() == targetScreenName) {
+                        window->resize(targetPopupSize);
+                        return;
+                    }
+
+                    for (QScreen* candidate : QGuiApplication::screens()) {
+                        if (candidate && candidate->name() == targetScreenName) {
+                            window->setScreen(candidate);
+                            // setScreen() recreates the popup platform window
+                            // and resets its native size to QWindow's 640x480
+                            // default.  Restore QMenu's final QWidget size
+                            // before LayerShellQt sends set_size.
+                            window->resize(targetPopupSize);
+                            break;
+                        }
+                    }
+                }, Qt::DirectConnection);
+        }
+    }
+
+    qWarning() << "GXDE_POPUP_TRACE layer"
+               << "globalPos" << popup->pos()
+               << "popupSize" << popup->size()
+               << "requestedScreen" << (screen ? screen->name() : QString())
+               << "requestedGeometry" << (screen ? screen->geometry() : QRect())
+               << "windowScreenAfterSet" << (window->screen()
+                      ? window->screen()->name() : QString());
+
     LayerShellQt::Window* target_layer_shell_window = LayerShellQt::Window::get(window);
     if (!target_layer_shell_window) {
         return;
     }
 
+    target_layer_shell_window->setScreenConfiguration(
+        LayerShellQt::Window::ScreenFromQWindow);
+
     // 把菜单定位到它期望出现的位置, 即右键光标处
     // 坏消息是若不设anchor，Treeland 会把它摆到屏幕正中
     // 备用方案: 锚定左上角，再用 margin 偏移到鼠标位置
-    // 注: popup->pos()为QMenu请求的弹出位置
-    const QPoint pos = popup->pos();
+    // 注: popup->pos()为QMenu请求的桌面全局位置；layer-shell margin 则以
+    // 当前输出左上角为原点。先把菜单限制在目标输出，再转换成输出局部坐标。
+    QPoint globalPos = popup->pos();
+    QPoint outputPos = globalPos;
+    if (screen) {
+        const QRect outputGeometry = screen->geometry();
+        const int maxX = qMax(outputGeometry.left(),
+            outputGeometry.right() - popup->width() + 1);
+        const int maxY = qMax(outputGeometry.top(),
+            outputGeometry.bottom() - popup->height() + 1);
+        globalPos.setX(qBound(outputGeometry.left(), globalPos.x(), maxX));
+        globalPos.setY(qBound(outputGeometry.top(), globalPos.y(), maxY));
+        outputPos = globalPos - outputGeometry.topLeft();
+    }
+    qWarning() << "GXDE_POPUP_TRACE margins"
+               << "clampedGlobalPos" << globalPos
+               << "outputPos" << outputPos;
     LayerShellQt::Window::Anchors anchors;
     anchors |= LayerShellQt::Window::AnchorTop;
     anchors |= LayerShellQt::Window::AnchorLeft;
     target_layer_shell_window->setAnchors(anchors);
-    target_layer_shell_window->setMargins(QMargins(pos.x(), pos.y(), 0, 0));
+    target_layer_shell_window->setMargins(
+        QMargins(outputPos.x(), outputPos.y(), 0, 0));
     target_layer_shell_window->setLayer(LayerShellQt::Window::LayerOverlay);
     target_layer_shell_window->setExclusiveZone(0);
 
@@ -306,7 +393,10 @@ void LayerShellHelper::fixPopupLayerShell(QWidget* popup) {
     // 否则它作为独立 layer surface 会 requestActive 抢走激活态
     // Treeland 会把父菜单setActivate(false))，且关闭时 requestInactive把激活
     // 甩给别的窗口，后果就是整条菜单关掉
-    const bool isSubMenu = window->transientParent() != nullptr;
+    const bool isRootPopup =
+        !popup->property("_gxde_popup_screen").toString().isEmpty();
+    const bool isSubMenu = !isRootPopup
+        && window->transientParent() != nullptr;
     target_layer_shell_window->setKeyboardInteractivity(
         isSubMenu ? LayerShellQt::Window::KeyboardInteractivityNone
             : LayerShellQt::Window::KeyboardInteractivityOnDemand);
