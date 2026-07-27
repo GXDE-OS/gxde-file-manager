@@ -1,3 +1,10 @@
+gxde-file-manager-neo (6.3.0-gxde3) UNRELEASED; urgency=medium
+
+  * 修复了Wayland下右键菜单翻到左侧时与主菜单仍有缝隙的问题
+  * 修复了Wayland双屏下在屏幕边缘激活菜单后菜单被绘制到另一块屏幕的问题
+
+ -- CharOfString <root@charofstring.cc>  Tue, 28 Jul 2026 02:28:12 +0800
+
 gxde-file-manager-neo (6.3.0-gxde2) UNRELEASED; urgency=medium
 
   * 修复了Wayland下右键「属性」后弹窗占满全屏的问题
