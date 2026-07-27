@@ -94,9 +94,25 @@ void Desktop::onBackgroundEnableChanged()
 
     if (d->background->isEnabled()) {
         QLabel *background = d->background->backgroundForScreen(qApp->primaryScreen());
-        d->screenFrame.setAttribute(Qt::WA_NativeWindow, false);
-        d->screenFrame.setParent(background);
-        d->screenFrame.move(0, 0);
+
+        if (Wayland::LayerShellHelper::isWayland()) {
+            // So under Wayland, there are two steps:
+            // One, wallpaper shall ignore the layershell exclusive zones, so
+            // we ensure that wallpaper lays behind top-panel & dock.
+            // Two, desktop icons shall respect exclusive zones, so that those
+            // icons are not overflowing to panel & dock zones.
+            // To do this we need to separete the wallpaper layer into two
+            // components: one for wallpaper, and one for desktop icons.
+            d->screenFrame.setParent(nullptr);
+            d->screenFrame.QWidget::setGeometry(qApp->primaryScreen()->geometry());
+            Wayland::LayerShellHelper::setDesktopIconsRole(
+                &d->screenFrame, qApp->primaryScreen(),
+                QStringLiteral("dde-shell/desktop-icons"));
+        } else {
+            d->screenFrame.setAttribute(Qt::WA_NativeWindow, false);
+            d->screenFrame.setParent(background);
+            d->screenFrame.move(0, 0);
+        }
 
         // 桌面图标区域也收到鼠标事件后会触发activateOnMousePress
         // 这会间接激活其父窗口，也就是壁纸，需要设置WA_ShowWithoutActivating
@@ -133,9 +149,9 @@ void Desktop::onBackgroundEnableChanged()
         d->screenFrame.setAttribute(Qt::WA_ShowWithoutActivating, true);
         if (Wayland::LayerShellHelper::isWayland()) {
             // Treelan的Wayland会话支持
-            Wayland::LayerShellHelper::setDesktopRole(
+            Wayland::LayerShellHelper::setDesktopIconsRole(
                 &d->screenFrame, qApp->primaryScreen(),
-                QStringLiteral("dde-shell/desktop"));
+                QStringLiteral("dde-shell/desktop-icons"));
         } else {
             // 传统X11会话支持
             Xcb::XcbMisc::instance().set_window_type(d->screenFrame.winId(), Xcb::XcbMisc::Desktop);

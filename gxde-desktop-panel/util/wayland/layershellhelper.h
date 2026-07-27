@@ -22,6 +22,8 @@ public:
     static bool isTreeland();
     static void setDesktopRole(QWidget* widget, QScreen* screen,
         const QString& scope);
+    static void setDesktopIconsRole(QWidget* widget, QScreen* screen,
+        const QString& scope);
     static void setChooserRole(QWidget* widget, QScreen* screen,
         const QString& scope);
     static void setPreviewBackdropRole(QWidget* widget, QScreen* screen,

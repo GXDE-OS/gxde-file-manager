@@ -1919,6 +1919,14 @@ void CanvasGridView::initUI()
 
 void CanvasGridView::updateGeometry(const QRect &geometry)
 {
+    if (Wayland::LayerShellHelper::isWayland() && isWindow()) {
+        d->canvasRect = rect();
+        d->waterMaskFrame->updatePosition();
+        updateCanvas();
+        repaint();
+        return;
+    }
+
     auto newGeometry =  getValidNewGeometry(geometry, this->geometry());
     setGeometry(qApp->primaryScreen()->geometry());
     d->canvasRect = newGeometry;
@@ -2171,8 +2179,11 @@ void CanvasGridView::initConnection()
 
 void CanvasGridView::updateCanvas()
 {
-    auto outRect = qApp->primaryScreen()->geometry();
-    auto inRect = d->canvasRect;
+    const bool compositorManagedWorkArea =
+        Wayland::LayerShellHelper::isWayland() && isWindow();
+    auto outRect = compositorManagedWorkArea
+        ? rect() : qApp->primaryScreen()->geometry();
+    auto inRect = compositorManagedWorkArea ? rect() : d->canvasRect;
 
     itemDelegate()->updateItemSizeHint();
     auto itemSize = itemDelegate()->sizeHint(QStyleOptionViewItem(), QModelIndex());
@@ -2183,7 +2194,7 @@ void CanvasGridView::updateCanvas()
     geometryMargins.setTop(inRect.top() - outRect.top());
     geometryMargins.setBottom(outRect.bottom() - inRect.bottom());
 
-    if (3 == d->dbusDock->hideMode()) {
+    if (!compositorManagedWorkArea && 3 == d->dbusDock->hideMode()) {
         auto margin = 80;
         auto iconSize = d->dbusDock->iconSize();
         if (iconSize <= 30) {

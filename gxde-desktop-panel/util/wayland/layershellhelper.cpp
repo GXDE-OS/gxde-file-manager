@@ -90,6 +90,55 @@ void LayerShellHelper::setDesktopRole(QWidget* widget, QScreen* screen,
         LayerShellQt::Window::KeyboardInteractivityOnDemand);
 }
 
+void LayerShellHelper::setDesktopIconsRole(QWidget* widget, QScreen* screen,
+        const QString& scope) {
+    if (!widget || !isWayland()) {
+        qWarning()
+            << "(Wayland) LayerShell: Cannot set the desktop icons layer-shell role"
+            << widget;
+        return;
+    }
+
+    widget->setWindowFlag(Qt::FramelessWindowHint, true);
+    widget->setAttribute(Qt::WA_NativeWindow, true);
+    widget->createWinId();
+
+    QWindow* window = widget->windowHandle();
+    if (!window) {
+        qWarning() << "(Wayland) LayerShell: Invalid desktop icons layer window handle";
+        return;
+    }
+
+    if (screen) {
+        window->setScreen(screen);
+    }
+
+    LayerShellQt::Window* layerWindow = LayerShellQt::Window::get(window);
+    if (!layerWindow) {
+        qWarning() << "Failed to get layer-shell window for desktop icons";
+        return;
+    }
+
+    LayerShellQt::Window::Anchors anchors;
+    anchors |= LayerShellQt::Window::AnchorTop;
+    anchors |= LayerShellQt::Window::AnchorBottom;
+    anchors |= LayerShellQt::Window::AnchorLeft;
+    anchors |= LayerShellQt::Window::AnchorRight;
+
+    layerWindow->setScope(scope);
+    layerWindow->setScreenConfiguration(LayerShellQt::Window::ScreenFromQWindow);
+
+    // Keep icons above the wallpaper & below ordinary application windows
+    layerWindow->setLayer(LayerShellQt::Window::LayerBottom);
+    layerWindow->setAnchors(anchors);
+
+    // A zero exclusive zone makes WM place this surface inside
+    // the usable area left w/ a positive exclusive zone.
+    layerWindow->setExclusiveZone(0);
+    layerWindow->setKeyboardInteractivity(
+        LayerShellQt::Window::KeyboardInteractivityOnDemand);
+}
+
 void LayerShellHelper::setChooserRole(QWidget* widget, QScreen* screen,
         const QString& scope) {
     // 安全检查
