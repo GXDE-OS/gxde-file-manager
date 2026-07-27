@@ -175,9 +175,13 @@ void Frame::show()
     if (!WaylandUtils::isWaylandPlatform())
         m_mouseArea->registerRegion();
     auto actionList = m_wallpaperDisplayMethodChooserActionGroup->actions();
-    auto method = m_backgroundHelper->getWallpaperDisplayMethods();
-    if (actionList.count() >= method + 1) {
-        actionList.at(method)->setChecked(true);
+    BackgroundHelper* backgroundHelper = m_backgroundHelper
+        ? m_backgroundHelper : BackgroundHelper::getDesktopInstance();
+    if (backgroundHelper) {
+        auto method = backgroundHelper->getWallpaperDisplayMethods();
+        if (method >= 0 && actionList.count() > method) {
+            actionList.at(method)->setChecked(true);
+        }
     }
     DBlurEffectWidget::show();
 }
@@ -559,8 +563,10 @@ void Frame::initUI()
     connect(m_wallpaperDisplayMethodChooserActionGroup, &QActionGroup::triggered, this, [this](QAction *action){
         int index = m_wallpaperDisplayMethodChooserActionGroup->actions().indexOf(action);
         BackgroundHelper::WallpaperDisplayMethods choose = static_cast<BackgroundHelper::WallpaperDisplayMethods>(index);
-        m_backgroundHelper->setWallpaperDisplayMethods(choose);
-        m_backgroundHelper->refreshBackground();
+        BackgroundHelper* backgroundHelper = m_backgroundHelper
+            ? m_backgroundHelper : BackgroundHelper::getDesktopInstance();
+        if (backgroundHelper)
+            backgroundHelper->setWallpaperDisplayMethods(choose);
     });
     connect(m_wallpaperShowWeatherReport, &QCheckBox::clicked, this, [this] (bool checked) {
         QFile file(QDir::homePath() + "/.config/GXDE/dde-file-manager/weatherReport");
@@ -576,8 +582,15 @@ void Frame::initUI()
             file.write("1");
             file.close();
         }
-        m_backgroundHelper->refreshBackground();
-        m_dbusDeepinWM->SetTransientBackground(desktopBackground());
+        BackgroundHelper* backgroundHelper = m_backgroundHelper
+            ? m_backgroundHelper : BackgroundHelper::getDesktopInstance();
+        if (backgroundHelper) {
+            backgroundHelper->refreshBackground();
+        }
+
+        if (m_dbusDeepinWM) {
+            m_dbusDeepinWM->SetTransientBackground(desktopBackground());
+        }
     });
 #endif
 

@@ -27,6 +27,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <dapplication.h>
+#include <QPointer>
 #include <QScreen>
 #include <QGuiApplication>
 #include <qpa/qplatformwindow.h>
@@ -37,11 +38,26 @@
 
 BackgroundHelper *BackgroundHelper::desktop_instance = nullptr;
 
-BackgroundHelper::BackgroundHelper(bool preview, QObject *parent)
-    : QObject(parent)
-    , m_previuew(preview)
-    , windowManagerHelper(DWindowManagerHelper::instance())
-{
+namespace {
+
+QRect nativeGeometryForScreen(QScreen* screen) {
+    if (!screen) {
+        return {};
+    }
+
+    if (screen->handle()) {
+        return screen->handle()->geometry();
+    }
+
+    return QRect(screen->geometry().topLeft(),
+        screen->geometry().size() * screen->devicePixelRatio());
+}
+
+}
+
+BackgroundHelper::BackgroundHelper(bool preview, QObject* parent)
+        : QObject(parent), m_previuew(preview)
+            , windowManagerHelper(DWindowManagerHelper::instance()) {
     if (!preview) {
         connect(windowManagerHelper, &DWindowManagerHelper::windowManagerChanged,
                 this, &BackgroundHelper::onWMChanged);
@@ -54,6 +70,8 @@ BackgroundHelper::BackgroundHelper(bool preview, QObject *parent)
 
     m_weatherTimer.setInterval(30 * 60 * 1000);
     connect(&m_weatherTimer, &QTimer::timeout, this, &BackgroundHelper::startDownloadWeatherImage);
+    connect(&m_networkManager, &QNetworkAccessManager::finished,
+            this, &BackgroundHelper::downloadWeatherImageFinished);
     if (m_isLoadWeatherReport) {
         m_weatherTimer.start();
         startDownloadWeatherImage();
@@ -62,13 +80,16 @@ BackgroundHelper::BackgroundHelper(bool preview, QObject *parent)
     connect(this, &BackgroundHelper::onScreenChanged, this, &BackgroundHelper::calculateAllScreenSize);
 
     // 用于动态检测配置文件
-    QFileSystemWatcher *fileWatcher = new QFileSystemWatcher();
+    QFileSystemWatcher* fileWatcher = new QFileSystemWatcher(this);
     fileWatcher->addPath(QDir::homePath() + "/.config/GXDE/dde-file-manager/wallpaperDisplayMethod");
     connect(fileWatcher, &QFileSystemWatcher::fileChanged, this, &BackgroundHelper::refreshBackground);
 }
 
-BackgroundHelper::~BackgroundHelper()
-{
+BackgroundHelper::~BackgroundHelper() {
+    if (desktop_instance == this) {
+        desktop_instance = nullptr;
+    }
+
     for (QLabel *l : backgroundMap) {
         l->hide();
         l->deleteLater();
@@ -215,36 +236,46 @@ void BackgroundHelper::onWMChanged()
 
 void BackgroundHelper::updateBackground(QLabel *l)
 {
-    if (backgroundPixmap.isNull())
+    if (!l || backgroundPixmap.isNull()) {
+        return;
+    }
+
+    QScreen* s = backgroundMap.key(l, nullptr);
+    if (!s) {
+        qWarning() << "(Desktop Panel) MultiScr: Cannot find the screen for background" << l;
+        return;
+    }
+
+    const QRect nativeGeometry = nativeGeometryForScreen(s);
+    const qreal pixelRatio = s->devicePixelRatio();
+    QSize targetPixelSize;
+    if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
+        targetPixelSize = m_nativeScreenGeometry.size();
+    } else {
+        targetPixelSize = nativeGeometry.size();
+    }
+
+    if (targetPixelSize.isEmpty() || pixelRatio <= 0)
         return;
 
-    QScreen *s = l->windowHandle()->screen();
-    l->windowHandle()->handle()->setGeometry(s->handle()->geometry());
-    QSize trueSize;
-    if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
-        trueSize = m_screenSize;
-    }
-    else {
-        trueSize = s->handle()->geometry().size();
-        qDebug() << s->handle()->geometry().size();
-    }
     QPixmap pix = backgroundPixmap;
 
     if (m_wallpaperDisplayMethods != WallpaperDisplayMethods::Center) {
-        pix = pix.scaled(trueSize,
+        pix = pix.scaled(targetPixelSize,
                      wallpaperDisplayMethods2PictureRatioMode(m_wallpaperDisplayMethods),
                      Qt::SmoothTransformation);
     }
 
-    if (pix.width() > trueSize.width() || pix.height() > trueSize.height()) {
-        pix = pix.copy(QRect((pix.width() - trueSize.width()) / 2.0,
-                             (pix.height() - trueSize.height()) / 2.0,
-                             trueSize.width(),
-                             trueSize.height()));
+    if (pix.width() > targetPixelSize.width() || pix.height() > targetPixelSize.height()) {
+        pix = pix.copy(QRect((pix.width() - targetPixelSize.width()) / 2.0,
+                (pix.height() - targetPixelSize.height()) / 2.0,
+                targetPixelSize.width(),
+                targetPixelSize.height()));
     }
     // 如果为穿透背景
     if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
-        pix = pix.copy(s->handle()->geometry());
+        const QRect screenRect = nativeGeometry.translated(-m_nativeScreenGeometry.topLeft());
+        pix = pix.copy(screenRect);
     }
     // 只有在 KeepAspectRatio 模式（居中）下的背景才设置居中
     if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::KeepAspectRatio ||
@@ -255,10 +286,10 @@ void BackgroundHelper::updateBackground(QLabel *l)
         l->setAlignment(Qt::AlignLeft);
     }
 
-    pix.setDevicePixelRatio(l->devicePixelRatioF());
+    pix.setDevicePixelRatio(pixelRatio);
     l->setPixmap(pix);
 
-    qInfo() << l->windowHandle()->screen() << currentWallpaper << pix;
+    qInfo() << s << currentWallpaper << pix;
 }
 
 void BackgroundHelper::updateBackground()
@@ -282,7 +313,6 @@ void BackgroundHelper::startDownloadWeatherImage()
 {
     QNetworkRequest request;
     request.setUrl(QUrl("https://wttr.in/~.png?lang=zh&transparency=200&tqnp"));
-    connect(&m_networkManager, &QNetworkAccessManager::finished, this, &BackgroundHelper::downloadWeatherImageFinished);
     m_networkManager.get(request);
 }
 
@@ -295,22 +325,29 @@ void BackgroundHelper::downloadWeatherImageFinished(QNetworkReply *reply)
     emit weatherImageChanged(m_weatherImage);
 }
 
-void BackgroundHelper::onScreenAdded(QScreen *screen)
-{
+void BackgroundHelper::onScreenAdded(QScreen* screen) {
+    if (!screen || backgroundMap.contains(screen)) {
+        return;
+    }
+
     QLabel *l = new QLabel();
     QLabel *weather = new QLabel();
-    connect(this, &BackgroundHelper::weatherImageChanged, [l, weather, this](){
+    QPointer<QScreen> screenGuard(screen);
+    connect(this, &BackgroundHelper::weatherImageChanged, weather, [weather, this, screenGuard](){
         weather->setVisible(m_isLoadWeatherReport);
-        if (weather) {
-            QRect rect = l->windowHandle()->screen()->geometry();
-            // 在壁纸跨屏模式下，天气预报只显示在最右上角的屏幕
-            if (WallpaperDisplayMethods::BackgroundSpanned) {
-                if (rect.y() != 0 || rect.width() + rect.x() < m_screenSize.width()) {
-                    return;
-                }
+        if (!screenGuard)
+            return;
+
+        const QRect rect = nativeGeometryForScreen(screenGuard);
+        // 在壁纸跨屏模式下，天气预报只显示在最右上角的屏幕
+        if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
+            if (rect.top() != m_nativeScreenGeometry.top()
+                    || rect.right() != m_nativeScreenGeometry.right()) {
+                weather->clear();
+                return;
             }
-            weather->setPixmap(m_weatherImage);
         }
+        weather->setPixmap(m_weatherImage);
     });
     weather->setAlignment(Qt::AlignRight);
     weather->setPixmap(m_weatherImage);
@@ -328,11 +365,18 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
     l->setStyleSheet("background: transparent;");
     l->setAlignment(Qt::AlignCenter);
 
-    QTimer::singleShot(0, this, [l, screen] {
+    QPointer<QLabel> labelGuard(l);
+    QTimer::singleShot(0, this, [labelGuard, screenGuard] {
+        if (!labelGuard || !screenGuard)
+            return;
+
         // 禁用高分屏缩放，防止窗口的sizeIncrement默认设置大于1
         bool hi_active = QHighDpiScaling::m_active;
         QHighDpiScaling::m_active = false;
-        l->windowHandle()->handle()->setGeometry(screen->handle()->geometry());
+        if (labelGuard->windowHandle() && labelGuard->windowHandle()->handle()
+                && screenGuard->handle()) {
+            labelGuard->windowHandle()->handle()->setGeometry(screenGuard->handle()->geometry());
+        }
         QHighDpiScaling::m_active = hi_active;
     });
 
@@ -377,22 +421,36 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
     else
         qDebug() << "Disable show the background widget, of screen:" << screen << screen->geometry();
 
-    connect(screen, &QScreen::geometryChanged, l, [l, this, screen] () {
-        qDebug() << "screen geometry changed:" << screen << screen->geometry();
+    const auto refreshScreenGeometry = [labelGuard, screenGuard, this] {
+        if (!labelGuard || !screenGuard)
+            return;
+
+        qDebug() << "(Panel) MultiScr: screen geometry changed:" << screenGuard << screenGuard->geometry();
 
         // 因为接下来会发出backgroundGeometryChanged信号，
         // 所以此处必须保证QWidget::geometry的值和接下来对其windowHandle()对象设置的geometry一致
-        l->setGeometry(screen->geometry());
+        labelGuard->setGeometry(screenGuard->geometry());
 
         // 忽略屏幕缩放，设置窗口的原始大小
         // 调用此函数后不会立即更新QWidget::geometry，而是在收到窗口resize事件后更新
         bool hi_active = QHighDpiScaling::m_active;
         QHighDpiScaling::m_active = false;
-        l->windowHandle()->handle()->setGeometry(screen->handle()->geometry());
+        if (labelGuard->windowHandle() && labelGuard->windowHandle()->handle()
+                && screenGuard->handle()) {
+            labelGuard->windowHandle()->handle()->setGeometry(screenGuard->handle()->geometry());
+        }
         QHighDpiScaling::m_active = hi_active;
-        updateBackground(l);
 
-        Q_EMIT backgroundGeometryChanged(l);
+        // A resolution or scale change also changes the native virtual desktop
+        // and therefore every crop in spanned mode.
+        calculateAllScreenSize();
+        Q_EMIT backgroundGeometryChanged(labelGuard);
+    };
+    connect(screen, &QScreen::geometryChanged, l, [refreshScreenGeometry] {
+        refreshScreenGeometry();
+    });
+    connect(screen, &QScreen::logicalDotsPerInchChanged, l, [refreshScreenGeometry] {
+        refreshScreenGeometry();
     });
 
     // 可能是由QGuiApplication引发的新屏幕添加，此处应该为新对象添加背景图
@@ -404,27 +462,21 @@ void BackgroundHelper::onScreenAdded(QScreen *screen)
     qInfo() << screen << screen->geometry();
 
     Q_EMIT onScreenChanged();
-    calculateAllScreenSize();
 }
 
 void BackgroundHelper::calculateAllScreenSize()
 {
-    QSize size;
-    // 如果有多个屏幕，可以遍历它们
-    QList<QScreen *> screens = QGuiApplication::screens();
-    foreach(QScreen *screen, screens) {
-        QRect geometry = screen->geometry();
-        double ratio = screen->devicePixelRatio();
-        int width = (geometry.x() + geometry.width()) * ratio;
-        int height = (geometry.y() + geometry.height()) * ratio;
-        if (geometry.x() + geometry.width() > size.width()) {
-            size.setWidth(width);
+    QRect geometry;
+    for (QScreen* screen : QGuiApplication::screens()) {
+        if (!screen) {
+            continue;
         }
-        if (geometry.y() + geometry.height() > size.height()) {
-            size.setHeight(height);
-        }
+
+        const QRect screenGeometry = nativeGeometryForScreen(screen);
+        geometry = geometry.isNull() ? screenGeometry : geometry.united(screenGeometry);
     }
-    m_screenSize = size;
+
+    m_nativeScreenGeometry = geometry;
     for (QLabel *l: backgroundMap) {
         updateBackground(l);
     }
@@ -441,7 +493,6 @@ void BackgroundHelper::onScreenRemoved(QScreen *screen)
     qInfo() << screen;
 
     Q_EMIT onScreenChanged();
-    calculateAllScreenSize();
 }
 
 void BackgroundHelper::refreshBackground()
@@ -475,8 +526,7 @@ void BackgroundHelper::setWallpaperDisplayMethods(WallpaperDisplayMethods method
     refreshBackground();
 }
 
-BackgroundHelper::WallpaperDisplayMethods BackgroundHelper::getWallpaperDisplayMethods()
-{
+BackgroundHelper::WallpaperDisplayMethods BackgroundHelper::getWallpaperDisplayMethods() const {
     return m_wallpaperDisplayMethods;
 }
 

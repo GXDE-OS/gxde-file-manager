@@ -58,7 +58,7 @@ public:
     void setVisible(bool visible);
     void setWallpaperDisplayMethods(WallpaperDisplayMethods method);
     Qt::AspectRatioMode wallpaperDisplayMethods2PictureRatioMode(WallpaperDisplayMethods method);
-    WallpaperDisplayMethods getWallpaperDisplayMethods();
+    WallpaperDisplayMethods getWallpaperDisplayMethods() const;
 
     void onWMChanged();
     void refreshBackground();
@@ -93,7 +93,7 @@ private:
     QString currentWallpaper;
     QPixmap backgroundPixmap;
     QPixmap m_weatherImage;
-    QSize m_screenSize;
+    QRect m_nativeScreenGeometry;
     QMap<QScreen*, QLabel*> backgroundMap;
     static BackgroundHelper *desktop_instance;
     QNetworkAccessManager m_networkManager;
