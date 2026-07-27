@@ -30,27 +30,22 @@
 #include <QPointer>
 #include <QScreen>
 #include <QGuiApplication>
-#include <qpa/qplatformwindow.h>
-#include <qpa/qplatformscreen.h>
-#define private public
-#include <private/qhighdpiscaling_p.h>
-#undef private
+#include <QtMath>
 
 BackgroundHelper *BackgroundHelper::desktop_instance = nullptr;
 
 namespace {
 
-QRect nativeGeometryForScreen(QScreen* screen) {
-    if (!screen) {
-        return {};
-    }
+QSize pixelSize(const QSize& logicalSize, qreal pixelRatio) {
+    return QSize(qRound(logicalSize.width() * pixelRatio),
+        qRound(logicalSize.height() * pixelRatio));
+}
 
-    if (screen->handle()) {
-        return screen->handle()->geometry();
-    }
-
-    return QRect(screen->geometry().topLeft(),
-        screen->geometry().size() * screen->devicePixelRatio());
+QRect pixelRect(const QRect& logicalRect, const QPoint& logicalOrigin,
+        qreal pixelRatio) {
+    return QRect(QPoint(qRound((logicalRect.x() - logicalOrigin.x()) * pixelRatio),
+        qRound((logicalRect.y() - logicalOrigin.y()) * pixelRatio)),
+            pixelSize(logicalRect.size(), pixelRatio));
 }
 
 }
@@ -246,36 +241,53 @@ void BackgroundHelper::updateBackground(QLabel *l)
         return;
     }
 
-    const QRect nativeGeometry = nativeGeometryForScreen(s);
     const qreal pixelRatio = s->devicePixelRatio();
-    QSize targetPixelSize;
-    if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
-        targetPixelSize = m_nativeScreenGeometry.size();
-    } else {
-        targetPixelSize = nativeGeometry.size();
-    }
-
+    const QSize targetPixelSize = pixelSize(s->geometry().size(), pixelRatio);
     if (targetPixelSize.isEmpty() || pixelRatio <= 0)
         return;
 
     QPixmap pix = backgroundPixmap;
 
-    if (m_wallpaperDisplayMethods != WallpaperDisplayMethods::Center) {
+    if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
+        qreal canvasPixelRatio = 1.0;
+        for (QScreen* screen : QGuiApplication::screens()) {
+            if (screen) {
+                canvasPixelRatio = qMax(canvasPixelRatio, screen->devicePixelRatio());
+            }
+        }
+
+        const QSize canvasPixelSize = pixelSize(m_screenGeometry.size(), canvasPixelRatio);
+        if (canvasPixelSize.isEmpty()) {
+            return;
+        }
+
+        pix = pix.scaled(canvasPixelSize, Qt::KeepAspectRatioByExpanding,
+            Qt::SmoothTransformation);
+        if (pix.width() > canvasPixelSize.width() || pix.height() > canvasPixelSize.height()) {
+            pix = pix.copy(QRect((pix.width() - canvasPixelSize.width()) / 2,
+                (pix.height() - canvasPixelSize.height()) / 2,
+                canvasPixelSize.width(), canvasPixelSize.height()));
+        }
+
+        pix = pix.copy(pixelRect(s->geometry(), m_screenGeometry.topLeft(),
+            canvasPixelRatio));
+        if (pix.size() != targetPixelSize) {
+            pix = pix.scaled(targetPixelSize, Qt::IgnoreAspectRatio,
+                Qt::SmoothTransformation);
+        }
+    } else if (m_wallpaperDisplayMethods != WallpaperDisplayMethods::Center) {
         pix = pix.scaled(targetPixelSize,
-                     wallpaperDisplayMethods2PictureRatioMode(m_wallpaperDisplayMethods),
-                     Qt::SmoothTransformation);
+                         wallpaperDisplayMethods2PictureRatioMode(m_wallpaperDisplayMethods),
+                         Qt::SmoothTransformation);
     }
 
-    if (pix.width() > targetPixelSize.width() || pix.height() > targetPixelSize.height()) {
+    if (m_wallpaperDisplayMethods != WallpaperDisplayMethods::BackgroundSpanned
+            && (pix.width() > targetPixelSize.width()
+                || pix.height() > targetPixelSize.height())) {
         pix = pix.copy(QRect((pix.width() - targetPixelSize.width()) / 2.0,
                 (pix.height() - targetPixelSize.height()) / 2.0,
                 targetPixelSize.width(),
                 targetPixelSize.height()));
-    }
-    // 如果为穿透背景
-    if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
-        const QRect screenRect = nativeGeometry.translated(-m_nativeScreenGeometry.topLeft());
-        pix = pix.copy(screenRect);
     }
     // 只有在 KeepAspectRatio 模式（居中）下的背景才设置居中
     if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::KeepAspectRatio ||
@@ -338,11 +350,11 @@ void BackgroundHelper::onScreenAdded(QScreen* screen) {
         if (!screenGuard)
             return;
 
-        const QRect rect = nativeGeometryForScreen(screenGuard);
+        const QRect rect = screenGuard->geometry();
         // 在壁纸跨屏模式下，天气预报只显示在最右上角的屏幕
         if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::BackgroundSpanned) {
-            if (rect.top() != m_nativeScreenGeometry.top()
-                    || rect.right() != m_nativeScreenGeometry.right()) {
+            if (rect.top() != m_screenGeometry.top()
+                    || rect.right() != m_screenGeometry.right()) {
                 weather->clear();
                 return;
             }
@@ -366,19 +378,6 @@ void BackgroundHelper::onScreenAdded(QScreen* screen) {
     l->setAlignment(Qt::AlignCenter);
 
     QPointer<QLabel> labelGuard(l);
-    QTimer::singleShot(0, this, [labelGuard, screenGuard] {
-        if (!labelGuard || !screenGuard)
-            return;
-
-        // 禁用高分屏缩放，防止窗口的sizeIncrement默认设置大于1
-        bool hi_active = QHighDpiScaling::m_active;
-        QHighDpiScaling::m_active = false;
-        if (labelGuard->windowHandle() && labelGuard->windowHandle()->handle()
-                && screenGuard->handle()) {
-            labelGuard->windowHandle()->handle()->setGeometry(screenGuard->handle()->geometry());
-        }
-        QHighDpiScaling::m_active = hi_active;
-    });
 
     if (m_previuew) {
         Qt::WindowFlags flags =
@@ -427,22 +426,8 @@ void BackgroundHelper::onScreenAdded(QScreen* screen) {
 
         qDebug() << "(Panel) MultiScr: screen geometry changed:" << screenGuard << screenGuard->geometry();
 
-        // 因为接下来会发出backgroundGeometryChanged信号，
-        // 所以此处必须保证QWidget::geometry的值和接下来对其windowHandle()对象设置的geometry一致
         labelGuard->setGeometry(screenGuard->geometry());
 
-        // 忽略屏幕缩放，设置窗口的原始大小
-        // 调用此函数后不会立即更新QWidget::geometry，而是在收到窗口resize事件后更新
-        bool hi_active = QHighDpiScaling::m_active;
-        QHighDpiScaling::m_active = false;
-        if (labelGuard->windowHandle() && labelGuard->windowHandle()->handle()
-                && screenGuard->handle()) {
-            labelGuard->windowHandle()->handle()->setGeometry(screenGuard->handle()->geometry());
-        }
-        QHighDpiScaling::m_active = hi_active;
-
-        // A resolution or scale change also changes the native virtual desktop
-        // and therefore every crop in spanned mode.
         calculateAllScreenSize();
         Q_EMIT backgroundGeometryChanged(labelGuard);
     };
@@ -472,11 +457,11 @@ void BackgroundHelper::calculateAllScreenSize()
             continue;
         }
 
-        const QRect screenGeometry = nativeGeometryForScreen(screen);
+        const QRect screenGeometry = screen->geometry();
         geometry = geometry.isNull() ? screenGeometry : geometry.united(screenGeometry);
     }
 
-    m_nativeScreenGeometry = geometry;
+    m_screenGeometry = geometry;
     for (QLabel *l: backgroundMap) {
         updateBackground(l);
     }

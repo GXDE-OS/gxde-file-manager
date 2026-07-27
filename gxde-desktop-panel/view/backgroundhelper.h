@@ -93,7 +93,7 @@ private:
     QString currentWallpaper;
     QPixmap backgroundPixmap;
     QPixmap m_weatherImage;
-    QRect m_nativeScreenGeometry;
+    QRect m_screenGeometry;
     QMap<QScreen*, QLabel*> backgroundMap;
     static BackgroundHelper *desktop_instance;
     QNetworkAccessManager m_networkManager;
