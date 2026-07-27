@@ -112,6 +112,18 @@ static bool registerFileManager1DBus()
 
 int main(int argc, char *argv[])
 {
+    bool preload = false;
+    bool fileDialogOnly = false;
+
+    for (int i = 1; i < argc; ++i) {
+        const QByteArray arg(argv[i]);
+        if (arg == "--preload") {
+            preload = true;
+        } else if (arg == "--file-dialog-only") {
+            fileDialogOnly = true;
+        }
+    }
+
     // Treeland下遇到了桌面文件重命名/ESC键失效的问题
     // 具体原因分析请见: ./doc/notes/treeland-desktop-panel-key-focus-issue.md
     // 打了补丁，当前Treeland下的重命名由子项目gxde-rename-interface-treeland负责
@@ -146,9 +158,9 @@ int main(int argc, char *argv[])
 
         // 仅在layer-shell的QtWayland集成插件可用时才启用layer-shell。
         // 否则wayland平台插件会因找不到"layer-shell"集成而初始化失败并abort(黑屏)。
-        if (WaylandUtils::layerShellIntegrationAvailable()) {
+        if (!fileDialogOnly && WaylandUtils::layerShellIntegrationAvailable()) {
             LayerShellQt::Shell::useLayerShell();
-        } else {
+        } else if (!fileDialogOnly) {
             qWarning() << "[Wayland] 缺少layer-shell的QtWayland集成插件"
                           "(wayland-shell-integration/liblayer-shell.so)，"
                           "已禁用layer-shell以避免崩溃；壁纸/桌面需要该插件才能作为背景层显示。";
@@ -351,26 +363,6 @@ int main(int argc, char *argv[])
 
     app.installEventFilter(new PopupLayerShellPatcher(&app));
 
-    bool preload = false;
-    bool fileDialogOnly = false;
-
-    for (const QString &arg : app.arguments()) {
-        if (arg == "--preload") {
-            preload = true;
-            break;
-        }
-        if (arg == "--file-dialog-only") {
-            fileDialogOnly = true;
-            break;
-        }
-    }
-
-    if (fileDialogOnly && getuid() != 0) {
-        // --file-dialog-only should only used by `root`.
-        qDebug() << "Current UID != 0, the `--file-dialog-only` argument is ignored.";
-        fileDialogOnly = false;
-    }
-
     if (fileDialogOnly) {
         app.setQuitOnLastWindowClosed(false);
     }
@@ -469,14 +461,19 @@ int main(int argc, char *argv[])
 
         // ---------------------------------------------------------------------------
         // ability to show file selection dialog
-        if (!registerDialogDBus()) {
+        // layer-shell is selected process-wide. A Wayland file dialog must be
+        // provided by the separate --file-dialog-only process so that it can
+        // use a normal xdg-toplevel with decorations and window management.
+        const bool shouldRegisterDialog = fileDialogOnly
+            || !WaylandUtils::isWaylandSession();
+        if (shouldRegisterDialog && !registerDialogDBus()) {
             qWarning() << "Register dialog dbus failed.";
             if (fileDialogOnly) {
                 return 1;
             }
         }
 
-        if (!registerFileManager1DBus()) {
+        if (!fileDialogOnly && !registerFileManager1DBus()) {
             qWarning() << "Register org.freedesktop.FileManager1 DBus service is failed";
         }
     }
