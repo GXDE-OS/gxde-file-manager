@@ -49,6 +49,7 @@ Build-Depends:
  qt6-scxml-dev,
  liblayershellqtinterface-dev,
  libdtk6gui-dev,
+ libwayland-dev,
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
