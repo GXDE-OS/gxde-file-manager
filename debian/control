@@ -50,6 +50,8 @@ Build-Depends:
  liblayershellqtinterface-dev,
  libdtk6gui-dev,
  libwayland-dev,
+ qt6-wayland-private-dev,
+ qt6-wayland-dev,
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
