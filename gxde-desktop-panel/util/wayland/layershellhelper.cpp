@@ -133,9 +133,14 @@ void LayerShellHelper::setDesktopIconsRole(QWidget* widget, QScreen* screen,
     layerWindow->setLayer(LayerShellQt::Window::LayerBottom);
     layerWindow->setAnchors(anchors);
 
-    // A zero exclusive zone makes WM place this surface inside
-    // the usable area left w/ a positive exclusive zone.
-    layerWindow->setExclusiveZone(0);
+    // exclusive zone = -1: 该 surface 不预留空间, 且不被其他正值 exclusive zone
+    // (如 dock 预留的底边) 推开, 从而铺满整屏。
+    // 这样在时尚模式下, dock 仅占部分宽度, dock 两侧暴露出来的区域仍能被
+    // CanvasGridView 接收到点击事件 (桌面右键菜单/框选/取消选中)。
+    // dock 处于 LayerTop, 本 surface 处于 LayerBottom, dock 仍会渲染在其之上,
+    // 不会被图标遮挡; 图标网格的布局区域由 CanvasGridView 内部依据
+    // availableGeometry 单独计算, 不会排布到 dock 下方。
+    layerWindow->setExclusiveZone(-1);
     layerWindow->setKeyboardInteractivity(
         LayerShellQt::Window::KeyboardInteractivityOnDemand);
 }

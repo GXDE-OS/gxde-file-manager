@@ -1939,7 +1939,14 @@ void CanvasGridView::initUI()
 void CanvasGridView::updateGeometry(const QRect &geometry)
 {
     if (Wayland::LayerShellHelper::isWayland() && isWindow()) {
-        d->canvasRect = rect();
+        // exclusive zone = -1: widget 铺满整屏用于接收点击 (含 dock 两侧暴露区域),
+        // 但图标只在 availableGeometry (已排除 dock 区域) 内排布。
+        QRect avail = geometry.isValid() && !geometry.isEmpty()
+            ? geometry
+            : DesktopDisplay::instance()->primaryScreen()->availableGeometry();
+        d->canvasRect = avail;
+        qDebug() << "(Wayland) set canvasRect" << d->canvasRect
+                 << "widget rect" << rect();
         d->waterMaskFrame->updatePosition();
         updateCanvas();
         repaint();
@@ -2202,7 +2209,7 @@ void CanvasGridView::updateCanvas()
         Wayland::LayerShellHelper::isWayland() && isWindow();
     auto outRect = compositorManagedWorkArea
         ? rect() : qApp->primaryScreen()->geometry();
-    auto inRect = compositorManagedWorkArea ? rect() : d->canvasRect;
+    auto inRect = d->canvasRect;
 
     itemDelegate()->updateItemSizeHint();
     auto itemSize = itemDelegate()->sizeHint(QStyleOptionViewItem(), QModelIndex());
@@ -2213,7 +2220,7 @@ void CanvasGridView::updateCanvas()
     geometryMargins.setTop(inRect.top() - outRect.top());
     geometryMargins.setBottom(outRect.bottom() - inRect.bottom());
 
-    if (!compositorManagedWorkArea && 3 == d->dbusDock->hideMode()) {
+    if (3 == d->dbusDock->hideMode()) {
         auto margin = 80;
         auto iconSize = d->dbusDock->iconSize();
         if (iconSize <= 30) {
