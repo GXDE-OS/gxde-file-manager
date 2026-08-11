@@ -628,7 +628,9 @@ void DIconItemDelegate::paint(QPainter *painter,
     if (isSelected) {
         paintIcon(painter, opt.icon, icon_rect, Qt::AlignCenter, isEnabled ? QIcon::Normal : QIcon::Disabled);
     } else if (isDropTarget) {
-        QPixmap pixmap = opt.icon.pixmap(icon_rect.size().toSize());
+        const qreal pixelRatio = painter->device()->devicePixelRatioF();
+        QPixmap pixmap = DStyledItemDelegate::getIconPixmap(opt.icon, icon_rect.size().toSize(), pixelRatio,
+                                                            isEnabled ? QIcon::Normal : QIcon::Disabled);
         QPainter p(&pixmap);
 
         p.setCompositionMode(QPainter::CompositionMode_SourceAtop);

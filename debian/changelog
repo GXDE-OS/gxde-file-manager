@@ -1,8 +1,9 @@
-gxde-file-manager-neo (6.3.0-gxde4) UNRELEASED; urgency=medium
+gxde-file-manager-neo (6.3.1) UNRELEASED; urgency=medium
 
   * 修复 Wayland 时尚模式下 dock 两侧暴露区域无法点击桌面的问题 (桌面图标层改为 exclusive zone -1 铺满整屏接收点击, 图标布局仍依据 availableGeometry 避开 dock)
+  * 修复高分屏下桌面图标模糊的问题
 
- -- gfdgd_xi <3025613752@qq.com>  Mon, 03 Aug 2026 21:32:14 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Tue, 11 Aug 2026 15:50:03 +0800
 
 gxde-file-manager-neo (6.3.0-gxde3) UNRELEASED; urgency=medium
 

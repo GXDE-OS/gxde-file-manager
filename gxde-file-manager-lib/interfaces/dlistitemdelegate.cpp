@@ -131,7 +131,9 @@ void DListItemDelegate::paint(QPainter *painter,
     icon_rect.moveTop(icon_rect.top() + (opt.rect.bottom() - icon_rect.bottom()) / 2);
 
     if (isDropTarget) {
-        QPixmap pixmap = opt.icon.pixmap(icon_rect.size());
+        const qreal pixelRatio = painter->device()->devicePixelRatioF();
+        QPixmap pixmap = DStyledItemDelegate::getIconPixmap(opt.icon, icon_rect.size(), pixelRatio,
+                                                            isEnabled ? QIcon::Normal : QIcon::Disabled);
 
         QPainter p(&pixmap);
 

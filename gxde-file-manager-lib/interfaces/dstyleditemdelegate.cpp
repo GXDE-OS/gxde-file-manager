@@ -218,17 +218,28 @@ QList<QRectF> DStyledItemDelegate::getCornerGeometryList(const QRectF &baseRect,
 
 QPixmap DStyledItemDelegate::getIconPixmap(const QIcon &icon, const QSize &size, qreal pixelRatio = 1.0, QIcon::Mode mode, QIcon::State state)
 {
+    QSize icon_size = icon.actualSize(size, mode, state);
+
+    if (icon_size.width() > size.width() || icon_size.height() > size.height())
+        icon_size.scale(size, Qt::KeepAspectRatio);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // In Qt6 the Qt::AA_UseHighDpiPixmaps attribute is deprecated and has no
+    // effect, and QIcon::pixmap(QSize, Mode, State) always scales the result by
+    // the global devicePixelRatio() instead of the target widget's ratio. That
+    // makes the legacy code below render the icon at the wrong density on HiDPI
+    // screens (especially with mixed-DPI monitors), which shows up as blurry
+    // icons. Use the Qt6 overload that takes the exact devicePixelRatio so the
+    // icon is painted at the correct resolution. `icon_size` here is the logical
+    // size and `pixelRatio` is the target widget's ratio.
+    QPixmap px = icon.pixmap(icon_size, pixelRatio, mode, state);
+#else
     // ###(zccrs): 开启Qt::AA_UseHighDpiPixmaps后，QIcon::pixmap会自动执行 pixmapSize *= qApp->devicePixelRatio()
     //             而且，在有些QIconEngine的实现中，会去调用另一个QIcon::pixmap，导致 pixmapSize 在这种嵌套调用中越来越大
     //             最终会获取到一个是期望大小几倍的图片，由于图片太大，会很快将 QPixmapCache 塞满，导致后面再调用QIcon::pixmap
     //             读取新的图片时无法缓存，非常影响图片绘制性能。此处在获取图片前禁用 Qt::AA_UseHighDpiPixmaps，自行处理图片大小问题
     bool useHighDpiPixmaps = qApp->testAttribute(Qt::AA_UseHighDpiPixmaps);
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps, false);
-
-    QSize icon_size = icon.actualSize(size, mode, state);
-
-    if (icon_size.width() > size.width() || icon_size.height() > size.height())
-        icon_size.scale(size, Qt::KeepAspectRatio);
 
     QSize pixmapSize = icon_size * pixelRatio;
     QPixmap px = icon.pixmap(pixmapSize, mode, state);
@@ -243,6 +254,7 @@ QPixmap DStyledItemDelegate::getIconPixmap(const QIcon &icon, const QSize &size,
     } else {
         px.setDevicePixelRatio(pixelRatio);
     }
+#endif
 
     return px;
 }
