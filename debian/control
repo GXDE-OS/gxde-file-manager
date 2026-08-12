@@ -1,4 +1,4 @@
-Source: gxde-file-manager-neo
+Source: gxde-file-manager
 Section: libdevel
 Priority: optional
 Maintainer: gfdgd xi <3025613752@qq.com>
@@ -55,12 +55,12 @@ Build-Depends:
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
-Package: gxde-file-manager-neo
+Package: gxde-file-manager
 Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- libgxde-file-manager-neo( =${binary:Version}),
+ libgxde-file-manager( =${binary:Version}),
  socat,
  libdtk2widget6,
  libdtk6core,
@@ -69,32 +69,32 @@ Depends:
  gxde-compressor,
 Provides:
  dde-file-manager,
- gxde-file-manager
+ gxde-file-manager-neo
 Replaces:
  dde-file-manager,
- gxde-file-manager
+ gxde-file-manager-neo
 Conflicts:
  dde-file-manager(>> 5.0.1-1),
- gxde-file-manager
+ gxde-file-manager-neo
 Breaks:
  deepin-menu (<< 2:6.0.0),
 Recommends: dde-qt6integration, avfs, gxde-file-manager-integration
 Description: File manager front end
  File manager front-end of Deepin OS
 
-Package: gxde-desktop-panel-neo
+Package: gxde-desktop-panel
 Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- libgxde-file-manager-neo( =${binary:Version}),
+ libgxde-file-manager( =${binary:Version}),
  gxde-daemon,
  libdframeworkdbus-qt6,
  liblayershellqtinterface6,
  layer-shell-qt,
-Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1), gxde-desktop-panel
-Provides: dde-desktop, gxde-desktop-panel
-Replaces: dde-desktop, gxde-desktop-panel
+Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1), gxde-desktop-panel-neo
+Provides: dde-desktop, gxde-desktop-panel-neo
+Replaces: dde-desktop, gxde-desktop-panel-neo
 Recommends:
  deepin-screensaver,
  fantascene-dynamic-wallpaper,
@@ -102,16 +102,16 @@ Recommends:
 Description: deepin desktop-environment - desktop module
  Deepin Desktop Environment (DDE) - desktop module.
 
-Package: gxde-disk-mount-plugin-neo
+Package: gxde-disk-mount-plugin
 Architecture: any
-Provides: dde-disk-mount-plugin, gxde-disk-mount-plugin
-Conflicts: dde-disk-mount-plugin (>> 5.0.1-1), gxde-disk-mount-plugin
-Replaces: dde-disk-mount-plugin, gxde-disk-mount-plugin
-Depends: ${shlibs:Depends}, ${misc:Depends}, libgxde-file-manager-neo( =${binary:Version})
+Provides: dde-disk-mount-plugin, gxde-disk-mount-plugin-neo
+Conflicts: dde-disk-mount-plugin (>> 5.0.1-1), gxde-disk-mount-plugin-neo
+Replaces: dde-disk-mount-plugin, gxde-disk-mount-plugin-neo
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgxde-file-manager( =${binary:Version})
 Description: plugin of gxde-dock
  Disk mount plugin of gxde-dock which is created by libgxde-file-manager
 
-Package: libgxde-file-manager-neo
+Package: libgxde-file-manager
 Architecture: any
 Depends:
  ${shlibs:Depends},
@@ -123,19 +123,19 @@ Depends:
  libgxmr-qt6,
 # deepin-anything-libs
 Breaks: gxde-file-manager-neo(<=1.2.3-3)
-Replaces: libdde-file-manager, libgxde-file-manager
-Conflicts: libdde-file-manager (>> 5.0.1-1), libgxde-file-manager
-Provides: libdde-file-manager, libgxde-file-manager
+Replaces: libdde-file-manager, libgxde-file-manager-neo
+Conflicts: libdde-file-manager (>> 5.0.1-1), libgxde-file-manager-neo
+Provides: libdde-file-manager, libgxde-file-manager-neo
 Multi-Arch: same
 Description: DDE File Manager library
  This package contains the shared libraries.
 
-Package: libgxde-file-manager-neo-dev
+Package: libgxde-file-manager-dev
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libgxde-file-manager-neo( =${binary:Version})
-Replaces: libdde-file-manager-dev, libgxde-file-manager-dev
-Conflicts: libdde-file-manager-dev (>> 5.0.1-1), libgxde-file-manager-dev
-Provides: libdde-file-manager-dev, libgxde-file-manager-dev
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgxde-file-manager( =${binary:Version})
+Replaces: libdde-file-manager-dev, libgxde-file-manager-neo-dev
+Conflicts: libdde-file-manager-dev (>> 5.0.1-1), libgxde-file-manager-neo-dev
+Provides: libdde-file-manager-dev, libgxde-file-manager-neo-dev
 Description: DDE File Manager Devel library
  This package contains the header files and static libraries
  of libgxde-file-manager
