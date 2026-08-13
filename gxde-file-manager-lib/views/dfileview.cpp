@@ -1079,6 +1079,10 @@ void DFileView::mousePressEvent(QMouseEvent *event)
 {
     D_D(DFileView);
 
+    const Qt::KeyboardModifiers modifiers = event->modifiers();
+    const bool controlModifier = modifiers.testFlag(Qt::ControlModifier)
+            && !modifiers.testFlag(Qt::ShiftModifier);
+
     switch (event->button()) {
     case Qt::BackButton: {
         DFMEventDispatcher::instance()->processEvent(dMakeEventPointer<DFMBackEvent>(this), qobject_cast<DFileManagerWindow*>(window()));
@@ -1120,14 +1124,25 @@ void DFileView::mousePressEvent(QMouseEvent *event)
             d->updateEnableSelectionByMouseTimer->start();
         }
 
-        bool isEmptyArea = d->fileViewHelper->isEmptyArea(event->pos());
+        QModelIndex controlSelectedIndex;
+        if (controlModifier) {
+            for (const QModelIndex &index : selectedIndexes()) {
+                if (visualRect(index).contains(event->pos())) {
+                    controlSelectedIndex = index;
+                    break;
+                }
+            }
+        }
+
+        const bool isEmptyArea = !controlSelectedIndex.isValid()
+                && d->fileViewHelper->isEmptyArea(event->pos());
 
         if (dragDropMode() != NoDragDrop) {
             setDragDropMode(DragDrop);
         }
 
         if (isEmptyArea) {
-            if (!DFMGlobal::keyCtrlIsPressed()) {
+            if (!controlModifier) {
                 itemDelegate()->hideNotEditingIndexWidget();
 
                 if (dragDropMode() != NoDragDrop) {
@@ -1140,18 +1155,16 @@ void DFileView::mousePressEvent(QMouseEvent *event)
                     update();
                 }
             }
-        } else if (DFMGlobal::keyCtrlIsPressed()) {
-            const QModelIndex &index = indexAt(event->pos());
+        } else if (controlSelectedIndex.isValid()) {
+            d->mouseLastPressedIndex = controlSelectedIndex;
 
-            if (selectionModel()->isSelected(index)) {
-                d->mouseLastPressedIndex = index;
-
-                DListView::mousePressEvent(event);
-
-                selectionModel()->select(index, QItemSelectionModel::Select);
-
-                return;
-            }
+            // Handle Ctrl+click on an already selected item ourselves.  Passing
+            // the event to the base view lets Qt toggle the selection again at
+            // different points of the press/release sequence, which can leave
+            // the item selected until the next click.
+            selectionModel()->select(controlSelectedIndex, QItemSelectionModel::Deselect);
+            event->accept();
+            return;
         }
 
         d->mouseLastPressedIndex = QModelIndex();
@@ -1199,14 +1212,19 @@ void DFileView::mouseReleaseEvent(QMouseEvent *event)
 
     d->dragMoveHoverIndex = QModelIndex();
 
-    if (d->mouseLastPressedIndex.isValid() && DFMGlobal::keyCtrlIsPressed()) {
-        if (d->mouseLastPressedIndex == indexAt(event->pos()))
-            selectionModel()->select(d->mouseLastPressedIndex, QItemSelectionModel::Deselect);
+    const QModelIndex mouseLastPressedIndex = d->mouseLastPressedIndex;
+    d->mouseLastPressedIndex = QModelIndex();
+
+    if (mouseLastPressedIndex.isValid() && event->button() == Qt::LeftButton) {
+        // The matching press already performed the deselection.  Consume the
+        // release as well so the base implementation cannot toggle it back.
+        event->accept();
+        return;
     }
 
     // 避免滚动视图导致文件选中状态被取消
     if (!QScroller::hasScroller(this))
-        return DListView::mouseReleaseEvent(event);
+        DListView::mouseReleaseEvent(event);
 }
 
 void DFileView::updateModelActiveIndex()
