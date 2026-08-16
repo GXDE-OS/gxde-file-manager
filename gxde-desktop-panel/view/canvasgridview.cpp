@@ -22,6 +22,7 @@
 #include <QProcess>
 #include <QApplication>
 #include <QScreen>
+#include <QWindow>
 #include <QAction>
 #include <QDir>
 #include <QStandardPaths>
@@ -1187,6 +1188,14 @@ void CanvasGridView::paintEvent(QPaintEvent *event)
 
 void CanvasGridView::resizeEvent(QResizeEvent * event)
 {
+    if (Wayland::LayerShellHelper::isWayland() && isWindow()) {
+        // Wayland下本函数由compositor的configure驱动, 此时 canvasRect 仍是上一个
+        // 分辨率下的矩形。只在 updateCanvas() 里夹取只会把画布越夹越小(分辨率调大
+        // 时无法回弹), 所以这里按新尺寸重新推导一次画布区域。
+        updateGeometry(QRect());
+        return QAbstractItemView::resizeEvent(event);
+    }
+
     updateCanvas();
     // todo restore
 
@@ -1948,9 +1957,22 @@ void CanvasGridView::updateGeometry(const QRect &geometry)
     if (Wayland::LayerShellHelper::isWayland() && isWindow()) {
         // exclusive zone = -1: widget 铺满整屏用于接收点击 (含 dock 两侧暴露区域),
         // 但图标只在 availableGeometry (已排除 dock 区域) 内排布。
+        QScreen *screen = windowHandle() && windowHandle()->screen()
+            ? windowHandle()->screen()
+            : DesktopDisplay::instance()->primaryScreen();
         QRect avail = geometry.isValid() && !geometry.isEmpty()
             ? geometry
-            : DesktopDisplay::instance()->primaryScreen()->availableGeometry();
+            : (screen ? screen->availableGeometry() : QRect());
+
+        if (screen && avail.isValid()) {
+            avail.translate(-screen->geometry().topLeft());
+        }
+
+        avail = avail.isValid() ? avail.intersected(rect()) : rect();
+        if (avail.isEmpty()) {
+            avail = rect();
+        }
+
         d->canvasRect = avail;
         qDebug() << "(Wayland) set canvasRect" << d->canvasRect
                  << "widget rect" << rect();
@@ -2217,6 +2239,13 @@ void CanvasGridView::updateCanvas()
     auto outRect = compositorManagedWorkArea
         ? rect() : qApp->primaryScreen()->geometry();
     auto inRect = d->canvasRect;
+
+    if (compositorManagedWorkArea) {
+        inRect = inRect.isValid() ? inRect.intersected(outRect) : outRect;
+        if (inRect.isEmpty())
+            inRect = outRect;
+        d->canvasRect = inRect;
+    }
 
     itemDelegate()->updateItemSizeHint();
     auto itemSize = itemDelegate()->sizeHint(QStyleOptionViewItem(), QModelIndex());
