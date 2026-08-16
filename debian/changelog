@@ -1,3 +1,10 @@
+gxde-file-manager (6.3.6) UNRELEASED; urgency=medium
+
+  * 修复Wayland下修改分辨率后desktop-panel图标重叠
+  * 新增设置GXDM锁屏壁纸
+
+ -- CharOfString <root@charofstring.cc>  Sun, 16 Aug 2026 22:38:00 +0800
+
 gxde-file-manager (6.3.5) UNRELEASED; urgency=medium
 
   * 修复 Wayland 时尚模式下 dock 两侧暴露区域无法点击桌面的问题 (桌面图标层改为 exclusive zone -1 铺满整屏接收点击, 图标布局仍依据 availableGeometry 避开 dock)
