@@ -42,6 +42,10 @@ static const QString DeepinWMPath = "/com/deepin/wm";
 static const QString MouseAreaServ = "com.deepin.api.XMouseArea";
 static const QString MouseAreaPath = "/com/deepin/api/XMouseArea";
 
+static const QString GxdeDisplayManagerServ = "top.gxde.DisplayManager";
+static const QString GxdeDisplayManagerPath = "/top/gxde/DisplayManager";
+static const QString GxdeDisplayManagerIface = "top.gxde.DisplayManager";
+
 static const QByteArray WallpaperSchemaId = "com.deepin.wrap.gnome.desktop.background";
 static const QByteArray WallpaperPath = "/com/deepin/wrap/gnome/desktop/background/";
 static const QString WallpaperKey = "pictureUri";

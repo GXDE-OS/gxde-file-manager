@@ -70,16 +70,16 @@ public:
     {
         QMargins miniMargin = QMargins(2, 2, 2, 2);
         auto miniCellWidth = szItem.width() + miniMargin.left() + miniMargin.right();
+        auto miniCellHeigh = szItem.height() + miniMargin.top() + miniMargin.bottom();
+
         colCount = (szSceeen.width() - dockReserveArea.width()) / miniCellWidth;
+        colCount = qBound(1, colCount, qMax(1, szCanvas.width() / miniCellWidth));
         cellWidth = szCanvas.width() / colCount;
 
-        auto miniCellHeigh = szItem.height() + miniMargin.top() + miniMargin.bottom();
-//        qDebug() << szItem.height() << miniCellHeigh;
         rowCount = (szSceeen.height() - dockReserveArea.height()) / miniCellHeigh;
-
+        rowCount = qBound(1, rowCount, qMax(1, szCanvas.height() / miniCellHeigh));
         cellHeight = szCanvas.height() / rowCount;
-//        qDebug() << szSceeen.height() << dockReserveArea.height()
-//                 << rowCount << cellHeight;
+
         updateCellMargins(szItem, QSize(cellWidth, cellHeight));
 
         auto horizontalMargin = (szCanvas.width() - cellWidth * colCount);
