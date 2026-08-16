@@ -1,3 +1,9 @@
+gxde-file-manager (6.3.7) UNRELEASED; urgency=medium
+
+  * 修复壁纸选择器在Wayland下失效的问题
+
+ -- CharOfString <root@charofstring.cc>  Mon, 17 Aug 2026 01:14:51 +0800
+
 gxde-file-manager (6.3.6) UNRELEASED; urgency=medium
 
   * 修复Wayland下修改分辨率后desktop-panel图标重叠
