@@ -49,6 +49,8 @@
 #include <QScreen>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <QDBusMessage>
+#include <QUrl>
 #include <QKeyEvent>
 #include <QDebug>
 #include <QPainter>
@@ -64,6 +66,34 @@
 #define DESKTOP_BUTTON_ID "desktop"
 #define LOCK_SCREEN_BUTTON_ID "lock-screen"
 #define SCREENSAVER_BUTTON_ID "screensaver"
+
+static void setGxdeLockWallpaperOverride(const QString &wallpaper) {
+    if (wallpaper.isEmpty()) {
+        return;
+    }
+
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    if (!bus.isConnected()) {
+        return;
+    }
+
+    QDBusConnectionInterface *dbus_interface = bus.interface();
+    if (!dbus_interface
+            || !dbus_interface->isServiceRegistered(GxdeDisplayManagerServ).value()) {
+        return;
+    }
+
+    const QUrl url(wallpaper);
+    const QString path = url.isLocalFile() ? url.toLocalFile() : wallpaper;
+    if (!path.startsWith('/'))
+        return;
+
+    QDBusMessage call = QDBusMessage::createMethodCall(GxdeDisplayManagerServ,
+        GxdeDisplayManagerPath, GxdeDisplayManagerIface,
+        "SetLockWallpaperOverride");
+    call << path;
+    bus.call(call, QDBus::NoBlock);
+}
 
 static bool previewBackground()
 {
@@ -266,8 +296,10 @@ void Frame::hideEvent(QHideEvent *event)
             m_dbusDeepinWM->SetTransientBackground("");
         }
 
-        if (!m_lockWallpaper.isEmpty())
+        if (!m_lockWallpaper.isEmpty()) {
             m_dbusAppearance->Set("greeterbackground", m_lockWallpaper);
+            setGxdeLockWallpaperOverride(m_lockWallpaper);
+        }
 
         ThumbnailManager *manager = ThumbnailManager::instance(devicePixelRatioF());
         manager->stop();
