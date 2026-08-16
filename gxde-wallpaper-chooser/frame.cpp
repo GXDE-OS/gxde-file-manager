@@ -104,7 +104,7 @@ static bool previewBackground()
             || !DWindowManagerHelper::instance()->hasBlurWindow();
 }
 
-Frame::Frame(QFrame *parent)
+Frame::Frame(QFrame *parent, QScreen *targetScreen)
     : DBlurEffectWidget(parent),
       m_wallpaperList(new WallpaperList(this)),
       m_closeButton(new DImageButton(":/images/close_round_normal.svg",
@@ -131,6 +131,14 @@ Frame::Frame(QFrame *parent)
     setMaskColor(DBlurEffectWidget::DarkColor);
 
     m_gsettings = new QGSettings("com.deepin.dde.appearance", "", this);
+
+    m_targetScreen = targetScreen ? targetScreen : qApp->primaryScreen();
+
+    // 目标屏幕被拔掉后QScreen会被销毁，留着就是野指针，回落到主屏
+    connect(qApp, &QGuiApplication::screenRemoved, this, [this](QScreen *screen) {
+        if (m_targetScreen == screen)
+            m_targetScreen = qApp->primaryScreen();
+    });
 
     initUI();
     initSize();
@@ -229,6 +237,11 @@ void Frame::hide()
 QString Frame::desktopBackground() const
 {
     return m_desktopWallpaper;
+}
+
+QScreen *Frame::targetScreen() const
+{
+    return m_targetScreen ? m_targetScreen : qApp->primaryScreen();
 }
 
 void Frame::handleNeedCloseButton(QString path, QPoint pos)
@@ -724,7 +737,11 @@ void Frame::initUI()
 
 void Frame::initSize()
 {
-    const QRect primaryRect = qApp->primaryScreen()->geometry();
+    QScreen *screen = m_targetScreen ? m_targetScreen : qApp->primaryScreen();
+    if (!screen)
+        return;
+
+    const QRect primaryRect = screen->geometry();
 
 #if defined(DISABLE_SCREENSAVER) && defined(DISABLE_WALLPAPER_CAROUSEL)
     setFixedSize(primaryRect.width(), FrameHeight);

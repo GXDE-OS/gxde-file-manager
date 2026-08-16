@@ -16,12 +16,15 @@
  */
 
 #include <QDebug>
+#include <QCursor>
 #include <QEvent>
 #include <QFile>
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QLocale>
+#include <QScreen>
 #include <QSettings>
+#include <QStringList>
 #include <QTextCodec>
 #include <QTranslator>
 #include <QWidget>
@@ -78,6 +81,30 @@ protected:
 private:
     QWidget* m_frame;
 };
+
+// 选择器要落在哪块屏幕上。
+// Wayland下本进程刚起来时还没拿到pointer focus, QCursor::pos()返回的是原点而非真实
+// 光标位置, 所以首选由gxde-desktop-panel通过--screen传进来的屏幕名(面板持有pointer
+// focus, 它算出来的才准)。拿不到再退回自己探测, 最后回落主屏。
+static QScreen* resolveTargetScreen(const QStringList& args)
+{
+    const int idx = args.indexOf(QStringLiteral("--screen"));
+    if (idx >= 0 && idx + 1 < args.size()) {
+        const QString name = args.at(idx + 1);
+        for (QScreen* screen : QGuiApplication::screens()) {
+            if (screen->name() == name) {
+                return screen;
+            }
+        }
+        qWarning() << "[Screen] 未找到--screen指定的屏幕:" << name;
+    }
+
+    if (QScreen* atCursor = QGuiApplication::screenAt(QCursor::pos())) {
+        return atCursor;
+    }
+
+    return QGuiApplication::primaryScreen();
+}
 
 int main(int argc, char* argv[])
 {
@@ -155,12 +182,15 @@ int main(int argc, char* argv[])
 
     qDebug() << "start " << app.applicationName();
 
-    Frame* frame = new Frame;
+    QScreen* targetScreen = resolveTargetScreen(app.arguments());
+    qDebug() << "target screen:" << (targetScreen ? targetScreen->name() : QString("<null>"));
+
+    Frame* frame = new Frame(nullptr, targetScreen);
     QObject::connect(frame, &Frame::done, &app, &QCoreApplication::quit);
 
     if (Wayland::LayerShellHelper::isWayland()) {
         Wayland::LayerShellHelper::setChooserRole(frame,
-            qApp->primaryScreen(), "wallpaper-chooser");
+            targetScreen, "wallpaper-chooser");
     }
 
     // 点击选择器之外关闭 (替代 Wayland 下失效的 DRegionMonitor)

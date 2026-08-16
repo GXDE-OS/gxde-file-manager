@@ -172,6 +172,10 @@ void WallpaperList::resizeEvent(QResizeEvent *event)
     if (width() % ItemWidth == 0)
         --screen_item_count;
 
+    // 窗口窄于一个item时screen_item_count会变成0，直接做除数会触发SIGFPE
+    if (screen_item_count < 1)
+        screen_item_count = 1;
+
     setGridSize(QSize(width() / screen_item_count, ItemHeight));
 }
 
@@ -197,6 +201,11 @@ void WallpaperList::setGridSize(const QSize &size)
     if (m_gridSize == size)
         return;
 
+    if (size.width() <= 0) {
+        m_gridSize = size;
+        return;
+    }
+
     int c = width() / size.width();
 
     m_gridSize = size;
@@ -216,10 +225,16 @@ void WallpaperList::addItem(WallpaperItem *item)
 
 QWidget *WallpaperList::item(int index) const
 {
-    if (index >= m_contentLayout->count())
-        return 0;
+    // QLayout::itemAt()对越界(含负数)索引返回nullptr，而调用方会直接解引用。
+    // 多屏下itemAt(QPoint)可能算出负索引，这里必须两头都挡住。
+    if (index < 0 || index >= m_contentLayout->count())
+        return nullptr;
 
-    return m_contentLayout->itemAt(index)->widget();
+    QLayoutItem *layoutItem = m_contentLayout->itemAt(index);
+    if (!layoutItem)
+        return nullptr;
+
+    return layoutItem->widget();
 }
 
 QWidget *WallpaperList::itemAt(const QPoint &pos) const
@@ -231,7 +246,15 @@ QWidget *WallpaperList::itemAt(int x, int y) const
 {
     Q_UNUSED(y)
 
-    return item((horizontalScrollBar()->value() + x) / gridSize().width());
+    const int gridWidth = gridSize().width();
+    if (gridWidth <= 0)
+        return nullptr;
+
+    const int offset = horizontalScrollBar()->value() + x;
+    if (offset < 0)
+        return nullptr;
+
+    return item(offset / gridWidth);
 }
 
 int WallpaperList::count() const
@@ -254,7 +277,14 @@ void WallpaperList::updateItemThumb()
 {
     m_contentWidget->adjustSize();
 
-    showDeleteButtonForItem(static_cast<WallpaperItem*>(itemAt(mapFromGlobal(QCursor::pos()))));
+    // Wayland多屏下选择器固定落在主屏, 而QCursor::pos()可能落在另一块屏(或选择器
+    // 还没拿到指针焦点时返回原点), mapFromGlobal()因此给出屏幕外的坐标。
+    // 指针不在列表内就没有hover项, 不必再去查。
+    const QPoint cursorPos = mapFromGlobal(QCursor::pos());
+    WallpaperItem *hoveredItem = rect().contains(cursorPos)
+        ? static_cast<WallpaperItem*>(itemAt(cursorPos)) : nullptr;
+
+    showDeleteButtonForItem(hoveredItem);
 
     for (WallpaperItem *item : m_items) {
         if (rect().intersects(QRect(item->mapTo(this, QPoint()), item->size()))) {

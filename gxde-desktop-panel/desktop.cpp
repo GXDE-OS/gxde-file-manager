@@ -16,7 +16,9 @@
 #include <QDir>
 #include <QDBusConnection>
 #include <QProcess>
+#include <QCursor>
 #include <QScreen>
+#include <QStringList>
 
 #include <durl.h>
 
@@ -201,6 +203,12 @@ void Desktop::loadView()
 
 void Desktop::showWallpaperSettings()
 {
+    // 选择器落在鼠标所在的屏幕上。本进程持有pointer focus, QCursor::pos()可信;
+    // 选择器是新起的进程, 它自己问到的光标位置是原点, 所以必须由这里算好传过去。
+    QScreen *cursorScreen = QGuiApplication::screenAt(QCursor::pos());
+    if (!cursorScreen)
+        cursorScreen = qApp->primaryScreen();
+
     // 两难困境：当前gxde-desktop-panel是一个Wayland程序，这当然是对的，毕竟它要支持Wayland WM，但是...
     // gxde-wallpaper-chooser基本还是个XCB的窗口（它自己不是程序），主要点是这样的：gxde-desktop-panel启动完成后
     // 会马上unset掉layer-shell相关的集成，导致gxde-wallpaper-chooser是个XCB窗口
@@ -210,8 +218,12 @@ void Desktop::showWallpaperSettings()
     // 备用方案: 在Wayland下改为以独立进程拉起选择器, 自己保持layer-shell集成
     // 详见 gxde-wallpaper-chooser/main.cpp
     if (Wayland::LayerShellHelper::isWayland()) {
+        QStringList args;
+        if (cursorScreen)
+            args << QStringLiteral("--screen") << cursorScreen->name();
+
         // startDetached不会重复拉起新进程，无妨；选择器进程自身在关闭时退出
-        if (!QProcess::startDetached("gxde-wallpaper-chooser-wayland", {})) {
+        if (!QProcess::startDetached("gxde-wallpaper-chooser-wayland", args)) {
             qWarning() << "Failed to launch: gxde-wallpaper-chooser-wayland";
         }
         return;
@@ -222,7 +234,7 @@ void Desktop::showWallpaperSettings()
         d->wallpaperSettings = nullptr;
     }
 
-    d->wallpaperSettings = new WallpaperSettings;
+    d->wallpaperSettings = new WallpaperSettings(nullptr, cursorScreen);
     connect(d->wallpaperSettings, &Frame::done, this, [ = ] {
         d->wallpaperSettings->deleteLater();
         d->wallpaperSettings = nullptr;

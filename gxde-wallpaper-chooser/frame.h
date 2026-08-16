@@ -39,6 +39,7 @@ DWIDGET_END_NAMESPACE
 QT_BEGIN_NAMESPACE
 class QCheckBox;
 class QHBoxLayout;
+class QScreen;
 QT_END_NAMESPACE
 
 DWIDGET_USE_NAMESPACE
@@ -59,12 +60,14 @@ public:
         ScreenSaverMode
     };
 
-    Frame(QFrame *parent = 0);
+    // targetScreen为选择器要落在的屏幕(通常是鼠标所在屏)，传nullptr则回落到主屏
+    Frame(QFrame *parent = 0, QScreen *targetScreen = nullptr);
     ~Frame();
 
     void show();
     void hide();
 
+    QScreen *targetScreen() const;
     QString desktopBackground() const;
 
 signals:
@@ -125,6 +128,8 @@ private:
     QMap<QString, bool> m_deletableInfo;
 
     BackgroundHelper *m_backgroundHelper = nullptr;
+
+    QScreen *m_targetScreen = nullptr;
 
     void initUI();
     void initSize();
