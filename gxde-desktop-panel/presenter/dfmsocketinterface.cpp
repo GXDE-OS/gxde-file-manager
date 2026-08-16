@@ -136,3 +136,18 @@ void DFMSocketInterface::showProperty(const QList<QUrl>& urls) {
 
     QProcess::startDetached(QStringLiteral("gxde-file-manager"), arguments);
 }
+
+void DFMSocketInterface::showFilePreview(const QStringList &paths)
+{
+    QStringList arguments;
+    arguments.append(QStringLiteral("--preview"));
+    for (const QString &path : paths) {
+        arguments.append(path);
+    }
+
+    if (QProcess::startDetached(QStringLiteral("file-manager.sh"), arguments)) {
+        return;
+    }
+
+    QProcess::startDetached(QStringLiteral("gxde-file-manager"), arguments);
+}

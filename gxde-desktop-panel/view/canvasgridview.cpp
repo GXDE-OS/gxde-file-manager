@@ -704,7 +704,14 @@ void CanvasGridView::keyPressEvent(QKeyEvent *event)
             foreach (QString url, urls) {
                 entryUrls << DUrl(url);
             }
-            DFMGlobal::showFilePreviewDialog(selectUrls, entryUrls);
+            if (Wayland::LayerShellHelper::isWayland()) {
+                QStringList paths;
+                for (const DUrl &url : selectUrls)
+                    paths.append(url.toString());
+                DFMSocketInterface::instance()->showFilePreview(paths);
+            } else {
+                DFMGlobal::showFilePreviewDialog(selectUrls, entryUrls);
+            }
         }
         break;
         default: break;

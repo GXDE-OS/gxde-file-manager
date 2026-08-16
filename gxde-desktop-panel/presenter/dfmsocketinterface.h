@@ -28,6 +28,7 @@ signals:
 public slots:
     void showProperty(const QStringList& paths);
     void showProperty(const QList<QUrl>& urls);
+    void showFilePreview(const QStringList& paths);
 
 private:
     QScopedPointer<DFMSocketInterfacePrivate> d_ptr;

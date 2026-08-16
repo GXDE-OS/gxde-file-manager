@@ -275,3 +275,24 @@ void FileManagerApp::showPropertyDialog(const QStringList paths)
     emit fileSignalManager->requestShowPropertyDialog(DFMUrlListBaseEvent(this, urlList));
 }
 
+void FileManagerApp::showFilePreviewDialog(const QStringList paths)
+{
+    DUrlList urlList;
+    foreach (QString path, paths) {
+        DUrl url = DUrl::fromUserInput(path);
+        if (!url.scheme().isEmpty()) {
+            if (url.scheme() == FILE_SCHEME && !QFile::exists(url.path()))
+                continue;
+        } else {
+            if (!QFile::exists(DUrl::fromLocalFile(path).path()))
+                continue;
+        }
+        if (!urlList.contains(url))
+            urlList << url;
+    }
+    if (urlList.isEmpty())
+        return;
+
+    emit fileSignalManager->requestShowFilePreviewDialog(urlList, urlList);
+}
+

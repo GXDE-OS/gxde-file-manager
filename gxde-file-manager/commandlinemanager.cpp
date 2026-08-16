@@ -60,6 +60,7 @@ void CommandLineManager::initOptions()
     QCommandLineOption newWindowOption(QStringList() << "n" << "new-window", "show new window");
     QCommandLineOption backendOption(QStringList() << "d" << "none-window-process", "start gxde-file-manager in no window mode");
     QCommandLineOption openPropertyDialogOption(QStringList() << "p" << "property", "show property dialog");
+    QCommandLineOption openPreviewDialogOption(QStringList() << "preview", "show file preview dialog");
     QCommandLineOption rootOption(QStringList() << "r" << "root", "exec gxde-file-manager in root mode");
     QCommandLineOption showFileItem(QStringList() << "show-item", "Show a file item in a new window");
     QCommandLineOption event(QStringList() << "e" << "event", "Process the event by json data");
@@ -74,6 +75,7 @@ void CommandLineManager::initOptions()
     addOption(newWindowOption);
     addOption(backendOption);
     addOption(openPropertyDialogOption);
+    addOption(openPreviewDialogOption);
     addOption(rootOption);
     addOption(showFileItem);
     addOption(event);
@@ -119,6 +121,13 @@ void CommandLineManager::processCommand()
     if (isSet("p")) {
         QStringList paths = positionalArguments();
         FileManagerApp::instance()->showPropertyDialog(paths);
+
+        return;
+    }
+
+    if (isSet("preview")) {
+        QStringList paths = positionalArguments();
+        FileManagerApp::instance()->showFilePreviewDialog(paths);
 
         return;
     }
