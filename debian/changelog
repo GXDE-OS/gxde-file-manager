@@ -1,8 +1,12 @@
-gxde-file-manager (6.3.8) UNRELEASED; urgency=medium
+gxde-file-manager (6.3.9) UNRELEASED; urgency=medium
 
+  [ CharOfString ]
   * 修复Wayland下桌面图标入侵dock与顶栏区域
 
- -- CharOfString <root@charofstring.cc>  Mon, 18 Aug 2026 16:28:22 +0800
+  [ gfdgd_xi ]
+  * 修复任务栏插件大小异常的问题
+
+ -- gfdgd_xi <3025613752@qq.com>  Tue, 18 Aug 2026 22:40:54 +0800
 
 gxde-file-manager (6.3.7) UNRELEASED; urgency=medium
 

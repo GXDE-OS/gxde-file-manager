@@ -28,8 +28,14 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QIcon>
-#include <QtMath>
 #include <QApplication>
+#include <algorithm>
+
+// 与 dock 框架约定一致：插件图标最大尺寸
+#define PLUGIN_ICON_MAX_SIZE 20
+
+// disk 插件图标尺寸，与 sound 等正常插件对齐（24），比框架旧值 20 更贴合面板
+#define DISK_ICON_SIZE 24
 
 DiskPluginItem::DiskPluginItem(QWidget *parent)
     : QWidget(parent),
@@ -49,9 +55,11 @@ void DiskPluginItem::paintEvent(QPaintEvent *e)
     QWidget::paintEvent(e);
 
     QPainter painter(this);
-    const QRectF &rf = QRectF(rect());
-    const QRectF &rfp = QRectF(m_icon.rect());
-    painter.drawPixmap(rf.center() - rfp.center() / qApp->devicePixelRatio(), m_icon);
+
+    updateIcon();
+
+    // 居中偏移必须用 pixmap 自身的 DPR（与正常插件一致，修复 HDPI 下图标偏左上）
+    painter.drawPixmap(rect().center() - m_icon.rect().center() / m_icon.devicePixelRatioF(), m_icon);
 }
 
 void DiskPluginItem::resizeEvent(QResizeEvent *e)
@@ -63,18 +71,18 @@ void DiskPluginItem::resizeEvent(QResizeEvent *e)
 
 QSize DiskPluginItem::sizeHint() const
 {
-    return QSize(26, 26);
+    // 仅一个图标，不需要像 trash 那样占用大尺寸，宽度贴近图标即可避免留白
+    return QSize(DISK_ICON_SIZE + 8, DISK_ICON_SIZE + 8);
 }
 
 void DiskPluginItem::updateIcon()
 {
-//    if (m_displayMode == Dock::Efficient)
-//        m_icon = QIcon::fromTheme("drive-removable-dock-symbolic").pixmap(16 * qApp->devicePixelRatio(), 16 * qApp->devicePixelRatio());
-//    else
-//        m_icon = QIcon::fromTheme("drive-removable-dock").pixmap(std::min(width(), height()) * 0.8 * qApp->devicePixelRatio(), std::min(width(), height()) * 0.8 * qApp->devicePixelRatio());
-
     // fashion mode icons are no longer needed
-    m_icon = QIcon::fromTheme("drive-removable-dock-symbolic").pixmap(16 * qApp->devicePixelRatio(), 16 * qApp->devicePixelRatio());
-    m_icon.setDevicePixelRatio(qApp->devicePixelRatio());
+    const int size = DISK_ICON_SIZE;
+    QIcon icon = QIcon::fromTheme("drive-removable-dock-symbolic");
+
+    // 按当前 DPR 请求 pixmap，HDPI 下图标才不会糊也不会偏小
+    m_icon = icon.pixmap(QSize(size, size), devicePixelRatioF());
+
     update();
 }
