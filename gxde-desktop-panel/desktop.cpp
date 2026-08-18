@@ -26,6 +26,8 @@
 #include "view/backgroundhelper.h"
 #include "presenter/apppresenter.h"
 
+#include "../gxde-wallpaper-chooser/frame.h"
+
 #ifndef DISABLE_ZONE
 #include "../gxde-zone/mainwindow.h"
 #endif
@@ -33,6 +35,8 @@
 #include "util/xcb/xcb.h"
 #include "util/wayland/layershellhelper.h"
 #include "waylandutils.h"
+
+using WallpaperSettings = Frame;
 
 #ifndef DISABLE_ZONE
 using ZoneSettings = ZoneMainWindow;
@@ -43,6 +47,7 @@ class DesktopPrivate
 public:
     CanvasGridView      screenFrame;
     BackgroundHelper *background = nullptr;
+    WallpaperSettings *wallpaperSettings{ nullptr };
 
 #ifndef DISABLE_ZONE
     ZoneSettings *zoneSettings { nullptr };
@@ -211,18 +216,45 @@ void Desktop::showWallpaperSettings()
     if (!cursorScreen)
         cursorScreen = qApp->primaryScreen();
 
-    QStringList args;
-    if (cursorScreen)
-        args << QStringLiteral("--screen") << cursorScreen->name();
+    // 两难困境：当前gxde-desktop-panel是一个Wayland程序，这当然是对的，毕竟它要支持Wayland WM，但是...
+    // gxde-wallpaper-chooser基本还是个XCB的窗口（它自己不是程序），主要点是这样的：gxde-desktop-panel启动完成后
+    // 会马上unset掉layer-shell相关的集成，导致gxde-wallpaper-chooser是个XCB窗口
+    // 你可能会说：那么，我不unset不就没事了吗？恰恰相反，unset是必须的
+    // 要不然其打开的所有子窗口（包括但不限于文件管理器、终端等）会继承这个layer-shell集成，然后也变成layer-shell从而糊满整个屏幕
+    // 所以，必须保留unset的设计，但是壁纸选择器必须是个例外...
+    // 备用方案: 在Wayland下改为以独立进程拉起选择器, 自己保持layer-shell集成
+    // 详见 gxde-wallpaper-chooser/main.cpp
+    if (Wayland::LayerShellHelper::isWayland()) {
+        QStringList args;
+        if (cursorScreen)
+            args << QStringLiteral("--screen") << cursorScreen->name();
 
-    // X11 会把选择器(Frame)直接内嵌到本进程, 而 Frame 内部用
-    // DRegionMonitor 监听全局鼠标点击来关闭自己。DRegionMonitor 会在本进程
-    // 创建一个 com.deepin.api.XEventMonitor 的 D-Bus 代理, 关闭选择器、销毁
-    // 该代理(QDBusAbstractInterface 析构)时, 在 X11 会话下会触发 __XEventMonitor
-    // 析构崩溃, 连带使 gxde-desktop-panel 进程崩溃，该选择器能在 x11 使用，所以干脆就直接
-    // 启动独立进程了，wayland 和 x11 用同个选择器，不再直接内嵌到进程里
-    if (!QProcess::startDetached(QStringLiteral("gxde-wallpaper-chooser-wayland"), args))
-        qWarning() << "failed to launch gxde-wallpaper-chooser-wayland";
+        // startDetached不会重复拉起新进程，无妨；选择器进程自身在关闭时退出
+        if (!QProcess::startDetached("gxde-wallpaper-chooser-wayland", args)) {
+            qWarning() << "Failed to launch: gxde-wallpaper-chooser-wayland";
+        }
+        return;
+    }
+
+    if (d->wallpaperSettings) {
+        d->wallpaperSettings->deleteLater();
+        d->wallpaperSettings = nullptr;
+    }
+
+    d->wallpaperSettings = new WallpaperSettings(nullptr, cursorScreen);
+    connect(d->wallpaperSettings, &Frame::done, this, [ = ] {
+        d->wallpaperSettings->deleteLater();
+        d->wallpaperSettings = nullptr;
+    });
+    connect(d->wallpaperSettings, &Frame::aboutHide, this, [this] {
+        const QString &desktopImage = d->wallpaperSettings->desktopBackground();
+
+        if (!desktopImage.isEmpty())
+            d->background->setBackground(desktopImage);
+    }, Qt::DirectConnection);
+
+    d->wallpaperSettings->show();
+    d->wallpaperSettings->grabKeyboard();
 }
 
 #ifndef DISABLE_ZONE
