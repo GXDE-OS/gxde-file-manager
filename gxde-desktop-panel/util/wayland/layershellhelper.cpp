@@ -133,14 +133,15 @@ void LayerShellHelper::setDesktopIconsRole(QWidget* widget, QScreen* screen,
     layerWindow->setLayer(LayerShellQt::Window::LayerBottom);
     layerWindow->setAnchors(anchors);
 
-    // exclusive zone = -1: 该 surface 不预留空间, 且不被其他正值 exclusive zone
-    // (如 dock 预留的底边) 推开, 从而铺满整屏。
-    // 这样在时尚模式下, dock 仅占部分宽度, dock 两侧暴露出来的区域仍能被
-    // CanvasGridView 接收到点击事件 (桌面右键菜单/框选/取消选中)。
-    // dock 处于 LayerTop, 本 surface 处于 LayerBottom, dock 仍会渲染在其之上,
-    // 不会被图标遮挡; 图标网格的布局区域由 CanvasGridView 内部依据
-    // availableGeometry 单独计算, 不会排布到 dock 下方。
-    layerWindow->setExclusiveZone(-1);
+    // exclusive zone = 0: 本 surface 自己不预留空间, 但会被所有正值
+    // exclusive zone 推开 —— 合成器把所有排除区(dock 的底边、顶栏、
+    // 以及用户自己运行的任何 layer-shell 程序)从工作区里扣掉后, 把本
+    // surface 排布到剩余工作区, 即 rect() 就是图标可用的全部区域。
+    // 这样无论谁设置了排除区都能被正确尊重, 不需要向具体程序查询几何。
+    // dock/顶栏处于 LayerTop, 本 surface 处于 LayerBottom, 它们仍会渲染
+    // 在本层之上; 排除区内的鼠标事件由壁纸层(LayerBackground)接收,
+    // desktop.cpp 里再转发给 CanvasGridView, 右键菜单/框选仍然可用。
+    layerWindow->setExclusiveZone(0);
     layerWindow->setKeyboardInteractivity(
         LayerShellQt::Window::KeyboardInteractivityOnDemand);
 }
