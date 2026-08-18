@@ -5,7 +5,11 @@
  * qdbusxml2cpp is Copyright (C) 2015 Digia Plc and/or its subsidiary(-ies).
  *
  * This is an auto-generated file.
- * Do not edit! All changes made to it will be lost.
+ * This file may have been hand-edited. Look for HAND-EDIT comments
+ * before re-generating it.
+ *
+ * HAND-EDIT: GXDE 的 dock 守护进程是 top.gxde.daemon.dock, 与深度原版的
+ * com.deepin.dde.daemon.Dock 不同。这里在运行时选择后端(优先 GXDE)。
  */
 
 #ifndef DBUSDOCK_H_1465782143
@@ -22,6 +26,7 @@
 
 /*
  * Proxy class for interface com.deepin.dde.daemon.Dock
+ * (GXDE 后端运行时实际接口为 top.gxde.daemon.dock)
  */
 class DBusDock: public QDBusAbstractInterface
 {
@@ -33,7 +38,7 @@ class DBusDock: public QDBusAbstractInterface
         if (3 != arguments.count())
             return;
         QString interfaceName = msg.arguments().at(0).toString();
-        if (interfaceName !="com.deepin.dde.daemon.Dock")
+        if (interfaceName != DBusDock::staticInterfaceName())
             return;
         QVariantMap changedProps = qdbus_cast<QVariantMap>(arguments.at(1).value<QDBusArgument>());
         foreach(const QString &prop, changedProps.keys()) {
@@ -47,8 +52,9 @@ class DBusDock: public QDBusAbstractInterface
         }
    }
 public:
-    static inline const char *staticInterfaceName()
-    { return "com.deepin.dde.daemon.Dock"; }
+    static QString staticServiceName();
+    static QString staticObjectPath();
+    static QString staticInterfaceName();
 
 public:
     explicit DBusDock(QObject *parent = 0);

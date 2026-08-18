@@ -17,6 +17,7 @@
 #include <QTextEdit>
 #include <QUrlQuery>
 #include <QContextMenuEvent>
+#include <QMouseEvent>
 #include <QHeaderView>
 #include <QMimeData>
 #include <QProcess>
@@ -1267,6 +1268,64 @@ bool CanvasGridView::event(QEvent *event)
     return QAbstractItemView::event(event);
 }
 
+bool CanvasGridView::eventFilter(QObject *watched, QEvent *event)
+{
+    // Wayland 下图标层尊重排除区(exclusive zone = 0), 不再铺满整屏:
+    // dock 两侧等排除区内的鼠标事件由壁纸层(LayerBackground)接收,
+    // desktop.cpp 把这个过滤器装在壁纸上, 把事件转发给画布, 保证
+    // 桌面右键菜单/框选/取消选中在这些区域仍然可用。
+    // X11 下画布本来就铺满整屏, 不需要转发。
+    if (watched == this || !Wayland::LayerShellHelper::isWayland()
+            || !watched->isWidgetType()) {
+        return QAbstractItemView::eventFilter(watched, event);
+    }
+
+    const QEvent::Type type = event->type();
+    const bool isMouseEvent = type == QEvent::MouseButtonPress
+        || type == QEvent::MouseButtonRelease
+        || type == QEvent::MouseButtonDblClick
+        || type == QEvent::MouseMove;
+    if (!isMouseEvent && type != QEvent::ContextMenu) {
+        return QAbstractItemView::eventFilter(watched, event);
+    }
+
+    auto source = qobject_cast<QWidget *>(watched);
+    if (!source) {
+        return QAbstractItemView::eventFilter(watched, event);
+    }
+
+    if (isMouseEvent) {
+        const QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        const QPoint localPos =
+            mapFromGlobal(source->mapToGlobal(mouseEvent->pos()));
+        // 仍落在画布内部的事件说明本就直接命中画布, 不需要转发
+        if (rect().contains(localPos)) {
+            return QAbstractItemView::eventFilter(watched, event);
+        }
+
+        QMouseEvent mappedEvent(type, localPos, localPos,
+            mouseEvent->globalPosition(), mouseEvent->button(),
+            mouseEvent->buttons(), mouseEvent->modifiers(),
+            mouseEvent->source(), mouseEvent->pointingDevice());
+        mappedEvent.setTimestamp(mouseEvent->timestamp());
+        QApplication::sendEvent(this, &mappedEvent);
+        return mappedEvent.isAccepted();
+    }
+
+    const QContextMenuEvent *menuEvent =
+        static_cast<QContextMenuEvent *>(event);
+    const QPoint localPos =
+        mapFromGlobal(source->mapToGlobal(menuEvent->pos()));
+    if (rect().contains(localPos)) {
+        return QAbstractItemView::eventFilter(watched, event);
+    }
+
+    QContextMenuEvent mappedEvent(menuEvent->reason(), localPos,
+        menuEvent->globalPos(), menuEvent->modifiers());
+    QApplication::sendEvent(this, &mappedEvent);
+    return mappedEvent.isAccepted();
+}
+
 void CanvasGridView::rowsInserted(const QModelIndex &parent, int first, int last)
 {
     QAbstractItemView::rowsInserted(parent, first, last);
@@ -1955,8 +2014,9 @@ void CanvasGridView::initUI()
 void CanvasGridView::updateGeometry(const QRect &geometry)
 {
     if (Wayland::LayerShellHelper::isWayland() && isWindow()) {
-        // exclusive zone = -1: widget 铺满整屏用于接收点击 (含 dock 两侧暴露区域),
-        // 但图标只在 availableGeometry (已排除 dock 区域) 内排布。
+        // exclusive zone = 0: 合成器把所有正值排除区(dock、顶栏或用户自己的
+        // layer-shell 程序)从工作区里扣掉后, 再把本 surface 推挤到工作区大小,
+        // 即 rect() 已经是排除区之外的可用区域, 图标直接在其中排布即可。
         QScreen *screen = windowHandle() && windowHandle()->screen()
             ? windowHandle()->screen()
             : DesktopDisplay::instance()->primaryScreen();

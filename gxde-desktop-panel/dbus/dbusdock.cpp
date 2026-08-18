@@ -7,16 +7,78 @@
  * This is an auto-generated file.
  * This file may have been hand-edited. Look for HAND-EDIT comments
  * before re-generating it.
+ *
+ * HAND-EDIT: 构造时在 GXDE 守护进程(top.gxde.daemon.dock)与深度原版
+ * (com.deepin.dde.daemon.Dock)之间做一次运行时选择, 与 gxde-dock 的
+ * dockdbusnames 保持一致。
  */
 
 #include "dbusdock.h"
+
+#include <QDBusConnectionInterface>
+
+namespace {
+
+// GXDE 的 dock 守护进程注册在 top.gxde.daemon.dock, 深度原版注册在
+// com.deepin.dde.daemon.Dock。已注册或可由 DBus 激活时优先使用 GXDE 后端。
+bool gxdeDockDaemonPreferred()
+{
+    static const bool preferred = []() -> bool {
+        QDBusConnectionInterface* bus = QDBusConnection::sessionBus().interface();
+        if (!bus) {
+            return false;
+        }
+
+        return bus->isServiceRegistered(
+                   QStringLiteral("top.gxde.daemon.dock")).value()
+            || bus->activatableServiceNames().value().contains(
+                   QStringLiteral("top.gxde.daemon.dock"));
+    }();
+    return preferred;
+}
+
+QString dockDaemonService()
+{
+    static const QString service = gxdeDockDaemonPreferred()
+        ? QStringLiteral("top.gxde.daemon.dock")
+        : QStringLiteral("com.deepin.dde.daemon.Dock");
+    return service;
+}
+
+QString dockDaemonPath()
+{
+    static const QString path = gxdeDockDaemonPreferred()
+        ? QStringLiteral("/top/gxde/daemon/dock")
+        : QStringLiteral("/com/deepin/dde/daemon/Dock");
+    return path;
+}
+
+}  // namespace
+
+QString DBusDock::staticServiceName()
+{
+    return dockDaemonService();
+}
+
+QString DBusDock::staticObjectPath()
+{
+    return dockDaemonPath();
+}
+
+QString DBusDock::staticInterfaceName()
+{
+    // 两种后端的接口名与 service 名一致
+    return dockDaemonService();
+}
 
 /*
  * Implementation of interface class DBusDock
  */
 
 DBusDock::DBusDock(QObject *parent)
-    : QDBusAbstractInterface("com.deepin.dde.daemon.Dock", "/com/deepin/dde/daemon/Dock", staticInterfaceName(), QDBusConnection::sessionBus(), parent)
+    : QDBusAbstractInterface(staticServiceName(), staticObjectPath(),
+        staticInterfaceName().toLatin1().constData(),
+        QDBusConnection::sessionBus(), parent)
 {
     QDBusConnection::sessionBus().connect(this->service(), this->path(), "org.freedesktop.DBus.Properties",  "PropertiesChanged","sa{sv}as", this, SLOT(__propertyChanged__(QDBusMessage)));
 }

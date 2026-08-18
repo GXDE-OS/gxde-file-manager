@@ -90,6 +90,7 @@ public:
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
     bool event(QEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 
     virtual void rowsInserted(const QModelIndex &index, int first, int last) override;

@@ -110,6 +110,13 @@ void Desktop::onBackgroundEnableChanged()
             Wayland::LayerShellHelper::setDesktopIconsRole(
                 &d->screenFrame, qApp->primaryScreen(),
                 QStringLiteral("dde-shell/desktop-icons"));
+
+            // We must respect exclusive zones, and after that the mouse event
+            // will be received by wallpaper layer. We forward them to icon layer.
+            if (background && !background->property("_gxde_canvas_input_filter").toBool()) {
+                background->installEventFilter(&d->screenFrame);
+                background->setProperty("_gxde_canvas_input_filter", true);
+            }
         } else {
             d->screenFrame.setAttribute(Qt::WA_NativeWindow, false);
             d->screenFrame.setParent(background);
