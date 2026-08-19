@@ -28,6 +28,7 @@
 #include "dabstractfileinfo.h"
 #include "dfileservices.h"
 #include "dfmapplication.h"
+#include "dfmglobal.h"
 
 #include <QCommandLineParser>
 #include <QCommandLineOption>
@@ -61,6 +62,7 @@ void CommandLineManager::initOptions()
     QCommandLineOption backendOption(QStringList() << "d" << "none-window-process", "start gxde-file-manager in no window mode");
     QCommandLineOption openPropertyDialogOption(QStringList() << "p" << "property", "show property dialog");
     QCommandLineOption openPreviewDialogOption(QStringList() << "preview", "show file preview dialog");
+    QCommandLineOption clearTrashOption(QStringList() << "clear-trash", "show the confirmation dialog and empty the trash");
     QCommandLineOption rootOption(QStringList() << "r" << "root", "exec gxde-file-manager in root mode");
     QCommandLineOption showFileItem(QStringList() << "show-item", "Show a file item in a new window");
     QCommandLineOption event(QStringList() << "e" << "event", "Process the event by json data");
@@ -76,6 +78,7 @@ void CommandLineManager::initOptions()
     addOption(backendOption);
     addOption(openPropertyDialogOption);
     addOption(openPreviewDialogOption);
+    addOption(clearTrashOption);
     addOption(rootOption);
     addOption(showFileItem);
     addOption(event);
@@ -128,6 +131,12 @@ void CommandLineManager::processCommand()
     if (isSet("preview")) {
         QStringList paths = positionalArguments();
         FileManagerApp::instance()->showFilePreviewDialog(paths);
+
+        return;
+    }
+
+    if (isSet("clear-trash")) {
+        DFMGlobal::clearTrash();
 
         return;
     }
