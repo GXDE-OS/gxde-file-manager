@@ -1,4 +1,4 @@
-gxde-file-manager (6.3.9) UNRELEASED; urgency=medium
+gxde-file-manager (6.3.10) UNRELEASED; urgency=medium
 
   [ CharOfString ]
   * 修复Wayland下桌面图标入侵dock与顶栏区域
@@ -6,7 +6,11 @@ gxde-file-manager (6.3.9) UNRELEASED; urgency=medium
   [ gfdgd_xi ]
   * 修复任务栏插件大小异常的问题
 
- -- gfdgd_xi <3025613752@qq.com>  Tue, 18 Aug 2026 22:40:54 +0800
+  [ zeqi ]
+  * 修复 wayland 下 gxde-file-manager 的文件删除进度对话框会铺满全屏的问题
+  * 修复在 x11 下修改壁纸会导致 gxde-desktop-panel 崩溃的问题
+
+ -- gfdgd_xi <3025613752@qq.com>  Wed, 19 Aug 2026 19:38:25 +0800
 
 gxde-file-manager (6.3.7) UNRELEASED; urgency=medium
 
