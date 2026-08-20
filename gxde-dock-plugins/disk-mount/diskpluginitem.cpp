@@ -56,7 +56,9 @@ void DiskPluginItem::paintEvent(QPaintEvent *e)
 
     QPainter painter(this);
 
-    updateIcon();
+    // 不要在 paintEvent 里调用 updateIcon()：updateIcon() 末尾会 update()，
+    // 从而形成“绘制 -> 请求重绘 -> 绘制”的自激循环，在 Wayland 下会把
+    // gxde-dock 主线程推到单核 70%+。图标刷新已由 resizeEvent/refreshIcon 覆盖。
 
     // 居中偏移必须用 pixmap 自身的 DPR（与正常插件一致，修复 HDPI 下图标偏左上）
     painter.drawPixmap(rect().center() - m_icon.rect().center() / m_icon.devicePixelRatioF(), m_icon);
