@@ -2552,6 +2552,10 @@ void CanvasGridView::handleContextMenuAction(int action)
     case MenuAction::SelectAll:
         this->selectAll();
         break;
+    // 修复 gxde-desktop-panel 的右键刷新无效的问题（x11 和 wayland）
+    case MenuAction::Refresh:
+        model()->refresh();
+        break;
 //    case FileManagerProperty: {
 //        QStringList localFiles;
 //        localFiles << currentUrl().toLocalFile();
