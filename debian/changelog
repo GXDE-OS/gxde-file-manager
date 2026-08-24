@@ -1,9 +1,12 @@
-gxde-file-manager (6.3.11) UNRELEASED; urgency=medium
+gxde-file-manager (6.3.12) UNRELEASED; urgency=medium
 
   [ shenmo ]
   * 修复 disk-mount 插件 paintEvent 中调用 updateIcon 导致 gxde-dock 在 Wayland 下持续满核重绘的问题
 
- -- shenmo <shenmo@spark-app.store>  Thu, 20 Aug 2026 20:10:08 +0800
+  [ zeqi ]
+  * 修复 gxde-file-manager 和 gxde-desktop-panel 的右键刷新无效的问题
+
+ -- gfdgd_xi <3025613752@qq.com>  Mon, 24 Aug 2026 16:12:18 +0800
 
 gxde-file-manager (6.3.10) UNRELEASED; urgency=medium
 
