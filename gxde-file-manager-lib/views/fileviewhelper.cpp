@@ -173,7 +173,8 @@ void FileViewHelper::setFoucsOnFileView(quint64 winId)
 
 void FileViewHelper::refreshFileView(quint64 winId)
 {
-    if (winId != windowId()) {
+    // 修复 wayland 下 gxde-file-manager 右键刷新无效的问题
+    if (winId != 0 && winId != windowId()) {
         return;
     }
 
