@@ -220,6 +220,14 @@ int main(int argc, char *argv[])
         // init app
         Q_UNUSED(FileManagerApp::instance())
 
+        // 桌面面板在 Wayland 下会启动 `gxde-file-manager -e` 来代跑会弹窗的
+        // 文件操作。作为独立辅助进程处理完事件后应主动退出；事件被转发给
+        // 已经运行的文件管理器实例时，则不能带着它的窗口一起退出。
+        if (CommandLineManager::instance()->isSet("e")
+                && !CommandLineManager::instance()->isSet("d")) {
+            app.setProperty("_gxde_quit_after_deferred_event", true);
+        }
+
         if (CommandLineManager::instance()->isSet("d")) {
             fileManagerApp;
 #ifdef AUTO_RESTART_DEAMON

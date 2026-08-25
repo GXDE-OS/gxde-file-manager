@@ -34,6 +34,7 @@
 #include <QCommandLineOption>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QTimer>
 
 DFM_USE_NAMESPACE
 
@@ -115,8 +116,34 @@ void CommandLineManager::processCommand()
         Q_UNUSED(FileManagerApp::instance());
         const QSharedPointer<DFMEvent> &event = DFMEvent::fromJson(QJsonDocument::fromJson(positionalArguments().first().toLocal8Bit().constData()).object());
 
-        if (event)
+        if (!event) {
+            return;
+        }
+
+        // 这些事件会弹出对话框或创建文件任务窗口。桌面面板在 Wayland 下
+        // 会通过 `gxde-file-manager -e` 把它们转发到本进程执行；若在进入
+        // app.exec() 之前同步执行，文件任务只能等操作完成后才在事件循环里
+        // 补建任务窗口，甚至完全不显示。延迟到事件循环中执行即可让复制/
+        // 删除进度对话框像在普通文件管理器窗口里一样正常显示。
+        switch (event->type()) {
+        case DFMEvent::OpenFile:
+        case DFMEvent::PasteFile:
+        case DFMEvent::MoveToTrash:
+        case DFMEvent::DeleteFiles:
+        case DFMEvent::RestoreFromTrash:
+        case DFMEvent::MenuAction:
+            QTimer::singleShot(0, [event] {
+                DFMEventDispatcher::instance()->processEvent(event);
+
+                if (qApp->property("_gxde_quit_after_deferred_event").toBool()) {
+                    qApp->quit();
+                }
+            });
+            break;
+        default:
             DFMEventDispatcher::instance()->processEvent(event);
+            break;
+        }
 
         return;
     }

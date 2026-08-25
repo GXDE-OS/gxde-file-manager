@@ -54,6 +54,7 @@
 #include "deviceinfo/udisklistener.h"
 #include "interfaces/dfmglobal.h"
 #include "singleton.h"
+#include "waylandutils.h"
 
 #include <ddialog.h>
 
@@ -66,8 +67,50 @@
 #include <QMimeData>
 #include <QTimer>
 #include <QStandardPaths>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QProcess>
 
 DWIDGET_USE_NAMESPACE
+
+// 桌面面板在 Wayland 下启用了进程级 layer-shell，任何由面板进程创建的普通
+// toplevel 窗口（DDialog / DTaskDialog 等）都会被合成器当作 layer surface
+// 铺满全屏。文件管理器窗口进程则没有这个问题。因此这些会创建对话框/文件
+// 任务窗口的操作应转发给 gxde-file-manager 进程执行。
+static bool isDesktopPanelOnWayland()
+{
+    if (!WaylandUtils::isWaylandSession() || !qApp) {
+        return false;
+    }
+
+    return qApp->applicationName() == QLatin1String("gxde-desktop-panel");
+}
+
+static QJsonArray urlsToJsonArray(const DUrlList &urls)
+{
+    QJsonArray array;
+
+    for (const DUrl &url : urls) {
+        array.append(url.toString());
+    }
+
+    return array;
+}
+
+static bool dispatchFileManagerEvent(const QJsonObject &event)
+{
+    const QStringList arguments{
+        QStringLiteral("-e"),
+        QString::fromUtf8(QJsonDocument(event).toJson(QJsonDocument::Compact))
+    };
+
+    if (QProcess::startDetached(QStringLiteral("file-manager.sh"), arguments)) {
+        return true;
+    }
+
+    return QProcess::startDetached(QStringLiteral("gxde-file-manager"), arguments);
+}
 
 class DFileServicePrivate
 {
@@ -481,6 +524,16 @@ void DFileService::clearFileUrlHandler(const QString &scheme, const QString &hos
 
 bool DFileService::openFile(const QObject *sender, const DUrl &url) const
 {
+    if (isDesktopPanelOnWayland()) {
+        QJsonObject event;
+        event.insert(QStringLiteral("eventType"), QStringLiteral("OpenFile"));
+        event.insert(QStringLiteral("url"), url.toString());
+
+        if (dispatchFileManagerEvent(event)) {
+            return true;
+        }
+    }
+
     return DFMEventDispatcher::instance()->processEvent(dMakeEventPointer<DFMOpenFileEvent>(sender, url)).toBool();
 }
 
@@ -521,6 +574,27 @@ bool DFileService::deleteFiles(const QObject *sender, const DUrlList &list, bool
     if (list.isEmpty())
         return false;
 
+    if (isDesktopPanelOnWayland()) {
+        QJsonObject event;
+
+        if (confirmationDialog) {
+            // 复用文件管理器进程中的菜单事件路径，保留删除确认对话框。
+            event.insert(QStringLiteral("eventType"), QStringLiteral("MenuAction"));
+            event.insert(QStringLiteral("action"), QStringLiteral("CompleteDeletion"));
+            event.insert(QStringLiteral("currentUrl"), list.first().toString());
+        } else {
+            event.insert(QStringLiteral("eventType"), QStringLiteral("DeleteFiles"));
+            event.insert(QStringLiteral("silent"), slient);
+            event.insert(QStringLiteral("force"), force);
+        }
+
+        event.insert(QStringLiteral("urlList"), urlsToJsonArray(list));
+
+        if (dispatchFileManagerEvent(event)) {
+            return true;
+        }
+    }
+
     foreach (const DUrl &url, list) {
         if (systemPathManager->isSystemPath(url.toLocalFile())) {
             if (!slient) {
@@ -542,6 +616,16 @@ DUrlList DFileService::moveToTrash(const QObject *sender, const DUrlList &list) 
 {
     if (list.isEmpty()) {
         return list;
+    }
+
+    if (isDesktopPanelOnWayland()) {
+        QJsonObject event;
+        event.insert(QStringLiteral("eventType"), QStringLiteral("MoveToTrash"));
+        event.insert(QStringLiteral("urlList"), urlsToJsonArray(list));
+
+        if (dispatchFileManagerEvent(event)) {
+            return list;
+        }
     }
 
     if (FileUtils::isGvfsMountFile(list.first().toLocalFile())) {
@@ -572,6 +656,18 @@ void DFileService::pasteFileByClipboard(const QObject *sender, const DUrl &targe
 
 DUrlList DFileService::pasteFile(const QObject *sender, DFMGlobal::ClipboardAction action, const DUrl &targetUrl, const DUrlList &list) const
 {
+    if (isDesktopPanelOnWayland()) {
+        QJsonObject event;
+        event.insert(QStringLiteral("eventType"), QStringLiteral("PasteFile"));
+        event.insert(QStringLiteral("action"), static_cast<int>(action));
+        event.insert(QStringLiteral("targetUrl"), targetUrl.toString());
+        event.insert(QStringLiteral("urlList"), urlsToJsonArray(list));
+
+        if (dispatchFileManagerEvent(event)) {
+            return list;
+        }
+    }
+
     const QSharedPointer<DFMPasteEvent> &event = dMakeEventPointer<DFMPasteEvent>(sender, action, targetUrl, list);
     const DUrlList &new_list = qvariant_cast<DUrlList>(DFMEventDispatcher::instance()->processEventWithEventLoop(event));
 
