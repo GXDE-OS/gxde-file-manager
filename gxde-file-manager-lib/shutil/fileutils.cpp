@@ -39,6 +39,9 @@
 
 #include <dstorageinfo.h>
 
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusMessage>
 #include <QDirIterator>
 #include <QUrl>
 #include <QProcess>
@@ -66,6 +69,36 @@ extern "C" {
 #define signals public
 
 DFM_USE_NAMESPACE
+
+namespace {
+
+void setGxdeLockWallpaperOverride(const QString &pictureFilePath)
+{
+    const QFileInfo pictureInfo(pictureFilePath);
+    if (!pictureInfo.isFile() || !pictureInfo.isReadable())
+        return;
+
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    if (!bus.isConnected())
+        return;
+
+    QDBusConnectionInterface *dbusInterface = bus.interface();
+    if (!dbusInterface
+            || !dbusInterface->isServiceRegistered(
+                QStringLiteral("top.gxde.DisplayManager")).value()) {
+        return;
+    }
+
+    QDBusMessage call = QDBusMessage::createMethodCall(
+        QStringLiteral("top.gxde.DisplayManager"),
+        QStringLiteral("/top/gxde/DisplayManager"),
+        QStringLiteral("top.gxde.DisplayManager"),
+        QStringLiteral("SetLockWallpaperOverride"));
+    call << pictureInfo.canonicalFilePath();
+    bus.call(call, QDBus::NoBlock);
+}
+
+}  // namespace
 
 QString FileUtils::XDG_RUNTIME_DIR = "";
 
@@ -730,12 +763,20 @@ bool FileUtils::setBackground(const QString &pictureFilePath)
         else
             uris[0] = wallpaperUri;
 
-        return settings.trySet("backgroundUris", uris);
+        const bool ok = settings.trySet("backgroundUris", uris);
+        if (ok)
+            setGxdeLockWallpaperOverride(pictureFilePath);
+
+        return ok;
     }
 
     QDBusMessage msg = QDBusMessage::createMethodCall("com.deepin.daemon.Appearance", "/com/deepin/daemon/Appearance", "com.deepin.daemon.Appearance", "Set");
     msg.setArguments({"Background", pictureFilePath});
     QDBusConnection::sessionBus().asyncCall(msg);
+
+    // Keep the GXDM lock-screen wallpaper in sync as well, so the wallpaper
+    // also survives logout instead of only working on the in-session locker.
+    setGxdeLockWallpaperOverride(pictureFilePath);
 
     return true;
 }

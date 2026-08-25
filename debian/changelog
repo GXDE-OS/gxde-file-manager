@@ -1,3 +1,10 @@
+gxde-file-manager (6.3.14) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 右键“设为壁纸”同步设置 GXDM 锁屏壁纸 override，注销后登录界面生效
+
+ -- shenmo <shenmo@spark-app.store>  Tue, 25 Aug 2026 23:04:00 +0800
+
 gxde-file-manager (6.3.13) UNRELEASED; urgency=medium
 
   [ shenmo ]
