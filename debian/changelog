@@ -1,3 +1,10 @@
+gxde-file-manager (6.3.13) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 修复 Wayland 下桌面面板中打开可执行文件、复制/删除文件时对话框铺满全屏的问题
+
+ -- shenmo <shenmo@spark-app.store>  Tue, 25 Aug 2026 20:35:22 +0800
+
 gxde-file-manager (6.3.12) UNRELEASED; urgency=medium
 
   [ shenmo ]
