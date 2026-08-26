@@ -40,8 +40,12 @@
 #include <QThreadPool>
 #include <QtConcurrent>
 #include <QScrollBar>
+#include <QSet>
+#include <QStorageInfo>
 #include <QDebug>
 #include <DDBusSender>
+
+#include <fstab.h>
 
 #define WIDTH           300
 
@@ -125,6 +129,52 @@ QMap<QString, QString> getKernelParameters()
     return result;
 }
 
+static QSet<QString> getFstabMountPoints()
+{
+    QSet<QString> mountPoints;
+
+    setfsent();
+    struct fstab *fs = nullptr;
+    while ((fs = getfsent()) != nullptr) {
+        mountPoints.insert(QString::fromLocal8Bit(fs->fs_file));
+    }
+    endfsent();
+
+    return mountPoints;
+}
+
+static bool isSystemMountPoint(const QString &mountPoint, const QSet<QString> &fstabMountPoints)
+{
+    return mountPoint == QStringLiteral("/")
+            || mountPoint == QStringLiteral("/boot")
+            || mountPoint == QStringLiteral("/boot/efi")
+            || mountPoint == QStringLiteral("/efi")
+            || mountPoint == QStringLiteral("/boot/firmware")
+            || mountPoint == QStringLiteral("/home")
+            || fstabMountPoints.contains(mountPoint);
+}
+
+QString DiskControlWidget::rootDrive()
+{
+    if (m_rootDriveQueried) {
+        return m_rootDrive;
+    }
+
+    m_rootDriveQueried = true;
+
+    const QByteArray rootDevice = QStorageInfo(QStringLiteral("/")).device();
+    if (rootDevice.isEmpty()) {
+        return m_rootDrive;
+    }
+
+    QScopedPointer<DBlockDevice> rootBlock(m_diskManager->createBlockDeviceByDevicePath(rootDevice + '\0'));
+    if (rootBlock && rootBlock->isValid()) {
+        m_rootDrive = rootBlock->drive();
+    }
+
+    return m_rootDrive;
+}
+
 void DiskControlWidget::doStartupAutoMount()
 {
     // check if we are in live system, don't do auto mount if we are in live system.
@@ -155,16 +205,26 @@ void DiskControlWidget::unmountAll()
 {
     QStringList blockDevices = m_diskManager->blockDevices();
 
+    const QString systemDrive = rootDrive();
+    const QSet<QString> fstabMountPoints = getFstabMountPoints();
+
     for (const QString & blDevStr : blockDevices) {
         QScopedPointer<DBlockDevice> blDev(DDiskManager::createBlockDevice(blDevStr));
         if (blDev->hasFileSystem() /* && DFMSetting*/ && !blDev->mountPoints().isEmpty() && !blDev->hintIgnore()) {
-            QByteArray mountPoint = blDev->mountPoints().first();
-            if (mountPoint != QStringLiteral("/boot") && mountPoint != QStringLiteral("/") && mountPoint != QStringLiteral("/home")) {
-                QScopedPointer<DDiskDevice> diskDev(DDiskManager::createDiskDevice(blDev->drive()));
-                blDev->unmount({});
-                if (diskDev->removable()) {
-                    diskDev->eject({});
-                }
+            const QString mountPoint = QString::fromLocal8Bit(blDev->mountPoints().first());
+
+            if (isSystemMountPoint(mountPoint, fstabMountPoints)) {
+                continue;
+            }
+
+            if (!systemDrive.isEmpty() && blDev->drive() == systemDrive) {
+                continue;
+            }
+
+            QScopedPointer<DDiskDevice> diskDev(DDiskManager::createDiskDevice(blDev->drive()));
+            blDev->unmount({});
+            if (diskDev->removable()) {
+                diskDev->eject({});
             }
         }
     }
@@ -187,17 +247,31 @@ void DiskControlWidget::onDiskListChanged()
 
     int mountedCount = 0;
 
+    const QString systemDrive = rootDrive();
+    const QSet<QString> fstabMountPoints = getFstabMountPoints();
+
     QStringList blDevList = m_diskManager->blockDevices();
     for (const QString& blDevStr : blDevList) {
         QScopedPointer<DBlockDevice> blDev(DDiskManager::createBlockDevice(blDevStr));
         if (blDev->hasFileSystem() && !blDev->mountPoints().isEmpty() && !blDev->hintIgnore() && !blDev->isLoopDevice()) {
-            QByteArray mountPoint = blDev->mountPoints().first();
-            if (mountPoint != QStringLiteral("/boot") && mountPoint != QStringLiteral("/") && mountPoint != QStringLiteral("/home")) {
-                mountedCount++;
-                DAttachedUdisks2Device *dad = new DAttachedUdisks2Device(blDev.data());
-                DiskControlItem *item = new DiskControlItem(dad, this);
-                m_centralLayout->addWidget(item);
+            const QString mountPoint = QString::fromLocal8Bit(blDev->mountPoints().first());
+
+            // System mounts (/, /boot, /home, ESP, entries in /etc/fstab) are
+            // not removable media and must not make the dock plugin appear.
+            if (isSystemMountPoint(mountPoint, fstabMountPoints)) {
+                continue;
             }
+
+            // Ignore all partitions that live on the same drive as the root
+            // filesystem: none of them is a removable device either.
+            if (!systemDrive.isEmpty() && blDev->drive() == systemDrive) {
+                continue;
+            }
+
+            mountedCount++;
+            DAttachedUdisks2Device *dad = new DAttachedUdisks2Device(blDev.data());
+            DiskControlItem *item = new DiskControlItem(dad, this);
+            m_centralLayout->addWidget(item);
         }
     }
 

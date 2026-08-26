@@ -62,9 +62,14 @@ private slots:
     void unmountDisk(const QString &diskId) const;
 
 private:
+    QString rootDrive();
+
     QVBoxLayout *m_centralLayout;
     QWidget *m_centralWidget;
     bool autoMountDisabled = false;
+
+    QString m_rootDrive;
+    bool m_rootDriveQueried = false;
 
     DDiskManager *m_diskManager;
     DFM_NAMESPACE::DFMVfsManager *m_vfsManager;
