@@ -126,6 +126,7 @@ public:
     int cellHeight;
 
     QTimer              dodgeDelayTimer;
+    QTimer              screenGeometryUpdateTimer;
     QStringList         dodgeItems;
     bool                dodgeAnimationing   = false;
     double              dodgeDuration       = 0;

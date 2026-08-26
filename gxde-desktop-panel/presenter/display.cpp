@@ -28,10 +28,10 @@ DesktopDisplay::DesktopDisplay(QObject *parent) : QObject(parent)
         }
         qCritical() << "Can not find" << primaryName << qApp->screens();
     });
-#else
+#endif
+
     connect(qApp, &QApplication::primaryScreenChanged,
             this, &DesktopDisplay::primaryScreenChanged);
-#endif
 }
 
 QScreen *DesktopDisplay::primaryScreen()

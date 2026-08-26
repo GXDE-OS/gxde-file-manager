@@ -1944,7 +1944,12 @@ static inline QRect getValidNewGeometry(const QRect &geometry, const QRect &oldG
     }
 
     auto primaryScreen = DesktopDisplay::instance()->primaryScreen();
-    newGeometry = primaryScreen->geometry();;
+    if (!primaryScreen) {
+        qCritical() << "Can not find a screen for desktop geometry update";
+        return oldGeometry;
+    }
+
+    newGeometry = primaryScreen->geometry();
     geometryValid = (newGeometry.width() > 0) && (newGeometry.height() > 0);
     if (geometryValid) {
         return newGeometry;
@@ -2042,10 +2047,16 @@ void CanvasGridView::updateGeometry(const QRect &geometry)
         return;
     }
 
-    auto newGeometry =  getValidNewGeometry(geometry, this->geometry());
-    setGeometry(qApp->primaryScreen()->geometry());
+    QScreen *primaryScreen = DesktopDisplay::instance()->primaryScreen();
+    if (!primaryScreen) {
+        qWarning() << "Skip desktop geometry update without a primary screen";
+        return;
+    }
+
+    auto newGeometry = getValidNewGeometry(geometry, this->geometry());
+    setGeometry(primaryScreen->geometry());
     d->canvasRect = newGeometry;
-    qDebug() << "set newGeometry" << newGeometry << qApp->primaryScreen()->geometry();
+    qDebug() << "set newGeometry" << newGeometry << primaryScreen->geometry();
     d->waterMaskFrame->updatePosition();
 
     /*
@@ -2148,16 +2159,39 @@ void CanvasGridView::initConnection()
 //    });
 //    d->syncTimer->start();
 
-    auto connectScreenGeometryChanged = [this](QScreen * screen) {
+    // VirtualBox/VMware dynamic resizing is not consistent about whether the
+    // work-area signal follows the screen-size signal.  Coalesce both signals
+    // and read the final geometry after the WM/compositor and dock have had a
+    // chance to update their reserved area.
+    d->screenGeometryUpdateTimer.setSingleShot(true);
+    d->screenGeometryUpdateTimer.setInterval(400);
+    connect(&d->screenGeometryUpdateTimer, &QTimer::timeout, this, [this] {
+        QScreen *screen = DesktopDisplay::instance()->primaryScreen();
+        if (!screen) {
+            qWarning() << "Skip delayed desktop geometry update without a primary screen";
+            return;
+        }
+
+        qDebug() << "Refresh desktop geometry:" << screen
+                 << "geometry:" << screen->geometry()
+                 << "availableGeometry:" << screen->availableGeometry();
+        updateGeometry(screen->availableGeometry());
+    });
+
+    auto connectScreenGeometryChanged = [this](QScreen *screen) {
+        if (!screen) {
+            return;
+        }
+
+        auto scheduleUpdate = [this] {
+            d->screenGeometryUpdateTimer.start();
+        };
+        connect(screen, &QScreen::geometryChanged,
+                this, scheduleUpdate);
         connect(screen, &QScreen::availableGeometryChanged,
-        this, [ = ](const QRect & /*geometry*/) {
-            QTimer::singleShot(400, this, [ = ]() {
-                auto geometry = DesktopDisplay::instance()->primaryScreen()->availableGeometry();
-                qDebug() << "primaryScreen availableGeometryChanged changed to:" << geometry;
-                qDebug() << "primaryScreen:" << qApp->primaryScreen() << qApp->primaryScreen()->geometry();
-                updateGeometry(geometry);
-            });
-        });
+                this, scheduleUpdate);
+        connect(screen, &QScreen::logicalDotsPerInchChanged,
+                this, scheduleUpdate);
     };
 
     connectScreenGeometryChanged(DesktopDisplay::instance()->primaryScreen());
@@ -2165,20 +2199,20 @@ void CanvasGridView::initConnection()
     connect(DesktopDisplay::instance(), &DesktopDisplay::primaryScreenChanged,
     this, [ = ](QScreen * screen) {
         qDebug() << "primaryScreenChanged to:" << screen;
-        qDebug() << "currend primaryScreen" << qApp->primaryScreen()
-                 << qApp->primaryScreen()->availableGeometry();
-
         if (!screen) {
             return;
         }
 
         qDebug() << "screen availableGeometry:" << screen->availableGeometry();
         for (auto screen : qApp->screens()) {
+            disconnect(screen, &QScreen::geometryChanged, this, Q_NULLPTR);
             disconnect(screen, &QScreen::availableGeometryChanged, this, Q_NULLPTR);
+            disconnect(screen, &QScreen::logicalDotsPerInchChanged, this, Q_NULLPTR);
         }
         connectScreenGeometryChanged(screen);
 
         updateGeometry(screen->availableGeometry());
+        d->screenGeometryUpdateTimer.start();
     });
 
     connect(this->model(), &DFileSystemModel::newFileByInternal,
