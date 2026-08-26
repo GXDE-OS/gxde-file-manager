@@ -1,3 +1,12 @@
+gxde-file-manager (6.3.16) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 修复 Wayland 下文件复制对话框标题栏无法拖拽移动的问题
+  * 移除文件复制对话框任务条目的白色背景，与 DTK 对话框背景保持一致
+  * 修复同时进行多个复制任务时任务条目互相重叠的问题
+
+ -- shenmo <shenmo@spark-app.store>  Wed, 26 Aug 2026 23:47:39 +0800
+
 gxde-file-manager (6.3.15) UNRELEASED; urgency=medium
 
   [ shenmo ]
