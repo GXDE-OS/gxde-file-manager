@@ -1,3 +1,10 @@
+gxde-file-manager (6.3.15) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 修复未插入外部优盘时 dock 磁盘插件仍显示启动设备及其卸载按钮的问题
+
+ -- shenmo <shenmo@spark-app.store>  Wed, 26 Aug 2026 20:32:22 +0800
+
 gxde-file-manager (6.3.14) UNRELEASED; urgency=medium
 
   [ shenmo ]
