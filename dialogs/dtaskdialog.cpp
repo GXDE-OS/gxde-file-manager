@@ -31,6 +31,8 @@
 #include <QApplication>
 #include <QScreen>
 #include <QCloseEvent>
+#include <QMouseEvent>
+#include <QWindow>
 
 #include <ddialog.h>
 
@@ -184,12 +186,6 @@ MoveCopyTaskWidget::~MoveCopyTaskWidget()
 
 void MoveCopyTaskWidget::initUI()
 {
-
-    m_bgLabel = new QLabel(this);
-    m_bgLabel->setObjectName("Background");
-    m_bgLabel->setAutoFillBackground(true);
-    m_bgLabel->setWindowFlags(Qt::WindowStaysOnBottomHint);
-
     m_closeButton = new QPushButton;
     m_closeButton->setObjectName("StopButton");
     m_closeButton->setFixedSize(24, 24);
@@ -649,24 +645,12 @@ bool MoveCopyTaskWidget::event(QEvent *e)
         m_closeButton->show();
         m_speedLabel->hide();
         m_remainLabel->hide();
-        m_bgLabel->setStyleSheet("QLabel#Background{"
-                                 "background-color: #f3f3f3;"
-                                 "border: 1px solid #f3f3f3;"
-                                 "border-radius: 8px;"
-                                 "}");
-        m_bgLabel->setFixedSize(size() - QSize(20, 0));
-        m_bgLabel->move(10, 0);
         emit hovereChanged(true);
     } else if (e->type() == QEvent::Leave) {
         hovereChanged(false);
         m_speedLabel->show();
         m_remainLabel->show();
         m_closeButton->hide();
-        m_bgLabel->setStyleSheet("QLabel#Background{"
-                                 "background-color: #fff;"
-                                 "border: 1px solid #fff;"
-                                 "border-radius: 8px;"
-                                 "}");
     }
 
     return QFrame::event(e);
@@ -883,6 +867,7 @@ void DTaskDialog::initUI()
     m_titlebar->setBackgroundTransparent(true);
     m_titlebar->layout()->setContentsMargins(0, 0, 0, 0);
     m_titlebar->setMenuVisible(false);
+    m_titlebar->installEventFilter(this);
 
     m_taskListWidget = new QListWidget;
     m_taskListWidget->setSelectionMode(QListWidget::NoSelection);
@@ -902,6 +887,21 @@ void DTaskDialog::initUI()
 void DTaskDialog::initConnect()
 {
 
+}
+
+bool DTaskDialog::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_titlebar && event->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        if (mouseEvent->button() == Qt::LeftButton && windowHandle()) {
+            // Under Wayland an application cannot reposition its own window.
+            // Let the compositor perform the interactive move instead.
+            windowHandle()->startSystemMove();
+            return true;
+        }
+    }
+
+    return DAbstractDialog::eventFilter(watched, event);
 }
 
 QListWidget *DTaskDialog::getTaskListWidget()
@@ -945,7 +945,7 @@ void DTaskDialog::addTask(const QMap<QString, QString> &jobDetail)
         connect(this, &DTaskDialog::currentHoverRowChanged, moveWidget, &MoveCopyTaskWidget::handleLineDisplay);
         QListWidgetItem *item = new QListWidgetItem();
         item->setFlags(Qt::NoItemFlags);
-        item->setSizeHint(QSize(item->sizeHint().width(), 60));
+        item->setSizeHint(QSize(m_defaultWidth, 60));
         m_taskListWidget->addItem(item);
         m_taskListWidget->setItemWidget(item, moveWidget);
         m_jobIdItems.insert(jobDetail.value("jobId"), item);
@@ -972,7 +972,7 @@ MoveCopyTaskWidget *DTaskDialog::addTaskJob(DFileCopyMoveJob *job)
     connect(this, &DTaskDialog::currentHoverRowChanged, moveWidget, &MoveCopyTaskWidget::handleLineDisplay);
     QListWidgetItem *item = new QListWidgetItem();
     item->setFlags(Qt::NoItemFlags);
-    item->setSizeHint(QSize(item->sizeHint().width(), 60));
+    item->setSizeHint(QSize(m_defaultWidth, 60));
     m_taskListWidget->addItem(item);
     m_taskListWidget->setItemWidget(item, moveWidget);
     m_jobIdItems.insert(QString::number(quintptr(job), 16), item);
@@ -1003,7 +1003,7 @@ void DTaskDialog::addConflictTask(const QMap<QString, QString> &jobDetail)
                 this, SIGNAL(conflictHided(QMap<QString, QString>)));
         QListWidgetItem *item = new QListWidgetItem();
         item->setFlags(Qt::NoItemFlags);
-        item->setSizeHint(QSize(item->sizeHint().width(), 85));
+        item->setSizeHint(QSize(m_defaultWidth, 85));
         m_taskListWidget->addItem(item);
         m_taskListWidget->setItemWidget(item, moveWidget);
         m_jobIdItems.insert(jobDetail.value("jobId"), item);
@@ -1020,7 +1020,7 @@ void DTaskDialog::adjustSize()
     for (int i = 0; i < m_taskListWidget->count(); i++) {
         QListWidgetItem *item = m_taskListWidget->item(i);
         int h = m_taskListWidget->itemWidget(item)->height();
-        item->setSizeHint(QSize(item->sizeHint().width(), h));
+        item->setSizeHint(QSize(m_defaultWidth, h));
         listHeight += h;
     }
 

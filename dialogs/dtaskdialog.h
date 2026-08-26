@@ -148,7 +148,6 @@ private:
     QCheckBox* m_checkBox=NULL;
     QPushButton* m_enterButton=NULL;
     CircleProgressAnimatePad* m_animatePad;
-    QLabel* m_bgLabel;
     QFrame* m_lineLabel = NULL;
 
     DFileCopyMoveJob *m_fileJob = nullptr;
@@ -211,6 +210,7 @@ public slots:
 protected:
     void closeEvent(QCloseEvent* event);
     void keyPressEvent(QKeyEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 
 private:
