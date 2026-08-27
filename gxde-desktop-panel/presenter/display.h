@@ -10,6 +10,7 @@
 #pragma once
 
 #include <QObject>
+#include <QRect>
 #include "../global/singleton.h"
 
 class QScreen;
@@ -23,6 +24,8 @@ public:
     explicit DesktopDisplay(QObject *parent = 0);
 
     QScreen *primaryScreen();
+    QRect primaryGeometry();
+    QRect primaryAvailableGeometry();
 
 signals:
     void primaryScreenChanged(QScreen *screen);
@@ -30,4 +33,3 @@ signals:
 private:
     DBusDisplay *m_display = nullptr;
 };
-

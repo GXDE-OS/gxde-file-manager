@@ -28,6 +28,7 @@
 #include <DWindowManagerHelper>
 #include <QNetworkAccessManager>
 #include <QFile>
+#include <QTimer>
 
 using WMInter = com::deepin::wm;
 DWIDGET_USE_NAMESPACE
@@ -71,6 +72,7 @@ Q_SIGNALS:
     void onScreenChanged();
 
 private:
+    bool eventFilter(QObject *watched, QEvent *event) override;
     bool isKWin() const;
     bool isDeepinWM() const;
     void updateBackground(QLabel *l);
@@ -98,6 +100,7 @@ private:
     static BackgroundHelper *desktop_instance;
     QNetworkAccessManager m_networkManager;
     QTimer m_weatherTimer;
+    QTimer m_surfaceGeometryRefreshTimer;
     WallpaperDisplayMethods m_wallpaperDisplayMethods = WallpaperDisplayMethods::KeepAspectRatioByExpanding;
 
 public:

@@ -25,6 +25,7 @@
 #include "view/canvasgridview.h"
 #include "view/backgroundhelper.h"
 #include "presenter/apppresenter.h"
+#include "presenter/display.h"
 
 #ifndef DISABLE_ZONE
 #include "../gxde-zone/mainwindow.h"
@@ -101,7 +102,8 @@ void Desktop::onBackgroundEnableChanged()
             // To do this we need to separete the wallpaper layer into two
             // components: one for wallpaper, and one for desktop icons.
             d->screenFrame.setParent(nullptr);
-            d->screenFrame.QWidget::setGeometry(qApp->primaryScreen()->geometry());
+            d->screenFrame.QWidget::setGeometry(
+                DesktopDisplay::instance()->primaryGeometry());
             Wayland::LayerShellHelper::setDesktopIconsRole(
                 &d->screenFrame, qApp->primaryScreen(),
                 QStringLiteral("dde-shell/desktop-icons"));
@@ -146,7 +148,8 @@ void Desktop::onBackgroundEnableChanged()
     } else {
         d->screenFrame.setParent(nullptr);
         setWindowFlag(&d->screenFrame, Qt::FramelessWindowHint, true);
-        d->screenFrame.QWidget::setGeometry(qApp->primaryScreen()->geometry());
+        d->screenFrame.QWidget::setGeometry(
+            DesktopDisplay::instance()->primaryGeometry());
 
         // 无壁纸模式：screenFrame 自身作为 LayerBackground 窗口，
         // 需要阻止鼠标点击触发窗口激活，免得窗口被点击后被带到窗口前面

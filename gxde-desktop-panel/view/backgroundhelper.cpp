@@ -22,12 +22,14 @@
 #include "util/xcb/xcb.h"
 #include "util/wayland/layershellhelper.h"
 #include "waylandutils.h"
+#include "../presenter/display.h"
 
 #include <QNetworkReply>
 #include <QPushButton>
 #include <QGridLayout>
 #include <dapplication.h>
 #include <QPointer>
+#include <QEvent>
 #include <QScreen>
 #include <QGuiApplication>
 #include <QtMath>
@@ -74,6 +76,18 @@ BackgroundHelper::BackgroundHelper(bool preview, QObject* parent)
 
     connect(this, &BackgroundHelper::onScreenChanged, this, &BackgroundHelper::calculateAllScreenSize);
 
+    // QScreen notifications can be missing or delayed while a VM guest output
+    // is resized.  A Wayland layer surface still receives a configure/resize,
+    // so coalesce that event and repaint every background from the effective
+    // surface geometry.
+    m_surfaceGeometryRefreshTimer.setSingleShot(true);
+    connect(&m_surfaceGeometryRefreshTimer, &QTimer::timeout, this, [this] {
+        calculateAllScreenSize();
+        for (QLabel *background : backgroundMap) {
+            Q_EMIT backgroundGeometryChanged(background);
+        }
+    });
+
     // 用于动态检测配置文件
     QFileSystemWatcher* fileWatcher = new QFileSystemWatcher(this);
     fileWatcher->addPath(QDir::homePath() + "/.config/GXDE/dde-file-manager/wallpaperDisplayMethod");
@@ -89,6 +103,18 @@ BackgroundHelper::~BackgroundHelper() {
         l->hide();
         l->deleteLater();
     }
+}
+
+bool BackgroundHelper::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::Resize) {
+        QLabel *background = qobject_cast<QLabel *>(watched);
+        if (background && backgroundMap.values().contains(background)) {
+            m_surfaceGeometryRefreshTimer.start();
+        }
+    }
+
+    return QObject::eventFilter(watched, event);
 }
 
 BackgroundHelper* BackgroundHelper::getDesktopInstance()
@@ -242,7 +268,13 @@ void BackgroundHelper::updateBackground(QLabel *l)
     }
 
     const qreal pixelRatio = s->devicePixelRatio();
-    const QSize targetPixelSize = pixelSize(s->geometry().size(), pixelRatio);
+    // A layer surface anchored to all four edges is resized by the compositor.
+    // In VirtualBox/VMware that configure can arrive before Qt refreshes the
+    // corresponding QScreen geometry, so use the surface's effective size for
+    // painting instead of scaling the wallpaper to a stale screen size.
+    const QSize logicalTargetSize = l->size().isEmpty()
+        ? s->geometry().size() : l->size();
+    const QSize targetPixelSize = pixelSize(logicalTargetSize, pixelRatio);
     if (targetPixelSize.isEmpty() || pixelRatio <= 0)
         return;
 
@@ -269,7 +301,9 @@ void BackgroundHelper::updateBackground(QLabel *l)
                 canvasPixelSize.width(), canvasPixelSize.height()));
         }
 
-        pix = pix.copy(pixelRect(s->geometry(), m_screenGeometry.topLeft(),
+        const QRect logicalGeometry = l->geometry().isValid()
+            ? l->geometry() : s->geometry();
+        pix = pix.copy(pixelRect(logicalGeometry, m_screenGeometry.topLeft(),
             canvasPixelRatio));
         if (pix.size() != targetPixelSize) {
             pix = pix.scaled(targetPixelSize, Qt::IgnoreAspectRatio,
@@ -370,6 +404,7 @@ void BackgroundHelper::onScreenAdded(QScreen* screen) {
     l->setLayout(layout);
 
     backgroundMap[screen] = l;
+    l->installEventFilter(this);
 
     l->createWinId();
     l->windowHandle()->setScreen(screen);
@@ -437,6 +472,19 @@ void BackgroundHelper::onScreenAdded(QScreen* screen) {
     connect(screen, &QScreen::logicalDotsPerInchChanged, l, [refreshScreenGeometry] {
         refreshScreenGeometry();
     });
+    connect(DesktopDisplay::instance(), &DesktopDisplay::primaryScreenChanged,
+            l, [this, labelGuard, screenGuard](QScreen *primary) {
+        if (!labelGuard || !screenGuard || primary != screenGuard) {
+            return;
+        }
+
+        const QRect geometry = DesktopDisplay::instance()->primaryGeometry();
+        if (!geometry.isEmpty()) {
+            labelGuard->setGeometry(geometry);
+        }
+        calculateAllScreenSize();
+        Q_EMIT backgroundGeometryChanged(labelGuard);
+    });
 
     // 可能是由QGuiApplication引发的新屏幕添加，此处应该为新对象添加背景图
     updateBackground(l);
@@ -457,7 +505,11 @@ void BackgroundHelper::calculateAllScreenSize()
             continue;
         }
 
-        const QRect screenGeometry = screen->geometry();
+        QLabel *background = backgroundMap.value(screen, nullptr);
+        // Prefer the layer surface geometry after a compositor configure.  It
+        // is the authoritative size while QScreen catches up with a VM resize.
+        const QRect screenGeometry = background && background->geometry().isValid()
+            ? background->geometry() : screen->geometry();
         geometry = geometry.isNull() ? screenGeometry : geometry.united(screenGeometry);
     }
 

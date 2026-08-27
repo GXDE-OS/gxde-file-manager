@@ -1913,7 +1913,7 @@ static inline QRect fix_available_geometry()
 
     QRegion availableRegion = virtualRegion.subtracted(strutParialRegion);
 
-    auto primaryGeometry = qApp->primaryScreen()->geometry();
+    auto primaryGeometry = DesktopDisplay::instance()->primaryGeometry();
     QRect availableRect;
     {
         const QRegion intersected = availableRegion.intersected(primaryGeometry);
@@ -1949,7 +1949,7 @@ static inline QRect getValidNewGeometry(const QRect &geometry, const QRect &oldG
         return oldGeometry;
     }
 
-    newGeometry = primaryScreen->geometry();
+    newGeometry = DesktopDisplay::instance()->primaryGeometry();
     geometryValid = (newGeometry.width() > 0) && (newGeometry.height() > 0);
     if (geometryValid) {
         return newGeometry;
@@ -1970,9 +1970,9 @@ void CanvasGridView::initUI()
         setWindowFlag(Qt::FramelessWindowHint, true);
     }
 
-    auto primaryScreen = DesktopDisplay::instance()->primaryScreen();
-    setGeometry(primaryScreen->geometry());
-    auto newGeometry =  getValidNewGeometry(primaryScreen->availableGeometry(), this->geometry());
+    setGeometry(DesktopDisplay::instance()->primaryGeometry());
+    auto newGeometry = getValidNewGeometry(
+        DesktopDisplay::instance()->primaryAvailableGeometry(), this->geometry());
     d->canvasRect = newGeometry;
 
     setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -2054,9 +2054,10 @@ void CanvasGridView::updateGeometry(const QRect &geometry)
     }
 
     auto newGeometry = getValidNewGeometry(geometry, this->geometry());
-    setGeometry(primaryScreen->geometry());
+    setGeometry(DesktopDisplay::instance()->primaryGeometry());
     d->canvasRect = newGeometry;
-    qDebug() << "set newGeometry" << newGeometry << primaryScreen->geometry();
+    qDebug() << "set newGeometry" << newGeometry
+             << DesktopDisplay::instance()->primaryGeometry();
     d->waterMaskFrame->updatePosition();
 
     /*
@@ -2175,7 +2176,7 @@ void CanvasGridView::initConnection()
         qDebug() << "Refresh desktop geometry:" << screen
                  << "geometry:" << screen->geometry()
                  << "availableGeometry:" << screen->availableGeometry();
-        updateGeometry(screen->availableGeometry());
+        updateGeometry(DesktopDisplay::instance()->primaryAvailableGeometry());
     });
 
     auto connectScreenGeometryChanged = [this](QScreen *screen) {
@@ -2211,7 +2212,7 @@ void CanvasGridView::initConnection()
         }
         connectScreenGeometryChanged(screen);
 
-        updateGeometry(screen->availableGeometry());
+        updateGeometry(DesktopDisplay::instance()->primaryAvailableGeometry());
         d->screenGeometryUpdateTimer.start();
     });
 
@@ -2296,13 +2297,13 @@ void CanvasGridView::initConnection()
     connect(d->dbusDock, &DBusDock::HideModeChanged,
     this, [ = ]() {
         if (3 == d->dbusDock->hideMode() || 1 == d->dbusDock->hideMode()) {
-            updateGeometry(DesktopDisplay::instance()->primaryScreen()->availableGeometry());
+            updateGeometry(DesktopDisplay::instance()->primaryAvailableGeometry());
         }
     });
     connect(d->dbusDock, &DBusDock::PositionChanged,
     this, [ = ]() {
         if (3 == d->dbusDock->hideMode()) {
-            updateGeometry(DesktopDisplay::instance()->primaryScreen()->availableGeometry());
+            updateGeometry(DesktopDisplay::instance()->primaryAvailableGeometry());
         }
     });
     connect(d->dbusDock, &DBusDock::IconSizeChanged,
@@ -2331,7 +2332,7 @@ void CanvasGridView::updateCanvas()
     const bool compositorManagedWorkArea =
         Wayland::LayerShellHelper::isWayland() && isWindow();
     auto outRect = compositorManagedWorkArea
-        ? rect() : qApp->primaryScreen()->geometry();
+        ? rect() : DesktopDisplay::instance()->primaryGeometry();
     auto inRect = d->canvasRect;
 
     if (compositorManagedWorkArea) {
