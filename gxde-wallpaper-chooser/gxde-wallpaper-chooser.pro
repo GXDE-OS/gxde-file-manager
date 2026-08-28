@@ -30,10 +30,14 @@ INCLUDEPATH += $$PANEL_DIR \
 
 SOURCES += \
     $$PWD/main.cpp \
-    $$PANEL_DIR/view/backgroundhelper.cpp
+    $$PANEL_DIR/view/backgroundhelper.cpp \
+    $$PANEL_DIR/presenter/display.cpp \
+    $$PANEL_DIR/dbus/dbusdisplay.cpp
 
 HEADERS += \
-    $$PANEL_DIR/view/backgroundhelper.h
+    $$PANEL_DIR/view/backgroundhelper.h \
+    $$PANEL_DIR/presenter/display.h \
+    $$PANEL_DIR/dbus/dbusdisplay.h
 
 isEmpty(PREFIX) {
     PREFIX = /usr
