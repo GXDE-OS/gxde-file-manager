@@ -95,6 +95,10 @@ public:
 
     quint64 windowId();
 
+    // DFileView 在单击/双击打开文件前询问宿主窗口。返回 true 表示事件已由
+    // 窗口自己处理，DFileView 不再走 DFMOpenUrlEvent/DFileService 流程。
+    virtual bool handleOpenFileByView(const DUrl &url);
+
     bool tabAddable() const;
     void hideRenameBar() noexcept;
     void requestToSelectUrls();

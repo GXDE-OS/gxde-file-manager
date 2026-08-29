@@ -691,6 +691,13 @@ quint64 DFileManagerWindow::windowId()
     return WindowManager::getWindowId(this);
 }
 
+bool DFileManagerWindow::handleOpenFileByView(const DUrl &url)
+{
+    Q_UNUSED(url)
+
+    return false;
+}
+
 bool DFileManagerWindow::tabAddable() const
 {
     D_DC(DFileManagerWindow);

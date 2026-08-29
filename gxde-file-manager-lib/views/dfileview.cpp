@@ -2110,6 +2110,14 @@ void DFileView::openIndex(const QModelIndex &index)
 
     const DUrl &url = model()->getUrlByIndex(index);
 
+    // 文件选择对话框需要把视图的单击/双击解释为“确认选择”，而右键菜单里的
+    // “打开”仍走下面的 OpenUrl 流程，便于在对话框中直接预览文件。
+    if (DFileManagerWindow *w = qobject_cast<DFileManagerWindow *>(window())) {
+        if (w->handleOpenFileByView(url)) {
+            return;
+        }
+    }
+
     DFMOpenUrlEvent::DirOpenMode mode = DFMApplication::instance()->appAttribute(DFMApplication::AA_AllwayOpenOnNewWindow).toBool()
                                         ? DFMOpenUrlEvent::ForceOpenNewWindow
                                         : DFMOpenUrlEvent::OpenInCurrentWindow;

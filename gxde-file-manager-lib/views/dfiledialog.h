@@ -127,6 +127,7 @@ protected:
 
 private:
     void handleNewView(DFMBaseView *view) Q_DECL_OVERRIDE;
+    bool handleOpenFileByView(const DUrl &url) Q_DECL_OVERRIDE;
     FileDialogStatusBar *statusBar() const;
 
     void onAcceptButtonClicked();

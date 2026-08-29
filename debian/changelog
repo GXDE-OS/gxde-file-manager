@@ -1,3 +1,10 @@
+gxde-file-manager (6.3.18) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 修复 Wayland 下 portal 文件选择对话框中双击文件会直接打开文件而不是确认选择的问题，同时保留右键“打开”用于预览
+
+ -- shenmo <shenmo@spark-app.store>  Sat, 29 Aug 2026 12:11:44 +0800
+
 gxde-file-manager (6.3.17) UNRELEASED; urgency=medium
 
   [ shenmo ]

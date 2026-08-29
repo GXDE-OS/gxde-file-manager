@@ -876,14 +876,10 @@ bool DFileDialog::fmEventFilter(const QSharedPointer<DFMEvent> &event, DFMAbstra
         return false;
     }
 
-    if (event->type() == DFMEvent::OpenFile) {
-        onAcceptButtonClicked();
-
-        return true;
-    }
-
+    // 注意：OpenFile 不再被这里消费。视图的单击/双击已经在
+    // handleOpenFileByView() 中转换为“确认选择”；右键菜单的“打开”应继续
+    // 走正常打开流程，方便用户预览文件。
     switch (event->type()) {
-    case DFMEvent::OpenFile:
     case DFMEvent::OpenFileByApp:
     case DFMEvent::CompressFiles:
     case DFMEvent::DecompressFile:
@@ -901,6 +897,29 @@ bool DFileDialog::fmEventFilter(const QSharedPointer<DFMEvent> &event, DFMAbstra
     }
 
     return false;
+}
+
+bool DFileDialog::handleOpenFileByView(const DUrl &url)
+{
+    // 这里处理的是视图自身的单击/双击激活，而不是右键菜单里的“打开”。
+    // 文件选择对话框应把这种激活当作“选中确认”：文件接受对话框，目录则
+    // 由 onAcceptButtonClicked() 负责切入。
+    //
+    // 保存对话框中双击目录仍需沿用原来的 OpenUrl 流程切入目录，不能当成
+    // “确认保存”。
+    const DAbstractFileInfoPointer &fileInfo = getFileView()->model()->fileInfo(url);
+
+    if (acceptMode() == QFileDialog::AcceptSave && fileInfo && fileInfo->isDir()) {
+        return false;
+    }
+
+    if (getFileView()->selectedUrls().isEmpty()) {
+        getFileView()->select(DUrlList() << url);
+    }
+
+    onAcceptButtonClicked();
+
+    return true;
 }
 
 void DFileDialog::handleNewView(DFMBaseView *view)
