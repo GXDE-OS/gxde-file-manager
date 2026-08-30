@@ -404,7 +404,7 @@ QProcessEnvironment compressorEnvironment()
 
     if (WaylandUtils::isWaylandPlatform()) {
         env.remove("DTK2_XWAYLAND");
-        env.insert("QT_QPA_PLATFORM", QStringLiteral("dwayland;wayland"));
+        env.insert("QT_QPA_PLATFORM", QStringLiteral("wayland"));
     } else {
         env.insert("QT_QPA_PLATFORM", QStringLiteral("dxcb;xcb"));
     }
