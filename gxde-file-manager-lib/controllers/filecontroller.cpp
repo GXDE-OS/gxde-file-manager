@@ -933,13 +933,16 @@ bool FileController::addToBookmark(const QSharedPointer<DFMAddToBookmarkEvent> &
     DStorageInfo info(destUrl.path());
     QString filePath = destUrl.path();
     QString rootPath = info.rootPath();
-    if (rootPath != QStringLiteral("/") || rootPath != QStringLiteral("/home")) {
+    if (rootPath != QStringLiteral("/") && rootPath != QStringLiteral("/home")) {
         QString devStr = info.device();
         QString locateUrl;
         int endPos = filePath.indexOf(rootPath);
         if (endPos != -1) {
             endPos += rootPath.length();
             locateUrl = filePath.mid(endPos);
+            if (!locateUrl.startsWith(QLatin1Char('/'))) {
+                locateUrl.prepend(QLatin1Char('/'));
+            }
         }
         if (devStr.startsWith(QStringLiteral("/dev/"))) {
             devStr = DUrl::fromDeviceId(info.device()).toString();

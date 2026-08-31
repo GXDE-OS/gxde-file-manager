@@ -31,6 +31,14 @@
 #include <QIcon>
 #include <QUrlQuery>
 
+// udisks2-qt6 returns ay byte array prop w/ C style NULL termintor.
+// Qt5 auto strips it but Qt6 keeps it as-is.
+// Manually sanitizing for Qt6...
+static inline QString sanitizeUDiskString(const QByteArray &value)
+{
+    return QString::fromUtf8(value).remove(QChar(u'\0'));
+}
+
 BookMark::BookMark(const DUrl &url)
     : DAbstractFileInfo(url)
 {
@@ -81,7 +89,7 @@ bool BookMark::exists() const
             mountPointPath.replace("dev", "org/freedesktop/UDisks2/block_devices");
             udisksDBusPath = mountPointPath;
             QScopedPointer<DBlockDevice> blDev(DDiskManager::createBlockDevice(mountPointPath));
-            udisksMountPoint = blDev->mountPoints().isEmpty() ? QString() : blDev->mountPoints().first();
+            udisksMountPoint = blDev->mountPoints().isEmpty() ? QString() : sanitizeUDiskString(blDev->mountPoints().first());
         }
     }
 
@@ -104,6 +112,7 @@ bool BookMark::canRedirectionFileUrl() const
     if (!mountPoint.isEmpty() && !locateUrl.isEmpty() && udisksMountPoint.isEmpty() && !udisksDBusPath.isEmpty()) {
         QScopedPointer<DBlockDevice> blDev(DDiskManager::createBlockDevice(udisksDBusPath));
         udisksMountPoint = blDev->mount({});
+        udisksMountPoint.remove(QChar(u'\0'));
     }
 
     return fileUrl() != DUrl(BOOKMARK_ROOT);
@@ -116,7 +125,18 @@ DUrl BookMark::redirectedFileUrl() const
         QString schemeStr = mountPointUrl.scheme();
 
         if (!udisksDBusPath.isEmpty() && !udisksMountPoint.isEmpty()) {
-            return DUrl::fromLocalFile(udisksMountPoint + locateUrl);
+            QString mountRootPath = udisksMountPoint;
+            QString locatePath = locateUrl;
+
+            if (mountRootPath.endsWith(QLatin1Char('/'))) {
+                if (locatePath.startsWith(QLatin1Char('/'))) {
+                    locatePath.remove(0, 1);
+                }
+            } else if (!locatePath.startsWith(QLatin1Char('/'))) {
+                mountRootPath.append(QLatin1Char('/'));
+            }
+
+            return DUrl::fromLocalFile(mountRootPath + locatePath);
         }
 
         if (schemeStr == SMB_SCHEME || schemeStr == FTP_SCHEME || schemeStr == SFTP_SCHEME) {
