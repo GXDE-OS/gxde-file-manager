@@ -1,3 +1,10 @@
+gxde-file-manager (6.3.19) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 修复添加书签后打开书签空白的问题：根分区与 /home 分区不再误写设备书签元数据，并清理 Qt6 下挂载点字符串残留的空字符
+
+ -- shenmo <shenmo@spark-app.store>  Tue, 01 Sep 2026 00:37:51 +0800
+
 gxde-file-manager (6.3.18) UNRELEASED; urgency=medium
 
   [ shenmo ]
