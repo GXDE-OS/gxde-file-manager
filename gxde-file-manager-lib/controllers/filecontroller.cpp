@@ -69,6 +69,9 @@
 #include <QGuiApplication>
 #include <QUrlQuery>
 #include <QRegularExpression>
+#include <QFile>
+
+#include "waylandutils.h"
 
 #include <unistd.h>
 
@@ -389,6 +392,36 @@ bool FileController::openFileByApp(const QSharedPointer<DFMOpenFileByAppEvent> &
     return FileUtils::openFilesByApp(event->appName(), {event->url().toString()});
 }
 
+// 修复在 x11 下在桌面或文管右键进行压缩、解压和解压到此处弹出的 deepin-compressor 窗口无特效的问题
+namespace {
+
+QProcessEnvironment compressorEnvironment()
+{
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
+    env.remove("QT_QPA_PLATFORM_PLUGIN_PATH");
+    env.remove("QT_QPA_PLATFORM");
+
+    if (WaylandUtils::isWaylandPlatform()) {
+        env.remove("DTK2_XWAYLAND");
+        env.insert("QT_QPA_PLATFORM", QStringLiteral("wayland"));
+    } else {
+        env.insert("QT_QPA_PLATFORM", QStringLiteral("dxcb;xcb"));
+    }
+
+    return env;
+}
+
+bool startCompressor(const QStringList &args)
+{
+    return QProcess::startDetached(QStringLiteral("gxde-compressor"),
+                                   args,
+                                   QString(),
+                                   compressorEnvironment());
+}
+
+} 
+
 bool FileController::compressFiles(const QSharedPointer<DFMCompressEvent> &event) const
 {
     if (findExecutable("gxde-compressor")) {
@@ -398,7 +431,7 @@ bool FileController::compressFiles(const QSharedPointer<DFMCompressEvent> &event
             args << url.toLocalFile();
         }
         qDebug() << args;
-        bool result = QProcess::startDetached("gxde-compressor", args);
+        bool result = startCompressor(args);
         return result;
     } else {
         qDebug() << "gxde-compressor is not installed";
@@ -416,7 +449,7 @@ bool FileController::decompressFile(const QSharedPointer<DFMDecompressEvent> &ev
             args << it.toLocalFile();
         }
         qDebug() << args;
-        bool result = QProcess::startDetached("gxde-compressor", args);
+        bool result = startCompressor(args);
         return result;
     } else {
         qDebug() << "gxde-compressor is not installed";
@@ -434,7 +467,7 @@ bool FileController::decompressFileHere(const QSharedPointer<DFMDecompressEvent>
             args << it.toLocalFile();
         }
         qDebug() << args;
-        bool result = QProcess::startDetached("gxde-compressor", args);
+        bool result = startCompressor(args);
         return result;
     } else {
         qDebug() << "gxde-compressor is not installed";
