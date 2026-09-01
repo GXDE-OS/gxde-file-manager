@@ -670,6 +670,20 @@ void PropertyDialog::mousePressEvent(QMouseEvent *event)
     DDialog::mousePressEvent(event);
 }
 
+void PropertyDialog::mouseMoveEvent(QMouseEvent *event)
+{
+    // Wayland 下多个属性对话框会嵌入一个宿主窗口，此时本对象不再是
+    // native toplevel，windowHandle() 为 nullptr。DTK 的
+    // DAbstractDialog::mouseMoveEvent 会无条件调用
+    // windowHandle()->startSystemMove()，点击时轻微移动鼠标就会段错误。
+    if (!isWindow()) {
+        QWidget::mouseMoveEvent(event);
+        return;
+    }
+
+    DDialog::mouseMoveEvent(event);
+}
+
 void PropertyDialog::startComputerFolderSize(const DUrl &url)
 {
     DUrl validUrl = url;

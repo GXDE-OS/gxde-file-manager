@@ -30,6 +30,8 @@
 
 #include <dabstractdialog.h>
 
+class QMouseEvent;
+
 DWIDGET_USE_NAMESPACE
 
 class CloseAllDialogIndicator : public DAbstractDialog
@@ -51,6 +53,7 @@ public slots:
 protected:
 //    void showEvent(QShowEvent* event);
     void keyPressEvent(QKeyEvent* event);
+    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
 private:

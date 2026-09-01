@@ -30,6 +30,7 @@
 #include <QScreen>
 #include <QApplication>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include "shutil/fileutils.h"
 
 CloseAllDialogIndicator::CloseAllDialogIndicator(QWidget *parent) : DAbstractDialog(parent)
@@ -80,6 +81,18 @@ void CloseAllDialogIndicator::keyPressEvent(QKeyEvent *event)
         return;
     }
     QDialog::keyPressEvent(event);
+}
+
+void CloseAllDialogIndicator::mouseMoveEvent(QMouseEvent *event)
+{
+    // 嵌入 Wayland 宿主窗口后不是 native toplevel，windowHandle() 为 nullptr，
+    // 不能走 DAbstractDialog 的 startSystemMove 拖动逻辑。
+    if (!isWindow()) {
+        QDialog::mouseMoveEvent(event);
+        return;
+    }
+
+    DAbstractDialog::mouseMoveEvent(event);
 }
 
 void CloseAllDialogIndicator::showEvent(QShowEvent *event)
