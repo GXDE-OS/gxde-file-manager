@@ -50,6 +50,7 @@
 
 #include "xutil.h"
 #include "utils.h"
+#include "waylandutils.h"
 #include "dialogs/ddesktoprenamedialog.h"
 #include "dialogs/dtaskdialog.h"
 #include "dialogs/propertydialog.h"
@@ -79,12 +80,59 @@
 #include <QScreen>
 #include <QApplication>
 #include <QScreen>
+#include <QCloseEvent>
 #include <qsettingbackend.h>
+
+#include <functional>
 
 DTK_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 DFM_USE_NAMESPACE
+
+namespace {
+
+QScreen *propertyDialogScreen()
+{
+    const QPoint &cursor_pos = QCursor::pos();
+
+    for (QScreen *screen : qApp->screens()) {
+        if (screen->geometry().contains(cursor_pos)) {
+            return screen;
+        }
+    }
+
+    return qApp->primaryScreen();
+}
+
+class WaylandPropertyDialogHost : public QWidget
+{
+public:
+    using QWidget::QWidget;
+
+    std::function<void()> closeAllCallback;
+
+protected:
+    void closeEvent(QCloseEvent *event) override
+    {
+        if (m_closing) {
+            QWidget::closeEvent(event);
+            return;
+        }
+
+        m_closing = true;
+        if (closeAllCallback) {
+            closeAllCallback();
+        }
+        m_closing = false;
+        event->accept();
+    }
+
+private:
+    bool m_closing = false;
+};
+
+} // namespace
 
 DialogManager::DialogManager(QObject *parent) : QObject(parent)
 {
@@ -96,7 +144,10 @@ DialogManager::DialogManager(QObject *parent) : QObject(parent)
 
 DialogManager::~DialogManager()
 {
-
+    if (m_waylandPropertyDialogHost) {
+        delete m_waylandPropertyDialogHost;
+        m_waylandPropertyDialogHost = nullptr;
+    }
 }
 
 void DialogManager::initData()
@@ -180,19 +231,7 @@ void DialogManager::initConnect()
 
 QPoint DialogManager::getPerportyPos(int dialogWidth, int dialogHeight, int count, int index)
 {
-    const QScreen *cursor_screen = Q_NULLPTR;
-    const QPoint &cursor_pos = QCursor::pos();
-
-    for (const QScreen *screen : qApp->screens()) {
-        if (screen->geometry().contains(cursor_pos)) {
-            cursor_screen = screen;
-            break;
-        }
-    }
-
-    if (!cursor_screen) {
-        cursor_screen = qApp->primaryScreen();
-    }
+    const QScreen *cursor_screen = propertyDialogScreen();
 
     int desktopWidth = cursor_screen->size().width();
     int desktopHeight = cursor_screen->size().height();
@@ -200,7 +239,7 @@ QPoint DialogManager::getPerportyPos(int dialogWidth, int dialogHeight, int coun
     int SpaceHeight = 100;
     int row, x, y;
 
-    int numberPerRow =  desktopWidth / (dialogWidth + SpaceWidth);
+    int numberPerRow = qMax(1, desktopWidth / (dialogWidth + SpaceWidth));
 
 
     if (count % numberPerRow == 0) {
@@ -225,6 +264,39 @@ QPoint DialogManager::getPerportyPos(int dialogWidth, int dialogHeight, int coun
     y = (desktopHeight - dialogsHeight) / 2 + (index / numberPerRow) * SpaceHeight;
 
     return QPoint(x, y) + cursor_screen->geometry().topLeft();
+}
+
+QRect DialogManager::getPerportyGroupRect(int dialogWidth, int dialogHeight, int count)
+{
+    const QScreen *cursor_screen = propertyDialogScreen();
+    const QRect &screenGeometry = cursor_screen->geometry();
+
+    int desktopWidth = cursor_screen->size().width();
+    int desktopHeight = cursor_screen->size().height();
+    int SpaceWidth = 20;
+    int SpaceHeight = 100;
+    int row;
+
+    int numberPerRow = qMax(1, desktopWidth / (dialogWidth + SpaceWidth));
+
+    if (count % numberPerRow == 0) {
+        row = count / numberPerRow;
+    } else {
+        row = count / numberPerRow + 1;
+    }
+
+    int dialogsWidth;
+    if (count / numberPerRow > 0) {
+        dialogsWidth = dialogWidth * numberPerRow + SpaceWidth * (numberPerRow - 1);
+    } else {
+        dialogsWidth = dialogWidth * (count % numberPerRow) + SpaceWidth * (count % numberPerRow - 1);
+    }
+
+    int dialogsHeight = dialogHeight + SpaceHeight * (row - 1);
+
+    return QRect(QPoint((desktopWidth - dialogsWidth) / 2, (desktopHeight - dialogsHeight) / 2)
+                 + screenGeometry.topLeft(),
+                 QSize(dialogsWidth, dialogsHeight));
 }
 
 bool DialogManager::isTaskDialogEmpty()
@@ -637,6 +709,7 @@ void DialogManager::showPropertyDialog(const DFMUrlListBaseEvent &event)
     int count = urlList.count();
 
     if (count <= MAX_PROPERTY_DIALOG_NUMBER) {
+        const bool useWaylandHost = WaylandUtils::isWaylandPlatform() && count > 1;
 
         foreach (const DUrl &url, urlList) {
             int index = urlList.indexOf(url);
@@ -651,25 +724,59 @@ void DialogManager::showPropertyDialog(const DFMUrlListBaseEvent &event)
                 PropertyDialog *dialog;
                 if (m_propertyDialogs.contains(url)) {
                     dialog = m_propertyDialogs.value(url);
+
+                    if (useWaylandHost && dialog->parentWidget() != m_waylandPropertyDialogHost) {
+                        dialog->setParent(m_waylandPropertyDialogHost);
+                        dialog->setWindowFlag(Qt::Window, false);
+                    }
+
                     dialog->raise();
                 } else {
-                    dialog = new PropertyDialog(event, url);
-                    m_propertyDialogs.insert(url, dialog);
-                    QPoint pos = getPerportyPos(dialog->size().width(), dialog->size().height(), count, index);
+                    if (useWaylandHost && !m_waylandPropertyDialogHost) {
+                        WaylandPropertyDialogHost *host = new WaylandPropertyDialogHost;
+                        host->setAttribute(Qt::WA_TranslucentBackground);
+                        host->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+                        host->setWindowTitle(tr("Properties"));
+                        host->closeAllCallback = [this]() {
+                            closeAllPropertyDialog();
+                        };
 
-                    dialog->show();
-                    dialog->move(pos);
+                        m_waylandPropertyDialogHost = host;
+                    }
+
+                    dialog = new PropertyDialog(event, url);
+
+                    if (useWaylandHost) {
+                        dialog->setParent(m_waylandPropertyDialogHost);
+                        dialog->setWindowFlag(Qt::Window, false);
+                    }
+
+                    m_propertyDialogs.insert(url, dialog);
 
                     connect(dialog, &PropertyDialog::closed, this, &DialogManager::removePropertyDialog);
                     //                connect(dialog, &PropertyDialog::raised, this, &DialogManager::raiseAllPropertyDialog);
-                    QTimer::singleShot(100, dialog, &PropertyDialog::raise);
+
+                    if (useWaylandHost) {
+                        dialog->show();
+                    } else {
+                        QPoint pos = getPerportyPos(dialog->size().width(), dialog->size().height(), count, index);
+
+                        dialog->show();
+                        dialog->move(pos);
+
+                        QTimer::singleShot(100, dialog, &PropertyDialog::raise);
+                    }
                 }
 
-                if (urlList.count() >= 2) {
+                if (!useWaylandHost && urlList.count() >= 2) {
                     m_closeIndicatorDialog->show();
                     m_closeIndicatorTimer->start();
                 }
             }
+        }
+
+        if (useWaylandHost) {
+            relayoutWaylandPropertyDialogs();
         }
 
     } else {
@@ -678,6 +785,56 @@ void DialogManager::showPropertyDialog(const DFMUrlListBaseEvent &event)
         m_multiFilesPropertyDialog->moveToCenter();
         m_multiFilesPropertyDialog->raise();
     }
+}
+
+void DialogManager::relayoutWaylandPropertyDialogs()
+{
+    if (!m_waylandPropertyDialogHost || m_propertyDialogs.isEmpty()) {
+        return;
+    }
+
+    QWidget *host = m_waylandPropertyDialogHost;
+    const QList<PropertyDialog *> dialogs = m_propertyDialogs.values();
+
+    int dialogWidth = 0;
+    int dialogHeight = 0;
+    for (PropertyDialog *dialog : dialogs) {
+        dialogWidth = qMax(dialogWidth, dialog->size().width());
+        dialogHeight = qMax(dialogHeight, dialog->size().height());
+    }
+
+    if (dialogWidth <= 0 || dialogHeight <= 0) {
+        return;
+    }
+
+    const int count = dialogs.count();
+    const QRect groupRect = getPerportyGroupRect(dialogWidth, dialogHeight, count);
+    const int indicatorHeight = qMax(50, m_closeIndicatorDialog->height());
+    const int indicatorSpacing = 20;
+    const int hostWidth = qMax(groupRect.width(), m_closeIndicatorDialog->width());
+    const int hostHeight = groupRect.height() + indicatorHeight + indicatorSpacing;
+
+    host->setFixedSize(hostWidth, hostHeight);
+
+    for (int i = 0; i < dialogs.count(); ++i) {
+        PropertyDialog *dialog = dialogs.at(i);
+        dialog->move(getPerportyPos(dialogWidth, dialogHeight, count, i) - groupRect.topLeft());
+        dialog->raise();
+    }
+
+    if (m_closeIndicatorDialog->parentWidget() != host) {
+        m_closeIndicatorDialog->setParent(host);
+        m_closeIndicatorDialog->setWindowFlag(Qt::Window, false);
+    }
+
+    m_closeIndicatorDialog->move((hostWidth - m_closeIndicatorDialog->width()) / 2,
+                                 groupRect.height() + indicatorSpacing);
+    m_closeIndicatorDialog->show();
+    m_closeIndicatorDialog->raise();
+    m_closeIndicatorTimer->start();
+
+    host->show();
+    host->raise();
 }
 
 void DialogManager::showShareOptionsInPropertyDialog(const DFMUrlListBaseEvent &event)
@@ -1149,12 +1306,25 @@ void DialogManager::removePropertyDialog(const DUrl &url)
         m_propertyDialogs.remove(url);
     }
     if (m_propertyDialogs.count() == 0) {
+        m_closeIndicatorTimer->stop();
         m_closeIndicatorDialog->hide();
+
+        if (m_waylandPropertyDialogHost && !m_closingWaylandPropertyDialogHost) {
+            m_closingWaylandPropertyDialogHost = true;
+            m_waylandPropertyDialogHost->hide();
+            m_closingWaylandPropertyDialogHost = false;
+        }
     }
 }
 
 void DialogManager::closeAllPropertyDialog()
 {
+    if (m_closingWaylandPropertyDialogHost) {
+        return;
+    }
+
+    m_closingWaylandPropertyDialogHost = true;
+
     foreach (const DUrl &url, m_propertyDialogs.keys()) {
         m_propertyDialogs.value(url)->close();
     }
@@ -1169,6 +1339,12 @@ void DialogManager::closeAllPropertyDialog()
     if (m_computerDialog) {
         m_computerDialog->close();
     }
+
+    if (m_waylandPropertyDialogHost) {
+        m_waylandPropertyDialogHost->hide();
+    }
+
+    m_closingWaylandPropertyDialogHost = false;
 }
 
 void DialogManager::updateCloseIndicator()
@@ -1184,6 +1360,15 @@ void DialogManager::updateCloseIndicator()
 
 void DialogManager::raiseAllPropertyDialog()
 {
+    if (m_waylandPropertyDialogHost) {
+        m_waylandPropertyDialogHost->showNormal();
+        m_waylandPropertyDialogHost->show();
+        m_waylandPropertyDialogHost->raise();
+        m_closeIndicatorDialog->raise();
+
+        return;
+    }
+
     foreach (PropertyDialog *d, m_propertyDialogs.values()) {
         qDebug() << d->getUrl() << d->isVisible() << d->windowState();
 //        d->showMinimized();
@@ -1215,6 +1400,7 @@ void DialogManager::refreshPropertyDialogs(const DUrl &oldUrl, const DUrl &newUr
     if (d) {
         m_propertyDialogs.remove(oldUrl);
         m_propertyDialogs.insert(newUrl, d);
+        relayoutWaylandPropertyDialogs();
     }
 }
 

@@ -30,6 +30,7 @@
 #include <QObject>
 #include <QMap>
 #include <QIcon>
+#include <QRect>
 
 #include "durl.h"
 #include "dfmglobal.h"
@@ -47,6 +48,7 @@ class CloseAllDialogIndicator;
 class TrashPropertyDialog;
 class ComputerPropertyDialog;
 class QTimer;
+class QWidget;
 class DMultiFilePropertyDialog;
 class QDiskInfo;
 
@@ -70,6 +72,7 @@ public:
     void initCloseIndicatorDialog();
     void initConnect();
     QPoint getPerportyPos(int dialogWidth, int dialogHeight, int count, int index);
+    QRect getPerportyGroupRect(int dialogWidth, int dialogHeight, int count);
     bool isTaskDialogEmpty();
     DTaskDialog *taskDialog() const;
 
@@ -131,6 +134,8 @@ public slots:
 
     void refreshPropertyDialogs(const DUrl& oldUrl, const DUrl& newUrl);
 
+    void relayoutWaylandPropertyDialogs();
+
     int showMessageDialog(int messageLevel, const QString& message);
 
 #ifdef SW_LABEL
@@ -152,6 +157,8 @@ private:
     QTimer* m_updateJobTaskTimer{ nullptr };
     dde_file_manager::FilePreviewDialog* m_filePreviewDialog{ nullptr };
     Dtk::Widget::DDialog* m_noPemesrsionDialog{ nullptr };
+    QWidget* m_waylandPropertyDialogHost{ nullptr };
+    bool m_closingWaylandPropertyDialogHost{ false };
 
     std::unique_ptr<DMultiFilePropertyDialog> m_multiFilesPropertyDialog;
 };

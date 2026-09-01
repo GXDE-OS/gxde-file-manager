@@ -23,6 +23,8 @@
  */
 
 #include "closealldialogindicator.h"
+#include "waylandutils.h"
+
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QScreen>
@@ -82,7 +84,11 @@ void CloseAllDialogIndicator::keyPressEvent(QKeyEvent *event)
 
 void CloseAllDialogIndicator::showEvent(QShowEvent *event)
 {
-    Q_UNUSED(event)
+    // Wayland 合成器不允许客户端给 toplevel 窗口设置全局位置，并且该窗口在
+    // Wayland 下会被嵌入属性窗口容器中，由容器负责布局。
+    if (parentWidget() || WaylandUtils::isWaylandPlatform()) {
+        return DAbstractDialog::showEvent(event);
+    }
 
     QRect screenGeometry = qApp->primaryScreen()->geometry();
 
