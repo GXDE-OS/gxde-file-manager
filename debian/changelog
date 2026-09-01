@@ -1,3 +1,11 @@
+gxde-file-manager (6.3.20) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 修复 Wayland 下多文件属性窗口互相重叠及属性总计窗口位置错误的问题
+  * 修复 Qt6 下启动 gxde-compressor 时 QProcess 接口不兼容导致编译失败的问题
+
+ -- shenmo <shenmo@spark-app.store>  Tue, 01 Sep 2026 20:17:15 +0800
+
 gxde-file-manager (6.3.19) UNRELEASED; urgency=medium
 
   [ shenmo ]
