@@ -29,7 +29,9 @@
 
 #include <QObject>
 #include <QMap>
+#include <QHash>
 #include <QIcon>
+#include <QPoint>
 #include <QRect>
 
 #include "durl.h"
@@ -49,6 +51,7 @@ class TrashPropertyDialog;
 class ComputerPropertyDialog;
 class QTimer;
 class QWidget;
+class QEvent;
 class DMultiFilePropertyDialog;
 class QDiskInfo;
 
@@ -74,6 +77,7 @@ public:
     QPoint getPerportyPos(int dialogWidth, int dialogHeight, int count, int index);
     QRect getPerportyGroupRect(int dialogWidth, int dialogHeight, int count);
     bool isTaskDialogEmpty();
+    bool eventFilter(QObject *watched, QEvent *event) override;
     DTaskDialog *taskDialog() const;
 
 public slots:
@@ -135,6 +139,7 @@ public slots:
     void refreshPropertyDialogs(const DUrl& oldUrl, const DUrl& newUrl);
 
     void relayoutWaylandPropertyDialogs();
+    void updateWaylandPropertyDialogHostMask();
 
     int showMessageDialog(int messageLevel, const QString& message);
 
@@ -158,6 +163,7 @@ private:
     dde_file_manager::FilePreviewDialog* m_filePreviewDialog{ nullptr };
     Dtk::Widget::DDialog* m_noPemesrsionDialog{ nullptr };
     QWidget* m_waylandPropertyDialogHost{ nullptr };
+    QHash<QWidget *, QPoint> m_waylandDragPositions{};
     bool m_closingWaylandPropertyDialogHost{ false };
 
     std::unique_ptr<DMultiFilePropertyDialog> m_multiFilesPropertyDialog;

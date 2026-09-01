@@ -81,6 +81,8 @@
 #include <QApplication>
 #include <QScreen>
 #include <QCloseEvent>
+#include <QMouseEvent>
+#include <QRegion>
 #include <qsettingbackend.h>
 
 #include <functional>
@@ -730,6 +732,11 @@ void DialogManager::showPropertyDialog(const DFMUrlListBaseEvent &event)
                         dialog->setWindowFlag(Qt::Window, false);
                     }
 
+                    if (useWaylandHost) {
+                        dialog->removeEventFilter(this);
+                        dialog->installEventFilter(this);
+                    }
+
                     dialog->raise();
                 } else {
                     if (useWaylandHost && !m_waylandPropertyDialogHost) {
@@ -749,6 +756,7 @@ void DialogManager::showPropertyDialog(const DFMUrlListBaseEvent &event)
                     if (useWaylandHost) {
                         dialog->setParent(m_waylandPropertyDialogHost);
                         dialog->setWindowFlag(Qt::Window, false);
+                        dialog->installEventFilter(this);
                     }
 
                     m_propertyDialogs.insert(url, dialog);
@@ -807,18 +815,19 @@ void DialogManager::relayoutWaylandPropertyDialogs()
         return;
     }
 
+    const QScreen *screen = propertyDialogScreen();
+    const QRect screenGeometry = screen->geometry();
+
+    // Wayland 下不能给 toplevel 设置全局位置，宿主窗口直接铺满当前屏幕，
+    // 透明的空白区域通过 mask 对鼠标事件放行，只有属性窗口/统计窗口区域
+    // 可交互。这样嵌入的子窗口可以在整个屏幕范围内拖动。
+    host->setFixedSize(screenGeometry.size());
+
     const int count = dialogs.count();
-    const QRect groupRect = getPerportyGroupRect(dialogWidth, dialogHeight, count);
-    const int indicatorHeight = qMax(50, m_closeIndicatorDialog->height());
-    const int indicatorSpacing = 20;
-    const int hostWidth = qMax(groupRect.width(), m_closeIndicatorDialog->width());
-    const int hostHeight = groupRect.height() + indicatorHeight + indicatorSpacing;
-
-    host->setFixedSize(hostWidth, hostHeight);
-
     for (int i = 0; i < dialogs.count(); ++i) {
         PropertyDialog *dialog = dialogs.at(i);
-        dialog->move(getPerportyPos(dialogWidth, dialogHeight, count, i) - groupRect.topLeft());
+        dialog->move(getPerportyPos(dialogWidth, dialogHeight, count, i)
+                     - screenGeometry.topLeft());
         dialog->raise();
     }
 
@@ -827,14 +836,125 @@ void DialogManager::relayoutWaylandPropertyDialogs()
         m_closeIndicatorDialog->setWindowFlag(Qt::Window, false);
     }
 
-    m_closeIndicatorDialog->move((hostWidth - m_closeIndicatorDialog->width()) / 2,
-                                 groupRect.height() + indicatorSpacing);
+    // 嵌入宿主窗口后允许统计窗口获得焦点，点击时可置前。
+    m_closeIndicatorDialog->setFocusPolicy(Qt::ClickFocus);
+    m_closeIndicatorDialog->removeEventFilter(this);
+    m_closeIndicatorDialog->installEventFilter(this);
+
+    const int indicatorMargin = 20;
+    m_closeIndicatorDialog->move((screenGeometry.width() - m_closeIndicatorDialog->width()) / 2,
+                                 screenGeometry.height() - m_closeIndicatorDialog->height()
+                                 - indicatorMargin);
     m_closeIndicatorDialog->show();
     m_closeIndicatorDialog->raise();
     m_closeIndicatorTimer->start();
 
+    updateWaylandPropertyDialogHostMask();
+
     host->show();
     host->raise();
+}
+
+void DialogManager::updateWaylandPropertyDialogHostMask()
+{
+    if (!m_waylandPropertyDialogHost) {
+        return;
+    }
+
+    QRegion mask;
+
+    for (PropertyDialog *dialog : m_propertyDialogs) {
+        mask += QRect(dialog->pos(), dialog->size());
+    }
+
+    if (m_closeIndicatorDialog && m_closeIndicatorDialog->parentWidget() == m_waylandPropertyDialogHost) {
+        mask += QRect(m_closeIndicatorDialog->pos(), m_closeIndicatorDialog->size());
+    }
+
+    m_waylandPropertyDialogHost->setMask(mask);
+}
+
+bool DialogManager::eventFilter(QObject *watched, QEvent *event)
+{
+    QWidget *widget = qobject_cast<QWidget *>(watched);
+
+    if (!widget || !m_waylandPropertyDialogHost) {
+        return QObject::eventFilter(watched, event);
+    }
+
+    QWidget *embeddedWidget = widget;
+    while (embeddedWidget && embeddedWidget->parentWidget() != m_waylandPropertyDialogHost) {
+        embeddedWidget = embeddedWidget->parentWidget();
+    }
+
+    if (!embeddedWidget) {
+        return QObject::eventFilter(watched, event);
+    }
+
+    PropertyDialog *propertyDialog = qobject_cast<PropertyDialog *>(embeddedWidget);
+    const bool isEmbeddedWidget = propertyDialog
+            ? m_propertyDialogs.values().contains(propertyDialog)
+            : embeddedWidget == m_closeIndicatorDialog;
+
+    if (!isEmbeddedWidget) {
+        return QObject::eventFilter(watched, event);
+    }
+
+    switch (event->type()) {
+    case QEvent::MouseButtonPress: {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+
+        if (mouseEvent->button() == Qt::LeftButton) {
+            embeddedWidget->raise();
+
+            // 只有直接点在属性窗口/统计窗口本体上时才切换焦点并准备拖拽，
+            // 点在内部按钮等子控件上时保持子控件自己的交互。
+            if (watched == embeddedWidget) {
+                if (embeddedWidget->focusPolicy() != Qt::NoFocus) {
+                    embeddedWidget->setFocus(Qt::MouseFocusReason);
+                }
+                m_waylandDragPositions.insert(embeddedWidget,
+                                              mouseEvent->globalPosition().toPoint());
+            }
+        }
+        break;
+    }
+    case QEvent::MouseMove: {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+
+        if (watched == embeddedWidget
+                && mouseEvent->buttons().testFlag(Qt::LeftButton)
+                && m_waylandDragPositions.contains(embeddedWidget)) {
+            const QPoint delta = mouseEvent->globalPosition().toPoint()
+                    - m_waylandDragPositions.value(embeddedWidget);
+            const QRect hostRect = m_waylandPropertyDialogHost->rect();
+            const int x = qBound(0,
+                                 embeddedWidget->x() + delta.x(),
+                                 qMax(0, hostRect.width() - embeddedWidget->width()));
+            const int y = qBound(0,
+                                 embeddedWidget->y() + delta.y(),
+                                 qMax(0, hostRect.height() - embeddedWidget->height()));
+
+            embeddedWidget->move(x, y);
+            m_waylandDragPositions.insert(embeddedWidget,
+                                          mouseEvent->globalPosition().toPoint());
+            updateWaylandPropertyDialogHostMask();
+
+            // 阻止 DTK 对嵌入的非 native 子窗口调用 startSystemMove。
+            return true;
+        }
+        break;
+    }
+    case QEvent::MouseButtonRelease:
+        if (watched == embeddedWidget) {
+            m_waylandDragPositions.remove(embeddedWidget);
+        }
+        break;
+    default:
+        break;
+    }
+
+    return QObject::eventFilter(watched, event);
 }
 
 void DialogManager::showShareOptionsInPropertyDialog(const DFMUrlListBaseEvent &event)
