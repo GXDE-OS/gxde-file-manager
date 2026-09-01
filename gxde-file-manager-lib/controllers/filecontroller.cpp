@@ -414,10 +414,14 @@ QProcessEnvironment compressorEnvironment()
 
 bool startCompressor(const QStringList &args)
 {
-    return QProcess::startDetached(QStringLiteral("gxde-compressor"),
-                                   args,
-                                   QString(),
-                                   compressorEnvironment());
+    QProcess process;
+
+    process.setProgram(QStringLiteral("gxde-compressor"));
+    process.setArguments(args);
+    process.setWorkingDirectory(QString());
+    process.setProcessEnvironment(compressorEnvironment());
+
+    return process.startDetached();
 }
 
 } 
