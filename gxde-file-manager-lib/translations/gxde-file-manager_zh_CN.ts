@@ -1032,48 +1032,56 @@
     <message>
         <location filename="../configure/global-setting-template.js" line="39" />
         <location filename="../configure/global-setting-template.js" line="68" />
+        <location filename="../configure/global-setting-template.js" line="223" />
         <source>Computer</source>
         <translation>计算机</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="40" />
         <location filename="../configure/global-setting-template.js" line="69" />
+        <location filename="../configure/global-setting-template.js" line="183" />
         <source>Home</source>
         <translation>主目录</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="41" />
         <location filename="../configure/global-setting-template.js" line="70" />
+        <location filename="../configure/global-setting-template.js" line="188" />
         <source>Desktop</source>
         <translation>桌面</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="42" />
         <location filename="../configure/global-setting-template.js" line="71" />
+        <location filename="../configure/global-setting-template.js" line="193" />
         <source>Videos</source>
         <translation>视频</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="43" />
         <location filename="../configure/global-setting-template.js" line="72" />
+        <location filename="../configure/global-setting-template.js" line="198" />
         <source>Music</source>
         <translation>音乐</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="44" />
         <location filename="../configure/global-setting-template.js" line="73" />
+        <location filename="../configure/global-setting-template.js" line="203" />
         <source>Pictures</source>
         <translation>图片</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="45" />
         <location filename="../configure/global-setting-template.js" line="74" />
+        <location filename="../configure/global-setting-template.js" line="208" />
         <source>Documents</source>
         <translation>文档</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="46" />
         <location filename="../configure/global-setting-template.js" line="75" />
+        <location filename="../configure/global-setting-template.js" line="213" />
         <source>Downloads</source>
         <translation>下载</translation>
     </message>
@@ -1151,6 +1159,31 @@
         <location filename="../configure/global-setting-template.js" line="139" />
         <source>Hide file extension when rename</source>
         <translation>重命名时隐藏文件扩展名</translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="173" />
+        <source>Items on sidebar pane</source>
+        <translation>侧边栏显示的项目</translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="178" />
+        <source>Recent</source>
+        <translation>最近使用</translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="218" />
+        <source>Trash</source>
+        <translation>回收站</translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="228" />
+        <source>Network</source>
+        <translation>网络</translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="233" />
+        <source>Added tags</source>
+        <translation>已添加的标签</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="157" />

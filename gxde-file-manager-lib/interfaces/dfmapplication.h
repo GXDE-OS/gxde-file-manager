@@ -70,6 +70,17 @@ public:
         GA_HiddenMyDirectories, // 隐藏我的目录
         GA_HiddenSystemPartition, // 隐藏系统分区
         GA_ShowRecentFileEntry, // 在侧边栏显示“最近文件”入口
+        GA_ShowHomeEntry, // 在侧边栏显示“主目录”入口
+        GA_ShowDesktopEntry, // 在侧边栏显示“桌面”入口
+        GA_ShowVideosEntry, // 在侧边栏显示“视频”入口
+        GA_ShowMusicEntry, // 在侧边栏显示“音乐”入口
+        GA_ShowPicturesEntry, // 在侧边栏显示“图片”入口
+        GA_ShowDocumentsEntry, // 在侧边栏显示“文档”入口
+        GA_ShowDownloadsEntry, // 在侧边栏显示“下载”入口
+        GA_ShowTrashEntry, // 在侧边栏显示“回收站”入口
+        GA_ShowComputerEntry, // 在侧边栏显示“计算机”入口
+        GA_ShowNetworkEntry, // 在侧边栏显示“网络”入口
+        GA_ShowTagEntry, // 在侧边栏显示“标签”分组
         GA_ShowCsdCrumbBarClickableArea, // 在面包屑栏预留可供点击以进入地址栏编辑状态的区域
         GA_showRightViewDetails // 显示右侧详情窗口
     };

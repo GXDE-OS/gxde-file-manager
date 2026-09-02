@@ -139,12 +139,6 @@
                             "text": qsTranslate("GenerateSettingTranslate", "Hide file extension when rename"),
                             "type": "checkbox",
                             "default": true
-                        },
-                        {
-                            "key": "show_recent",
-                            "text": qsTranslate("GenerateSettingTranslate", "Display recent file entry in left panel"),
-                            "type": "checkbox",
-                            "default": true
                         }
 
                     ]
@@ -172,6 +166,84 @@
                             "type": "checkbox",
                             "default": false
                     }
+                    ]
+                },
+                {
+                    "key": "items_in_sidebar",
+                    "name": qsTranslate("GenerateSettingTranslate", "Items on sidebar pane"),
+                    "options": [
+                        {
+                            "key": "recent",
+                            "text": qsTranslate("GenerateSettingTranslate", "Recent"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "home",
+                            "text": qsTranslate("GenerateSettingTranslate", "Home"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "desktop",
+                            "text": qsTranslate("GenerateSettingTranslate", "Desktop"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "videos",
+                            "text": qsTranslate("GenerateSettingTranslate", "Videos"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "music",
+                            "text": qsTranslate("GenerateSettingTranslate", "Music"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "pictures",
+                            "text": qsTranslate("GenerateSettingTranslate", "Pictures"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "documents",
+                            "text": qsTranslate("GenerateSettingTranslate", "Documents"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "downloads",
+                            "text": qsTranslate("GenerateSettingTranslate", "Downloads"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "trash",
+                            "text": qsTranslate("GenerateSettingTranslate", "Trash"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "computer",
+                            "text": qsTranslate("GenerateSettingTranslate", "Computer"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "network",
+                            "text": qsTranslate("GenerateSettingTranslate", "Network"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
+                            "key": "tags",
+                            "text": qsTranslate("GenerateSettingTranslate", "Added tags"),
+                            "type": "checkbox",
+                            "default": true
+                        }
                     ]
                 },
                 {

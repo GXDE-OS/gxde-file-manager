@@ -1188,10 +1188,6 @@ MenuAction DFileMenuManager::registerMenuActionType(QAction *action)
 
 bool DFileMenuManager::whetherShowTagActions(const QList<DUrl> &urls)
 {
-#ifdef DISABLE_TAG_SUPPORT
-    return false;
-#endif // DISABLE_TAG_SUPPORT
-
     for (const DUrl &url : urls) {
         const DAbstractFileInfoPointer &info = DFileService::instance()->createFileInfo(nullptr, url);
 

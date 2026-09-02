@@ -332,9 +332,16 @@ void DFMSideBarItemGroup::sort()
 void DFMSideBarItemGroup::setDisableUrlSchemes(const QSet<QString> &schemes)
 {
     for (DFMSideBarItem *item : itemList) {
-        item->setVisible(!schemes.contains(item->url().scheme()));
+        const QVariant &settingVisible = item->property("sidebarItemVisible");
+        const bool configuredVisible = settingVisible.isValid() ? settingVisible.toBool() : true;
+        item->setVisible(configuredVisible && !schemes.contains(item->url().scheme()));
     }
 
+    refresh();
+}
+
+void DFMSideBarItemGroup::refresh()
+{
     bottomSeparator->setVisible(visibleItemCount() != 0);
 }
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(gxde-file-manager
-    VERSION 1.8.2
+    VERSION 6.4.0
     LANGUAGES C CXX
 )
 

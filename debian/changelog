@@ -1,3 +1,11 @@
+gxde-file-manager (6.4.0) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 新增侧边栏目录条目显示开关，可在设置中开启或关闭左侧目录的显示
+  * 新增颜色标签功能：支持按颜色分类文件和目录，并支持自定义标签名称
+
+ -- shenmo <shenmo@spark-app.store>  Tue, 02 Sep 2026 19:31:51 +0800
+
 gxde-file-manager (6.3.21) UNRELEASED; urgency=medium
 
   [ shenmo ]

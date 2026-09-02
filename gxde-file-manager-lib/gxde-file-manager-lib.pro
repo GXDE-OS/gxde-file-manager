@@ -69,9 +69,8 @@ isEqual(BUILD_MINIMUM, YES){
 }
 
 CONFIG(DISABLE_ANYTHING) {
-    message("Quick search and tag support disabled dut to Anything support disabled.")
+    message("Quick search support disabled dut to Anything support disabled. Tag support remains enabled.")
     DEFINES += DISABLE_QUICK_SEARCH
-    DEFINES += DISABLE_TAG_SUPPORT
 }
 
 include(../dialogs/dialogs.pri)

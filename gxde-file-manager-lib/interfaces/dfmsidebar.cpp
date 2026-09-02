@@ -85,6 +85,8 @@ private:
     void initUserShareItem();
     void initTagsConnection();
     void initRecentConnection();
+    void initSidebarItemVisibility();
+    void updateSidebarItemVisibility(DFMApplication::GenericAttribute ga);
     void setGroupSaveItemOrder(DFMSideBarItemGroup *group, DFMSideBar::GroupName groupType);
     void addItemToGroup(DFMSideBarItemGroup *group, DFMSideBar::GroupName groupType);
 
@@ -100,6 +102,7 @@ DFMSideBarPrivate::DFMSideBarPrivate(DFMSideBar *qq)
     initUserShareItem();
     initTagsConnection();
     initRecentConnection();
+    initSidebarItemVisibility();
 }
 
 void DFMSideBarPrivate::groupConnectionRegister(DFMSideBarItemGroup * group)
@@ -153,6 +156,121 @@ void DFMSideBarPrivate::_q_onItemDragRelease(QPoint cursorPos, Qt::DropAction ac
     }
 }
 
+void DFMSideBarPrivate::initSidebarItemVisibility()
+{
+    Q_Q(DFMSideBar);
+
+    const QList<DFMApplication::GenericAttribute> sidebarAttributes {
+        DFMApplication::GA_ShowHomeEntry,
+        DFMApplication::GA_ShowDesktopEntry,
+        DFMApplication::GA_ShowVideosEntry,
+        DFMApplication::GA_ShowMusicEntry,
+        DFMApplication::GA_ShowPicturesEntry,
+        DFMApplication::GA_ShowDocumentsEntry,
+        DFMApplication::GA_ShowDownloadsEntry,
+        DFMApplication::GA_ShowTrashEntry,
+        DFMApplication::GA_ShowComputerEntry,
+        DFMApplication::GA_ShowNetworkEntry,
+        DFMApplication::GA_ShowTagEntry
+    };
+
+    for (const DFMApplication::GenericAttribute &ga : sidebarAttributes) {
+        updateSidebarItemVisibility(ga);
+    }
+
+    QObject::connect(DFMApplication::instance(), &DFMApplication::genericAttributeChanged,
+                     q, [this, sidebarAttributes](DFMApplication::GenericAttribute ga, const QVariant &) {
+        if (!sidebarAttributes.contains(ga)) {
+            return;
+        }
+
+        updateSidebarItemVisibility(ga);
+    });
+}
+
+void DFMSideBarPrivate::updateSidebarItemVisibility(DFMApplication::GenericAttribute ga)
+{
+    Q_Q(DFMSideBar);
+
+    using DFM_STD_LOCATION = DFMStandardPaths::StandardLocation;
+
+    const bool visible = DFMApplication::instance()->genericAttribute(ga).toBool();
+    DUrl url;
+    DFMSideBar::GroupName groupType = DFMSideBar::GroupName::Unknow;
+
+    switch (ga) {
+    case DFMApplication::GA_ShowHomeEntry:
+        url = DUrl::fromUserInput(DFMStandardPaths::location(DFM_STD_LOCATION::HomePath));
+        groupType = DFMSideBar::GroupName::Common;
+        break;
+    case DFMApplication::GA_ShowDesktopEntry:
+        url = DUrl::fromUserInput(DFMStandardPaths::location(DFM_STD_LOCATION::DesktopPath));
+        groupType = DFMSideBar::GroupName::Common;
+        break;
+    case DFMApplication::GA_ShowVideosEntry:
+        url = DUrl::fromUserInput(DFMStandardPaths::location(DFM_STD_LOCATION::VideosPath));
+        groupType = DFMSideBar::GroupName::Common;
+        break;
+    case DFMApplication::GA_ShowMusicEntry:
+        url = DUrl::fromUserInput(DFMStandardPaths::location(DFM_STD_LOCATION::MusicPath));
+        groupType = DFMSideBar::GroupName::Common;
+        break;
+    case DFMApplication::GA_ShowPicturesEntry:
+        url = DUrl::fromUserInput(DFMStandardPaths::location(DFM_STD_LOCATION::PicturesPath));
+        groupType = DFMSideBar::GroupName::Common;
+        break;
+    case DFMApplication::GA_ShowDocumentsEntry:
+        url = DUrl::fromUserInput(DFMStandardPaths::location(DFM_STD_LOCATION::DocumentsPath));
+        groupType = DFMSideBar::GroupName::Common;
+        break;
+    case DFMApplication::GA_ShowDownloadsEntry:
+        url = DUrl::fromUserInput(DFMStandardPaths::location(DFM_STD_LOCATION::DownloadsPath));
+        groupType = DFMSideBar::GroupName::Common;
+        break;
+    case DFMApplication::GA_ShowTrashEntry:
+        url = DUrl::fromTrashFile("/");
+        groupType = DFMSideBar::GroupName::Common;
+        break;
+    case DFMApplication::GA_ShowComputerEntry:
+        url = DUrl::fromUserInput(DFMStandardPaths::location(DFM_STD_LOCATION::ComputerRootPath));
+        groupType = DFMSideBar::GroupName::Device;
+        break;
+    case DFMApplication::GA_ShowNetworkEntry:
+        groupType = DFMSideBar::GroupName::Network;
+        break;
+    case DFMApplication::GA_ShowTagEntry:
+        groupType = DFMSideBar::GroupName::Tag;
+        break;
+    default:
+        return;
+    }
+
+    DFMSideBarItemGroup *group = groupNameMap.value(q->groupName(groupType));
+
+    if (!group) {
+        return;
+    }
+
+    auto applyVisibility = [this, group, visible](DFMSideBarItem *item) {
+        if (!item) {
+            return;
+        }
+
+        item->setProperty("sidebarItemVisible", visible);
+        item->setVisible(visible && !disabledSchemes.contains(item->url().scheme()));
+    };
+
+    if (groupType == DFMSideBar::GroupName::Network || groupType == DFMSideBar::GroupName::Tag) {
+        for (int index = 0; index < group->itemCount(); ++index) {
+            applyVisibility((*group)[index]);
+        }
+    } else {
+        applyVisibility(group->findItem(url));
+    }
+
+    group->refresh();
+}
+
 void DFMSideBarPrivate::initUI()
 {
     Q_Q(DFMSideBar);
@@ -184,10 +302,6 @@ void DFMSideBarPrivate::initUI()
     };
 
     foreach (const DFMSideBar::GroupName &groupType, groups) {
-#ifdef DISABLE_TAG_SUPPORT
-        if (groupType == DFMSideBar::GroupName::Tag) continue;
-#endif // DISABLE_TAG_SUPPORT
-
         DFMSideBarItemGroup *group = new DFMSideBarItemGroup(q->groupName(groupType));
         mainLayout->addLayout(group);
         groupConnectionRegister(group);
@@ -390,6 +504,9 @@ void DFMSideBarPrivate::initUserShareItem()
         DFMSideBarItem *item = group->findItem(DUrl::fromUserShareFile("/"));
         if (cnt > 0 && item == nullptr) {
             item = new DFMSideBarNetworkItem(DFM_STD_LOCATION::UserShareRootPath);
+            const bool showNetwork = DFMApplication::instance()->genericAttribute(DFMApplication::GA_ShowNetworkEntry).toBool();
+            item->setProperty("sidebarItemVisible", showNetwork);
+            item->setVisible(showNetwork && !disabledSchemes.contains(item->url().scheme()));
             group->appendItem(item);
         } else if (cnt == 0 && item) {
             q->removeItem(item);
@@ -412,10 +529,6 @@ void DFMSideBarPrivate::initTagsConnection()
 {
     Q_Q(DFMSideBar);
 
-#ifdef DISABLE_TAG_SUPPORT
-    return;
-#endif
-
     DFMSideBarItemGroup *group = groupNameMap[q->groupName(DFMSideBar::GroupName::Tag)];
     Q_CHECK_PTR(group);
 
@@ -424,15 +537,21 @@ void DFMSideBarPrivate::initTagsConnection()
     tags_watcher->startWatcher();
 
     // New tag added.
-    q->connect(tags_watcher, &DAbstractFileWatcher::subfileCreated, group, [group](const DUrl & url) {
-        group->appendItem(new DFMSideBarTagItem(url));
+    q->connect(tags_watcher, &DAbstractFileWatcher::subfileCreated, group, [this, group](const DUrl & url) {
+        DFMSideBarTagItem *item = new DFMSideBarTagItem(url);
+        const bool showTags = DFMApplication::instance()->genericAttribute(DFMApplication::GA_ShowTagEntry).toBool();
+        item->setProperty("sidebarItemVisible", showTags);
+        item->setVisible(showTags && !disabledSchemes.contains(item->url().scheme()));
+        group->appendItem(item);
         group->saveItemOrder();
     });
 
     // Tag get removed.
     q->connect(tags_watcher, &DAbstractFileWatcher::fileDeleted, group, [group, q](const DUrl & url) {
         DFMSideBarItem *item = group->findItem(url);
-        Q_CHECK_PTR(item); // should always find one
+        if (!item) {
+            return;
+        }
         q->removeItem(item);
         group->saveItemOrder();
     });
@@ -450,6 +569,9 @@ void DFMSideBarPrivate::initTagsConnection()
     // Tag changed color
     q->connect(tags_watcher, &DAbstractFileWatcher::fileAttributeChanged, group, [group](const DUrl & url) {
         DFMSideBarItem *item = group->findItem(url);
+        if (!item) {
+            return;
+        }
         item->setIconFromThemeConfig("BookmarkItem." + TagManager::instance()->getTagColorName(url.tagName()));
     });
 }

@@ -56,6 +56,7 @@ public:
     void setAutoSort(bool autoSort);
     void sort();
     void setDisableUrlSchemes(const QSet<QString> &schemes);
+    void refresh();
     DFMSideBarItem *operator [](int index);
 
 private:

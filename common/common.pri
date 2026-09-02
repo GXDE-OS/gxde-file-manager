@@ -18,7 +18,7 @@ unix {
 #    isEqual(ARCH, x86_64) | isEqual(ARCH, i686) | | isEqual(ARCH, i386) {
 #        message("Build arch:" $$ARCH)
 #    } else {
-        message("Build arch:" $$ARCH "Deepin Anything support disabled")
+        message("Build arch:" $$ARCH "Deepin Anything quick search support disabled")
         CONFIG += DISABLE_ANYTHING
 #    }
 
@@ -57,7 +57,7 @@ unix {
     DEFINES += PLUGINDIR=\\\"$$top_srcdir/plugins:$$PLUGINDIR\\\" TOOLDIR=\\\"$$top_srcdir/tools:$$TOOLDIR\\\"
 
     isEmpty(VERSION) {
-        VERSION = 1.8.2
+        VERSION = 6.4.0
     }
 }
 

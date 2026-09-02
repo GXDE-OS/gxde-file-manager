@@ -356,7 +356,7 @@ endif()
 
 if(GXDE_DISABLE_ANYTHING)
     target_compile_definitions(${TARGET_NAME} PRIVATE
-        DISABLE_QUICK_SEARCH DISABLE_TAG_SUPPORT)
+        DISABLE_QUICK_SEARCH)
 endif()
 
 if(BUILD_MINIMUM)
