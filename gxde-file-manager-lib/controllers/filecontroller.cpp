@@ -74,6 +74,7 @@
 #include "waylandutils.h"
 
 #include <unistd.h>
+#include <dirent.h>
 
 #include <QQueue>
 
@@ -83,6 +84,16 @@
 #include "anything_interface.h"
 #endif
 
+/**
+ * @brief 本地目录迭代器
+ *
+ * 这里没有直接使用 QDirIterator：Qt 6 的 QDir/QDirIterator 在遍历目录时，一旦遇到文件名
+ * 不是合法 UTF-8 编码的条目，会直接终止整个目录的遍历，后续条目全部丢失。此时文件管理器
+ * 会把一个实际上包含大量文件的目录（典型场景：主目录）显示为空文件夹。
+ *
+ * 因此改为基于 POSIX 的 opendir/readdir 自行遍历，保证单个异常条目只影响它自己，
+ * 不会导致整个目录被显示为空。
+ */
 class DFMQDirIterator : public DDirIterator
 {
 public:
@@ -90,34 +101,72 @@ public:
                     const QStringList &nameFilters,
                     QDir::Filters filter,
                     QDirIterator::IteratorFlags flags)
-        : iterator(path, nameFilters, filter, flags)
+        : m_path(path)
+        , m_filters(filter)
+        , m_flags(flags)
     {
+        const Qt::CaseSensitivity caseSensitive = m_filters.testFlag(QDir::CaseSensitive)
+                                                  ? Qt::CaseSensitive
+                                                  : Qt::CaseInsensitive;
 
+        for (const QString &nameFilter : nameFilters) {
+            m_nameRegExps << QRegularExpression(
+                                 QRegularExpression::wildcardToRegularExpression(nameFilter),
+                                 caseSensitive == Qt::CaseInsensitive
+                                 ? QRegularExpression::CaseInsensitiveOption
+                                 : QRegularExpression::NoPatternOption);
+        }
+
+        pushDirectory(path);
+    }
+
+    ~DFMQDirIterator() override
+    {
+        close();
     }
 
     DUrl next() override
     {
-        return DUrl::fromLocalFile(iterator.next());
+        if (!m_pendingValid && !advance()) {
+            m_currentFileName.clear();
+            m_currentPath.clear();
+            m_currentInfo = QFileInfo();
+
+            return DUrl();
+        }
+
+        m_pendingValid = false;
+        m_currentFileName = m_pendingFileName;
+        m_currentPath = m_pendingFilePath;
+        m_currentInfo = m_pendingInfo;
+
+        return DUrl::fromLocalFile(m_currentPath);
     }
 
     bool hasNext() const override
     {
-        return iterator.hasNext();
+        if (m_pendingValid) {
+            return true;
+        }
+
+        m_pendingValid = advance();
+
+        return m_pendingValid;
     }
 
     QString fileName() const override
     {
-        return iterator.fileName();
+        return m_currentFileName;
     }
 
     DUrl fileUrl() const override
     {
-        return DUrl::fromLocalFile(iterator.filePath());
+        return DUrl::fromLocalFile(m_currentPath);
     }
 
     const DAbstractFileInfoPointer fileInfo() const override
     {
-        const QFileInfo &info = iterator.fileInfo();
+        const QFileInfo &info = m_currentInfo;
 
         if (info.suffix() == DESKTOP_SURRIX) {
             return DAbstractFileInfoPointer(new DesktopFileInfo(info));
@@ -128,11 +177,188 @@ public:
 
     DUrl url() const override
     {
-        return DUrl::fromLocalFile(iterator.path());
+        return DUrl::fromLocalFile(m_path);
+    }
+
+    void close() override
+    {
+        while (!m_dirStack.isEmpty()) {
+            popDirectory();
+        }
+
+        m_pendingValid = false;
     }
 
 private:
-    QDirIterator iterator;
+    struct DirLevel
+    {
+        DirLevel(const QString &p, DIR *d)
+            : path(p)
+            , dir(d)
+        {
+        }
+
+        QString path;
+        DIR *dir;
+    };
+
+    void pushDirectory(const QString &path) const
+    {
+        DIR *dir = ::opendir(QFile::encodeName(path).constData());
+
+        if (!dir) {
+            return;
+        }
+
+        m_dirStack.append(DirLevel(path, dir));
+    }
+
+    void popDirectory() const
+    {
+        const DirLevel level = m_dirStack.takeLast();
+
+        if (level.dir) {
+            ::closedir(level.dir);
+        }
+    }
+
+    bool advance() const
+    {
+        while (!m_dirStack.isEmpty()) {
+            DIR *dir = m_dirStack.last().dir;
+
+            if (!dir) {
+                m_dirStack.removeLast();
+                continue;
+            }
+
+            const struct dirent *entry = ::readdir(dir);
+
+            if (!entry) {
+                // 当前目录已读完（或读取出错），继续处理上一层目录
+                popDirectory();
+                continue;
+            }
+
+            const QByteArray rawName(entry->d_name);
+
+            if (rawName == ".") {
+                if (m_filters.testFlag(QDir::NoDot)) {
+                    continue;
+                }
+            } else if (rawName == "..") {
+                if (m_filters.testFlag(QDir::NoDotDot)) {
+                    continue;
+                }
+            }
+
+            // 文件名可能并不是合法的 UTF-8 编码，此时 QFile::decodeName 只能得到一个
+            // 近似的名字。这里必须继续遍历后面的条目，不能像 Qt 6 的 QDirIterator 那样
+            // 直接终止整个目录的遍历。
+            const QString name = QFile::decodeName(rawName);
+
+            // 是否为隐藏文件只取决于文件名，放在 stat 之前判断可以减少无谓的开销
+            if (!m_filters.testFlag(QDir::Hidden) && name.startsWith(QLatin1Char('.'))) {
+                continue;
+            }
+
+            if (!nameMatches(name)) {
+                continue;
+            }
+
+            const QString dirPath = m_dirStack.last().path;
+            const QString filePath = dirPath.endsWith(QLatin1Char('/'))
+                                     ? dirPath + name
+                                     : dirPath + QLatin1Char('/') + name;
+            const QFileInfo info(filePath);
+
+            if (!matchesFilters(info)) {
+                continue;
+            }
+
+            if (m_flags.testFlag(QDirIterator::Subdirectories) && info.isDir()
+                    && (!info.isSymLink() || m_flags.testFlag(QDirIterator::FollowSymlinks))) {
+                pushDirectory(filePath);
+            }
+
+            m_pendingFileName = name;
+            m_pendingFilePath = filePath;
+            m_pendingInfo = info;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    bool nameMatches(const QString &name) const
+    {
+        if (m_nameRegExps.isEmpty()) {
+            return true;
+        }
+
+        for (const QRegularExpression &re : m_nameRegExps) {
+            if (re.match(name).hasMatch()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool matchesFilters(const QFileInfo &info) const
+    {
+        const bool isDir = info.isDir();
+        const bool isFile = info.isFile();
+
+        if (isDir && !m_filters.testFlag(QDir::Dirs) && !m_filters.testFlag(QDir::AllDirs)) {
+            return false;
+        }
+
+        if (isFile && !m_filters.testFlag(QDir::Files)) {
+            return false;
+        }
+
+        // 既不是普通文件、目录也不是链接的条目（管道、套接字、设备等）
+        // 只有在指定了 QDir::System 时才需要列举
+        if (!isFile && !isDir && !info.isSymLink() && !m_filters.testFlag(QDir::System)) {
+            return false;
+        }
+
+        if (info.isSymLink() && m_filters.testFlag(QDir::NoSymLinks)) {
+            return false;
+        }
+
+        if (!info.isReadable() && m_filters.testFlag(QDir::Readable)) {
+            return false;
+        }
+
+        if (!info.isWritable() && m_filters.testFlag(QDir::Writable)) {
+            return false;
+        }
+
+        if (!info.isExecutable() && m_filters.testFlag(QDir::Executable)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    QString m_path;
+    QDir::Filters m_filters;
+    QDirIterator::IteratorFlags m_flags;
+    QList<QRegularExpression> m_nameRegExps;
+
+    mutable QList<DirLevel> m_dirStack;
+
+    mutable QString m_pendingFileName;
+    mutable QString m_pendingFilePath;
+    mutable QFileInfo m_pendingInfo;
+    mutable bool m_pendingValid = false;
+
+    QString m_currentFileName;
+    QString m_currentPath;
+    QFileInfo m_currentInfo;
 };
 
 class DFMSortInodeDirIterator : public DDirIterator

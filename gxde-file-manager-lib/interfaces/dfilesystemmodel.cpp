@@ -2249,7 +2249,9 @@ void DFileSystemModel::updateChildren(QList<DAbstractFileInfoPointer> list)
     if (enabledSort())
         sort(node->fileInfo, fileList);
 
-    beginInsertRows(createIndex(node, 0), 0, list.count() - 1);
+    // 必须使用实际插入的节点数量通知视图，list 中可能存在重复的 url 或被过滤规则
+    // 排除的条目，用 list.count() 会导致模型的行数与视图的状态不一致
+    beginInsertRows(createIndex(node, 0), 0, fileList.count() - 1);
 
     node->setChildrenMap(fileHash);
     node->setChildrenList(fileList);
