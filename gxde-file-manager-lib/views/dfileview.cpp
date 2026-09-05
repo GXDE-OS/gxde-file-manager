@@ -24,6 +24,7 @@
 
 #include "dfileview.h"
 #include "fileitem.h"
+#include "dfiledialog.h"
 #include "dfilemenumanager.h"
 #include "dfilemenu.h"
 #include "windowmanager.h"
@@ -901,6 +902,20 @@ void DFileView::wheelEvent(QWheelEvent *event)
     }
 }
 
+// 文件选择对话框（DFileDialog）中，回车/快捷键打开由对话框自己接管：
+// 回车表示“确认选择”，不能由视图用默认程序把文件打开，
+// 否则会在把路径返回给调用方的同时又把文件打开。
+static bool isInFileDialog(const QWidget *widget)
+{
+    for (const QWidget *w = widget; w; w = w->parentWidget()) {
+        if (qobject_cast<const DFileDialog *>(w)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void DFileView::keyPressEvent(QKeyEvent *event)
 {
     D_D(DFileView);
@@ -921,6 +936,11 @@ void DFileView::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Return:
         case Qt::Key_Enter:
             if (!itemDelegate()->editingIndex().isValid()) {
+                // 对话框里回车表示“确认选择”，由 DFileDialog 统一处理
+                if (isInFileDialog(this)) {
+                    return;
+                }
+
                 appController->actionOpen(dMakeEventPointer<DFMUrlListBaseEvent>(this, urls));
 
                 return;
@@ -985,6 +1005,11 @@ void DFileView::keyPressEvent(QKeyEvent *event)
 
             return;
         case Qt::Key_Down:
+            // 对话框里不用快捷键打开选中的文件
+            if (isInFileDialog(this)) {
+                return;
+            }
+
             appController->actionOpen(dMakeEventPointer<DFMUrlListBaseEvent>(this, urls));
 
             return;
@@ -1046,6 +1071,11 @@ void DFileView::keyPressEvent(QKeyEvent *event)
 
             return;
         case Qt::Key_Down:
+            // 对话框里不用快捷键打开选中的文件
+            if (isInFileDialog(this)) {
+                return;
+            }
+
             appController->actionOpen(dMakeEventPointer<DFMUrlListBaseEvent>(this, urls));
 
             return;

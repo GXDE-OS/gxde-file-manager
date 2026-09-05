@@ -773,7 +773,12 @@ bool DFileDialog::eventFilter(QObject *watched, QEvent *event)
                 }
                 close();
             } else if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
-                handleEnterPressed();
+                // 回车已被对话框当作“确认选择”处理时必须拦截，
+                // 否则事件会继续下发给文件视图，被 DFileView::keyPressEvent()
+                // 当成“回车打开”，在返回文件路径的同时又用默认程序打开文件。
+                if (handleEnterPressed()) {
+                    return true;
+                }
             }
         }
     }
@@ -1130,15 +1135,24 @@ void DFileDialog::onCurrentInputNameChanged()
     statusBar()->acceptButton()->setDisabled(d->currentInputName.isEmpty());
 }
 
-void DFileDialog::handleEnterPressed()
+bool DFileDialog::handleEnterPressed()
 {
-    if (!qobject_cast<DFMAddressBar*>(qApp->focusWidget())) {
-        for (const QModelIndex &index : getFileView()->selectedIndexes()) {
-            const DAbstractFileInfoPointer &info = getFileView()->model()->fileInfo(index);
-            if (info->isDir()) {
-                return;
-            }
-        }
-        statusBar()->acceptButton()->animateClick();
+    DFileView *view = getFileView();
+
+    // 当前不是文件视图（例如“计算机”页面）时，交给视图自己处理
+    if (!view) {
+        return false;
     }
+
+    // 地址栏里的回车用于跳转到输入的路径，交给地址栏自己处理
+    if (qobject_cast<DFMAddressBar*>(qApp->focusWidget())) {
+        return false;
+    }
+
+    // 与双击保持一致，直接走确认按钮的处理流程（目录切入目录，文件确认选择）。
+    // 不再用 animateClick()：它的点击是延迟触发的，期间回车一旦被文件视图
+    // 收到就会被当成“回车打开”，从而额外用默认程序把文件打开。
+    onAcceptButtonClicked();
+
+    return true;
 }

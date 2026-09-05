@@ -133,7 +133,7 @@ private:
     void onAcceptButtonClicked();
     void onRejectButtonClicked();
     void onCurrentInputNameChanged();
-    void handleEnterPressed();
+    bool handleEnterPressed();
 
     QScopedPointer<DFileDialogPrivate> d_ptr;
 
