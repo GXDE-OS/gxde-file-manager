@@ -1,11 +1,14 @@
-gxde-file-manager (6.4.2) UNRELEASED; urgency=medium
+gxde-file-manager (6.4.2-1) UNRELEASED; urgency=medium
 
   [ shenmo ]
   * 新增类似 Windows 的鼠标悬停高亮框效果：文件管理器与桌面图标默认开启，
     可在设置中关闭，同时支持 Wayland 和 X11
   * 修复文件浏览窗口按 Enter 键会使用默认打开方式打开文件的问题
 
- -- shenmo <shenmo@spark-app.store>  Sun, 06 Sep 2026 10:20:00 +0800
+  [ CharOfString ]
+  * Support the Poppler 26 C++ runtime.
+
+ -- CharOfString <root@charofstring.cc>  Sun, 06 Sep 2026 17:18:42 -0500
 
 gxde-file-manager (6.4.1) UNRELEASED; urgency=medium
 
