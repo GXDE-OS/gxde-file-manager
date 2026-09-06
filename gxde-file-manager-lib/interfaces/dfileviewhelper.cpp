@@ -476,12 +476,28 @@ DUrl DFileViewHelper::currentUrl() const
     return fileInfo->fileUrl();
 }
 
+bool DFileViewHelper::isHovered(const QModelIndex &index) const
+{
+    Q_UNUSED(index)
+    return false;
+}
+
 void DFileViewHelper::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
 {
     if (isSelected(index)) {
         option->state |= QStyle::State_Selected;
     } else {
         option->state &= QStyle::StateFlag(~QStyle::State_Selected);
+    }
+
+    if (DFM_NAMESPACE::DFMApplication::instance()
+            && DFM_NAMESPACE::DFMApplication::instance()->genericAttribute(
+                   DFM_NAMESPACE::DFMApplication::GA_ShowHoverBox).toBool()) {
+        if (isHovered(index)) {
+            option->state |= QStyle::State_MouseOver;
+        } else {
+            option->state &= ~QStyle::State_MouseOver;
+        }
     }
 
     option->palette.setColor(QPalette::Text, ThemeConfig::instace()->color("FileView", "color"));

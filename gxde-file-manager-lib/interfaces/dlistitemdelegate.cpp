@@ -120,6 +120,13 @@ void DListItemDelegate::paint(QPainter *painter,
         }
     }
 
+    const bool isHover = !isDragMode && !drawBackground && !isDropTarget
+            && (opt.state & QStyle::State_MouseOver)
+            && hoverBoxEnabled();
+    if (isHover) {
+        paintHoverBox(painter, opt.rect, LIST_MODE_RECT_RADIUS);
+    }
+
     opt.rect.setLeft(opt.rect.left() + LEFT_PADDING);
     opt.rect.setRight(opt.rect.right() - RIGHT_PADDING);
 

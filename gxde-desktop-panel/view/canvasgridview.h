@@ -76,6 +76,7 @@ public:
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     void mouseDoubleClickEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
@@ -108,6 +109,7 @@ public:
     const DUrlList selectedUrls() const;
 
     bool isSelected(const QModelIndex &index) const;
+    bool isHovered(const QModelIndex &index) const;
     void select(const QList<DUrl> &list);
     int selectedIndexCount() const;
 
@@ -163,6 +165,8 @@ private:
 
     void initUI();
     void initConnection();
+    void updateHoverIndex(const QPoint &pos);
+    void clearHoverIndex();
     void updateGeometry(const QRect &geometry);
     void updateCanvas();
 

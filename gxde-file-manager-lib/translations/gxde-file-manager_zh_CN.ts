@@ -1161,6 +1161,11 @@
         <translation>重命名时隐藏文件扩展名</translation>
     </message>
     <message>
+        <location filename="../configure/global-setting-template.js" line="145" />
+        <source>Show hover highlight box</source>
+        <translation>鼠标悬停时显示高亮框</translation>
+    </message>
+    <message>
         <location filename="../configure/global-setting-template.js" line="173" />
         <source>Items on sidebar pane</source>
         <translation>侧边栏显示的项目</translation>

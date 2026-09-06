@@ -28,6 +28,7 @@ public:
     quint64 windowId() const Q_DECL_OVERRIDE;
     bool isSelected(const QModelIndex &index) const Q_DECL_OVERRIDE;
     bool isDropTarget(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    bool isHovered(const QModelIndex &index) const Q_DECL_OVERRIDE;
     int selectedIndexsCount() const Q_DECL_OVERRIDE;
     int rowCount() const Q_DECL_OVERRIDE;
     int indexOfRow(const QModelIndex &index) const Q_DECL_OVERRIDE;

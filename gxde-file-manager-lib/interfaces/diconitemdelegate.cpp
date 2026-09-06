@@ -615,6 +615,13 @@ void DIconItemDelegate::paint(QPainter *painter,
         painter->setRenderHint(QPainter::Antialiasing, false);
     }
 
+    const bool isHover = !isDragMode && !isSelected && !isDropTarget
+            && (opt.state & QStyle::State_MouseOver)
+            && hoverBoxEnabled();
+    if (isHover) {
+        paintHoverBox(painter, opt.rect, ICON_MODE_RECT_RADIUS);
+    }
+
     /// init icon geomerty
 
     QRectF icon_rect = opt.rect;

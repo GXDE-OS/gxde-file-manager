@@ -30,6 +30,7 @@ public:
     virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const Q_DECL_OVERRIDE;
     virtual int selectedIndexsCount() const Q_DECL_OVERRIDE;
     virtual bool isSelected(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    virtual bool isHovered(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 public slots:
     void edit(const DFMEvent &event);

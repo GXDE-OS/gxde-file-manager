@@ -13,6 +13,7 @@
 #include <dfileinfo.h>
 #include <dfilesystemmodel.h>
 #include <diconitemdelegate.h>
+#include <dfmapplication.h>
 
 #include "canvasgridview.h"
 #include "desktopitemdelegate.h"
@@ -89,6 +90,16 @@ void CanvasViewHelper::initStyleOption(QStyleOptionViewItem *option, const QMode
         option->state &= QStyle::StateFlag(~QStyle::State_Selected);
     }
 
+    if (dde_file_manager::DFMApplication::instance()
+            && dde_file_manager::DFMApplication::instance()->genericAttribute(
+                   dde_file_manager::DFMApplication::GA_ShowHoverBox).toBool()) {
+        if (isHovered(index)) {
+            option->state |= QStyle::State_MouseOver;
+        } else {
+            option->state &= ~QStyle::State_MouseOver;
+        }
+    }
+
     option->palette.setColor(QPalette::Text, QColor("white"));
     option->palette.setColor(QPalette::Disabled, QPalette::Text, QColor("#797979"));
     if ((option->state & QStyle::State_Selected) && option->showDecorationSelected) {
@@ -128,4 +139,9 @@ int CanvasViewHelper::selectedIndexsCount() const
 bool CanvasViewHelper::isSelected(const QModelIndex &index) const
 {
     return parent()->isSelected(index);
+}
+
+bool CanvasViewHelper::isHovered(const QModelIndex &index) const
+{
+    return parent()->isHovered(index);
 }

@@ -39,6 +39,7 @@ public:
     virtual bool isTransparent(const QModelIndex &index) const;
     virtual bool isSelected(const QModelIndex &index) const;
     virtual bool isDropTarget(const QModelIndex &index) const;
+    virtual bool isHovered(const QModelIndex &index) const;
     virtual int selectedIndexsCount() const;
     virtual int rowCount() const;
     virtual int indexOfRow(const QModelIndex &index) const;

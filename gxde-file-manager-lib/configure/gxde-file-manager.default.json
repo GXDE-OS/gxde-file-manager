@@ -39,7 +39,8 @@
         "ShowedFileSuffixOnRename": true,
         "DisableNonRemovableDeviceUnmount": false,
         "HiddenSystemPartition": false,
-        "ShowCsdCrumbBarClickableArea":true
+        "ShowCsdCrumbBarClickableArea": true,
+        "ShowHoverBox": true
     },
     "AnythingMonitorFilterPath": {
         "WhiteList":[

@@ -121,6 +121,7 @@ private:
     BidirectionHash<QString, DFMApplication::GenericAttribute> keyToGA {
         {"base.hidden_files.show_hidden", DFMApplication::GA_ShowedHiddenFiles},
         {"base.hidden_files.hide_suffix", DFMApplication::GA_ShowedFileSuffixOnRename},
+        {"base.default_view.hover_box", DFMApplication::GA_ShowHoverBox},
         {"advance.items_in_sidebar.recent", DFMApplication::GA_ShowRecentFileEntry},
         {"advance.items_in_sidebar.home", DFMApplication::GA_ShowHomeEntry},
         {"advance.items_in_sidebar.desktop", DFMApplication::GA_ShowDesktopEntry},

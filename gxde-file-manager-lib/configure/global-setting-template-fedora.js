@@ -121,6 +121,12 @@
                                 ]
                             },
                             "default": 1
+                        },
+                        {
+                            "key": "hover_box",
+                            "text": qsTranslate("GenerateSettingTranslate", "Show hover highlight box"),
+                            "type": "checkbox",
+                            "default": true
                         }
                     ]
                 },

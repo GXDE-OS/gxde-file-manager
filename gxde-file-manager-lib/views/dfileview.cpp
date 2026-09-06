@@ -139,6 +139,9 @@ public:
 
     QModelIndex mouseLastPressedIndex;
 
+    /// 鼠标悬停项（用于绘制类似 Windows 的高亮框）
+    QModelIndex hoverIndex;
+
     /// drag drop
     QModelIndex dragMoveHoverIndex;
 
@@ -398,6 +401,13 @@ bool DFileView::isSelected(const QModelIndex &index) const
 #endif
 }
 
+bool DFileView::isHovered(const QModelIndex &index) const
+{
+    D_DC(DFileView);
+
+    return d->hoverIndex.isValid() && d->hoverIndex == index;
+}
+
 int DFileView::selectedIndexCount() const
 {
 #ifndef CLASSICAL_SECTION
@@ -605,6 +615,41 @@ bool DFileView::isDropTarget(const QModelIndex &index) const
     D_DC(DFileView);
 
     return d->dragMoveHoverIndex == index;
+}
+
+void DFileView::updateHoverIndex(const QPoint &pos)
+{
+    D_D(DFileView);
+
+    const QModelIndex oldHover = d->hoverIndex;
+    const QModelIndex newHover = indexAt(pos);
+
+    if (oldHover == newHover) {
+        return;
+    }
+
+    if (oldHover.isValid()) {
+        update(visualRect(oldHover).adjusted(-10, -10, 10, 10));
+    }
+
+    d->hoverIndex = newHover;
+
+    if (newHover.isValid()) {
+        update(visualRect(newHover).adjusted(-10, -10, 10, 10));
+    }
+}
+
+void DFileView::clearHoverIndex()
+{
+    D_D(DFileView);
+
+    if (!d->hoverIndex.isValid()) {
+        return;
+    }
+
+    const QRect oldRect = visualRect(d->hoverIndex).adjusted(-10, -10, 10, 10);
+    d->hoverIndex = QModelIndex();
+    update(oldRect);
 }
 
 bool DFileView::cd(const DUrl &url)
@@ -1233,6 +1278,8 @@ void DFileView::mouseMoveEvent(QMouseEvent *event)
         }
     }
 
+    updateHoverIndex(event->pos());
+
     return DListView::mouseMoveEvent(event);
 }
 
@@ -1255,6 +1302,12 @@ void DFileView::mouseReleaseEvent(QMouseEvent *event)
     // 避免滚动视图导致文件选中状态被取消
     if (!QScroller::hasScroller(this))
         DListView::mouseReleaseEvent(event);
+}
+
+void DFileView::leaveEvent(QEvent *event)
+{
+    clearHoverIndex();
+    QWidget::leaveEvent(event);
 }
 
 void DFileView::updateModelActiveIndex()
@@ -1465,6 +1518,7 @@ void DFileView::onDriveOpticalChanged(const QString &path)
 
 void DFileView::reset()
 {
+    clearHoverIndex();
     DListView::reset();
 }
 
@@ -1987,6 +2041,8 @@ void DFileView::initUI()
     setPalette(palette);
 
     setSpacing(ICON_VIEW_SPACING);
+    setMouseTracking(true);
+    viewport()->setMouseTracking(true);
     setResizeMode(QListView::Adjust);
     setOrientation(QListView::LeftToRight, true);
     setTextElideMode(Qt::ElideMiddle);
@@ -2085,6 +2141,13 @@ void DFileView::initConnects()
     connect(DFMApplication::instance(), &DFMApplication::previewAttributeChanged, this, [this] {
         model()->refresh();
     });
+    connect(DFMApplication::instance(), &DFMApplication::genericAttributeChanged, this,
+            [this](DFMApplication::GenericAttribute ga, const QVariant &) {
+        if (ga == DFMApplication::GA_ShowHoverBox) {
+            clearHoverIndex();
+            viewport()->update();
+        }
+    });
 
     connect(d->statusBar->scalingSlider(), &QSlider::valueChanged, this, &DFileView::viewStateChanged);
     connect(this, &DFileView::rootUrlChanged, this, &DFileView::loadViewState);
@@ -2176,6 +2239,7 @@ bool DFileView::setRootUrl(const DUrl &url)
         return false;
 
     itemDelegate()->hideAllIIndexWidget();
+    clearHoverIndex();
 
     clearSelection();
 

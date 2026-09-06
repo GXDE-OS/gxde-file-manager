@@ -82,7 +82,8 @@ public:
         GA_ShowNetworkEntry, // 在侧边栏显示“网络”入口
         GA_ShowTagEntry, // 在侧边栏显示“标签”分组
         GA_ShowCsdCrumbBarClickableArea, // 在面包屑栏预留可供点击以进入地址栏编辑状态的区域
-        GA_showRightViewDetails // 显示右侧详情窗口
+        GA_showRightViewDetails, // 显示右侧详情窗口
+        GA_ShowHoverBox // 鼠标悬停时显示类似 Windows 的高亮边框（默认开启）
     };
 
     Q_ENUM(GenericAttribute)

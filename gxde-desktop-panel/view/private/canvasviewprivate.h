@@ -137,6 +137,9 @@ public:
     // currentCursorIndex is not the mouse, it's the position move by keybord
     QModelIndex         currentCursorIndex;
 
+    // 鼠标悬停项（用于绘制类似 Windows 的高亮框）
+    QModelIndex         hoverIndex;
+
     QPoint              lastMenuPos;
     QString             lastMenuNewFilepath;
 

@@ -107,6 +107,7 @@ public:
     int horizontalOffset() const Q_DECL_OVERRIDE;
 
     bool isSelected(const QModelIndex &index) const;
+    bool isHovered(const QModelIndex &index) const;
     int selectedIndexCount() const;
     QModelIndexList selectedIndexes() const Q_DECL_OVERRIDE;
 
@@ -201,6 +202,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     void focusInEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
@@ -228,6 +230,8 @@ protected:
 private:
     void increaseIcon();
     void decreaseIcon();
+    void updateHoverIndex(const QPoint &pos);
+    void clearHoverIndex();
     void openIndex(const QModelIndex &index);
     void keyboardSearch(const QString & search) Q_DECL_OVERRIDE;
     void updateHorizontalOffset();

@@ -9,6 +9,7 @@
 
 #include "dstyleditemdelegate.h"
 #include "dfileviewhelper.h"
+#include "dfmapplication.h"
 #include "private/dstyleditemdelegate_p.h"
 
 #include <QDebug>
@@ -27,6 +28,30 @@ DStyledItemDelegate::DStyledItemDelegate(DFileViewHelper *parent)
 DStyledItemDelegate::~DStyledItemDelegate()
 {
 
+}
+
+bool DStyledItemDelegate::hoverBoxEnabled()
+{
+    return dde_file_manager::DFMApplication::instance()
+            && dde_file_manager::DFMApplication::instance()->genericAttribute(
+                   dde_file_manager::DFMApplication::GA_ShowHoverBox).toBool();
+}
+
+void DStyledItemDelegate::paintHoverBox(QPainter *painter, const QRectF &rect, qreal radius)
+{
+    if (!painter || !rect.isValid()) {
+        return;
+    }
+
+    QPainterPath path;
+    path.addRoundedRect(rect, radius, radius);
+
+    painter->save();
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->fillPath(path, QColor(43, 167, 248, 38));
+    painter->setPen(QPen(QColor(43, 167, 248, 110), 1));
+    painter->drawPath(path);
+    painter->restore();
 }
 
 DFileViewHelper *DStyledItemDelegate::parent() const

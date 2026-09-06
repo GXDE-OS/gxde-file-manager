@@ -516,6 +516,8 @@ QRegion CanvasGridView::visualRegionForSelection(const QItemSelection &selection
 
 void CanvasGridView::mouseMoveEvent(QMouseEvent *event)
 {
+    updateHoverIndex(event->pos());
+
     if (event->buttons() != Qt::LeftButton) {
         event->ignore();
         return;
@@ -595,6 +597,12 @@ void CanvasGridView::mouseReleaseEvent(QMouseEvent *event)
     d->selectFrame->setGeometry(d->selectRect);
     d->selectFrame->setVisible(d->showSelectRect);
     update();
+}
+
+void CanvasGridView::leaveEvent(QEvent *event)
+{
+    clearHoverIndex();
+    QWidget::leaveEvent(event);
 }
 
 void CanvasGridView::mouseDoubleClickEvent(QMouseEvent *event)
@@ -1567,6 +1575,7 @@ bool CanvasGridView::setRootUrl(const DUrl &url)
     }
 
     itemDelegate()->hideAllIIndexWidget();
+    clearHoverIndex();
 
     clearSelection();
     /*if (this->hideIcon()) {
@@ -1592,6 +1601,42 @@ const DUrlList CanvasGridView::selectedUrls() const
 bool CanvasGridView::isSelected(const QModelIndex &index) const
 {
     return static_cast<DFileSelectionModel *>(selectionModel())->isSelected(index);
+}
+
+bool CanvasGridView::isHovered(const QModelIndex &index) const
+{
+    return d->hoverIndex.isValid() && d->hoverIndex == index;
+}
+
+void CanvasGridView::updateHoverIndex(const QPoint &pos)
+{
+    const QModelIndex oldHover = d->hoverIndex;
+    const QModelIndex newHover = indexAt(pos);
+
+    if (oldHover == newHover) {
+        return;
+    }
+
+    if (oldHover.isValid()) {
+        update(visualRect(oldHover).adjusted(-10, -10, 10, 10));
+    }
+
+    d->hoverIndex = newHover;
+
+    if (newHover.isValid()) {
+        update(visualRect(newHover).adjusted(-10, -10, 10, 10));
+    }
+}
+
+void CanvasGridView::clearHoverIndex()
+{
+    if (!d->hoverIndex.isValid()) {
+        return;
+    }
+
+    const QRect oldRect = visualRect(d->hoverIndex).adjusted(-10, -10, 10, 10);
+    d->hoverIndex = QModelIndex();
+    update(oldRect);
 }
 
 void CanvasGridView::select(const QList<DUrl> &list)
@@ -1965,6 +2010,8 @@ void CanvasGridView::initUI()
 
     setAttribute(Qt::WA_TranslucentBackground);
     viewport()->setAttribute(Qt::WA_TranslucentBackground);
+    setMouseTracking(true);
+    viewport()->setMouseTracking(true);
 
     if (DApplication::isWayland()) {
         setWindowFlag(Qt::FramelessWindowHint, true);
@@ -2325,6 +2372,13 @@ void CanvasGridView::initConnection()
     });
 
     connect(DFMApplication::instance(), &DFMApplication::previewAttributeChanged, this->model(), &DFileSystemModel::update);
+    connect(DFMApplication::instance(), &DFMApplication::genericAttributeChanged, this,
+            [this](DFMApplication::GenericAttribute ga, const QVariant &) {
+        if (ga == DFMApplication::GA_ShowHoverBox) {
+            clearHoverIndex();
+            update();
+        }
+    });
 }
 
 void CanvasGridView::updateCanvas()

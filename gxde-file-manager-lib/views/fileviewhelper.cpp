@@ -53,6 +53,11 @@ bool FileViewHelper::isDropTarget(const QModelIndex &index) const
     return parent()->isDropTarget(index);
 }
 
+bool FileViewHelper::isHovered(const QModelIndex &index) const
+{
+    return parent()->isHovered(index);
+}
+
 int FileViewHelper::selectedIndexsCount() const
 {
     return parent()->selectedIndexCount();
