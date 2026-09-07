@@ -1,3 +1,11 @@
+gxde-file-manager (6.4.4) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 桌面与文件管理器网格模式的选中效果改为长期显示更深的悬停高亮框，
+    替代原文件名高亮效果
+
+ -- shenmo <shenmo@spark-app.store>  Mon, 07 Sep 2026 19:33:35 +0800
+
 gxde-file-manager (6.4.3) UNRELEASED; urgency=medium
 
   [ shenmo ]

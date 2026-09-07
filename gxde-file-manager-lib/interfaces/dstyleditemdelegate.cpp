@@ -37,7 +37,7 @@ bool DStyledItemDelegate::hoverBoxEnabled()
                    dde_file_manager::DFMApplication::GA_ShowHoverBox).toBool();
 }
 
-void DStyledItemDelegate::paintHoverBox(QPainter *painter, const QRectF &rect, qreal radius)
+void DStyledItemDelegate::paintHoverBox(QPainter *painter, const QRectF &rect, qreal radius, bool deeper)
 {
     if (!painter || !rect.isValid()) {
         return;
@@ -46,10 +46,13 @@ void DStyledItemDelegate::paintHoverBox(QPainter *painter, const QRectF &rect, q
     QPainterPath path;
     path.addRoundedRect(rect, radius, radius);
 
+    const QColor fillColor = deeper ? QColor(43, 167, 248, 110) : QColor(43, 167, 248, 38);
+    const QColor borderColor = deeper ? QColor(43, 167, 248, 230) : QColor(43, 167, 248, 110);
+
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
-    painter->fillPath(path, QColor(43, 167, 248, 38));
-    painter->setPen(QPen(QColor(43, 167, 248, 110), 1));
+    painter->fillPath(path, fillColor);
+    painter->setPen(QPen(borderColor, deeper ? 2 : 1));
     painter->drawPath(path);
     painter->restore();
 }

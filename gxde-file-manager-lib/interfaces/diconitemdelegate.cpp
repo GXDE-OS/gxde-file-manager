@@ -345,7 +345,7 @@ public:
         QRect label_rect(TEXT_PADDING + margins.left(), margins.top() + iconHeight + TEXT_PADDING + ICON_MODE_ICON_SPACING,
                          width() - TEXT_PADDING * 2 - margins.left() - margins.right(), INT_MAX);
         const QList<QRectF> &lines = delegate->drawText(index, &pa, option.text, label_rect, ICON_MODE_RECT_RADIUS,
-                                                        option.backgroundBrush,
+                                                        QBrush(Qt::NoBrush),
                                                         QTextOption::WrapAtWordBoundaryOrAnywhere,
                                                         option.textElideMode, Qt::AlignCenter);
 
@@ -570,7 +570,6 @@ void DIconItemDelegate::paint(QPainter *painter,
     /// judgment way of the whether drag model(another way is: painter.devType() != 1)
     bool isDragMode = ((QPaintDevice*)parent()->parent()->viewport() != painter->device());
     bool isEnabled = option.state & QStyle::State_Enabled;
-    bool hasFocus = option.state & QStyle::State_HasFocus;
 
     if (index == d->expandedIndex && !parent()->isSelected(index))
         const_cast<DIconItemDelegate*>(this)->hideNotEditingIndexWidget();
@@ -620,6 +619,11 @@ void DIconItemDelegate::paint(QPainter *painter,
             && hoverBoxEnabled();
     if (isHover) {
         paintHoverBox(painter, opt.rect, ICON_MODE_RECT_RADIUS);
+    }
+
+    // 网格模式下选中态直接用更深的悬停框长期展示，替代旧的文件名高亮效果
+    if (isSelected && !isDragMode) {
+        paintHoverBox(painter, opt.rect, ICON_MODE_RECT_RADIUS, true);
     }
 
     /// init icon geomerty
@@ -770,18 +774,14 @@ void DIconItemDelegate::paint(QPainter *painter,
     }
 
     if (isSelected || !d->enabledTextShadow) {
-        const QList<QRectF> &lines = drawText(index, painter, str, label_rect, ICON_MODE_RECT_RADIUS,
-                                              isSelected ? opt.backgroundBrush : QBrush(Qt::NoBrush),
-                                              QTextOption::WrapAtWordBoundaryOrAnywhere, opt.textElideMode, Qt::AlignCenter);
+        drawText(index, painter, str, label_rect, ICON_MODE_RECT_RADIUS,
+                 QBrush(Qt::NoBrush),
+                 QTextOption::WrapAtWordBoundaryOrAnywhere, opt.textElideMode, Qt::AlignCenter);
 
         const QColor &border_color = focusTextBackgroundBorderColor();
+        Q_UNUSED(border_color)
 
-        if (hasFocus && !singleSelected && border_color.isValid()) {
-            QPainterPath line_path = boundingPath(lines, ICON_MODE_RECT_RADIUS, 1);
-
-            painter->setPen(QPen(border_color, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-            painter->drawPath(line_path);
-        }
+        // 旧选中文本边框效果已由网格模式的深色悬停框替代，不再绘制
     } else {
         qreal pixel_ratio = painter->device()->devicePixelRatioF();
         QImage text_image((label_rect.size() * pixel_ratio).toSize(), QImage::Format_ARGB32_Premultiplied);

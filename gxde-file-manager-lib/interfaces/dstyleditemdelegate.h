@@ -76,7 +76,7 @@ protected:
     QList<QRectF> getCornerGeometryList(const QRectF &baseRect, const QSizeF &cornerSize) const;
 
     static bool hoverBoxEnabled();
-    static void paintHoverBox(QPainter *painter, const QRectF &rect, qreal radius);
+    static void paintHoverBox(QPainter *painter, const QRectF &rect, qreal radius, bool deeper = false);
 
     static void paintIcon(QPainter *painter, const QIcon &icon, const QRectF &rect, Qt::Alignment alignment = Qt::AlignCenter,
                           QIcon::Mode mode = QIcon::Normal, QIcon::State state = QIcon::Off);
