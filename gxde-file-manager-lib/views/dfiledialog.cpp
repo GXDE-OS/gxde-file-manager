@@ -907,14 +907,14 @@ bool DFileDialog::fmEventFilter(const QSharedPointer<DFMEvent> &event, DFMAbstra
 bool DFileDialog::handleOpenFileByView(const DUrl &url)
 {
     // 这里处理的是视图自身的单击/双击激活，而不是右键菜单里的“打开”。
-    // 文件选择对话框应把这种激活当作“选中确认”：文件接受对话框，目录则
-    // 由 onAcceptButtonClicked() 负责切入。
+    // 文件选择对话框应把这种激活当作“选中确认”：文件接受对话框。
     //
-    // 保存对话框中双击目录仍需沿用原来的 OpenUrl 流程切入目录，不能当成
-    // “确认保存”。
+    // 目录则沿用原来的 OpenUrl 流程切入目录，不作为确认选择；只有点击
+    // 状态栏的“打开”按钮才会确认选中该目录，避免误操作直接选中目录
+    // （保存对话框中亦然）。
     const DAbstractFileInfoPointer &fileInfo = getFileView()->model()->fileInfo(url);
 
-    if (acceptMode() == QFileDialog::AcceptSave && fileInfo && fileInfo->isDir()) {
+    if (fileInfo && fileInfo->isDir()) {
         return false;
     }
 
