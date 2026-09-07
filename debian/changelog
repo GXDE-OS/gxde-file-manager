@@ -1,3 +1,11 @@
+gxde-file-manager (6.4.3) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 修复文件选择对话框中双击目录会被直接选中的问题：双击目录改为切入
+    目录，选中后点击“打开”按钮才会确认
+
+ -- shenmo <jifengshenmo@outlook.com>  Mon, 07 Sep 2026 17:07:39 +0800
+
 gxde-file-manager (6.4.2-1) UNRELEASED; urgency=medium
 
   [ shenmo ]
