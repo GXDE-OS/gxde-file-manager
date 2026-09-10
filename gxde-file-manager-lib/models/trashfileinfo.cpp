@@ -70,6 +70,12 @@ void TrashFileInfoPrivate::updateInfo()
 {
     const QString &filePath = proxy->absoluteFilePath();
     const QString &basePath = DFMStandardPaths::location(DFMStandardPaths::TrashFilesPath);
+
+    if (q_ptr->fileUrl() == DUrl::fromTrashFile("/")) {
+        displayName = QCoreApplication::translate("PathManager", "Trash");
+        return;
+    }
+
     const QString &fileBaseName = QDir::separator() + proxy->fileName();
 
     if (QFile::exists(DFMStandardPaths::location(DFMStandardPaths::TrashInfosPath) + fileBaseName + ".trashinfo")) {
@@ -101,13 +107,6 @@ void TrashFileInfoPrivate::updateInfo()
     } else {
         //inherits from parent trash info
         inheritParentTrashInfo();
-
-        // is trash root path
-        if (filePath == basePath || filePath == basePath + "/") {
-            displayName = QCoreApplication::translate("PathManager", "Trash");
-
-            return;
-        }
 
         if (systemPathManager->isSystemPath(filePath)) {
             displayName = systemPathManager->getSystemPathDisplayNameByPath(filePath);
