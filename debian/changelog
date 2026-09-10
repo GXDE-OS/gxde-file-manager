@@ -1,3 +1,9 @@
+gxde-file-manager (6.4.5) UNRELEASED; urgency=medium
+
+  * 修复了「回收站」标签被标记为「files」的问题
+
+ -- CharOfString <root@charofstring.cc>  Thu, 10 Sep 2026 17:04:02 -0500
+
 gxde-file-manager (6.4.4) UNRELEASED; urgency=medium
 
   [ shenmo ]
