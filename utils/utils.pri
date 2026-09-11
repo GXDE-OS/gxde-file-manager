@@ -5,7 +5,8 @@ HEADERS += \
     $$PWD/qobjecthelper.h \
     $$PWD/singleton.h \
     $$PWD/qx11info_compat.h \
-    $$PWD/waylandutils.h
+    $$PWD/waylandutils.h \
+    $$PWD/wallpaperutils.h
 
 SOURCES += \
     $$PWD/utils.cpp \

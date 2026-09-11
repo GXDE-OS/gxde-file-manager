@@ -57,6 +57,7 @@
 #include <QJsonArray>
 #include <QSettings>
 #include "qx11info_compat.h"
+#include "wallpaperutils.h"
 #include <dabstractfilewatcher.h>
 
 #include <sys/vfs.h>
@@ -755,8 +756,11 @@ bool FileUtils::setBackground(const QString &pictureFilePath)
 
         QGSettings settings(appearanceSchema);
         QStringList uris = settings.get("backgroundUris").toStringList();
-        const QString wallpaperUri = QUrl::fromLocalFile(
-            pictureInfo.canonicalFilePath()).toString();
+
+        // For Wayland sessions, we need to presist wallpaper history ourselves.
+        const QString persisted = WallpaperUtils::persistWallpaperToLibrary(
+            pictureInfo.canonicalFilePath());
+        const QString wallpaperUri = QUrl::fromLocalFile(persisted).toString();
 
         if (uris.isEmpty())
             uris.append(wallpaperUri);
@@ -765,7 +769,7 @@ bool FileUtils::setBackground(const QString &pictureFilePath)
 
         const bool ok = settings.trySet("backgroundUris", uris);
         if (ok)
-            setGxdeLockWallpaperOverride(pictureFilePath);
+            setGxdeLockWallpaperOverride(persisted);
 
         return ok;
     }

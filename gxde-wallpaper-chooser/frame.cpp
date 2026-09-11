@@ -43,6 +43,7 @@
 #include <dapplication.h>
 
 #include "waylandutils.h"
+#include "wallpaperutils.h"
 
 #include <QApplication>
 #include <QDirIterator>
@@ -291,7 +292,15 @@ void Frame::hideEvent(QHideEvent *event)
             && dbus_interface->isServiceRegistered(AppearanceServ).value();
 
         if (!m_desktopWallpaper.isEmpty()) {
-            m_dbusAppearance->Set("background", m_desktopWallpaper);
+            QString wallpaper = m_desktopWallpaper;
+
+            if (WaylandUtils::isWaylandPlatform()) {
+                wallpaper = QUrl::fromLocalFile(
+                    WallpaperUtils::persistWallpaperToLibrary(m_desktopWallpaper))
+                    .toString();
+            }
+
+            m_dbusAppearance->Set("background", wallpaper);
 
             // Also ensure GSettings
             Q_UNUSED(appearanceAvailable);
@@ -299,9 +308,9 @@ void Frame::hideEvent(QHideEvent *event)
                 QStringList uris =
                     m_gsettings->get("backgroundUris").toStringList();
                 if (uris.isEmpty()) {
-                    uris << m_desktopWallpaper;
+                    uris << wallpaper;
                 } else {
-                    uris[0] = m_desktopWallpaper;
+                    uris[0] = wallpaper;
                 }
                 m_gsettings->set("backgroundUris", uris);
             }
@@ -310,8 +319,13 @@ void Frame::hideEvent(QHideEvent *event)
         }
 
         if (!m_lockWallpaper.isEmpty()) {
-            m_dbusAppearance->Set("greeterbackground", m_lockWallpaper);
-            setGxdeLockWallpaperOverride(m_lockWallpaper);
+            QString wallpaper = m_lockWallpaper;
+            if (WaylandUtils::isWaylandPlatform()) {
+                wallpaper = WallpaperUtils::persistWallpaperToLibrary(m_lockWallpaper);
+            }
+
+            m_dbusAppearance->Set("greeterbackground", wallpaper);
+            setGxdeLockWallpaperOverride(wallpaper);
         }
 
         ThumbnailManager *manager = ThumbnailManager::instance(devicePixelRatioF());
@@ -790,8 +804,6 @@ QStringList Frame::localWallpaperPaths() const {
 
     const QString genericData =
         QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
-    const QString genericCache =
-        QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation);
     const QStringList roots {
         QStringLiteral("/usr/share/wallpapers"),
         QStringLiteral("/usr/local/share/wallpapers"),
@@ -799,7 +811,7 @@ QStringList Frame::localWallpaperPaths() const {
         QStringLiteral("/usr/local/share/backgrounds"),
         genericData + QStringLiteral("/wallpapers"),
         genericData + QStringLiteral("/backgrounds"),
-        genericCache + QStringLiteral("/deepin/dde-daemon/appearance/custom-wallpapers")
+        WallpaperUtils::wallpaperLibraryDir()
     };
     const QStringList filters {
         QStringLiteral("*.jpg"), QStringLiteral("*.jpeg"),
@@ -852,7 +864,16 @@ void Frame::refreshList()
         // session it may own its D-Bus name without replying, making List()
         // wait for the default D-Bus timeout and leaving the chooser empty.
         if (WaylandUtils::isWaylandPlatform()) {
-            populateWallpaperList(localWallpaperPaths());
+            const QStringList paths = localWallpaperPaths();
+
+            // daemon 的 List("background") 会对自定义壁纸标记 Deletable=true，
+            // 选择器据此显示删除按钮。Wayland 下我们自行扫描，需要手动补上这个标记。
+            m_deletableInfo.clear();
+            for (const QString &path : paths) {
+                m_deletableInfo[path] = WallpaperUtils::isInWallpaperLibrary(path);
+            }
+
+            populateWallpaperList(paths);
             return;
         }
 
