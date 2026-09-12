@@ -1,3 +1,12 @@
+gxde-file-manager (6.4.6) UNRELEASED; urgency=medium
+
+  [ shenmo ]
+  * 修复文件管理器选中项文件名反白、切换选中项后旧项残留边框的问题
+  * 修复桌面面板选中项文件名阴影丢失的问题
+  * 文件管理器「计算机」页面新增鼠标悬停高亮框
+
+ -- shenmo <shenmo@spark-app.store>  Sun, 13 Sep 2026 00:22:29 +0800
+
 gxde-file-manager (6.4.5) UNRELEASED; urgency=medium
 
   * 修复了「回收站」标签被标记为「files」的问题
