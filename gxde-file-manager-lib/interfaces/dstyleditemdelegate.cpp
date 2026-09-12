@@ -43,16 +43,28 @@ void DStyledItemDelegate::paintHoverBox(QPainter *painter, const QRectF &rect, q
         return;
     }
 
-    QPainterPath path;
-    path.addRoundedRect(rect, radius, radius);
-
+    const qreal borderWidth = deeper ? 2 : 1;
     const QColor fillColor = deeper ? QColor(43, 167, 248, 110) : QColor(43, 167, 248, 38);
     const QColor borderColor = deeper ? QColor(43, 167, 248, 230) : QColor(43, 167, 248, 110);
 
+    // 边框画笔以路径为中心绘制，会让部分像素落到 item 矩形之外。选中项
+    // 切换时 Qt 只重绘原来的 item 矩形，这些残留像素就会表现为上一个
+    // 选中项周围的线条。这里将路径内缩半个画笔宽度，保证整个边框都在
+    // item 矩形内部。
+    const QRectF frameRect = rect.adjusted(borderWidth / 2, borderWidth / 2,
+                                           -borderWidth / 2, -borderWidth / 2);
+    if (!frameRect.isValid()) {
+        return;
+    }
+
+    QPainterPath path;
+    path.addRoundedRect(frameRect, radius, radius);
+
     painter->save();
+    painter->setClipRect(rect);
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->fillPath(path, fillColor);
-    painter->setPen(QPen(borderColor, deeper ? 2 : 1));
+    painter->setPen(QPen(borderColor, borderWidth));
     painter->drawPath(path);
     painter->restore();
 }

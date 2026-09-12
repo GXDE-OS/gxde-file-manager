@@ -67,6 +67,7 @@ public:
 
     static void paintCircleList(QPainter *painter, QRectF boundingRect, qreal diameter, const QList<QColor> &colors, const QColor &borderColor);
     static QPixmap getIconPixmap(const QIcon &icon, const QSize &size, qreal pixelRatio, QIcon::Mode mode = QIcon::Normal, QIcon::State state = QIcon::Off);
+    static void paintHoverBox(QPainter *painter, const QRectF &rect, qreal radius, bool deeper = false);
 
 protected:
     DStyledItemDelegate(DStyledItemDelegatePrivate &dd, DFileViewHelper *parent);
@@ -76,7 +77,6 @@ protected:
     QList<QRectF> getCornerGeometryList(const QRectF &baseRect, const QSizeF &cornerSize) const;
 
     static bool hoverBoxEnabled();
-    static void paintHoverBox(QPainter *painter, const QRectF &rect, qreal radius, bool deeper = false);
 
     static void paintIcon(QPainter *painter, const QIcon &icon, const QRectF &rect, Qt::Alignment alignment = Qt::AlignCenter,
                           QIcon::Mode mode = QIcon::Normal, QIcon::State state = QIcon::Off);

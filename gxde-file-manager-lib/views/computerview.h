@@ -126,6 +126,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void mouseDoubleClickEvent(QMouseEvent* event);
+    void paintEvent(QPaintEvent *event) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
     bool event(QEvent *event);
 
@@ -141,6 +142,7 @@ private:
     int m_iconSize = 64;
     int m_iconIndex = 1;
     bool m_checked = false;
+    bool m_hovered = false;
     QString m_name;
     QString m_displayName;
     bool m_hasMemoryInfo = false;

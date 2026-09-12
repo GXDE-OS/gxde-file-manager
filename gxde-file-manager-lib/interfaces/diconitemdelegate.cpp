@@ -331,7 +331,7 @@ public:
         QPainter pa(this);
 
         pa.setOpacity(m_opactity);
-        pa.setPen(option.palette.color(QPalette::BrightText));
+        pa.setPen(option.palette.color(QPalette::Text));
         pa.setFont(option.font);
 
         if (!iconPixmap.isNull()) {
@@ -344,10 +344,14 @@ public:
         const QMargins &margins = contentsMargins();
         QRect label_rect(TEXT_PADDING + margins.left(), margins.top() + iconHeight + TEXT_PADDING + ICON_MODE_ICON_SPACING,
                          width() - TEXT_PADDING * 2 - margins.left() - margins.right(), INT_MAX);
+        const QColor shadowColor = delegate->enabledTextShadow()
+                                       ? option.palette.color(QPalette::Shadow)
+                                       : QColor();
         const QList<QRectF> &lines = delegate->drawText(index, &pa, option.text, label_rect, ICON_MODE_RECT_RADIUS,
                                                         QBrush(Qt::NoBrush),
                                                         QTextOption::WrapAtWordBoundaryOrAnywhere,
-                                                        option.textElideMode, Qt::AlignCenter);
+                                                        option.textElideMode, Qt::AlignCenter,
+                                                        shadowColor);
 
         textBounding = boundingRect(lines).toRect();
     }
@@ -700,11 +704,8 @@ void DIconItemDelegate::paint(QPainter *painter,
     label_rect.setWidth(opt.rect.width() - 2 * TEXT_PADDING);
     label_rect.moveLeft(label_rect.left() + TEXT_PADDING);
 
-    if (isSelected) {
-        painter->setPen(opt.palette.color(QPalette::BrightText));
-    } else {
-        painter->setPen(opt.palette.color(QPalette::Text));
-    }
+    // 选中态改为高亮框展示后，文件名保持普通文本颜色，不再反白显示。
+    painter->setPen(opt.palette.color(QPalette::Text));
 
     /// if has selected show all file name else show elide file name.
     bool singleSelected = parent()->selectedIndexsCount() < 2;
@@ -773,15 +774,10 @@ void DIconItemDelegate::paint(QPainter *painter,
         }
     }
 
-    if (isSelected || !d->enabledTextShadow) {
+    if (!d->enabledTextShadow) {
         drawText(index, painter, str, label_rect, ICON_MODE_RECT_RADIUS,
                  QBrush(Qt::NoBrush),
                  QTextOption::WrapAtWordBoundaryOrAnywhere, opt.textElideMode, Qt::AlignCenter);
-
-        const QColor &border_color = focusTextBackgroundBorderColor();
-        Q_UNUSED(border_color)
-
-        // 旧选中文本边框效果已由网格模式的深色悬停框替代，不再绘制
     } else {
         qreal pixel_ratio = painter->device()->devicePixelRatioF();
         QImage text_image((label_rect.size() * pixel_ratio).toSize(), QImage::Format_ARGB32_Premultiplied);

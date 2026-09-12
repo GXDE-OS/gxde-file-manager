@@ -44,6 +44,7 @@
 #include "../shutil/fileutils.h"
 #include "partman/partition.h"
 #include "dabstractfilewatcher.h"
+#include "interfaces/dstyleditemdelegate.h"
 
 #include <dslider.h>
 
@@ -53,6 +54,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <QTextEdit>
+#include <QPainter>
 #include <QSizePolicy>
 #include <QFile>
 #include <QStorageInfo>
@@ -103,6 +105,10 @@ void TitleLine::resizeEvent(QResizeEvent *event)
 ComputerViewItem::ComputerViewItem(QWidget *parent):
     FileIconItem(parent)
 {
+    setAttribute(Qt::WA_Hover, true);
+    getIconLabel()->setAttribute(Qt::WA_Hover, false);
+    getTextEdit()->setAttribute(Qt::WA_Hover, false);
+
     getTextEdit()->setReadOnly(true);
     getTextEdit()->setAttribute(Qt::WA_TransparentForMouseEvents);
     getTextEdit()->setTextInteractionFlags(Qt::NoTextInteraction);
@@ -277,12 +283,40 @@ bool ComputerViewItem::eventFilter(QObject *obj, QEvent *event)
 
 bool ComputerViewItem::event(QEvent *event)
 {
-    if (event->type() == QEvent::Resize) {
+    const QEvent::Type type = event->type();
+
+    if (type == QEvent::HoverEnter || type == QEvent::HoverLeave) {
+        const bool hovered = (type == QEvent::HoverEnter);
+
+        if (m_hovered != hovered) {
+            m_hovered = hovered;
+            update();
+        }
+    }
+
+    if (type == QEvent::Resize) {
         resize(width(), getIconLabel()->height() + getTextEdit()->height() + ICON_MODE_ICON_SPACING + 45);
         adjustPosition();
         return true;
     }
     return FileIconItem::event(event);
+}
+
+void ComputerViewItem::paintEvent(QPaintEvent *event)
+{
+    QFrame::paintEvent(event);
+
+    if (!m_hovered || m_checked || !getTextEdit()->isReadOnly()) {
+        return;
+    }
+
+    if (!(DFMApplication::instance()
+          && DFMApplication::instance()->genericAttribute(DFMApplication::GA_ShowHoverBox).toBool())) {
+        return;
+    }
+
+    QPainter painter(this);
+    DStyledItemDelegate::paintHoverBox(&painter, QRectF(rect()), TEXT_PADDING);
 }
 
 void ComputerViewItem::adjustPosition()
@@ -303,6 +337,7 @@ void ComputerViewItem::setChecked(bool checked)
     if (checked != m_checked) {
         m_checked = checked;
         updateStatus();
+        update();
         emit checkChanged(checked);
     }
 }
@@ -693,6 +728,22 @@ void ComputerView::initConnect()
     connect(m_statusBar->scalingSlider(), &DSlider::valueChanged, this, &ComputerView::resizeAllItemsBySizeIndex);
     connect(m_statusBar->scalingSlider(), &DSlider::valueChanged, this, &ComputerView::saveViewState);
     connect(DFMApplication::instance(), &DFMApplication::iconSizeLevelChanged, this, &ComputerView::resizeAllItemsBySizeIndex);
+    connect(DFMApplication::instance(), &DFMApplication::genericAttributeChanged, this,
+            [this](DFMApplication::GenericAttribute ga, const QVariant &) {
+        if (ga != DFMApplication::GA_ShowHoverBox) {
+            return;
+        }
+
+        const auto updateItems = [](const QMap<QString, ComputerViewItem *> &items) {
+            for (ComputerViewItem *item : items) {
+                item->update();
+            }
+        };
+
+        updateItems(m_systemItems);
+        updateItems(m_nativeItems);
+        updateItems(m_removableItems);
+    });
     connect(fileSignalManager, &FileSignalManager::requestRename, this, &ComputerView::onRequestEdit);
 
 }
