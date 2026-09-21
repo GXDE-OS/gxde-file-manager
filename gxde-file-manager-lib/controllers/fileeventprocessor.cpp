@@ -212,9 +212,23 @@ static bool processMenuEvent(const QSharedPointer<DFMMenuActionEvent> &event)
             AppController::instance()->actionCopyPath(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), event->selectedUrls().first()));
         }
         break;
-    case DFMGlobal::Paste:
-        AppController::instance()->actionPaste(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), event->currentUrl()));
+    case DFMGlobal::Paste: {
+        // 当在单个目录上右键选择“粘贴”时，将剪贴板内容粘贴到该目录中，
+        // 而不必先进入该目录。其它情况（空白处等）仍粘贴到当前目录。
+        DUrl target = event->currentUrl();
+
+        if (event->selectedUrls().size() == 1) {
+            const DAbstractFileInfoPointer &selectedInfo =
+                    DFileService::instance()->createFileInfo(event->sender(), event->selectedUrls().first());
+
+            if (selectedInfo && selectedInfo->isDir()) {
+                target = event->selectedUrls().first();
+            }
+        }
+
+        AppController::instance()->actionPaste(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), target));
         break;
+    }
     case DFMGlobal::Rename:
         AppController::instance()->actionRename(dMakeEventPointer<DFMUrlListBaseEvent>(event->sender(), event->selectedUrls()));
         break;
