@@ -69,6 +69,42 @@ void DStyledItemDelegate::paintHoverBox(QPainter *painter, const QRectF &rect, q
     painter->restore();
 }
 
+void DStyledItemDelegate::paintSelectionBox(QPainter *painter, const QRectF &rect,
+        qreal radius) {
+    if (!painter || !rect.isValid()) {
+        return;
+    }
+
+    const QRectF frameRect = rect.adjusted(0.5, 0.5, -0.5, -0.5);
+    if (!frameRect.isValid()) {
+        return;
+    }
+
+    QPainterPath framePath;
+    const qreal frameRadius = qMin<qreal>(radius, 2);
+    framePath.addRoundedRect(frameRect, frameRadius, frameRadius);
+
+    QLinearGradient fill(frameRect.topLeft(), frameRect.bottomLeft());
+    fill.setColorAt(0.0, QColor(117, 202, 255, 58));
+    fill.setColorAt(1.0, QColor(44, 167, 248, 78));
+
+    painter->save();
+    painter->setClipRect(rect);
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->fillPath(framePath, fill);
+    painter->setPen(QPen(QColor(44, 167, 248, 210), 1));
+    painter->drawPath(framePath);
+
+    const QRectF innerRect = frameRect.adjusted(1, 1, -1, -1);
+    if (innerRect.isValid()) {
+        QPainterPath innerPath;
+        innerPath.addRoundedRect(innerRect, 1, 1);
+        painter->setPen(QPen(QColor(255, 255, 255, 72), 1));
+        painter->drawPath(innerPath);
+    }
+    painter->restore();
+}
+
 DFileViewHelper *DStyledItemDelegate::parent() const
 {
     return static_cast<DFileViewHelper*>(QStyledItemDelegate::parent());

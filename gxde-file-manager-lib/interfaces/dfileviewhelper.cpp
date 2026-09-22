@@ -502,11 +502,9 @@ void DFileViewHelper::initStyleOption(QStyleOptionViewItem *option, const QModel
 
     option->palette.setColor(QPalette::Text, ThemeConfig::instace()->color("FileView", "color"));
     option->palette.setColor(QPalette::Disabled, QPalette::Text, ThemeConfig::instace()->color("FileView", "color", ThemeConfig::Dislable));
-    if ((option->state & QStyle::State_Selected) && option->showDecorationSelected) {
-        option->palette.setColor(QPalette::Inactive, QPalette::Text, ThemeConfig::instace()->color("FileView", "color", ThemeConfig::Checked | ThemeConfig::Inactive));
-    } else {
-        option->palette.setColor(QPalette::Inactive, QPalette::Text, ThemeConfig::instace()->color("FileView", "color", ThemeConfig::Inactive));
-    }
+    // The translucent selection frame keeps the normal text colors, including
+    // secondary columns and selections in an inactive window.
+    option->palette.setColor(QPalette::Inactive, QPalette::Text, ThemeConfig::instace()->color("FileView", "color", ThemeConfig::Inactive));
     option->palette.setColor(QPalette::BrightText, Qt::white);
     option->palette.setBrush(QPalette::Shadow, ThemeConfig::instace()->color("FileView", "shadow"));
 

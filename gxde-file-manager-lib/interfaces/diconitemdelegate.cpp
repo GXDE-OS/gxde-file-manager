@@ -54,41 +54,6 @@ Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius,
     bool quality, int transposed = 0);
 QT_END_NAMESPACE
 
-static void paintDLightDesktopSelection(QPainter *painter, const QRectF &rect,
-        qreal radius) {
-    if (!painter || !rect.isValid()) {
-        return;
-    }
-
-    const QRectF frameRect = rect.adjusted(0.5, 0.5, -0.5, -0.5);
-    if (!frameRect.isValid()) {
-        return;
-    }
-
-    QPainterPath framePath;
-    const qreal frameRadius = qMin<qreal>(radius, 2);
-    framePath.addRoundedRect(frameRect, frameRadius, frameRadius);
-
-    QLinearGradient fill(frameRect.topLeft(), frameRect.bottomLeft());
-    fill.setColorAt(0.0, QColor(117, 202, 255, 58));
-    fill.setColorAt(1.0, QColor(44, 167, 248, 78));
-
-    painter->save();
-    painter->setClipRect(rect);
-    painter->setRenderHint(QPainter::Antialiasing, true);
-    painter->fillPath(framePath, fill);
-    painter->setPen(QPen(QColor(44, 167, 248, 210), 1));
-    painter->drawPath(framePath);
-
-    const QRectF innerRect = frameRect.adjusted(1, 1, -1, -1);
-    if (innerRect.isValid()) {
-        QPainterPath innerPath;
-        innerPath.addRoundedRect(innerRect, 1, 1);
-        painter->setPen(QPen(QColor(255, 255, 255, 72), 1));
-        painter->drawPath(innerPath);
-    }
-    painter->restore();
-}
 
 QString trimmedEnd(QString str)
 {
@@ -393,7 +358,7 @@ public:
             const QRectF highlightRect = QRectF(rect()).marginsRemoved(
                 selectionHighlightMargins);
             if (dlightDesktopSelectionStyle) {
-                paintDLightDesktopSelection(&pa, highlightRect,
+                DStyledItemDelegate::paintSelectionBox(&pa, highlightRect,
                     ICON_MODE_RECT_RADIUS);
             } else {
                 delegate->paintHoverBox(&pa, highlightRect,
@@ -426,6 +391,12 @@ public:
 
     void resizeEvent(QResizeEvent *event) override {
         QWidget::resizeEvent(event);
+        blurredBackdrop = QPixmap();
+        scheduleBackdropRefresh();
+    }
+
+    void moveEvent(QMoveEvent *event) override {
+        QWidget::moveEvent(event);
         blurredBackdrop = QPixmap();
         scheduleBackdropRefresh();
     }
@@ -813,6 +784,9 @@ DIconItemDelegate::DIconItemDelegate(DFileViewHelper *parent) :
     d->expandedItem->setContentsMargins(0, 0, 0, 0);
     /// prevent flash when first call show()
     d->expandedItem->setFixedWidth(0);
+    setDLightDesktopSelectionStyle(true);
+    setExpandedItemSelectionHighlight(true);
+    setExpandedItemBackdropBlur(true);
 
     d->iconSizes << 48 << 64 << 96 << 128 << 256;
 
@@ -921,13 +895,13 @@ void DIconItemDelegate::paint(QPainter *painter,
         paintHoverBox(painter, opt.rect, ICON_MODE_RECT_RADIUS);
     }
 
-    // 网格模式下选中态直接用更深的悬停框长期展示，替代旧的文件名高亮效果
+    // 图标视图与桌面共用选中样式；展开时由浮层绘制完整高亮框。
     const bool hasExpandedHighlight = index == d->expandedIndex
             && d->expandedItem
             && d->expandedItem->selectionHighlightEnabled;
     if (isSelected && !isDragMode && !hasExpandedHighlight) {
         if (d->dlightDesktopSelectionStyle) {
-            paintDLightDesktopSelection(painter, opt.rect,
+            DStyledItemDelegate::paintSelectionBox(painter, opt.rect,
             ICON_MODE_RECT_RADIUS);
         } else {
             paintHoverBox(painter, opt.rect, ICON_MODE_RECT_RADIUS, true);

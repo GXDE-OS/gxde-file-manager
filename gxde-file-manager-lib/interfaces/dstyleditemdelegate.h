@@ -67,6 +67,7 @@ public:
 
     static void paintCircleList(QPainter *painter, QRectF boundingRect, qreal diameter, const QList<QColor> &colors, const QColor &borderColor);
     static QPixmap getIconPixmap(const QIcon &icon, const QSize &size, qreal pixelRatio, QIcon::Mode mode = QIcon::Normal, QIcon::State state = QIcon::Off);
+    static void paintSelectionBox(QPainter *painter, const QRectF &rect, qreal radius);
     static void paintHoverBox(QPainter *painter, const QRectF &rect, qreal radius, bool deeper = false);
 
 protected:

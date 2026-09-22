@@ -306,6 +306,12 @@ void ComputerViewItem::paintEvent(QPaintEvent *event)
 {
     QFrame::paintEvent(event);
 
+    if (m_checked && getTextEdit()->isReadOnly()) {
+        QPainter painter(this);
+        DStyledItemDelegate::paintSelectionBox(&painter, QRectF(rect()), TEXT_PADDING);
+        return;
+    }
+
     if (!m_hovered || m_checked || !getTextEdit()->isReadOnly()) {
         return;
     }
@@ -345,13 +351,13 @@ void ComputerViewItem::setChecked(bool checked)
 void ComputerViewItem::updateStatus()
 {
     if (m_checked) {
-        setIconSizeState(m_iconSize, QIcon::Selected);
+        setIconSizeState(m_iconSize, QIcon::Normal);
         setDisplayName(m_name);
         if (fontMetrics().horizontalAdvance(m_name) < width()) {
             getTextEdit()->setFixedWidth(fontMetrics().horizontalAdvance(m_name) + 10);
         }
         if (getTextEdit()->isReadOnly()) {
-            getTextEdit()->setStyleSheet("border-radius:4px; background-color:#2da6f7; color:white");
+            getTextEdit()->setStyleSheet("background-color: transparent");
         } else {
             getTextEdit()->setStyleSheet("");
         }

@@ -88,14 +88,9 @@ void DListItemDelegate::paint(QPainter *painter,
     bool drawBackground = !isDragMode && (opt.state & QStyle::State_Selected) && opt.showDecorationSelected;
 
     if (drawBackground) {
-        QPainterPath path;
-
-        path.addRoundedRect(opt.rect, LIST_MODE_RECT_RADIUS, LIST_MODE_RECT_RADIUS);
-
         painter->save();
         painter->setOpacity(1);
-        painter->setRenderHint(QPainter::Antialiasing);
-        painter->fillPath(path, opt.backgroundBrush);
+        paintSelectionBox(painter, opt.rect, LIST_MODE_RECT_RADIUS);
         painter->restore();
     } else {
         if (!isDragMode) {
@@ -192,7 +187,7 @@ void DListItemDelegate::paint(QPainter *painter,
 
         /// draw file name label
         const QVariant &data = index.data(role);
-        painter->setPen(opt.palette.color(drawBackground ? QPalette::BrightText : QPalette::Text));
+        painter->setPen(opt.palette.color(QPalette::Text));
         if (data.canConvert<QString>()) {
             QString file_name;
 
@@ -303,14 +298,16 @@ void DListItemDelegate::drawNotStringData(const QStyleOptionViewItem &opt, int l
 {
     Q_D(const DListItemDelegate);
 
+    Q_UNUSED(drawBackground)
+
     const DFileSystemModel *model = parent()->model();
     const DAbstractFileInfoPointer &fileInfo = model->fileInfo(model->rootUrl());
 
     int sortRole = model->sortRole();
     int sortRoleIndexByColumnChildren = fileInfo->userColumnChildRoles(column).indexOf(sortRole);
 
-    const QColor &active_color = opt.palette.color(QPalette::Active, drawBackground ? QPalette::BrightText : QPalette::Text);
-    const QColor &normal_color = opt.palette.color(QPalette::Inactive, drawBackground ? QPalette::BrightText : QPalette::Text);
+    const QColor &active_color = opt.palette.color(QPalette::Active, QPalette::Text);
+    const QColor &normal_color = opt.palette.color(QPalette::Inactive, QPalette::Text);
 
     if (data.canConvert<QPair<QString, QString>>()) {
         QPair<QString, QString> name_path = qvariant_cast<QPair<QString, QString>>(data);
