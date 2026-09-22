@@ -85,6 +85,8 @@ protected:
     void initTextLayout(const QModelIndex &index, QTextLayout *layout) const override;
 
     void setExpandedItemSelectionHighlight(bool enabled, const QMargins &margins = QMargins()) const;
+    void setExpandedItemBackdropBlur(bool enabled) const;
+    void setDLightDesktopSelectionStyle(bool enabled);
 
     bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 

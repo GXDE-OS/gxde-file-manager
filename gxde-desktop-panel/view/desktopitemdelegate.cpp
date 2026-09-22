@@ -34,6 +34,8 @@
 DesktopItemDelegate::DesktopItemDelegate(DFileViewHelper *parent) :
     DIconItemDelegate(parent)
 {
+    setDLightDesktopSelectionStyle(true);
+    setExpandedItemBackdropBlur(true);
     iconSizes << 32 << 48 << 64 << 96 << 128;
     iconSizeDescriptions << tr("Tiny")
                          << tr("Small")
@@ -83,6 +85,7 @@ void DesktopItemDelegate::updateEditorGeometry(QWidget *editor,
         true, QMargins(cellMargins.left(), cellMargins.top(),
             cellMargins.right(), 0));
 
+    const QRect oldGeometry = editor->geometry();
     const int fullHeight = editor->heightForWidth(editor->width());
     const int normalHeight = cellMargins.top()
         + sizeHint(QStyleOptionViewItem(), QModelIndex()).height();
@@ -91,7 +94,8 @@ void DesktopItemDelegate::updateEditorGeometry(QWidget *editor,
     const QRect iconArea = view->iconAreaRect();
     const int availableHeight = qMax(0, iconArea.bottom() - editor->y() + 1);
     editor->setFixedHeight(qMin(desiredHeight, availableHeight));
-    view->viewport()->update(editor->geometry());
+
+    view->viewport()->update(oldGeometry.united(editor->geometry()));
 }
 
 QString DesktopItemDelegate::iconSizeLevelDescription(int i) const

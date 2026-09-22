@@ -43,10 +43,52 @@
 #include <QVBoxLayout>
 #include <private/qtextengine_p.h>
 #include <QPainterPath>
+#include <QTimer>
 DFM_USE_NAMESPACE
 
 #define ICON_SPACING 16
 #define ICON_MODE_RECT_RADIUS TEXT_PADDING
+
+QT_BEGIN_NAMESPACE
+Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius,
+    bool quality, int transposed = 0);
+QT_END_NAMESPACE
+
+static void paintDLightDesktopSelection(QPainter *painter, const QRectF &rect,
+        qreal radius) {
+    if (!painter || !rect.isValid()) {
+        return;
+    }
+
+    const QRectF frameRect = rect.adjusted(0.5, 0.5, -0.5, -0.5);
+    if (!frameRect.isValid()) {
+        return;
+    }
+
+    QPainterPath framePath;
+    const qreal frameRadius = qMin<qreal>(radius, 2);
+    framePath.addRoundedRect(frameRect, frameRadius, frameRadius);
+
+    QLinearGradient fill(frameRect.topLeft(), frameRect.bottomLeft());
+    fill.setColorAt(0.0, QColor(117, 202, 255, 58));
+    fill.setColorAt(1.0, QColor(44, 167, 248, 78));
+
+    painter->save();
+    painter->setClipRect(rect);
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->fillPath(framePath, fill);
+    painter->setPen(QPen(QColor(44, 167, 248, 210), 1));
+    painter->drawPath(framePath);
+
+    const QRectF innerRect = frameRect.adjusted(1, 1, -1, -1);
+    if (innerRect.isValid()) {
+        QPainterPath innerPath;
+        innerPath.addRoundedRect(innerRect, 1, 1);
+        painter->setPen(QPen(QColor(255, 255, 255, 72), 1));
+        painter->drawPath(innerPath);
+    }
+    painter->restore();
+}
 
 QString trimmedEnd(QString str)
 {
@@ -295,7 +337,6 @@ public:
         : QWidget(parent)
         , delegate(d)
     {
-
     }
 
     bool event(QEvent *ee) override
@@ -326,11 +367,40 @@ public:
         update();
     }
 
-    void paintEvent(QPaintEvent *) override
-    {
+    void paintEvent(QPaintEvent *event) override {
+        Q_UNUSED(event)
+        if (capturingBackdrop) {
+            return;
+        }
+
         QPainter pa(this);
 
+        if (backdropBlurEnabled && !blurredBackdrop.isNull()) {
+            const QRectF highlightRect = QRectF(rect()).marginsRemoved(
+                selectionHighlightMargins);
+            QPainterPath clipPath;
+            clipPath.addRoundedRect(highlightRect, 2, 2);
+            pa.save();
+            pa.setRenderHint(QPainter::Antialiasing, true);
+            pa.setClipPath(clipPath);
+            pa.drawPixmap(QPoint(0, 0), blurredBackdrop);
+            pa.restore();
+        }
+
         pa.setOpacity(m_opactity);
+
+        if (selectionHighlightEnabled) {
+            const QRectF highlightRect = QRectF(rect()).marginsRemoved(
+                selectionHighlightMargins);
+            if (dlightDesktopSelectionStyle) {
+                paintDLightDesktopSelection(&pa, highlightRect,
+                    ICON_MODE_RECT_RADIUS);
+            } else {
+                delegate->paintHoverBox(&pa, highlightRect,
+                    ICON_MODE_RECT_RADIUS, true);
+            }
+        }
+
         pa.setPen(option.palette.color(QPalette::Text));
         pa.setFont(option.font);
 
@@ -346,19 +416,50 @@ public:
         QRect label_rect(TEXT_PADDING + margins.left(), labelTop,
                          width() - TEXT_PADDING * 2 - margins.left() - margins.right(),
                          qMax(0, height() - labelTop - margins.bottom()));
-        const QColor shadowColor = delegate->enabledTextShadow()
-                                       ? option.palette.color(QPalette::Shadow)
-                                       : QColor();
-        const QList<QRectF> &lines = delegate->drawText(index, &pa, option.text, label_rect, ICON_MODE_RECT_RADIUS,
-                                                        QBrush(Qt::NoBrush),
-                                                        QTextOption::WrapAtWordBoundaryOrAnywhere,
-                                                        option.textElideMode, Qt::AlignCenter,
-                                                        shadowColor);
+        const QList<QRectF> lines = drawExpandedText(&pa, label_rect,
+                                                     option.textElideMode);
 
         textBounding = boundingRect(lines).toRect();
         textBoundingWidth = width();
         textBoundingHeight = height();
     }
+
+    void resizeEvent(QResizeEvent *event) override {
+        QWidget::resizeEvent(event);
+        blurredBackdrop = QPixmap();
+        scheduleBackdropRefresh();
+    }
+
+    void showEvent(QShowEvent *event) override {
+        QWidget::showEvent(event);
+        scheduleBackdropRefresh();
+    }
+
+    void setBackdropBlurEnabled(bool enabled) {
+        if (backdropBlurEnabled == enabled) {
+            return;
+        }
+
+        backdropBlurEnabled = enabled;
+        blurredBackdrop = QPixmap();
+        scheduleBackdropRefresh();
+        update();
+    }
+
+    void scheduleBackdropRefresh() {
+        if (!backdropBlurEnabled || backdropRefreshPending
+                || capturingBackdrop || !isVisible()) {
+            return;
+        }
+
+        backdropRefreshPending = true;
+        QTimer::singleShot(0, this, [this] {
+            backdropRefreshPending = false;
+            refreshBackdrop();
+        });
+    }
+
+    void refreshBackdrop();
 
     QSize sizeHint() const override
     {
@@ -420,8 +521,8 @@ public:
             const int contentWidth = width - margins.left() - margins.right();
             QRect label_rect(TEXT_PADDING + margins.left(), labelTop,
                              contentWidth - TEXT_PADDING * 2, labelHeight);
-            const QList<QRectF> &lines = delegate->drawText(index, nullptr, option.text, label_rect, ICON_MODE_RECT_RADIUS, Qt::NoBrush,
-                                                            QTextOption::WrapAtWordBoundaryOrAnywhere, option.textElideMode, Qt::AlignCenter);
+            const QList<QRectF> lines = drawExpandedText(nullptr, label_rect,
+                                                        option.textElideMode);
 
             textBounding = boundingRect(lines);
             textBoundingWidth = width;
@@ -429,6 +530,109 @@ public:
         }
 
         return textBounding;;
+    }
+
+    QList<QRectF> drawExpandedText(QPainter *painter, const QRectF &rect,
+            Qt::TextElideMode elideMode) const {
+        QList<QRectF> boundingRegion;
+        if (option.text.isEmpty() || rect.width() <= 0 || rect.height() <= 0) {
+            return boundingRegion;
+        }
+
+        const QFontMetrics metrics(option.font);
+        const int lineHeight = qMax(1, metrics.height());
+        const bool unbounded = rect.height() >= INT_MAX / 2;
+        const int maxLines = unbounded
+            ? qMax(1, option.text.size() + 1)
+            : qMax(0, qFloor(rect.height() / lineHeight));
+        if (maxLines == 0) {
+            return boundingRegion;
+        }
+
+        QTextOption textOption;
+        textOption.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        textOption.setAlignment(Qt::AlignHCenter);
+        if (painter) {
+            textOption.setTextDirection(painter->layoutDirection());
+        }
+
+        const QColor textColor = option.palette.color(QPalette::Text);
+        const QColor shadowColor = delegate->enabledTextShadow()
+            ? option.palette.color(QPalette::Shadow) : QColor();
+
+        auto drawLine = [&](QTextLine &line, const QPointF &position) {
+            line.setPosition(position);
+            const qreal naturalWidth = qMin(line.naturalTextWidth(), rect.width());
+            boundingRegion.append(QRectF(
+                rect.center().x() - naturalWidth / 2.0, position.y(),
+                naturalWidth, lineHeight));
+
+            if (!painter) {
+                return;
+            }
+
+            if (shadowColor.isValid()) {
+                painter->setPen(shadowColor);
+                line.draw(painter, QPointF(0, 1));
+            }
+
+            painter->setPen(textColor);
+            line.draw(painter, QPointF());
+        };
+
+        if (painter) {
+            painter->save();
+            painter->setClipRect(rect);
+            painter->setFont(option.font);
+        }
+
+        QTextLayout layout(option.text, option.font);
+        layout.setTextOption(textOption);
+        layout.beginLayout();
+
+        for (int lineNumber = 0; lineNumber < maxLines; ++lineNumber) {
+            QTextLine line = layout.createLine();
+            if (!line.isValid()) {
+                break;
+            }
+
+            line.setLineWidth(rect.width());
+            const int nextTextPosition = line.textStart() + line.textLength();
+            const bool hasMoreText = nextTextPosition < option.text.size();
+            const bool isLastVisibleLine = lineNumber + 1 == maxLines;
+            const QPointF position(rect.left(),
+                rect.top() + lineNumber * lineHeight);
+
+            if (isLastVisibleLine && hasMoreText
+                    && elideMode != Qt::ElideNone) {
+                QString remainingText = option.text.mid(line.textStart());
+                remainingText.replace(QLatin1Char('\n'), QLatin1Char(' '));
+                const QString elidedText = metrics.elidedText(
+                    remainingText, elideMode, qFloor(rect.width()));
+
+                QTextLayout lastLayout(elidedText, option.font);
+                QTextOption lastOption = textOption;
+                lastOption.setWrapMode(QTextOption::NoWrap);
+                lastLayout.setTextOption(lastOption);
+                lastLayout.beginLayout();
+                QTextLine lastLine = lastLayout.createLine();
+                if (lastLine.isValid()) {
+                    lastLine.setLineWidth(rect.width());
+                    drawLine(lastLine, position);
+                }
+                lastLayout.endLayout();
+                break;
+            }
+
+            drawLine(line, position);
+            if (!hasMoreText)
+                break;
+        }
+
+        layout.endLayout();
+        if (painter)
+            painter->restore();
+        return boundingRegion;
     }
 
     QPixmap iconPixmap;
@@ -441,6 +645,11 @@ public:
     qreal m_opactity = 1;
     bool canDeferredDelete = true;
     bool selectionHighlightEnabled = false;
+    bool dlightDesktopSelectionStyle = false;
+    bool backdropBlurEnabled = false;
+    bool backdropRefreshPending = false;
+    bool capturingBackdrop = false;
+    QPixmap blurredBackdrop;
     QMargins selectionHighlightMargins;
     DIconItemDelegate *delegate;
 };
@@ -453,6 +662,8 @@ public:
     {}
 
     QSize textSize(const QString &text, const QFontMetrics &metrics, int lineHeight = -1) const;
+
+    bool dlightDesktopSelectionStyle = false;
     void drawText(QPainter *painter, const QRect &r, const QString &text,
                   int lineHeight = -1, QRect *br = Q_NULLPTR) const;
     QPixmap getFileIconPixmap(const QModelIndex &index, const QIcon &icon, const QSize &icon_size, QIcon::Mode mode, qreal devicePixelRatio) const;
@@ -484,6 +695,47 @@ public:
 
 int DIconItemDelegatePrivate::textObjectType = QTextFormat::UserObject + 1;
 FileTagObjectInterface *DIconItemDelegatePrivate::textObjectInterface = new FileTagObjectInterface();
+
+void ExpandedItem::refreshBackdrop() {
+    if (!backdropBlurEnabled || capturingBackdrop || !isVisible()
+            || width() <= 0 || height() <= 0) {
+        return;
+    }
+
+    QWidget *topLevel = window();
+    if (!topLevel) {
+        return;
+    }
+
+    const QPoint sourceTopLeft = mapTo(topLevel, QPoint(0, 0));
+    const qreal pixelRatio = devicePixelRatioF();
+    const QSize pixelSize(qCeil(width() * pixelRatio),
+        qCeil(height() * pixelRatio));
+    QImage backdrop(pixelSize,
+        QImage::Format_ARGB32_Premultiplied);
+    backdrop.setDevicePixelRatio(pixelRatio);
+    backdrop.fill(Qt::transparent);
+
+    capturingBackdrop = true;
+    hide();
+
+    QPainter backdropPainter(&backdrop);
+    topLevel->render(&backdropPainter, -sourceTopLeft,
+        QRegion(QRect(sourceTopLeft, size())),
+        QWidget::DrawWindowBackground | QWidget::DrawChildren);
+    backdropPainter.end();
+
+    show();
+    raise();
+    capturingBackdrop = false;
+
+    qt_blurImage(backdrop, 18 * pixelRatio, true);
+    blurredBackdrop = QPixmap::fromImage(backdrop);
+    blurredBackdrop.setDevicePixelRatio(pixelRatio);
+    if (parentWidget())
+        parentWidget()->update(geometry());
+    update();
+}
 
 QSize DIconItemDelegatePrivate::textSize(const QString &text, const QFontMetrics &metrics, int lineHeight) const
 {
@@ -580,15 +832,21 @@ DIconItemDelegate::~DIconItemDelegate()
     }
 }
 
-QT_BEGIN_NAMESPACE
-Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
-QT_END_NAMESPACE
-
 void DIconItemDelegate::paint(QPainter *painter,
-                              const QStyleOptionViewItem &option,
-                              const QModelIndex &index) const
-{
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) const {
     Q_D(const DIconItemDelegate);
+
+    struct PainterRestoreGuard {
+        QPainter *painter = nullptr;
+        bool saved = false;
+        ~PainterRestoreGuard()
+        {
+            if (saved) {
+                painter->restore();
+            }
+        }
+    } painterRestoreGuard { painter, false };
 
     /// judgment way of the whether drag model(another way is: painter.devType() != 1)
     bool isDragMode = ((QPaintDevice*)parent()->parent()->viewport() != painter->device());
@@ -602,6 +860,25 @@ void DIconItemDelegate::paint(QPainter *painter,
     QStyleOptionViewItem opt = option;
     initStyleOption(&opt, index);
     painter->setFont(opt.font);
+
+    if (index == d->expandedIndex && d->expandedItem
+            && d->expandedItem->capturingBackdrop) {
+        return;
+    }
+
+    if (!isDragMode && index != d->expandedIndex && d->expandedItem
+            && d->expandedItem->isVisible()
+            && d->expandedItem->backdropBlurEnabled
+            && !d->expandedItem->blurredBackdrop.isNull()) {
+        const QRect coveredRect = d->expandedItem->geometry().marginsRemoved(
+            d->expandedItem->selectionHighlightMargins);
+        if (opt.rect.intersects(coveredRect)) {
+            painter->save();
+            painterRestoreGuard.saved = true;
+            painter->setClipRegion(QRegion(opt.rect).subtracted(
+                QRegion(coveredRect)), Qt::IntersectClip);
+        }
+    }
 
     static QFont old_font = opt.font;
 
@@ -648,12 +925,13 @@ void DIconItemDelegate::paint(QPainter *painter,
     const bool hasExpandedHighlight = index == d->expandedIndex
             && d->expandedItem
             && d->expandedItem->selectionHighlightEnabled;
-    if (isSelected && !isDragMode) {
-        const QRectF highlightRect = hasExpandedHighlight
-                ? d->expandedItem->geometry().marginsRemoved(
-                      d->expandedItem->selectionHighlightMargins)
-                : QRectF(opt.rect);
-        paintHoverBox(painter, highlightRect, ICON_MODE_RECT_RADIUS, true);
+    if (isSelected && !isDragMode && !hasExpandedHighlight) {
+        if (d->dlightDesktopSelectionStyle) {
+            paintDLightDesktopSelection(painter, opt.rect,
+            ICON_MODE_RECT_RADIUS);
+        } else {
+            paintHoverBox(painter, opt.rect, ICON_MODE_RECT_RADIUS, true);
+        }
     }
 
     /// init icon geomerty
@@ -772,6 +1050,7 @@ void DIconItemDelegate::paint(QPainter *painter,
             d->expandedItem->setFixedWidth(0);
 
             parent()->setIndexWidget(index, d->expandedItem);
+            d->expandedItem->raise();
 
             if (parent()->indexOfRow(index) == parent()->rowCount() - 1) {
                 d->lastAndExpandedInde = index;
@@ -915,7 +1194,10 @@ void DIconItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index)
     const QSize &icon_size = parent()->parent()->iconSize();
 
     if (ExpandedItem *item = qobject_cast<ExpandedItem*>(editor)) {
-        item->iconHeight = icon_size.height();
+        const qreal pixelRatio = item->devicePixelRatioF();
+        item->setIconPixmap(d->getFileIconPixmap(
+            index, opt.icon, icon_size, QIcon::Normal, pixelRatio),
+            icon_size.height());
         item->setOpacity(parent()->isTransparent(index) ? 0.3 : 1);
 
         return;
@@ -1115,8 +1397,8 @@ QWidget *DIconItemDelegate::expandedIndexWidget() const
     return d->expandedItem;
 }
 
-void DIconItemDelegate::setExpandedItemSelectionHighlight(bool enabled, const QMargins &margins) const
-{
+void DIconItemDelegate::setExpandedItemSelectionHighlight(bool enabled,
+        const QMargins &margins) const {
     Q_D(const DIconItemDelegate);
 
     if (!d->expandedItem)
@@ -1124,7 +1406,27 @@ void DIconItemDelegate::setExpandedItemSelectionHighlight(bool enabled, const QM
 
     d->expandedItem->selectionHighlightEnabled = enabled;
     d->expandedItem->selectionHighlightMargins = margins;
+    d->expandedItem->scheduleBackdropRefresh();
     d->expandedItem->update();
+}
+
+void DIconItemDelegate::setExpandedItemBackdropBlur(bool enabled) const {
+    Q_D(const DIconItemDelegate);
+
+    if (d->expandedItem) {
+        d->expandedItem->setBackdropBlurEnabled(enabled);
+    }
+}
+
+void DIconItemDelegate::setDLightDesktopSelectionStyle(bool enabled) {
+    Q_D(DIconItemDelegate);
+
+    d->dlightDesktopSelectionStyle = enabled;
+    if (d->expandedItem) {
+        d->expandedItem->dlightDesktopSelectionStyle = enabled;
+        d->expandedItem->update();
+    }
+    parent()->parent()->viewport()->update();
 }
 
 int DIconItemDelegate::iconSizeLevel() const
