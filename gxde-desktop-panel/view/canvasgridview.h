@@ -124,6 +124,7 @@ public:
 
     QMargins cellMargins() const;
     QSize cellSize() const;
+    QRect iconAreaRect() const;
 
     WId winId() const;
     bool hideIcon() const;

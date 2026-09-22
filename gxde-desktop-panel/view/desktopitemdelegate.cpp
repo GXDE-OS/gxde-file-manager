@@ -58,6 +58,42 @@ QWidget *DesktopItemDelegate::createEditor(QWidget *parent, const QStyleOptionVi
     return widget;
 }
 
+void DesktopItemDelegate::updateEditorGeometry(QWidget *editor,
+        const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    const bool isExpandedItem = editor == expandedIndexWidget();
+    if (isExpandedItem) {
+        editor->setMinimumHeight(0);
+        editor->setMaximumHeight(QWIDGETSIZE_MAX);
+    }
+
+    DIconItemDelegate::updateEditorGeometry(editor, option, index);
+
+    if (!isExpandedItem) {
+        return;
+    }
+
+    auto helper = qobject_cast<CanvasViewHelper *>(parent());
+    CanvasGridView *view = helper ? helper->parent() : nullptr;
+    if (!view) {
+        return;
+    }
+
+    const QMargins cellMargins = view->cellMargins();
+    setExpandedItemSelectionHighlight(
+        true, QMargins(cellMargins.left(), cellMargins.top(),
+            cellMargins.right(), 0));
+
+    const int fullHeight = editor->heightForWidth(editor->width());
+    const int normalHeight = cellMargins.top()
+        + sizeHint(QStyleOptionViewItem(), QModelIndex()).height();
+    const int desiredHeight = qMax(normalHeight, fullHeight);
+
+    const QRect iconArea = view->iconAreaRect();
+    const int availableHeight = qMax(0, iconArea.bottom() - editor->y() + 1);
+    editor->setFixedHeight(qMin(desiredHeight, availableHeight));
+    view->viewport()->update(editor->geometry());
+}
+
 QString DesktopItemDelegate::iconSizeLevelDescription(int i) const
 {
     return iconSizeDescriptions.at(i);

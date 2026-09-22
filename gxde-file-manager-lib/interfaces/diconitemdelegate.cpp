@@ -342,8 +342,10 @@ public:
             return;
 
         const QMargins &margins = contentsMargins();
-        QRect label_rect(TEXT_PADDING + margins.left(), margins.top() + iconHeight + TEXT_PADDING + ICON_MODE_ICON_SPACING,
-                         width() - TEXT_PADDING * 2 - margins.left() - margins.right(), INT_MAX);
+        const int labelTop = margins.top() + iconHeight + TEXT_PADDING + ICON_MODE_ICON_SPACING;
+        QRect label_rect(TEXT_PADDING + margins.left(), labelTop,
+                         width() - TEXT_PADDING * 2 - margins.left() - margins.right(),
+                         qMax(0, height() - labelTop - margins.bottom()));
         const QColor shadowColor = delegate->enabledTextShadow()
                                        ? option.palette.color(QPalette::Shadow)
                                        : QColor();
@@ -354,6 +356,8 @@ public:
                                                         shadowColor);
 
         textBounding = boundingRect(lines).toRect();
+        textBoundingWidth = width();
+        textBoundingHeight = height();
     }
 
     QSize sizeHint() const override
@@ -396,21 +400,32 @@ public:
         return icon_rect;
     }
 
-    QRectF textGeometry(int width = -1) const
+    QRectF textGeometry(int width = -1, int height = -1) const
     {
-        if (textBounding.isEmpty() && !option.text.isEmpty()) {
-            const QMargins &margins = contentsMargins();
+        const QMargins &margins = contentsMargins();
 
-            if (width < 0)
-                width = this->width();
+        if (width < 0)
+            width = this->width();
+        if (height < 0)
+            height = maximumHeight();
 
-            width -= (margins.left() + margins.right());
-
-            QRect label_rect(TEXT_PADDING + margins.left(), iconHeight + TEXT_PADDING + ICON_MODE_ICON_SPACING + margins.top(), width - TEXT_PADDING * 2, INT_MAX);
+        if ((textBounding.isEmpty()
+             || textBoundingWidth != width
+             || textBoundingHeight != height)
+                && !option.text.isEmpty()) {
+            const int labelTop = iconHeight + TEXT_PADDING + ICON_MODE_ICON_SPACING + margins.top();
+            const int labelHeight = height == QWIDGETSIZE_MAX
+                ? INT_MAX
+                : qMax(0, height - labelTop - margins.bottom());
+            const int contentWidth = width - margins.left() - margins.right();
+            QRect label_rect(TEXT_PADDING + margins.left(), labelTop,
+                             contentWidth - TEXT_PADDING * 2, labelHeight);
             const QList<QRectF> &lines = delegate->drawText(index, nullptr, option.text, label_rect, ICON_MODE_RECT_RADIUS, Qt::NoBrush,
                                                             QTextOption::WrapAtWordBoundaryOrAnywhere, option.textElideMode, Qt::AlignCenter);
 
             textBounding = boundingRect(lines);
+            textBoundingWidth = width;
+            textBoundingHeight = height;
         }
 
         return textBounding;;
@@ -419,10 +434,14 @@ public:
     QPixmap iconPixmap;
     int iconHeight = 0;
     mutable QRectF textBounding;
+    mutable int textBoundingWidth = -1;
+    mutable int textBoundingHeight = -1;
     QModelIndex index;
     QStyleOptionViewItem option;
     qreal m_opactity = 1;
     bool canDeferredDelete = true;
+    bool selectionHighlightEnabled = false;
+    QMargins selectionHighlightMargins;
     DIconItemDelegate *delegate;
 };
 
@@ -626,8 +645,15 @@ void DIconItemDelegate::paint(QPainter *painter,
     }
 
     // 网格模式下选中态直接用更深的悬停框长期展示，替代旧的文件名高亮效果
+    const bool hasExpandedHighlight = index == d->expandedIndex
+            && d->expandedItem
+            && d->expandedItem->selectionHighlightEnabled;
     if (isSelected && !isDragMode) {
-        paintHoverBox(painter, opt.rect, ICON_MODE_RECT_RADIUS, true);
+        const QRectF highlightRect = hasExpandedHighlight
+                ? d->expandedItem->geometry().marginsRemoved(
+                      d->expandedItem->selectionHighlightMargins)
+                : QRectF(opt.rect);
+        paintHoverBox(painter, highlightRect, ICON_MODE_RECT_RADIUS, true);
     }
 
     /// init icon geomerty
@@ -736,13 +762,16 @@ void DIconItemDelegate::paint(QPainter *painter,
             d->expandedIndex = index;
 
             setEditorData(d->expandedItem, index);
-            parent()->setIndexWidget(index, d->expandedItem);
 
             // 重设item状态
             d->expandedItem->index = index;
             d->expandedItem->option = opt;
             d->expandedItem->textBounding = QRectF();
+            d->expandedItem->textBoundingWidth = -1;
+            d->expandedItem->textBoundingHeight = -1;
             d->expandedItem->setFixedWidth(0);
+
+            parent()->setIndexWidget(index, d->expandedItem);
 
             if (parent()->indexOfRow(index) == parent()->rowCount() - 1) {
                 d->lastAndExpandedInde = index;
@@ -1063,10 +1092,12 @@ void DIconItemDelegate::hideNotEditingIndexWidget()
     Q_D(DIconItemDelegate);
 
     if (d->expandedIndex.isValid()) {
+        const QRect oldGeometry = d->expandedItem->geometry();
         parent()->setIndexWidget(d->expandedIndex, 0);
         d->expandedItem->hide();
         d->expandedIndex = QModelIndex();
         d->lastAndExpandedInde = QModelIndex();
+        parent()->parent()->viewport()->update(oldGeometry);
     }
 }
 
@@ -1082,6 +1113,18 @@ QWidget *DIconItemDelegate::expandedIndexWidget() const
     Q_D(const DIconItemDelegate);
 
     return d->expandedItem;
+}
+
+void DIconItemDelegate::setExpandedItemSelectionHighlight(bool enabled, const QMargins &margins) const
+{
+    Q_D(const DIconItemDelegate);
+
+    if (!d->expandedItem)
+        return;
+
+    d->expandedItem->selectionHighlightEnabled = enabled;
+    d->expandedItem->selectionHighlightMargins = margins;
+    d->expandedItem->update();
 }
 
 int DIconItemDelegate::iconSizeLevel() const

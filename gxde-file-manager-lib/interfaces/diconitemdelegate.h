@@ -84,6 +84,8 @@ public slots:
 protected:
     void initTextLayout(const QModelIndex &index, QTextLayout *layout) const override;
 
+    void setExpandedItemSelectionHighlight(bool enabled, const QMargins &margins = QMargins()) const;
+
     bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
     QList<QRectF> drawText(const QModelIndex &index, QPainter *painter, QTextLayout *layout,

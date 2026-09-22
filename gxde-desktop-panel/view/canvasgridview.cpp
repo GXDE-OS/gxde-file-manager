@@ -1419,6 +1419,11 @@ QSize CanvasGridView::cellSize() const
     return QSize(d->cellWidth, d->cellHeight);
 }
 
+QRect CanvasGridView::iconAreaRect() const {
+    const QRect area = d->canvasRect.intersected(viewport()->rect());
+    return area.isEmpty() ? viewport()->rect() : area;
+}
+
 void CanvasGridView::openUrl(const DUrl &url)
 {
     DAbstractFileInfoPointer info = DFileService::instance()->createFileInfo(nullptr, url);
