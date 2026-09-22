@@ -720,7 +720,7 @@ void ExpandedItem::refreshBackdrop() {
     hide();
 
     QPainter backdropPainter(&backdrop);
-    topLevel->render(&backdropPainter, -sourceTopLeft,
+    topLevel->render(&backdropPainter, QPoint(0, 0),
         QRegion(QRect(sourceTopLeft, size())),
         QWidget::DrawWindowBackground | QWidget::DrawChildren);
     backdropPainter.end();
