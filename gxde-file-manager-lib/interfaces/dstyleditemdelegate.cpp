@@ -43,9 +43,16 @@ void DStyledItemDelegate::paintHoverBox(QPainter *painter, const QRectF &rect, q
         return;
     }
 
-    const qreal borderWidth = deeper ? 2 : 1;
-    const QColor fillColor = deeper ? QColor(43, 167, 248, 110) : QColor(43, 167, 248, 38);
-    const QColor borderColor = deeper ? QColor(43, 167, 248, 230) : QColor(43, 167, 248, 110);
+    if (deeper) {
+        paintSelectionBox(painter, rect, radius);
+        return;
+    }
+
+    const QPalette palette = QGuiApplication::palette();
+    const bool dark = palette.color(QPalette::Window).lightness() < 128;
+    const qreal borderWidth = 1;
+    const QColor fillColor = dark ? QColor(255, 255, 255, 16)
+                                  : QColor(0, 0, 0, 10);
 
     // 边框画笔以路径为中心绘制，会让部分像素落到 item 矩形之外。选中项
     // 切换时 Qt 只重绘原来的 item 矩形，这些残留像素就会表现为上一个
@@ -58,14 +65,13 @@ void DStyledItemDelegate::paintHoverBox(QPainter *painter, const QRectF &rect, q
     }
 
     QPainterPath path;
-    path.addRoundedRect(frameRect, radius, radius);
+    const qreal frameRadius = qMax<qreal>(radius, 3);
+    path.addRoundedRect(frameRect, frameRadius, frameRadius);
 
     painter->save();
-    painter->setClipRect(rect);
+    painter->setClipRect(rect, Qt::IntersectClip);
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->fillPath(path, fillColor);
-    painter->setPen(QPen(borderColor, borderWidth));
-    painter->drawPath(path);
     painter->restore();
 }
 
@@ -81,27 +87,24 @@ void DStyledItemDelegate::paintSelectionBox(QPainter *painter, const QRectF &rec
     }
 
     QPainterPath framePath;
-    const qreal frameRadius = qMin<qreal>(radius, 2);
+    const qreal frameRadius = qMax<qreal>(radius, 3);
     framePath.addRoundedRect(frameRect, frameRadius, frameRadius);
 
-    QLinearGradient fill(frameRect.topLeft(), frameRect.bottomLeft());
-    fill.setColorAt(0.0, QColor(117, 202, 255, 58));
-    fill.setColorAt(1.0, QColor(44, 167, 248, 78));
+    const QPalette palette = QGuiApplication::palette();
+    const bool dark = palette.color(QPalette::Window).lightness() < 128;
+    const QColor accent = palette.color(QPalette::Highlight);
+    QColor fill = accent;
+    QColor edge = accent;
+    fill.setAlpha(dark ? 76 : 58);
+    edge.setAlpha(dark ? 150 : 130);
 
     painter->save();
-    painter->setClipRect(rect);
+    painter->setClipRect(rect, Qt::IntersectClip);
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->fillPath(framePath, fill);
-    painter->setPen(QPen(QColor(44, 167, 248, 210), 1));
+    painter->setPen(QPen(edge, 1));
     painter->drawPath(framePath);
 
-    const QRectF innerRect = frameRect.adjusted(1, 1, -1, -1);
-    if (innerRect.isValid()) {
-        QPainterPath innerPath;
-        innerPath.addRoundedRect(innerRect, 1, 1);
-        painter->setPen(QPen(QColor(255, 255, 255, 72), 1));
-        painter->drawPath(innerPath);
-    }
     painter->restore();
 }
 

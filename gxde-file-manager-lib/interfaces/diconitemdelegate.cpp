@@ -47,7 +47,7 @@
 DFM_USE_NAMESPACE
 
 #define ICON_SPACING 16
-#define ICON_MODE_RECT_RADIUS TEXT_PADDING
+#define ICON_MODE_RECT_RADIUS 3
 
 QT_BEGIN_NAMESPACE
 Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius,
@@ -344,7 +344,7 @@ public:
             const QRectF highlightRect = QRectF(rect()).marginsRemoved(
                 selectionHighlightMargins);
             QPainterPath clipPath;
-            clipPath.addRoundedRect(highlightRect, 2, 2);
+            clipPath.addRoundedRect(highlightRect, ICON_MODE_RECT_RADIUS, ICON_MODE_RECT_RADIUS);
             pa.save();
             pa.setRenderHint(QPainter::Antialiasing, true);
             pa.setClipPath(clipPath);
@@ -849,8 +849,10 @@ void DIconItemDelegate::paint(QPainter *painter,
         if (opt.rect.intersects(coveredRect)) {
             painter->save();
             painterRestoreGuard.saved = true;
+            QPainterPath coveredPath;
+            coveredPath.addRoundedRect(coveredRect, ICON_MODE_RECT_RADIUS, ICON_MODE_RECT_RADIUS);
             painter->setClipRegion(QRegion(opt.rect).subtracted(
-                QRegion(coveredRect)), Qt::IntersectClip);
+                QRegion(coveredPath.toFillPolygon().toPolygon())), Qt::IntersectClip);
         }
     }
 

@@ -308,7 +308,7 @@ void ComputerViewItem::paintEvent(QPaintEvent *event)
 
     if (m_checked && getTextEdit()->isReadOnly()) {
         QPainter painter(this);
-        DStyledItemDelegate::paintSelectionBox(&painter, QRectF(rect()), TEXT_PADDING);
+        DStyledItemDelegate::paintSelectionBox(&painter, QRectF(rect()), 3);
         return;
     }
 
@@ -322,7 +322,7 @@ void ComputerViewItem::paintEvent(QPaintEvent *event)
     }
 
     QPainter painter(this);
-    DStyledItemDelegate::paintHoverBox(&painter, QRectF(rect()), TEXT_PADDING);
+    DStyledItemDelegate::paintHoverBox(&painter, QRectF(rect()), 3);
 }
 
 void ComputerViewItem::adjustPosition()

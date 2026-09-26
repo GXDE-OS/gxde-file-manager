@@ -1134,6 +1134,7 @@ void DialogManager::showGlobalSettingsDialog(quint64 winId)
     w->setProperty("isSettingDialogShown", true);
 
     DSettingsDialog *dsd = new DFMSettingDialog(w);
+    dsd->setWindowModality(Qt::WindowModal);
     dsd->show();
 
     connect(dsd, &DSettingsDialog::finished, [ = ] {
@@ -1666,4 +1667,3 @@ int DialogManager::showPrivilegeDialog_SW(int nRet, const QString &srcfilename)
 }
 
 #endif
-

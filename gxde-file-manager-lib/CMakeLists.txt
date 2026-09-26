@@ -316,17 +316,29 @@ set_source_files_properties(
     PROPERTIES SKIP_AUTOMOC ON
 )
 
-# dtabbar.h 含自引用 metatype（signal 中含 Tab*），CMake AUTOMOC 把所有
-# moc_*.cpp 聚合到 mocs_compilation.cpp，会与其他 header 里 `class Tab;` 前向
-# 声明撞车。绕过：对 dtabbar.h 手动跑 moc，单独编译为独立 TU。
+# These headers cannot safely share AUTOMOC's aggregated translation unit:
+# dtabbar.h contains a self-referencing metatype, while DHoverButton and
+# DIconTextButton collide with same-named DTK widget classes imported by other
+# generated moc files.  Generate each moc file as an independent translation
+# unit instead.
 set_source_files_properties(
     ${SRC_DIR}/views/dtabbar.h
+    ${SRC_DIR}/views/dhoverbutton.h
+    ${SRC_DIR}/views/dicontextbutton.h
     PROPERTIES SKIP_AUTOMOC ON
 )
 if(GXDE_QT_VERSION_MAJOR GREATER_EQUAL 6)
-    qt6_wrap_cpp(LIB_EXTRA_MOC ${SRC_DIR}/views/dtabbar.h)
+    qt6_wrap_cpp(LIB_EXTRA_MOC
+        ${SRC_DIR}/views/dtabbar.h
+        ${SRC_DIR}/views/dhoverbutton.h
+        ${SRC_DIR}/views/dicontextbutton.h
+    )
 else()
-    qt5_wrap_cpp(LIB_EXTRA_MOC ${SRC_DIR}/views/dtabbar.h)
+    qt5_wrap_cpp(LIB_EXTRA_MOC
+        ${SRC_DIR}/views/dtabbar.h
+        ${SRC_DIR}/views/dhoverbutton.h
+        ${SRC_DIR}/views/dicontextbutton.h
+    )
 endif()
 
 add_library(${TARGET_NAME} SHARED

@@ -231,6 +231,12 @@ void WindowManager::showNewWindow(const DUrl &url, const bool& isNewWindow)
     window->requestToSelectUrls(); //###: here, when selected files and then drag a tab to create a new window.
                                    //     will select these files again in new window.
 
+    if (qEnvironmentVariableIsSet("GXDE_TEST_OPEN_SETTINGS")) {
+        QTimer::singleShot(500, this, [window] {
+            dialogManager->showGlobalSettingsDialog(window->winId());
+        });
+    }
+
     if (m_windows.count() == 1){
         QPoint pos = QCursor::pos();
         QRect currentScreenGeometry;
