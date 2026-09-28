@@ -1,3 +1,9 @@
+gxde-file-manager (6.4.9) UNRELEASED; urgency=medium
+
+  * 修复了热区设置在Wayland下错位的问题
+
+ -- CharOfString <root@charofstring.cc>  Mon, 28 Sep 2026 01:12:10 -0500
+
 gxde-file-manager (6.4.8) UNRELEASED; urgency=medium
 
   * 修复了长文件名在选中时被截断的问题 (触碰到LayerShell四边依旧会触发elide)
