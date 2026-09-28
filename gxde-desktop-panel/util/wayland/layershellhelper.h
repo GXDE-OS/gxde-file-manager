@@ -28,6 +28,8 @@ public:
         const QString& scope);
     static void setPreviewBackdropRole(QWidget* widget, QScreen* screen,
         const QString& scope);
+    static void setFullscreenOverlayRole(QWidget* widget, QScreen* screen,
+        const QString& scope);
     static void fixPopupLayerShell(QWidget* popup, QScreen* screen = nullptr);
 };
 

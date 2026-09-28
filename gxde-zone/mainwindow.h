@@ -73,6 +73,7 @@ private:
 
     // MAIN_ITEM_TOP_MARGIN is aimed to steer clear of the fade-zone of mouseEvent of mainWindow Item.
     const int MAIN_ITEM_TOP_MARGIN = 30;
+    int m_topMargin;
     DVideoWidget *m_videoWidget;
 };
 

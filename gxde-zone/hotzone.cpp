@@ -12,7 +12,9 @@
 #include <QFontMetrics>
 #include <QImageReader>
 
-HotZone::HotZone(QWidget *parent, bool isRight, bool isBottom): QWidget(parent)
+HotZone::HotZone(QWidget *parent, bool isRight, bool isBottom, int topMargin)
+    : QWidget(parent)
+    , m_topMargin(topMargin)
 {
 
     initSeveralVar(isRight, isBottom);
@@ -67,10 +69,10 @@ void HotZone::initItemAtCorrectCorner(QWidget *mainWindow)
 
     switch (corner) {
     case TopLeft:
-        m_mainItem->move(0, MAIN_ITEM_TOP_MARGIN);
+        m_mainItem->move(0, m_topMargin);
         break;
     case TopRight:
-        m_mainItem->move(mainWidth - WRAPPER_SIZE, MAIN_ITEM_TOP_MARGIN);
+        m_mainItem->move(mainWidth - WRAPPER_SIZE, m_topMargin);
         break;
     case BottomLeft:
         m_mainItem->move(0, mainHeight - WRAPPER_SIZE);

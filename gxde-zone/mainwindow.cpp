@@ -22,6 +22,8 @@
 #include <QGSettings>
 #include <dapplication.h>
 
+#include "util/wayland/layershellhelper.h"
+
 ZoneMainWindow::ZoneMainWindow(QWidget *parent)
     : QWidget(parent)
     , m_videoWidget(nullptr)
@@ -32,24 +34,34 @@ ZoneMainWindow::ZoneMainWindow(QWidget *parent)
     setWindowFlags(Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
     // let background be transparent
     setAttribute(Qt::WA_TranslucentBackground, true);
-    if (DApplication::isWayland()) {
-        setWindowFlag(Qt::FramelessWindowHint, 1);
-    }
+
+    const bool isWayland = Wayland::LayerShellHelper::isWayland();
+    m_topMargin = isWayland ? 0 : MAIN_ITEM_TOP_MARGIN;
 
     // catch the screen that mouse is in
-    QList<QScreen *> screenList = QGuiApplication::screens();
-    for (int i = 0; i < screenList.length(); i++) {
-        QRect screen = screenList[i]->geometry();
-        if (screen.contains(QCursor::pos())) {
+    QScreen *targetScreen = QGuiApplication::screenAt(QCursor::pos());
+    if (!targetScreen) {
+        targetScreen = QGuiApplication::primaryScreen();
+    }
+
+    if (targetScreen) {
+        const QRect screen = targetScreen->geometry();
+        if (isWayland) {
+            this->resize(screen.size());
+        } else {
             // set the size and position of this app. Enlarge 30px to height to avoid fade-zone of mouseEvent.
-            this->setGeometry(screen.x(), screen.y() - MAIN_ITEM_TOP_MARGIN, screen.width(), screen.height() + MAIN_ITEM_TOP_MARGIN);
-            break;
+            this->setGeometry(screen.x(), screen.y() - m_topMargin, screen.width(), screen.height() + m_topMargin);
         }
+    }
+
+    if (isWayland) {
+        Wayland::LayerShellHelper::setFullscreenOverlayRole(
+            this, targetScreen, QStringLiteral("dde-shell/hotzone-settings"));
     }
 
     // set the background
     QWidget *back = new QWidget(this);
-    back->setGeometry(0, MAIN_ITEM_TOP_MARGIN, this->width(), this->height() - MAIN_ITEM_TOP_MARGIN);
+    back->setGeometry(0, m_topMargin, this->width(), this->height() - m_topMargin);
 
     // check demo video gsettings value
     QGSettings gsetting("com.deepin.dde.desktop", "/com/deepin/dde/desktop/");
@@ -112,16 +124,16 @@ ZoneMainWindow::ZoneMainWindow(QWidget *parent)
     QStringList topRightActionStr = QStringList() << CLOSE_MAX_WINDOW_STR << m_ActionStrs2;
 
     // load 4 corners
-    HotZone *hotzone1 = new HotZone(this, false, false);
+    HotZone *hotzone1 = new HotZone(this, false, false, m_topMargin);
     hotzone1->addButtons(m_ButtonNames, m_ActionStrs);
 
-    HotZone *hotzone2 = new HotZone(this, true, false);
+    HotZone *hotzone2 = new HotZone(this, true, false, m_topMargin);
     hotzone2->addButtons(topRightNames, topRightActionStr);
 
-    HotZone *hotzone3 = new HotZone(this, false, true);
+    HotZone *hotzone3 = new HotZone(this, false, true, m_topMargin);
     hotzone3->addButtons(m_ButtonNames, m_ActionStrs);
 
-    HotZone *hotzone4 = new HotZone(this, true, true);
+    HotZone *hotzone4 = new HotZone(this, true, true, m_topMargin);
     hotzone4->addButtons(m_ButtonNames, m_ActionStrs2);
 
     m_dbusZoneInter->EnableZoneDetected(false);

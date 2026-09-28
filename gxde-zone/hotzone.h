@@ -26,7 +26,7 @@ class HotZone : public QWidget
 {
     Q_OBJECT
 public:
-    HotZone(QWidget *parent, bool isRight, bool isBottom);
+    HotZone(QWidget *parent, bool isRight, bool isBottom, int topMargin);
     ~HotZone();
 
     void addButton(QString buttonName, QString actionStr, bool lastAddedButton);
@@ -88,8 +88,8 @@ private:
     const int WRAPPER_SIZE = 420;
     // imageSize indicates the height and width of image ,also the size of m_hoverItem
     const int IMAGE_SIZE = 110;
-    // MAIN_ITEM_TOP_MARGIN is aimed to steer clear of the fade-zone of mouseEvent of mainWindow Item.
-    const int MAIN_ITEM_TOP_MARGIN = 30;
+    // m_topMargin is aimed to steer clear of the fade-zone of mouseEvent of mainWindow Item (0 on Wayland).
+    int m_topMargin;
     // these three constants are used to justify m_selectedActionTextLabel's position
     const int TEXT_LEFT_OR_RIGHT_MARGIN = 36 ;
     const int TEXT_TOP_MARGIN = 10;

@@ -270,6 +270,64 @@ void LayerShellHelper::setPreviewBackdropRole(QWidget* widget,
         LayerShellQt::Window::KeyboardInteractivityNone);
 }
 
+void LayerShellHelper::setFullscreenOverlayRole(QWidget* widget,
+        QScreen* screen, const QString& scope) {
+    if (widget == nullptr) {
+        qWarning()
+            << "(LayerShellHelper) OverlayRole: got null ptr!!";
+        return;
+    }
+
+    if (!isWayland()) {
+        qWarning()
+            << "(LayerShellHelper) OverlayRole: Non-wayland session detected,"
+            << "now aborting...";
+        return;
+    }
+
+    widget->setWindowFlag(Qt::FramelessWindowHint, true);
+    widget->setAttribute(Qt::WA_NativeWindow, true);
+    widget->createWinId();
+
+    QWindow* window = widget->windowHandle();
+    if (!window) {
+        qWarning()
+            << "(LayerShellHelper) OverlayRole: Invalid handle, halted!!";
+        return;
+    }
+
+    if (screen) {
+        window->setScreen(screen);
+    }
+
+    LayerShellQt::Window* target_layer_shell_window =
+        LayerShellQt::Window::get(window);
+    if (!target_layer_shell_window) {
+        qWarning() << "(LayerShellHelper) OverlayRole: Failed to get"
+            << "layer-shell window for: " << widget << ", halted!!";
+        return;
+    }
+
+    LayerShellQt::Window::Anchors anchors;
+    anchors |= LayerShellQt::Window::AnchorTop;
+    anchors |= LayerShellQt::Window::AnchorBottom;
+    anchors |= LayerShellQt::Window::AnchorLeft;
+    anchors |= LayerShellQt::Window::AnchorRight;
+
+    target_layer_shell_window->setScope(scope);
+    target_layer_shell_window->setScreenConfiguration(
+        LayerShellQt::Window::ScreenFromQWindow);
+
+    target_layer_shell_window->setLayer(LayerShellQt::Window::LayerOverlay);
+    target_layer_shell_window->setAnchors(anchors);
+    target_layer_shell_window->setExclusiveZone(-1);
+
+    target_layer_shell_window->setKeyboardInteractivity(
+        LayerShellQt::Window::KeyboardInteractivityExclusive);
+
+    DPlatformHandle::setEnabledNoTitlebarForWindow(window, true);
+}
+
 void LayerShellHelper::fixPopupLayerShell(QWidget* popup, QScreen* screen) {
     if (popup == nullptr) {
         qWarning() << "The popup pointer that needs a desktop role passed in"
