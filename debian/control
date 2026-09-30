@@ -52,6 +52,7 @@ Build-Depends:
  libwayland-dev,
  qt6-wayland-private-dev,
  qt6-wayland-dev,
+ librofd-ffi-dev [!i386],
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
