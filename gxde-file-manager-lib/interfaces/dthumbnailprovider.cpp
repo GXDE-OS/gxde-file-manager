@@ -116,6 +116,7 @@ void DThumbnailProviderPrivate::init()
     sizeLimitHash.reserve(28);
     sizeLimitHash.insert(mimeDatabase.mimeTypeForName("text/plain"), 1024 * 1024);
     sizeLimitHash.insert(mimeDatabase.mimeTypeForName("application/pdf"), INT64_MAX);
+    sizeLimitHash.insert(mimeDatabase.mimeTypeForName("application/ofd"), INT64_MAX);
 //    sizeLimitHash.insert(mimeDatabase.mimeTypeForName("application/vnd.adobe.flash.movie"), INT64_MAX);
     sizeLimitHash.insert(mimeDatabase.mimeTypeForName("application/vnd.rn-realmedia"), INT64_MAX);
     sizeLimitHash.insert(mimeDatabase.mimeTypeForName("application/vnd.ms-asf"), INT64_MAX);
@@ -224,6 +225,7 @@ bool DThumbnailProvider::hasThumbnail(const QMimeType &mimeType) const
         return false;
 
     if (Q_LIKELY(mime == "application/pdf"
+                 || mime == "application/ofd"
                  || mime == "application/cnd.rn-realmedia"
                  || mime == "application/mxf")
             && !DFMApplication::instance()->genericAttribute(DFMApplication::GA_PreviewDocumentFile).toBool()) {
@@ -240,6 +242,7 @@ bool DThumbnailProvider::hasThumbnail(const QMimeType &mimeType) const
     }
 
     if (Q_LIKELY(mime == "text/plain" || mime == "application/pdf"
+            || mime == "application/ofd"
 //            || mime == "application/vnd.adobe.flash.movie"
             || mime == "application/vnd.rn-realmedia"
             || mime == "application/vnd.ms-asf"

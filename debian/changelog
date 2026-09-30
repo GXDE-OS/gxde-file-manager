@@ -1,8 +1,13 @@
-gxde-file-manager (6.4.9) UNRELEASED; urgency=medium
+gxde-file-manager (6.4.10) UNRELEASED; urgency=medium
 
+  [ CharOfString ]
   * 修复了热区设置在Wayland下错位的问题
 
- -- CharOfString <root@charofstring.cc>  Mon, 28 Sep 2026 01:12:10 -0500
+  [ gfdgd_xi ]
+  * 支持空格预览 ofd 文件
+  * 支持将 ofd 文件第一页作为文件预览图标
+
+ -- gfdgd_xi <3025613752@qq.com>  Wed, 30 Sep 2026 21:21:52 +0800
 
 gxde-file-manager (6.4.8) UNRELEASED; urgency=medium
 
