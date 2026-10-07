@@ -12,16 +12,22 @@ if(GXDE_QT_VERSION_MAJOR GREATER_EQUAL 6)
 endif()
 
 find_package(PkgConfig REQUIRED)
+find_package(LayerShellQt REQUIRED)
 pkg_check_modules(XCB REQUIRED IMPORTED_TARGET xcb)
 pkg_check_modules(XCB_EWMH REQUIRED IMPORTED_TARGET xcb-ewmh)
 pkg_check_modules(XCB_SHAPE REQUIRED IMPORTED_TARGET xcb-shape)
-pkg_check_modules(DFRAMEWORKDBUS REQUIRED IMPORTED_TARGET dframeworkdbus)
 if(GXDE_QT_VERSION_MAJOR GREATER_EQUAL 6)
+    find_path(DFRAMEWORKDBUS_QT6_INCLUDE_DIR com_deepin_wm.h
+        PATH_SUFFIXES libdframeworkdbus-qt6-6.0 REQUIRED)
+    find_library(DFRAMEWORKDBUS_QT6_LIBRARY dframeworkdbus-qt6 REQUIRED)
     pkg_check_modules(GSETTINGS_QT REQUIRED IMPORTED_TARGET gsettings-qt6)
     pkg_check_modules(DTKWIDGET REQUIRED IMPORTED_TARGET dtk2widget)
+    pkg_check_modules(DTKGUI REQUIRED IMPORTED_TARGET dtk6gui)
 else()
+    pkg_check_modules(DFRAMEWORKDBUS REQUIRED IMPORTED_TARGET dframeworkdbus)
     pkg_check_modules(GSETTINGS_QT REQUIRED IMPORTED_TARGET gsettings-qt)
     pkg_check_modules(DTKWIDGET REQUIRED IMPORTED_TARGET dtkwidget)
+    pkg_check_modules(DTKGUI REQUIRED IMPORTED_TARGET dtkgui)
 endif()
 
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -76,11 +82,13 @@ list(APPEND PANEL_SOURCES
     util/dde/ddesession.cpp
     util/xcb/xcb.cpp
     util/util.cpp
+    util/wayland/layershellhelper.cpp
 )
 list(APPEND PANEL_HEADERS
     util/dde/ddesession.h
     util/xcb/xcb.h
     util/util.h
+    util/wayland/layershellhelper.h
 )
 
 # dbus.pri (filedialog + filemanager1)
@@ -223,6 +231,7 @@ endif()
 
 target_link_libraries(${TARGET_NAME} PRIVATE
     gxde-file-manager-lib
+    LayerShellQt::Interface
     Qt${GXDE_QT_VERSION_MAJOR}::Core
     Qt${GXDE_QT_VERSION_MAJOR}::Gui
     Qt${GXDE_QT_VERSION_MAJOR}::Widgets
@@ -236,15 +245,16 @@ target_link_libraries(${TARGET_NAME} PRIVATE
     PkgConfig::XCB
     PkgConfig::XCB_EWMH
     PkgConfig::XCB_SHAPE
-    PkgConfig::DFRAMEWORKDBUS
     PkgConfig::GSETTINGS_QT
     PkgConfig::DTKWIDGET
+    PkgConfig::DTKGUI
 )
 if(GXDE_QT_VERSION_MAJOR EQUAL 5)
-    target_link_libraries(${TARGET_NAME} PRIVATE Qt5::X11Extras)
+    target_link_libraries(${TARGET_NAME} PRIVATE Qt5::X11Extras PkgConfig::DFRAMEWORKDBUS)
 endif()
 if(GXDE_QT_VERSION_MAJOR GREATER_EQUAL 6)
-    target_link_libraries(${TARGET_NAME} PRIVATE Qt6::Core5Compat)
+    target_include_directories(${TARGET_NAME} PRIVATE ${DFRAMEWORKDBUS_QT6_INCLUDE_DIR})
+    target_link_libraries(${TARGET_NAME} PRIVATE Qt6::Core5Compat ${DFRAMEWORKDBUS_QT6_LIBRARY})
 endif()
 
 # git rev → GIT_VERSION

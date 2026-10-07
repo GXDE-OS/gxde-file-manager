@@ -432,6 +432,16 @@ public:
 
     void refreshBackdrop();
 
+    bool eventFilter(QObject *object, QEvent *event) override {
+        if (object == backdropSource && (event->type() == QEvent::Paint
+                || event->type() == QEvent::Resize || event->type() == QEvent::Move)) {
+            scheduleBackdropRefresh();
+        }
+        return QWidget::eventFilter(object, event);
+    }
+
+    QPointer<QWidget> backdropSource;
+
     QSize sizeHint() const override
     {
         return QSize(width(), textGeometry().bottom() + contentsMargins().bottom());
@@ -691,6 +701,12 @@ void ExpandedItem::refreshBackdrop() {
     hide();
 
     QPainter backdropPainter(&backdrop);
+    if (backdropSource && backdropSource->window() != topLevel) {
+        const QPoint wallpaperTopLeft = backdropSource->mapFromGlobal(
+            mapToGlobal(QPoint(0, 0)));
+        backdropSource->render(&backdropPainter, QPoint(0, 0),
+            QRegion(QRect(wallpaperTopLeft, size())), QWidget::DrawWindowBackground);
+    }
     topLevel->render(&backdropPainter, QPoint(0, 0),
         QRegion(QRect(sourceTopLeft, size())),
         QWidget::DrawWindowBackground | QWidget::DrawChildren);
@@ -1010,7 +1026,7 @@ void DIconItemDelegate::paint(QPainter *painter,
 //            str = wordWrap_str;
 //        }
 
-        if (height > label_rect.height()) {
+        if (d->expandedItem->backdropBlurEnabled || height > label_rect.height()) {
             /// use widget(FileIconItem) show file icon and file name label.
 
             d->expandedIndex = index;
@@ -1028,7 +1044,8 @@ void DIconItemDelegate::paint(QPainter *painter,
             parent()->setIndexWidget(index, d->expandedItem);
             d->expandedItem->raise();
 
-            if (parent()->indexOfRow(index) == parent()->rowCount() - 1) {
+            if (height > label_rect.height()
+                    && parent()->indexOfRow(index) == parent()->rowCount() - 1) {
                 d->lastAndExpandedInde = index;
             }
 
@@ -1384,6 +1401,18 @@ void DIconItemDelegate::setExpandedItemSelectionHighlight(bool enabled,
     d->expandedItem->selectionHighlightMargins = margins;
     d->expandedItem->scheduleBackdropRefresh();
     d->expandedItem->update();
+}
+
+void DIconItemDelegate::setExpandedItemBackdropSource(QWidget *source) {
+    Q_D(DIconItemDelegate);
+    if (!d->expandedItem || d->expandedItem->backdropSource == source)
+        return;
+    if (d->expandedItem->backdropSource)
+        d->expandedItem->backdropSource->removeEventFilter(d->expandedItem);
+    d->expandedItem->backdropSource = source;
+    if (source)
+        source->installEventFilter(d->expandedItem);
+    d->expandedItem->scheduleBackdropRefresh();
 }
 
 void DIconItemDelegate::setExpandedItemBackdropBlur(bool enabled) const {

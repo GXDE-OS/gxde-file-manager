@@ -23,6 +23,7 @@
 #include <durl.h>
 
 #include "view/canvasgridview.h"
+#include "view/desktopitemdelegate.h"
 #include "view/backgroundhelper.h"
 #include "presenter/apppresenter.h"
 #include "presenter/display.h"
@@ -92,6 +93,7 @@ void Desktop::onBackgroundEnableChanged()
 
     if (d->background->isEnabled()) {
         QLabel *background = d->background->backgroundForScreen(qApp->primaryScreen());
+        d->screenFrame.itemDelegate()->setExpandedItemBackdropSource(background);
 
         if (Wayland::LayerShellHelper::isWayland()) {
             // So under Wayland, there are two steps:
@@ -146,6 +148,7 @@ void Desktop::onBackgroundEnableChanged()
             }
         }
     } else {
+        d->screenFrame.itemDelegate()->setExpandedItemBackdropSource(nullptr);
         d->screenFrame.setParent(nullptr);
         setWindowFlag(&d->screenFrame, Qt::FramelessWindowHint, true);
         d->screenFrame.QWidget::setGeometry(

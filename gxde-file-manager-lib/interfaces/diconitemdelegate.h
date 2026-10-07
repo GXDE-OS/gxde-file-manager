@@ -78,6 +78,7 @@ public:
     bool enabledTextShadow() const;
 
 public slots:
+    void setExpandedItemBackdropSource(QWidget *source);
     void setFocusTextBackgroundBorderColor(QColor focusTextBackgroundBorderColor);
     void setEnabledTextShadow(bool enabledTextShadow);
 
