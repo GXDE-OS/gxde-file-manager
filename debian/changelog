@@ -1,3 +1,9 @@
+gxde-file-manager (6.4.11) UNRELEASED; urgency=medium
+
+  * 现在文件名较短时也可以在高亮时blur高亮背景了
+
+ -- CharOfString <root@charofstring.cc>  Tue, 06 Oct 2026 20:23:22 -0500
+
 gxde-file-manager (6.4.10) UNRELEASED; urgency=medium
 
   [ CharOfString ]
