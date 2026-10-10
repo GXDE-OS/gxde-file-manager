@@ -1,3 +1,9 @@
+gxde-file-manager (6.4.12) UNRELEASED; urgency=medium
+
+  * 修复了Archlinux下文件夹打不开的问题
+
+ -- CharOfString <root@charofstring.cc>  Sat, 10 Oct 2026 17:26:02 -0500
+
 gxde-file-manager (6.4.11) UNRELEASED; urgency=medium
 
   * 现在文件名较短时也可以在高亮时blur高亮背景了
