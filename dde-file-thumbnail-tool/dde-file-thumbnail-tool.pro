@@ -4,7 +4,7 @@ TEMPLATE = subdirs
     SUBDIRS += video
 }
 
-ARCH = $$QMAKE_HOST.arch
+ARCH = $$QT_ARCH
 !isEqual(ARCH, i386):!isEqual(ARCH, i686) {
     SUBDIRS += ofd
 }

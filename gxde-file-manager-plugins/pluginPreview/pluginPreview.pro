@@ -6,7 +6,7 @@ SUBDIRS += \
     dde-text-preview-plugin \
     dde-music-preview-plugin
 
-ARCH = $$QMAKE_HOST.arch
+ARCH = $$QT_ARCH
 
 !isEqual(ARCH, i386):!isEqual(ARCH, i686) {
     SUBDIRS += dde-ofd-preview-plugin
