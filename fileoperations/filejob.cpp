@@ -977,12 +977,12 @@ bool FileJob::getIsGvfsFileOperationUsed() const
     return m_isGvfsFileOperationUsed;
 }
 
-int FileJob::getWindowId()
+quint64 FileJob::getWindowId()
 {
     return m_windowId;
 }
 
-void FileJob::setWindowId(int windowId)
+void FileJob::setWindowId(quint64 windowId)
 {
     m_windowId = windowId;
 }

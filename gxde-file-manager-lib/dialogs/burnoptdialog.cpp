@@ -35,7 +35,7 @@ private:
     QString dev;
     QHash<QString, int> speedmap;
     DUrl image_file;
-    int window_id;
+    quint64 window_id = 0;
 
     Q_DECLARE_PUBLIC(BurnOptDialog)
 };
@@ -109,7 +109,7 @@ void BurnOptDialog::setISOImage(DUrl image)
     ISOMaster->releaseDevice();
 }
 
-void BurnOptDialog::setJobWindowId(int wid)
+void BurnOptDialog::setJobWindowId(quint64 wid)
 {
     Q_D(BurnOptDialog);
     d->window_id = wid;

@@ -155,7 +155,7 @@ DFileMenu *DFileMenuManager::createToolBarSettingsMenu(const QSet<MenuAction> &d
     return genereteMenuByKeys(actionKeys, disableList, false, subMenuKeys, false);
 }
 
-DFileMenu *DFileMenuManager::createNormalMenu(const DUrl &currentUrl, const DUrlList &urlList, QSet<MenuAction> disableList, QSet<MenuAction> unusedList, int windowId)
+DFileMenu *DFileMenuManager::createNormalMenu(const DUrl &currentUrl, const DUrlList &urlList, QSet<MenuAction> disableList, QSet<MenuAction> unusedList, quint64 windowId)
 {
     DAbstractFileInfoPointer info = fileService->createFileInfo(Q_NULLPTR, currentUrl);
     DFileMenu *menu = Q_NULLPTR;

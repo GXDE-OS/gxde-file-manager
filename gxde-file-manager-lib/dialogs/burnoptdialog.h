@@ -12,7 +12,7 @@ public:
     ~BurnOptDialog();
 
     void setISOImage(DUrl image);
-    void setJobWindowId(int wid);
+    void setJobWindowId(quint64 wid);
 private:
     QScopedPointer<BurnOptDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(BurnOptDialog)

@@ -108,8 +108,8 @@ public:
     bool getIsCoExisted() const;
     void setIsCoExisted(bool isCoExisted);
 
-    int getWindowId();
-    void setWindowId(int windowId);
+    quint64 getWindowId();
+    void setWindowId(quint64 windowId);
 
     bool getIsGvfsFileOperationUsed() const;
 
@@ -212,7 +212,7 @@ private:
     bool m_isCoExisted = true;
     bool m_isAborted = false;
     JobType m_jobType;
-    int m_windowId = -1;
+    quint64 m_windowId = 0;
     bool m_skipandApplyToAll = false;
     int m_opticalJobStatus;
     int m_opticalJobProgress;

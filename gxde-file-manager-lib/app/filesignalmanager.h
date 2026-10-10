@@ -90,10 +90,10 @@ signals:
     void requestMultiFilesRename(const DFMUrlListBaseEvent& event);
 
     /* view select all */
-    void requestViewSelectAll(int windowId);
+    void requestViewSelectAll(quint64 windowId);
 
     /* set file manager background */
-    void requestChangeFMBackground(int windowId);
+    void requestChangeFMBackground(quint64 windowId);
 
     /*requst open new window by given url*/
     void requestOpenNewWindowByUrl(const DUrl& url, bool isAlwaysOpen);
@@ -132,7 +132,7 @@ signals:
     void requestUpdateMimeAppsCache();
 
     /*close last active window */
-    void aboutToCloseLastActivedWindow(int winId);
+    void aboutToCloseLastActivedWindow(quint64 winId);
 
     /*sort role changed*/
     void requestCacheSortState();

@@ -441,28 +441,28 @@ void AppController::actionClearTrash(const QObject *sender)
 
 void AppController::actionNewWord(const QSharedPointer<DFMUrlBaseEvent> &event)
 {
-    int windowId = event->windowId();
+    quint64 windowId = event->windowId();
     DAbstractFileInfoPointer info = DFileService::instance()->createFileInfo(nullptr, event->url());
     FileUtils::cpTemplateFileToTargetDir(info->toLocalFile(), QObject::tr("Document"), "doc", windowId);
 }
 
 void AppController::actionNewExcel(const QSharedPointer<DFMUrlBaseEvent> &event)
 {
-    int windowId = event->windowId();
+    quint64 windowId = event->windowId();
     DAbstractFileInfoPointer info = DFileService::instance()->createFileInfo(nullptr, event->url());
     FileUtils::cpTemplateFileToTargetDir(info->toLocalFile(), QObject::tr("Spreadsheet"), "xls", windowId);
 }
 
 void AppController::actionNewPowerpoint(const QSharedPointer<DFMUrlBaseEvent> &event)
 {
-    int windowId = event->windowId();
+    quint64 windowId = event->windowId();
     DAbstractFileInfoPointer info = DFileService::instance()->createFileInfo(nullptr, event->url());
     FileUtils::cpTemplateFileToTargetDir(info->toLocalFile(), QObject::tr("Presentation"), "ppt", windowId);
 }
 
 void AppController::actionNewText(const QSharedPointer<DFMUrlBaseEvent> &event)
 {
-    int windowId = event->windowId();
+    quint64 windowId = event->windowId();
     DAbstractFileInfoPointer info = DFileService::instance()->createFileInfo(nullptr, event->url());
     FileUtils::cpTemplateFileToTargetDir(info->toLocalFile(), QObject::tr("Text"), "txt", windowId);
 }
