@@ -1,0 +1,138 @@
+# Maintainer: CharOfString <root@charofstring.cc>
+pkgbase=gxde-file-manager-git
+pkgname=('gxde-file-manager-git' 'gxde-desktop-panel-git' 'gxde-disk-mount-plugin-git'
+         'libgxde-file-manager-git')
+pkgver=6.4.13
+pkgrel=1
+pkgdesc='GXDE file manager'
+arch=('x86_64' 'aarch64')
+url="https://github.com/GXDE-OS/gxde-file-manager"
+license=('GPL-3.0-or-later')
+makedepends=('git' 'qt6-tools' 'qt6-base' 'qt6-svg' 'qt6-multimedia' 'qt6-declarative' 'qt6-5compat'
+             'gsettings-qt6' 'file' 'libsecret' 'poppler' 'polkit-qt6' 'ffmpegthumbnailer' 'taglib'
+             'dtk2widget-qt6-git' 'dtk6core-git' 'libxcb' 'libx11' 'glib2' 'gxde-dock-git'
+             'xcb-util-wm' 'deepin-qt-dbus-factory-git' 'dframework-dbus-qt6-git' 'deepin-gettext-tools'
+             'kcodecs' 'udisks2-qt6-git' 'libxrender' 'mtdev' 'fontconfig' 'freetype2' 'mesa'
+             'disomaster-qt6-git' 'libwebp' 'libgxmr-qt6-git' 'layer-shell-qt' 'cairo'
+             'librofd-ffi-git' 'dtk6gui-git')
+source=()
+sha512sums=()
+
+# 直接使用 PKGBUILD 所在的 git 仓库作为源码 ・ Build from the git checkout this PKGBUILD lives in.
+_srcroot() {
+  git -C "$startdir" rev-parse --show-toplevel
+}
+
+build() {
+  # 与 debian/rules 相同（qmake6，关闭 jemalloc） ・ Same as debian/rules (qmake6, jemalloc disabled).
+  # Arch 的 KF6 KCodecs 头文件需要 C++20（工程默认 C++17），qmake 取 CONFIG 中最高的标准
+  # Arch's KF6 KCodecs headers need C++20 (the project asks for C++17);
+  # qmake uses the highest standard listed in CONFIG.
+  mkdir -p build
+  cd build
+  qmake6 "$(_srcroot)/filemanager.pro" \
+    PREFIX=/usr \
+    LIB_INSTALL_DIR=/usr/lib \
+    DISABLE_JEMALLOC=1 \
+    CONFIG+=c++20 \
+    DEFINES+="VERSION=$pkgver" \
+    QMAKE_CFLAGS_RELEASE="$CFLAGS" \
+    QMAKE_CXXFLAGS_RELEASE="$CXXFLAGS" \
+    QMAKE_LFLAGS_RELEASE="$LDFLAGS"
+  make
+  make INSTALL_ROOT="$srcdir/root" install
+}
+
+# 按 debian/*.install 拆分 ・ Split as in debian/*.install.
+_pick() {
+  local _f
+  cd "$srcdir/root"
+  for _f in "$@"; do
+    # 符号链接的目标可能已先被移走，因此也接受（悬空的）链接
+    # A symlink's target may already have been moved, so accept (dangling) links too.
+    [[ -e $_f || -L $_f ]] || { echo "missing: $_f" >&2; return 1; }
+    install -d "$pkgdir/$(dirname "$_f")"
+    mv "$_f" "$pkgdir/$_f"
+  done
+}
+
+package_gxde-file-manager-git() {
+  depends=("libgxde-file-manager-git=$pkgver-$pkgrel" 'socat' 'dtk2widget-qt6-git' 'dtk6core-git'
+           'dtk6log-git' 'disomaster-qt6-git' 'libisoburn' 'gxde-compressor-git' 'polkit-qt6'
+           'qt6-5compat' 'qt6-base' 'libx11' 'libgcc' 'libstdc++' 'glibc')
+  optdepends=('deepin-qt6integration-git: DTK6 platform theme'
+              'avfs: browse inside archives'
+              'gxde-file-manager-integration-git: extra file manager plugins'
+              'gxde-disk-mount-plugin-git: disk mount plugin for the dock')
+  provides=('gxde-file-manager' 'deepin-file-manager')
+  conflicts=('gxde-file-manager' 'deepin-file-manager' 'deepin-menu<6.0.0')
+
+  _pick usr/bin/gxde-file-manager usr/bin/gxde-file-manager-daemon usr/bin/gxde-file-manager-pkexec \
+        usr/bin/gxde-property-dialog usr/bin/gxde-xdg-user-dirs-update usr/bin/usb-device-formatter \
+        usr/bin/usb-device-formatter-pkexec usr/share/applications/gxde-file-manager.desktop \
+        usr/share/polkit-1/actions/com.deepin.pkexec.gxde-file-manager.policy \
+        usr/share/polkit-1/actions/com.deepin.pkexec.usb-device-formatter.policy \
+        etc/xdg/autostart/gxde-file-manager-xdg-autostart.desktop \
+        usr/share/dbus-1/interfaces/com.deepin.filemanager.filedialog.xml \
+        usr/share/dbus-1/interfaces/com.deepin.filemanager.filedialogmanager.xml \
+        usr/share/dbus-1/services/com.deepin.filemanager.filedialog.service \
+        usr/share/dbus-1/services/org.freedesktop.FileManager.service \
+        usr/share/dbus-1/system-services/com.deepin.filemanager.daemon.service \
+        usr/share/usb-device-formatter/translations usr/lib/systemd/system
+
+  # Arch 上 /etc 留给管理员，系统 D-Bus 策略放到 /usr/share
+  # On Arch /etc belongs to the administrator, system D-Bus policies go to /usr/share.
+  install -Dm644 "$srcdir/root/etc/dbus-1/system.d/com.deepin.filemanager.daemon.conf" \
+    "$pkgdir/usr/share/dbus-1/system.d/com.deepin.filemanager.daemon.conf"
+}
+
+package_gxde-desktop-panel-git() {
+  pkgdesc='GXDE desktop (icons and wallpaper)'
+  depends=("libgxde-file-manager-git=$pkgver-$pkgrel" 'gxde-daemon-git' 'dframework-dbus-qt6-git'
+           'layer-shell-qt' 'dtk2widget-qt6-git' 'dtk6core-git' 'dtk6gui-git' 'gsettings-qt6'
+           'qt6-5compat' 'qt6-base' 'libxcb' 'xcb-util-wm' 'libgcc' 'libstdc++' 'glibc')
+  optdepends=('deepin-screensaver-git: screensaver'
+              'gxde-requ-git: GXDE ReQu')
+  provides=('gxde-desktop-panel' 'deepin-desktop')
+  conflicts=('gxde-desktop-panel' 'deepin-desktop')
+
+  _pick usr/bin/gxde-desktop-panel usr/bin/gxde-rename-interface-treeland \
+        usr/bin/gxde-wallpaper-chooser-wayland usr/share/applications/gxde-computer.desktop \
+        usr/share/applications/gxde-trash.desktop usr/share/gxde-desktop-panel/translations \
+        usr/share/gxde-rename-interface-treeland/translations \
+        usr/share/dbus-1/services/com.deepin.dde.desktop.service
+}
+
+package_gxde-disk-mount-plugin-git() {
+  pkgdesc='Disk mount plugin for the GXDE dock'
+  depends=('gxde-dock-git' 'dtk2widget-qt6-git' 'dtk6core-git' 'udisks2-qt6-git' 'qt6-base' 'glib2'
+           'libgcc' 'libstdc++' 'glibc')
+  provides=('gxde-disk-mount-plugin')
+  conflicts=('gxde-disk-mount-plugin')
+
+  _pick usr/lib/gxde-dock/plugins/system-trays/libdde-disk-mount-plugin.so \
+        usr/share/dde-disk-mount-plugin/translations
+}
+
+package_libgxde-file-manager-git() {
+  pkgdesc='GXDE file manager library, plugins and data'
+  # Debian 把开发文件拆到 -dev 包，这里没有文件冲突，按 Arch 惯例合并
+  # Debian splits the development files into a -dev package; nothing collides
+  # here, so they stay in the library package as usual on Arch.
+  # 公开头文件 dfmglobal.h 包含 <QtCore5Compat/QTextCodec>，因此 qt6-5compat 也是开发所需
+  # The public header dfmglobal.h includes <QtCore5Compat/QTextCodec>, so
+  # qt6-5compat is needed for development too.
+  depends=('disomaster-qt6-git' 'dtk2widget-qt6-git' 'dtk6core-git' 'libgxmr-qt6-git' 'librofd-ffi-git'
+           'udisks2-qt6-git' 'cairo' 'ffmpegthumbnailer' 'glib2' 'gsettings-qt6' 'kcodecs' 'libsecret'
+           'poppler' 'qt6-5compat' 'qt6-base' 'qt6-multimedia' 'qt6-svg' 'libgcc' 'libstdc++' 'glibc')
+  provides=('libgxde-file-manager')
+  conflicts=('libgxde-file-manager')
+
+  # 通配符需在暂存目录中展开 ・ The globs must expand inside the staging root.
+  cd "$srcdir/root"
+  _pick usr/lib/libgxde-file-manager.so.* usr/share/gxde-file-manager/translations \
+        usr/share/gxde-file-manager/templates usr/share/gxde-file-manager/mimetypes \
+        usr/share/gxde-file-manager/mimetypeassociations usr/share/icons \
+        usr/lib/gxde-file-manager/plugins usr/lib/gxde-file-manager/tools \
+        usr/include/gxde-file-manager usr/lib/pkgconfig/gxde-file-manager.pc usr/lib/libgxde-file-manager.so
+}
