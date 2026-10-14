@@ -213,9 +213,12 @@ void WindowManager::showNewWindow(const DUrl &url, const bool& isNewWindow)
         }
     }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (QX11Info::isPlatformX11()) {
         QX11Info::setAppTime(QX11Info::appUserTime());
     }
+#endif
+    // Qt6 manages activation timestamps when showing/activating a QWindow.
 
     DFileManagerWindow *window = new DFileManagerWindow(url.isEmpty() ? DFMApplication::instance()->appUrlAttribute(DFMApplication::AA_UrlOfNewWindow) : url);
     loadWindowState(window);

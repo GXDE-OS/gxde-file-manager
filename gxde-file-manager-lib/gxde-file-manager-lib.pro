@@ -9,11 +9,9 @@
 include(../common/common.pri)
 
 QT       += core gui svg dbus concurrent multimedia xml widgets
-#private
-QT       += gui-private
 
 # Qt6 端 DTK 仅保留 dtk2widget 的 Qt6 移植（同时拉入 dtk6core / dtk6gui）
-QT       += dtk2widget
+include(../common/dtk2widget-public.pri)
 
 # Qt5 兼容：x11extras 仅在 Qt5 下加入；Qt6 已用 utils/qx11info_compat.h 自行封装
 lessThan(QT_MAJOR_VERSION, 6): QT += x11extras
@@ -528,6 +526,7 @@ QMAKE_PKGCONFIG_VERSION = $$VERSION
 QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 QMAKE_PKGCONFIG_NAME = gxde-file-manager
 QMAKE_PKGCONFIG_DESCRIPTION = DDE File Manager Header Files
+QMAKE_PKGCONFIG_REQUIRES += gxde-bernese-qt$${QT_MAJOR_VERSION}
 QMAKE_PKGCONFIG_INCDIR = $$includes.path
 
 templateFiles.path = $$APPSHAREDIR/templates

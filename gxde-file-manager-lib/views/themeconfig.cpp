@@ -28,6 +28,7 @@
 #include <QGuiApplication>
 #include <QIcon>
 #include <QImageReader>
+#include "imageutils.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -192,7 +193,7 @@ static QPixmap pixmapByPath(const QString &path, qreal scaleRatio)
         return pixmap;
 
     qreal sourceDevicePixelRatio = 1;
-    QImageReader reader(qt_findAtNxFile(path, scaleRatio, &sourceDevicePixelRatio));
+    QImageReader reader(ImageUtils::ScaledAssetPath(path, scaleRatio, &sourceDevicePixelRatio));
 
     reader.setScaledSize(reader.size() / sourceDevicePixelRatio * scaleRatio);
 

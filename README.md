@@ -10,6 +10,21 @@ Now DFM V4.x is forked and maintained by GXDE to provide filemanager and desktop
 DONE.
 
 ### How to compile
+
+Install `libgxde-bernese-qt6-dev` first. The reusable Qt compatibility helpers
+now live in the independent **gxde-bernese** library; the file manager links
+against it instead of compiling its own copies.
+
+For a local Bernese installation, point CMake at its prefix:
+
+```bash
+cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/gxde-bernese/build/install
+cmake --build build -j
+```
+
+For qmake, add that prefix's `lib/pkgconfig` (or `lib/<triplet>/pkgconfig`)
+to `PKG_CONFIG_PATH` before configuring:
+
 ```bash
 mkdir -p ./build/all
 cd ./build/all
@@ -19,6 +34,11 @@ make
 
 
 ### How to run without installing to system path
+
+If Bernese is installed locally, also add its installation's `lib` directory
+to `LD_LIBRARY_PATH` when running a qmake build. CMake build-tree executables
+already have a runtime path to the Bernese installation used at configure time.
+
 ```bash
 LD_LIBRARY_PATH=/home/char/Desktop/Repository/GXDE/FileMan/gxde-file-manager/build/all/gxde-file-manager-lib:$LD_LIBRARY_PATH /home/char/Desktop/Repository/GXDE/FileMan/gxde-file-manager/build/all/gxde-file-manager/gxde-file-manager
 ```

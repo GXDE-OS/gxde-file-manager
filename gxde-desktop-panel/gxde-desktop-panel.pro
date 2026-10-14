@@ -13,7 +13,6 @@ include($$PWD/../gxde-zone/gxde-zone.pri)
 
 QT       += core gui widgets svg dbus network concurrent multimediawidgets multimedia
 lessThan(QT_MAJOR_VERSION, 6): QT += x11extras
-QT       += gui-private
 
 TEMPLATE    = app
 TARGET      = gxde-desktop-panel
@@ -22,7 +21,8 @@ CONFIG      += c++17 link_pkgconfig
 PKGCONFIG   += xcb xcb-ewmh xcb-shape
 LIBS        += -lLayerShellQtInterface
 greaterThan(QT_MAJOR_VERSION, 5) {
-    QT += dtk2widget core5compat
+    include(../common/dtk2widget-public.pri)
+    QT += core5compat
     PKGCONFIG += gsettings-qt6
     INCLUDEPATH += /usr/include/libdframeworkdbus-qt6-6.0
     LIBS += -ldframeworkdbus-qt6
@@ -68,6 +68,7 @@ SOURCES += \
 
 
 HEADERS += \
+    util/wayland/backdroporigin.h \
     config/config.h \
     desktop.h \
     view/canvasviewhelper.h \

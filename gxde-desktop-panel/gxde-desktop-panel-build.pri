@@ -13,7 +13,7 @@ isEqual(EDITION, RACCOON) {
 DEFINES += DDE_DBUS_DISPLAY
 
 greaterThan(QT_MAJOR_VERSION, 5) {
-    # Qt6: dtk2widget was already added in the main .pro.
+    # Qt6: public DTK dependencies were already added in the main .pro.
     # DPlatformHandle (setEnabledNoTitlebarForWindow) only lives in dtk6gui/DGui,
     # whose headers collide by name with dtk2/DWidget. Add dtk6/DGui with the
     # LOWEST include priority (-idirafter) so dtk2/DWidget still wins the
@@ -35,3 +35,4 @@ deepin_professional: DEFINES += DDE_COMPUTER_TRASH DISABLE_AUTOMERGE
 !isEmpty(DISABLE_WALLPAPER_CAROUSEL) {
     DEFINES += DISABLE_WALLPAPER_CAROUSEL
 }
+include($$PWD/../common/bernese.pri)

@@ -52,9 +52,9 @@
 #include <QJsonArray>
 #include <QDebug>
 
-#include <private/qguiapplication_p.h>
-#include <qpa/qplatformtheme.h>
-#include <qpa/qplatformdialoghelper.h>
+#include <QWindow>
+#include "filedialogutils.h"
+#include "waylandutils.h"
 
 class DFileDialogPrivate
 {
@@ -336,7 +336,7 @@ void DFileDialog::selectNameFilterByIndex(int index)
     }
 
     QString nameFilter = nameFilters.at(index);
-    QStringList newNameFilters = QPlatformFileDialogHelper::cleanFilterList(nameFilter);
+    QStringList newNameFilters = FileDialogUtils::CleanFilterList(nameFilter);
     if (d->acceptMode == QFileDialog::AcceptSave && !newNameFilters.isEmpty()) {
         QString newNameFilterExtension;
         QMimeDatabase db;
@@ -788,10 +788,9 @@ bool DFileDialog::eventFilter(QObject *watched, QEvent *event)
 
 void DFileDialog::adjustPosition(QWidget *w)
 {
-    if (const QPlatformTheme *theme = QGuiApplicationPrivate::platformTheme())
-        if (theme->themeHint(QPlatformTheme::WindowAutoPlacement).toBool()) {
-            return;
-        }
+    // Wayland compositors position top-level windows; X11 keeps our centering.
+    if (WaylandUtils::isWaylandPlatform())
+        return;
     QPoint p(0, 0);
     int extraw = 0, extrah = 0, scrn = 0;
     if (w) {
@@ -838,7 +837,7 @@ void DFileDialog::adjustPosition(QWidget *w)
     if (w && (w->windowFlags() | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint) != w->windowFlags()) {
         // Use pos() if the widget is embedded into a native window
         QPoint pp;
-        if (w->windowHandle() && w->windowHandle()->property("_q_embedded_native_parent_handle").value<WId>()) {
+        if (w->windowHandle() && w->windowHandle()->parent()) {
             pp = w->pos();
         } else {
             pp = w->mapToGlobal(QPoint(0, 0));

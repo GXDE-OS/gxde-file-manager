@@ -14,8 +14,8 @@
 #include <QPluginLoader>
 #include <QDebug>
 
-#include <private/qobject_p.h>
-#include <private/qcoreapplication_p.h>
+#include <QCoreApplication>
+#include <QThread>
 
 DFM_BEGIN_NAMESPACE
 
@@ -39,11 +39,11 @@ inline QString keysKeyLiteral() { return QStringLiteral("Keys"); }
 
 }
 
-class DFMFactoryLoaderPrivate : public QObjectPrivate
+class DFMFactoryLoaderPrivate : public QObject
 {
-    Q_DECLARE_PUBLIC(DFMFactoryLoader)
+    Q_OBJECT
 public:
-    DFMFactoryLoaderPrivate();
+    explicit DFMFactoryLoaderPrivate(DFMFactoryLoader *owner);
     ~DFMFactoryLoaderPrivate();
     mutable QMutex mutex;
     QByteArray iid;
@@ -59,7 +59,8 @@ public:
 
 QStringList DFMFactoryLoaderPrivate::pluginPaths;
 
-DFMFactoryLoaderPrivate::DFMFactoryLoaderPrivate()
+DFMFactoryLoaderPrivate::DFMFactoryLoaderPrivate(DFMFactoryLoader *owner)
+    : QObject(owner)
 {
     if (pluginPaths.isEmpty()) {
         if (QT_PREPEND_NAMESPACE(qEnvironmentVariableIsEmpty)("DFM_PLUGIN_PATH"))
@@ -81,9 +82,13 @@ DFMFactoryLoader::DFMFactoryLoader(const char *iid,
                                    const QString &suffix,
                                    Qt::CaseSensitivity cs,
                                    bool repetitiveKeyInsensitive)
-    : QObject(*new DFMFactoryLoaderPrivate)
+    : QObject(nullptr)
 {
-    moveToThread(QCoreApplicationPrivate::mainThread());
+    // Keep sizeof(DFMFactoryLoader) unchanged for existing plugin binaries.
+    // QObject owns this ordinary child; no QObjectPrivate subclass is needed.
+    new DFMFactoryLoaderPrivate(this);
+    moveToThread(QCoreApplication::instance() ? QCoreApplication::instance()->thread()
+                                                : QThread::currentThread());
     Q_D(DFMFactoryLoader);
     d->iid = iid;
     d->suffix = suffix;
@@ -237,6 +242,17 @@ DFMFactoryLoader::~DFMFactoryLoader()
 {
     QMutexLocker locker(qt_factoryloader_mutex());
     qt_factory_loaders()->removeAll(this);
+    delete d_func();
+}
+
+DFMFactoryLoaderPrivate *DFMFactoryLoader::d_func()
+{
+    return findChild<DFMFactoryLoaderPrivate *>(QString(), Qt::FindDirectChildrenOnly);
+}
+
+const DFMFactoryLoaderPrivate *DFMFactoryLoader::d_func() const
+{
+    return findChild<DFMFactoryLoaderPrivate *>(QString(), Qt::FindDirectChildrenOnly);
 }
 
 QList<QJsonObject> DFMFactoryLoader::metaData() const
@@ -262,7 +278,8 @@ QObject *DFMFactoryLoader::instance(int index) const
             QObject *obj = loader->instance();
             if (obj) {
                 if (!obj->parent())
-                    obj->moveToThread(QCoreApplicationPrivate::mainThread());
+                    obj->moveToThread(QCoreApplication::instance()
+                        ? QCoreApplication::instance()->thread() : QThread::currentThread());
                 return obj;
             }
         }
@@ -349,3 +366,5 @@ QList<int> DFMFactoryLoader::getAllIndexByKey(const QString &needle) const
 }
 
 DFM_END_NAMESPACE
+
+#include "dfmfactoryloader.moc"

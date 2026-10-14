@@ -4,7 +4,7 @@ TEMPLATE         = lib
 CONFIG          += plugin c++17 link_pkgconfig
 PKGCONFIG       += gio-2.0
 greaterThan(QT_MAJOR_VERSION, 5) {
-    QT += dtk2widget
+    include(../../common/dtk2widget-public.pri)
     PKGCONFIG += udisks2-qt6
     DEFINES += DFM_USE_QT6
 } else {

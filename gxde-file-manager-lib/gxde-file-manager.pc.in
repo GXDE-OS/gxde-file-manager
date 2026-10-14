@@ -6,5 +6,6 @@ includedir=@INCLUDE_INSTALL_DIR@
 Name: gxde-file-manager
 Description: DDE File Manager Header Files
 Version: @GXDE_VERSION@
+Requires: gxde-bernese-qt@GXDE_QT_VERSION_MAJOR@
 Libs: -L${libdir} -lgxde-file-manager
 Cflags: -I${includedir}

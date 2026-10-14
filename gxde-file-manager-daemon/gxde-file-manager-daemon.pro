@@ -15,7 +15,7 @@ CONFIG   -= app_bundle
 PKGCONFIG += x11
 greaterThan(QT_MAJOR_VERSION, 5) {
     PKGCONFIG += polkit-qt6-1
-    QT += dtk2widget
+    include(../common/dtk2widget-public.pri)
     DEFINES += DFM_USE_QT6
 } else {
     PKGCONFIG += polkit-agent-1 polkit-qt5-1 dtkwidget

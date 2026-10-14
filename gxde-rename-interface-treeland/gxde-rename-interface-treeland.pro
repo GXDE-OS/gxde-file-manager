@@ -8,7 +8,8 @@ CONFIG      += c++17 link_pkgconfig
 greaterThan(QT_MAJOR_VERSION, 5) {
     # Qt6: DApplication/DDialog/DLineEdit come from dtk2widget,
     # QTextCodec lives in core5compat
-    QT += dtk2widget core5compat
+    include(../common/dtk2widget-public.pri)
+    QT += core5compat
 } else {
     PKGCONFIG += dtkwidget
 }

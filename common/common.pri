@@ -1,4 +1,5 @@
 unix {
+    include($$PWD/bernese.pri)
     ProjectName = gxde-file-manager
     PREFIX = /usr
     APPSHAREDIR = $$PREFIX/share/$$ProjectName

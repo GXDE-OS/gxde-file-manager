@@ -34,6 +34,7 @@
 
 #include "util/xcb/xcb.h"
 #include "util/wayland/layershellhelper.h"
+#include "util/wayland/backdroporigin.h"
 #include "waylandutils.h"
 
 #ifndef DISABLE_ZONE
@@ -94,8 +95,29 @@ void Desktop::onBackgroundEnableChanged()
     if (d->background->isEnabled()) {
         QLabel *background = d->background->backgroundForScreen(qApp->primaryScreen());
         d->screenFrame.itemDelegate()->setExpandedItemBackdropSource(background);
+        d->screenFrame.itemDelegate()->setExpandedItemBackdropOriginProvider({});
 
         if (Wayland::LayerShellHelper::isWayland()) {
+            d->screenFrame.itemDelegate()->setExpandedItemBackdropOriginProvider(
+                [this, source = QPointer<QLabel>(background)] {
+                    if (!source || !source->screen())
+                        return QPoint();
+                    const QRect output(source->screen()->geometry().topLeft(), source->size());
+                    const QPoint fallback = source->mapFromGlobal(
+                        d->screenFrame.mapToGlobal(QPoint()));
+                    QRect available = source->screen()->availableGeometry();
+                    if (available.size() != d->screenFrame.size())
+                        available = Wayland::XwaylandWorkArea(source->screen()->name(), output);
+                    const QPoint origin = Wayland::BackdropOrigin(output, d->screenFrame.size(),
+                        available, fallback);
+                    if (qEnvironmentVariableIsSet("GXDE_BLUR_TRACE"))
+                        qInfo() << "Backdrop coordinates: output" << output
+                                << "surface" << d->screenFrame.size()
+                                << "workArea" << available << "origin" << origin
+                                << "surfaceDpr" << d->screenFrame.devicePixelRatioF()
+                                << "wallpaperDpr" << source->devicePixelRatioF();
+                    return origin;
+                });
             // So under Wayland, there are two steps:
             // One, wallpaper shall ignore the layershell exclusive zones, so
             // we ensure that wallpaper lays behind top-panel & dock.

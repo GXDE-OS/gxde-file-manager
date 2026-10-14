@@ -85,6 +85,7 @@ list(APPEND PANEL_SOURCES
     util/wayland/layershellhelper.cpp
 )
 list(APPEND PANEL_HEADERS
+    util/wayland/backdroporigin.h
     util/dde/ddesession.h
     util/xcb/xcb.h
     util/util.h
@@ -241,7 +242,6 @@ target_link_libraries(${TARGET_NAME} PRIVATE
     Qt${GXDE_QT_VERSION_MAJOR}::Concurrent
     Qt${GXDE_QT_VERSION_MAJOR}::MultimediaWidgets
     Qt${GXDE_QT_VERSION_MAJOR}::Multimedia
-    Qt${GXDE_QT_VERSION_MAJOR}::GuiPrivate
     PkgConfig::XCB
     PkgConfig::XCB_EWMH
     PkgConfig::XCB_SHAPE

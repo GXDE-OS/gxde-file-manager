@@ -24,6 +24,7 @@ option(GXDE_DISABLE_ANYTHING "Disable deepin-anything based quick search" ON)
 
 set(GXDE_VERSION "${PROJECT_VERSION}")
 include(GXDECommon)
+find_package(GxdeBerneseQt${GXDE_QT_VERSION_MAJOR} 0.1 CONFIG REQUIRED)
 
 add_subdirectory(gxde-file-manager-lib)
 add_subdirectory(gxde-file-manager)

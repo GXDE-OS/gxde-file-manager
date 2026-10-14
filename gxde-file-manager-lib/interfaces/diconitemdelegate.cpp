@@ -41,7 +41,8 @@
 #include <QApplication>
 #include <QAbstractItemView>
 #include <QVBoxLayout>
-#include <private/qtextengine_p.h>
+#include "textlayoututils.h"
+#include "imageutils.h"
 #include <QPainterPath>
 #include <QTimer>
 DFM_USE_NAMESPACE
@@ -49,10 +50,7 @@ DFM_USE_NAMESPACE
 #define ICON_SPACING 16
 #define ICON_MODE_RECT_RADIUS 3
 
-QT_BEGIN_NAMESPACE
-Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius,
-    bool quality, int transposed = 0);
-QT_END_NAMESPACE
+
 
 
 QString trimmedEnd(QString str)
@@ -211,6 +209,7 @@ QPainterPath boundingPath(QList<QRectF> rects, qreal radius, qreal padding)
 class TagTextFormat : public QTextCharFormat
 {
 public:
+    explicit TagTextFormat(const QTextFormat &format) : QTextCharFormat(format.toCharFormat()) {}
     TagTextFormat(int objectType, const QList<QColor> &colors, const QColor &borderColor);
 
     QList<QColor> colors() const;
@@ -264,7 +263,7 @@ QSizeF FileTagObjectInterface::intrinsicSize(QTextDocument *doc, int posInDocume
     Q_UNUSED(posInDocument)
     Q_UNUSED(doc)
 
-    const TagTextFormat &f = static_cast<const TagTextFormat&>(format);
+    const TagTextFormat f(format);
     const QList<QColor> &colors = f.colors();
     const int diameter = f.diameter();
 
@@ -279,7 +278,7 @@ void FileTagObjectInterface::drawObject(QPainter *painter, const QRectF &rect, Q
     Q_UNUSED(posInDocument)
     Q_UNUSED(doc)
 
-    const TagTextFormat &f = static_cast<const TagTextFormat&>(format);
+    const TagTextFormat f(format);
     const QList<QColor> &colors = f.colors();
     const QColor borderColor = f.borderColor();
     qreal diameter = f.diameter();
@@ -441,6 +440,7 @@ public:
     }
 
     QPointer<QWidget> backdropSource;
+    std::function<QPoint()> backdropOriginProvider;
 
     QSize sizeHint() const override
     {
@@ -666,7 +666,6 @@ public:
     // 最后一次绘制item时是否画了背景
     mutable bool drawTextBackgroundOnLast = true;
 
-    QTextDocument *document = nullptr;
 
     static int textObjectType;
     static FileTagObjectInterface *textObjectInterface;
@@ -702,8 +701,9 @@ void ExpandedItem::refreshBackdrop() {
 
     QPainter backdropPainter(&backdrop);
     if (backdropSource && backdropSource->window() != topLevel) {
-        const QPoint wallpaperTopLeft = backdropSource->mapFromGlobal(
-            mapToGlobal(QPoint(0, 0)));
+        const QPoint wallpaperTopLeft = backdropOriginProvider
+            ? sourceTopLeft + backdropOriginProvider()
+            : backdropSource->mapFromGlobal(mapToGlobal(QPoint(0, 0)));
         backdropSource->render(&backdropPainter, QPoint(0, 0),
             QRegion(QRect(wallpaperTopLeft, size())), QWidget::DrawWindowBackground);
     }
@@ -716,7 +716,7 @@ void ExpandedItem::refreshBackdrop() {
     raise();
     capturingBackdrop = false;
 
-    qt_blurImage(backdrop, 18 * pixelRatio, true);
+    ImageUtils::Blur(backdrop, 8 * pixelRatio);
     blurredBackdrop = QPixmap::fromImage(backdrop);
     blurredBackdrop.setDevicePixelRatio(pixelRatio);
     if (parentWidget())
@@ -1095,7 +1095,7 @@ void DIconItemDelegate::paint(QPainter *painter,
 
         QPixmap text_pixmap = QPixmap::fromImage(text_image);
         text_pixmap.setDevicePixelRatio(pixel_ratio);
-        qt_blurImage(text_image, 6, false);
+        ImageUtils::Blur(text_image, 6);
 
         p.begin(&text_image);
         p.setCompositionMode(QPainter::CompositionMode_SourceIn);
@@ -1415,6 +1415,14 @@ void DIconItemDelegate::setExpandedItemBackdropSource(QWidget *source) {
     d->expandedItem->scheduleBackdropRefresh();
 }
 
+void DIconItemDelegate::setExpandedItemBackdropOriginProvider(std::function<QPoint()> provider) {
+    Q_D(DIconItemDelegate);
+    if (!d->expandedItem)
+        return;
+    d->expandedItem->backdropOriginProvider = std::move(provider);
+    d->expandedItem->scheduleBackdropRefresh();
+}
+
 void DIconItemDelegate::setExpandedItemBackdropBlur(bool enabled) const {
     Q_D(const DIconItemDelegate);
 
@@ -1545,27 +1553,7 @@ void DIconItemDelegate::setEnabledTextShadow(bool enabledTextShadow)
 
 void DIconItemDelegate::initTextLayout(const QModelIndex &index, QTextLayout *layout) const
 {
-    Q_D(const DIconItemDelegate);
-
-    const QVariantHash &ep = index.data(DFileSystemModel::ExtraProperties).toHash();
-    const QList<QColor> &colors = qvariant_cast<QList<QColor>>(ep.value("colored"));
-
-    if (!colors.isEmpty()) {
-        if (!layout->engine()->block.isValid() || !layout->engine()->block.document()) {
-            if (!d->document)
-                const_cast<DIconItemDelegatePrivate*>(d)->document = new QTextDocument(const_cast<DIconItemDelegate*>(this));
-
-            d->document->setPlainText(layout->text());
-            layout->engine()->block = d->document->firstBlock();
-        }
-
-        layout->engine()->docLayout()->registerHandler(d->textObjectType, d->textObjectInterface);
-        QTextCursor cursor(layout->engine()->docLayout()->document());
-        TagTextFormat format(d->textObjectType, colors, (d->drawTextBackgroundOnLast || colors.size() > 1) ? Qt::white : QColor(0, 0, 0, 25));
-
-        cursor.setPosition(0);
-        cursor.insertText(QString(QChar::ObjectReplacementCharacter), format);
-    }
+    DStyledItemDelegate::initTextLayout(index, layout);
 }
 
 bool DIconItemDelegate::eventFilter(QObject *object, QEvent *event)
@@ -1596,7 +1584,28 @@ QList<QRectF> DIconItemDelegate::drawText(const QModelIndex &index, QPainter *pa
 
     const_cast<DIconItemDelegatePrivate*>(d)->drawTextBackgroundOnLast = background != Qt::NoBrush;
 
-    return DStyledItemDelegate::drawText(index, painter, layout, boundingRect, radius, background, wordWrap, mode, flags, shadowColor);
+    const QList<QColor> colors = qvariant_cast<QList<QColor>>(
+        index.data(DFileSystemModel::ExtraProperties).toHash().value("colored"));
+    if (colors.isEmpty())
+        return DStyledItemDelegate::drawText(index, painter, layout, boundingRect, radius, background, wordWrap, mode, flags, shadowColor);
+
+    // A document owns its block layout and inline tag object through public APIs.
+    QTextDocument document;
+    document.setDocumentMargin(0);
+    document.setDefaultFont(painter ? painter->font() : layout->font());
+    document.setPlainText(layout->text());
+    document.documentLayout()->registerHandler(d->textObjectType, d->textObjectInterface);
+    QTextCursor cursor(&document);
+    cursor.insertText(QString(QChar::ObjectReplacementCharacter),
+        TagTextFormat(d->textObjectType, colors,
+            (background != Qt::NoBrush || colors.size() > 1) ? Qt::white : QColor(0, 0, 0, 25)));
+    QTextLayout *tagLayout = document.firstBlock().layout();
+    tagLayout->setTextOption(layout->textOption());
+    QList<QRectF> regions;
+    TextLayoutUtils::DrawElidedText(tagLayout, boundingRect.size(), wordWrap, mode,
+        d->textLineHeight, flags, nullptr, painter, boundingRect.topLeft(), shadowColor,
+        QPointF(0, 1), background, radius, &regions, &document);
+    return regions;
 }
 
 void DIconItemDelegate::onEditWidgetFocusOut()

@@ -453,10 +453,11 @@ auto runInThread(QSemaphore *s, QThread *thread, Fun fun, Args&&... args) -> dec
 {
     return _TMP<decltype(fun(args...))>::runInThread(s, thread, fun, std::forward<Args>(args)...);
 }
-template <typename Fun, typename... Args>
-typename QtPrivate::FunctionPointer<Fun>::ReturnType runInThread(QSemaphore *s, QThread *thread, typename QtPrivate::FunctionPointer<Fun>::Object *obj, Fun fun, Args&&... args)
+template <typename Object, typename Fun, typename... Args>
+auto runInThread(QSemaphore *s, QThread *thread, Object *obj, Fun fun, Args&&... args)
+    -> decltype((obj->*fun)(std::forward<Args>(args)...))
 {
-    return _TMP<typename QtPrivate::FunctionPointer<Fun>::ReturnType>::runInThread(s, thread, [&] {
+    return _TMP<decltype((obj->*fun)(std::forward<Args>(args)...))>::runInThread(s, thread, [&] {
         return (obj->*fun)(std::forward<Args>(args)...);
     });
 }
@@ -468,8 +469,9 @@ auto runInThread(QThread *thread, Fun fun, Args&&... args) -> decltype(fun(args.
 
     return runInThread(&s, thread, fun, std::forward<Args>(args)...);
 }
-template <typename Fun, typename... Args>
-typename QtPrivate::FunctionPointer<Fun>::ReturnType runInThread(QThread *thread, typename QtPrivate::FunctionPointer<Fun>::Object *obj, Fun fun, Args&&... args)
+template <typename Object, typename Fun, typename... Args>
+auto runInThread(QThread *thread, Object *obj, Fun fun, Args&&... args)
+    -> decltype((obj->*fun)(std::forward<Args>(args)...))
 {
     QSemaphore s;
 
@@ -485,8 +487,9 @@ auto runInMainThread(Fun fun, Args&&... args) -> decltype(fun(args...))
 
     return runInThread(QCoreApplication::instance()->thread(), fun, std::forward<Args>(args)...);
 }
-template <typename Fun, typename... Args>
-typename QtPrivate::FunctionPointer<Fun>::ReturnType runInMainThread(typename QtPrivate::FunctionPointer<Fun>::Object *obj, Fun fun, Args&&... args)
+template <typename Object, typename Fun, typename... Args>
+auto runInMainThread(Object *obj, Fun fun, Args&&... args)
+    -> decltype((obj->*fun)(std::forward<Args>(args)...))
 {
     if (!QCoreApplication::instance()) {
         return (obj->*fun)(std::forward<Args>(args)...);

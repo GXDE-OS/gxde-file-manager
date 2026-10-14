@@ -62,8 +62,7 @@
 #include <QUrlQuery>
 #include <QScroller>
 
-#include <private/qguiapplication_p.h>
-#include <qpa/qplatformtheme.h>
+#include <QStyleHints>
 
 #include <DApplication>
 
@@ -594,7 +593,7 @@ void ComputerView::initUI()
 #if QT_VERSION < QT_VERSION_CHECK(5,9,0)
     int touchTapDistance = 15;
 #else
-    int touchTapDistance = QGuiApplicationPrivate::platformTheme()->themeHint(QPlatformTheme::TouchDoubleTapDistance).toInt();
+    int touchTapDistance = QGuiApplication::styleHints()->touchDoubleTapDistance();
 #endif
     scroller_properties.setScrollMetric(QScrollerProperties::DragStartDistance, touchTapDistance / 1000);
     scroller->setScrollerProperties(scroller_properties);

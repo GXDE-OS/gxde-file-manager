@@ -12,10 +12,11 @@ TARGET = usb-device-formatter
 TEMPLATE = app
 
 include(../partman/partman.pri)
+include(../common/bernese.pri)
 
 PKGCONFIG += x11
 greaterThan(QT_MAJOR_VERSION, 5) {
-    QT += dtk2widget
+    include(../common/dtk2widget-public.pri)
     DEFINES += DFM_USE_QT6
 } else {
     PKGCONFIG += dtkwidget

@@ -20,7 +20,6 @@ class DFMFactoryLoaderPrivate;
 class DFMFactoryLoader : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(DFMFactoryLoader)
 public:
     explicit DFMFactoryLoader(const char *iid,
                               const QString &suffix = QString(),
@@ -43,6 +42,10 @@ public:
     void update();
 
     static void refreshAll();
+
+private:
+    DFMFactoryLoaderPrivate *d_func();
+    const DFMFactoryLoaderPrivate *d_func() const;
 };
 
 template <class PluginInterface, class FactoryInterface>

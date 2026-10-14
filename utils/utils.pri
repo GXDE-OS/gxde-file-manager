@@ -1,5 +1,8 @@
 HEADERS += \
     $$PWD/utils.h \
+    $$PWD/filedialogutils.h \
+    $$PWD/imageutils.h \
+    $$PWD/textlayoututils.h \
     $$PWD/xutil.h \
     $$PWD/debugobejct.h \
     $$PWD/qobjecthelper.h \

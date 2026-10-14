@@ -17,7 +17,8 @@ TEMPLATE = app
 CONFIG += c++17 link_pkgconfig
 PKGCONFIG += gio-unix-2.0
 greaterThan(QT_MAJOR_VERSION, 5) {
-    QT += dtk2widget core5compat
+    include(../common/dtk2widget-public.pri)
+    QT += core5compat
     DEFINES += DFM_USE_QT6
 } else {
     PKGCONFIG += dtkwidget

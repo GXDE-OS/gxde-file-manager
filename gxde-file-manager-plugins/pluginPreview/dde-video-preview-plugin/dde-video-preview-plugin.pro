@@ -14,7 +14,7 @@ CONFIG += plugin link_pkgconfig c++17
 include(../../../common/common.pri)
 
 greaterThan(QT_MAJOR_VERSION, 5) {
-    QT += dtk2widget
+    include(../../../common/dtk2widget-public.pri)
     DEFINES += DFM_USE_QT6
     PKGCONFIG += libgxmr-qt6
 } else {

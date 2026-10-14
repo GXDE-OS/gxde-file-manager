@@ -61,7 +61,9 @@ void XcbMisc::set_window_type(WId winId, WindowType winType)
         break;
     }
 
+    QGuiApplication::sync();
     xcb_ewmh_set_wm_window_type(&m_ewmh_connection, static_cast<xcb_window_t>(winId), 1, atoms);
+    xcb_flush(QX11Info::connection());
 }
 
 
@@ -90,6 +92,7 @@ void XcbMisc::set_window_transparent_input(WId winId, bool transparent)
         return;
     }
 
+    QGuiApplication::sync();
     if (transparent) {
         xcb_shape_rectangles(QX11Info::connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT,
                              XCB_CLIP_ORDERING_YX_BANDED, winId, 0, 0, 0, 0);
@@ -97,6 +100,7 @@ void XcbMisc::set_window_transparent_input(WId winId, bool transparent)
         xcb_shape_mask(QX11Info::connection(), XCB_SHAPE_SO_SET,
                        XCB_SHAPE_SK_INPUT, winId, 0, 0, XCB_NONE);
     }
+    xcb_flush(QX11Info::connection());
 }
 
 bool XcbMisc::is_dock_window(xcb_window_t winId)

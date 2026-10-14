@@ -132,8 +132,13 @@ int main(int argc, char *argv[])
         int parentWinId = CMDManager::instance()->getWinId();
         int winId = w->winId();
 
-        if(parentWinId != -1)
-            qDebug() << XSetTransientForHint(QX11Info::display(), (Window)winId, (Window)parentWinId);
+        if (parentWinId != -1) {
+            if (Display *display = QX11Info::display()) {
+                QGuiApplication::sync();
+                qDebug() << XSetTransientForHint(display, (Window)winId, (Window)parentWinId);
+                XFlush(display);
+            }
+        }
     }
 
     int code = a.exec();

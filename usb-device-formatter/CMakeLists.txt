@@ -64,9 +64,9 @@ if(GXDE_QT_VERSION_MAJOR GREATER_EQUAL 6)
 endif()
 
 target_link_libraries(${TARGET_NAME} PRIVATE
+    GxdeBernese::Qt${GXDE_QT_VERSION_MAJOR}
     Qt${GXDE_QT_VERSION_MAJOR}::Core
     Qt${GXDE_QT_VERSION_MAJOR}::Gui
-    Qt${GXDE_QT_VERSION_MAJOR}::GuiPrivate
     Qt${GXDE_QT_VERSION_MAJOR}::Concurrent
     Qt${GXDE_QT_VERSION_MAJOR}::Network
     Qt${GXDE_QT_VERSION_MAJOR}::Widgets

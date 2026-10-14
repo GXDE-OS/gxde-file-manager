@@ -146,8 +146,9 @@ DFileService::~DFileService()
 
 }
 
-template<typename T>
-QVariant eventProcess(DFileService *service, const QSharedPointer<DFMEvent> &event, T function)
+template<typename Result, typename Event>
+QVariant eventProcess(DFileService *service, const QSharedPointer<DFMEvent> &event,
+                      Result (DAbstractFileController::*function)(const QSharedPointer<Event> &) const)
 {
     QSet<DAbstractFileController *> controller_set;
     QSet<QString> scheme_set;
@@ -167,9 +168,7 @@ QVariant eventProcess(DFileService *service, const QSharedPointer<DFMEvent> &eve
 
             controller_set << controller;
 
-            typedef typename std::remove_reference<typename QtPrivate::FunctionPointer<T>::Arguments::Car>::type::Type DFMEventType;
-
-            const QVariant result = QVariant::fromValue((controller->*function)(event.staticCast<DFMEventType>()));
+            const QVariant result = QVariant::fromValue((controller->*function)(event.staticCast<Event>()));
 
             if (event->isAccepted()) {
                 return result;

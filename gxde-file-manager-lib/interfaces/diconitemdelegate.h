@@ -28,6 +28,7 @@
 #include "dstyleditemdelegate.h"
 
 #include <QPointer>
+#include <functional>
 
 class FileIconItem;
 QT_BEGIN_NAMESPACE
@@ -79,6 +80,8 @@ public:
 
 public slots:
     void setExpandedItemBackdropSource(QWidget *source);
+    // The top-level icon window's origin in backdrop-source coordinates.
+    void setExpandedItemBackdropOriginProvider(std::function<QPoint()> provider);
     void setFocusTextBackgroundBorderColor(QColor focusTextBackgroundBorderColor);
     void setEnabledTextShadow(bool enabledTextShadow);
 
