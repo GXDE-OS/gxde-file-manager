@@ -14,7 +14,7 @@ makedepends=('git' 'qt6-tools' 'qt6-base' 'qt6-svg' 'qt6-multimedia' 'qt6-declar
              'xcb-util-wm' 'deepin-qt-dbus-factory-git' 'dframework-dbus-qt6-git' 'deepin-gettext-tools'
              'kcodecs' 'udisks2-qt6-git' 'libxrender' 'mtdev' 'fontconfig' 'freetype2' 'mesa'
              'disomaster-qt6-git' 'libwebp' 'libgxmr-qt6-git' 'layer-shell-qt' 'cairo'
-             'librofd-ffi-git' 'dtk6gui-git')
+             'librofd-ffi-git' 'dtk6gui-git' 'gxde-bernese-git')
 source=()
 sha512sums=()
 
