@@ -106,7 +106,7 @@ package_gxde-desktop-panel-git() {
 package_gxde-disk-mount-plugin-git() {
   pkgdesc='Disk mount plugin for the GXDE dock'
   depends=('gxde-dock-git' 'dtk2widget-qt6-git' 'dtk6core-git' 'udisks2-qt6-git' 'qt6-base' 'glib2'
-           'libgcc' 'libstdc++' 'glibc')
+           'libgcc' 'libstdc++' 'glibc' 'gxde-bernese-git')
   provides=('gxde-disk-mount-plugin')
   conflicts=('gxde-disk-mount-plugin')
 
