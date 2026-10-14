@@ -1,0 +1,13 @@
+name: Building Program (Archlinux Only)
+run-name: Building ${{ GITHUB.REPOSITORY }}
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  call:
+    uses: GXDE-OS/GXDE/.github/workflows/building-pkg.yml@master
+    secrets: inherit
