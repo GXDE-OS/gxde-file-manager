@@ -1,3 +1,10 @@
+gxde-file-manager (6.4.14) UNRELEASED; urgency=medium
+
+  * 修复了桌面图标总是乱飞的问题
+  * 移除了对Qt私有函数的依赖
+
+ -- CharOfString <root@charofstring.cc>  Wed, 14 Oct 2026 13:32:24 -0500
+
 gxde-file-manager (6.4.13) UNRELEASED; urgency=medium
 
   * 修复了Archlinux下文件夹打不开的问题
