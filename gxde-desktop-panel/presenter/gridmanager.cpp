@@ -20,18 +20,35 @@
 #include "../config/config.h"
 #include "dabstractfileinfo.h"
 
-class GridManagerPrivate
-{
+class GridManagerPrivate {
 public:
-    GridManagerPrivate()
-    {
-        auto settings = Config::instance()->settings();
+    GridManagerPrivate() {
+        QSettings reader(Config::instance()->settings()->fileName(), QSettings::IniFormat);
+        auto settings = &reader;
         settings->beginGroup(Config::groupGeneral);
         positionProfile = settings->value(Config::keyProfile).toString();
         autoArrange = settings->value(Config::keyAutoAlign).toBool();
         autoMerge = settings->value(Config::keyAutoMerge, false).toBool();
         hideIcon = settings->value(Config::keyHideIcon, false).toBool();
         settings->endGroup();
+
+        for (const QString &group : settings->childGroups()) {
+            if (!group.startsWith(QStringLiteral("Position_"))) {
+                continue;
+            }
+
+            settings->beginGroup(group);
+            auto &profile = savedProfiles[group];
+            for (const QString &key : settings->childKeys()) {
+                const auto coords = key.split('_');
+                bool xOk = false, yOk = false;
+                const int x = coords.value(0).toInt(&xOk);
+                const int y = coords.value(1).toInt(&yOk);
+                if (coords.size() == 2 && xOk && yOk)
+                    profile.insert(QPoint(x, y), settings->value(key).toString());
+            }
+            settings->endGroup();
+        }
 
         coordWidth = 0;
         coordHeight = 0;
@@ -108,32 +125,33 @@ public:
         clear();
     }
 
-    void loadProfile(const QList<DAbstractFileInfoPointer> &fileInfoList)
-    {
+    void loadProfile(const QList<DAbstractFileInfoPointer> &fileInfoList) {
         if (hideIcon) {
             // 如果设置为隐藏图标，则直接跳过渲染
             return;
         }
-        QMap<QString, int> existItems;
-
+        QStringList items;
         for (const DAbstractFileInfoPointer &info : fileInfoList) {
-            existItems.insert(info->fileUrl().toString(), 0);
+            items << info->fileUrl().toString();
+        }
+        restoreProfile(items);
+        savedProfiles[positionProfile] = m_gridItems;
+        profileLoaded = true;
+    }
+
+    void restoreProfile(const QStringList &items) {
+        QMap<QString, int> existItems;
+        for (const QString &item : items) {
+            existItems.insert(item, 0);
         }
 
-        auto settings = Config::instance()->settings();
-        settings->beginGroup(positionProfile);
-        for (auto &key : settings->allKeys()) {
-            auto coords = key.split("_");
-            auto x = coords.value(0).toInt();
-            auto y = coords.value(1).toInt();
-            auto item = settings->value(key).toString();
-            if (existItems.contains(item)) {
-                QPoint pos{x, y};
-                add(pos, item);
-                existItems.remove(item);
+        const auto profile = savedProfiles.value(positionProfile);
+        for (auto it = profile.cbegin(); it != profile.cend(); ++it) {
+            if (isValid(it.key()) && existItems.contains(it.value())
+                    && add(it.key(), it.value())) {
+                existItems.remove(it.value());
             }
         }
-        settings->endGroup();
 
         for (auto &item : existItems.keys()) {
             QPoint empty_pos{ takeEmptyPos() };
@@ -147,6 +165,7 @@ public:
 
     void loadWithoutProfile(const QList<DAbstractFileInfoPointer> &fileInfoList)
     {
+        profileLoaded = true;
         if (hideIcon) {
             // 如果设置为隐藏图标，则直接跳过渲染
             return;
@@ -240,8 +259,11 @@ public:
         return QPair<QStringList, QVariantList>(keyList, valueList);
     }
 
-    inline void syncProfile()
-    {
+    inline void syncProfile() {
+        if (!profileLoaded || hideIcon) {
+            return;
+        }
+        savedProfiles[positionProfile] = m_gridItems;
         QPair<QStringList, QVariantList> kvList = generateProfileConfigVariable();
 
         if (m_gridItems.size() != m_itemGrids.size()) {
@@ -446,35 +468,43 @@ public:
         }
     }
 
-    bool updateGridSize(int w, int h)
-    {
+    bool updateGridSize(int w, int h) {
+        if (w <= 0 || h <= 0) {
+            return false;
+        }
+
         if (coordHeight == h && coordWidth == w) {
             qWarning() << "profile not changed";
             return false;
         }
 
-        if (0 == coordWidth && 0 == coordHeight) {
+        if (!profileLoaded || hideIcon || (0 == coordWidth && 0 == coordHeight)) {
             resetGridSize(w, h);
             return false;
         } else {
             qDebug() << "change grid from" << coordWidth << coordHeight
                      << "to" << w << h;
-            changeGridSize(w, h);
+            const QString targetProfile = QString("Position_%1x%2").arg(w).arg(h);
+            if (!autoMerge && savedProfiles.contains(targetProfile)) {
+                const QStringList items = rangeItems();
+                resetGridSize(w, h);
+                restoreProfile(items);
+            } else {
+                changeGridSize(w, h);
+            }
 
             // check if we should update grid profile.
             if (autoMerge) {
                 return this->autoArrange;
             }
 
-            QPair<QStringList, QVariantList> kvList = generateProfileConfigVariable();
+            if (autoArrange) {
+                arrange();
+            }
 
-            qDebug() << "updateGridProfile:" << kvList.first.size()
-                     << m_gridItems.size() << m_itemGrids.size();
+            syncProfile();
 
-            emit Presenter::instance()->removeConfig(positionProfile, "");
-            emit Presenter::instance()->setConfigList(positionProfile, kvList.first, kvList.second);
-
-            return this->autoArrange;
+            return false;
         }
     }
 
@@ -495,6 +525,8 @@ public:
     QMap<QString, QPoint>   m_itemGrids;
     QVector<bool>           m_cellStatus;
 
+    QMap<QString, QMap<QPoint, QString>> savedProfiles;
+    bool                    profileLoaded = false;
     QString                 positionProfile;
     int                     coordWidth;
     int                     coordHeight;
@@ -666,11 +698,9 @@ bool GridManager::remove(QPoint pos, const QString &id)
     return ret;
 }
 
-bool GridManager::clear()
-{
+bool GridManager::clear() {
     d->createProfile();
-
-    emit Presenter::instance()->removeConfig(d->positionProfile, "");
+    d->syncProfile();
 
     return true;
 }
@@ -798,18 +828,14 @@ void GridManager::toggleAutoMerge()
     setAutoMerge(!d->autoMerge);
 }
 
-void GridManager::reArrange()
-{
+void GridManager::reArrange() {
     d->arrange();
 
     if (autoMerge()) {
         return;
     }
 
-    QPair<QStringList, QVariantList> kvList = d->generateProfileConfigVariable();
-
-    emit Presenter::instance()->removeConfig(d->positionProfile, "");
-    emit Presenter::instance()->setConfigList(d->positionProfile, kvList.first, kvList.second);
+    d->syncProfile();
 }
 
 int GridManager::gridCount() const
