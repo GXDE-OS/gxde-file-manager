@@ -7,7 +7,7 @@ Build-Depends:
  pkg-config,
  qmake6,
  qt6-base-dev,
- libgxde-bernese-qt6-dev (>= 0.1.0),
+ libgxde-bernese-qt6-dev,
  qt6-multimedia-dev,
  qt6-svg-dev,
  qt6-tools-dev-tools,
