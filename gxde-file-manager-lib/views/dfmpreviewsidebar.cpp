@@ -2,6 +2,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFileInfo>
+#include <QImageReader>
 #include <QKeyEvent>
 #include <QMenu>
 #include <QAction>
@@ -115,6 +116,8 @@ void DFMPreviewSidebar::initUI()
     m_fileName = new WrapLabel(this);
     m_fileSizeTips = new QLabel("<b>" + tr("File Size:") + "</b>");
     m_fileSize = new WrapLabel(this);
+    m_imageSizeTips = new QLabel("<b>" + tr("Image Size:") + "</b>");
+    m_imageSize = new WrapLabel(this);
     m_fileMimetype = new WrapLabel(this);
     m_timeCreatedLabel = new WrapLabel(this);
     m_timeModifiedLabel = new WrapLabel(this);
@@ -126,6 +129,8 @@ void DFMPreviewSidebar::initUI()
     layout->addWidget(m_fileName);
     layout->addWidget(m_fileSizeTips);
     layout->addWidget(m_fileSize);
+    layout->addWidget(m_imageSizeTips);
+    layout->addWidget(m_imageSize);
     layout->addWidget(new QLabel("<b>" + tr("Mimetype:") + "</b>"));
     layout->addWidget(m_fileMimetype);
     layout->addWidget(new QLabel("<b>" + tr("Time read:") + "</b>"));
@@ -142,12 +147,14 @@ void DFMPreviewSidebar::initUI()
     // 设置允许拷贝
     m_fileName->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
     m_fileSize->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+    m_imageSize->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
     m_fileMimetype->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
     m_timeCreatedLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
     m_timeModifiedLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
 
     m_fileName->setWordWrap(true);
     m_fileSize->setWordWrap(true);
+    m_imageSize->setWordWrap(true);
     m_fileMimetype->setWordWrap(true);
     m_timeCreatedLabel->setWordWrap(true);
     m_timeModifiedLabel->setWordWrap(true);
@@ -201,6 +208,20 @@ void DFMPreviewSidebar::refresh()
     // 文件大小
     m_fileSize->setWrappedText(info.sizeDisplayName());
     m_fileSize->setToolTip(info.sizeDisplayName());
+
+    // 图片尺寸（宽x高），仅图片文件显示，其它文件隐藏
+    bool showImageSize = false;
+    if (info.mimeTypeName().startsWith("image")) {
+        const QSize imageSize = QImageReader(path).size();
+        if (imageSize.isValid() && imageSize.width() > 0 && imageSize.height() > 0) {
+            const QString imageSizeText = QString("%1 x %2").arg(imageSize.width()).arg(imageSize.height());
+            m_imageSize->setWrappedText(imageSizeText);
+            m_imageSize->setToolTip(imageSizeText);
+            showImageSize = true;
+        }
+    }
+    m_imageSizeTips->setVisible(showImageSize);
+    m_imageSize->setVisible(showImageSize);
 
     // MimeType 类型（同样按宽度强制换行，避免长类型名超出窗口）
     m_fileMimetype->setWrappedText(info.mimeTypeDisplayName());

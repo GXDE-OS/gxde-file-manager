@@ -44,6 +44,8 @@ private:
     WrapLabel *m_fileName = nullptr;
     QLabel *m_fileSizeTips = nullptr;
     WrapLabel *m_fileSize = nullptr;
+    QLabel *m_imageSizeTips = nullptr;
+    WrapLabel *m_imageSize = nullptr;
     WrapLabel *m_fileMimetype = nullptr;
     WrapLabel *m_timeCreatedLabel = nullptr;
     WrapLabel *m_timeModifiedLabel = nullptr;
