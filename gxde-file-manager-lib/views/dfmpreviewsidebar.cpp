@@ -139,6 +139,7 @@ void DFMPreviewSidebar::initUI()
     layout->addWidget(m_timeModifiedLabel);
     /*layout->addWidget(new QLabel(tr("File Path:")));
     layout->addWidget(labelAddScroll(m_filePath));*/
+    layout->addStretch(1);
 
     setLayout(layout);
 
