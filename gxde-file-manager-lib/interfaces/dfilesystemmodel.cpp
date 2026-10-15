@@ -1096,12 +1096,18 @@ QModelIndex DFileSystemModel::index(const DUrl &fileUrl, int column)
 {
     Q_D(DFileSystemModel);
 
-    if (fileUrl == rootUrl()) {
-        return createIndex(d->rootNode, column);
-    }
-
+    // 必须在与 rootUrl() 比较之前判断: rootUrl() 取自 d->rootNode,
+    // rootNode 尚未就绪时它为空 DUrl, 此时传入的空 fileUrl 会命中下面的
+    // createIndex(d->rootNode, column), 而 createIndex 内部会解引用
+    // node->parent, 直接造成段错误。
+    // 典型场景: gxde-desktop-panel 启动时视图在 loadView() 之前就收到
+    // focusInEvent, moveCursor -> firstIndex -> model()->index(DUrl())。
     if (!d->rootNode) {
         return QModelIndex();
+    }
+
+    if (fileUrl == rootUrl()) {
+        return createIndex(d->rootNode, column);
     }
 
 //    const FileSystemNodePointer &node = d->urlToNode.value(fileUrl);

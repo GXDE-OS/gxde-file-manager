@@ -2524,12 +2524,20 @@ inline QRect CanvasGridView::itemIconGeomerty(const QModelIndex &index) const
 inline QModelIndex CanvasGridView::firstIndex()
 {
     auto localFile = GridManager::instance()->firstItemId();
+    // 网格为空(如启动初期、尚未 loadView())时没有首项，
+    // 不要拿空 url 去问模型，否则会命中模型里空根节点的边界情况
+    if (localFile.isEmpty()) {
+        return QModelIndex();
+    }
     return model()->index(DUrl(localFile));
 }
 
 inline QModelIndex CanvasGridView::lastIndex()
 {
     auto localFile = GridManager::instance()->lastItemId();
+    if (localFile.isEmpty()) {
+        return QModelIndex();
+    }
     return model()->index(DUrl(localFile));
 }
 
