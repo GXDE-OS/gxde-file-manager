@@ -2,6 +2,11 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFileInfo>
+#include <QKeyEvent>
+#include <QMenu>
+#include <QAction>
+#include <QGuiApplication>
+#include <QClipboard>
 #include "dfileinfo.h"
 
 DFMPreviewSidebar::DFMPreviewSidebar(QWidget *parent)
@@ -16,15 +21,103 @@ DFMPreviewSidebar::~DFMPreviewSidebar()
 
 }
 
+WrapLabel::WrapLabel(QWidget *parent)
+    : QLabel(parent)
+{
+}
+
+// 按可用宽度对文本进行强制换行（长单词内部也会断开），避免超出侧边栏宽度
+static QString wrapTextByWidth(const QString &text, const QFontMetrics &fm, int maxWidth)
+{
+    if (maxWidth <= 0)
+        return text;
+
+    QString result;
+    QString line;
+    for (const QChar &c : text) {
+        if (!line.isEmpty() && fm.horizontalAdvance(line + c) > maxWidth) {
+            result += line;
+            result += QLatin1Char('\n');
+            line.clear();
+        }
+        line += c;
+    }
+    result += line;
+    return result;
+}
+
+void WrapLabel::setWrappedText(const QString &text)
+{
+    m_sourceText = text;
+    QLabel::setText(wrapTextByWidth(text, fontMetrics(), contentsRect().width()));
+}
+
+void WrapLabel::keyPressEvent(QKeyEvent *event)
+{
+    if (event->matches(QKeySequence::Copy)) {
+        copyCleanText();
+        event->accept();
+        return;
+    }
+
+    QLabel::keyPressEvent(event);
+}
+
+bool WrapLabel::event(QEvent *event)
+{
+    if (event->type() == QEvent::ShortcutOverride) {
+        // 抢占 Ctrl+C，避免窗口级的“复制文件”快捷键把文件路径写入剪贴板
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->matches(QKeySequence::Copy)) {
+            event->accept();
+            return true;
+        }
+    } else if (event->type() == QEvent::ContextMenu) {
+        // 使用自定义右键菜单，避免默认菜单复制到带换行符的文本
+        const QContextMenuEvent *menuEvent = static_cast<QContextMenuEvent *>(event);
+
+        QMenu menu(this);
+        QAction *copyAction = menu.addAction(tr("复制"));
+        QAction *selectAllAction = menu.addAction(tr("全选"));
+
+        if (QAction *chosen = menu.exec(menuEvent->globalPos())) {
+            if (chosen == copyAction) {
+                copyCleanText();
+            } else if (chosen == selectAllAction) {
+                setSelection(0, text().length());
+            }
+        }
+
+        return true;
+    }
+
+    return QLabel::event(event);
+}
+
+void WrapLabel::copyCleanText()
+{
+    QString text = m_sourceText;
+    if (hasSelectedText()) {
+        // 只复制选中部分时，去掉自动换行产生的换行符
+        text = selectedText();
+        text.remove(QLatin1Char('\n'));
+        text.remove(QLatin1Char('\r'));
+        text.remove(QChar(0x2029)); // 段落分隔符
+        if (text.isEmpty())
+            text = m_sourceText;
+    }
+    QGuiApplication::clipboard()->setText(text);
+}
+
 void DFMPreviewSidebar::initUI()
 {
     m_fileIcon = new QLabel(this);
-    m_fileName = new QLabel(this);
+    m_fileName = new WrapLabel(this);
     m_fileSizeTips = new QLabel("<b>" + tr("File Size:") + "</b>");
-    m_fileSize = new QLabel(this);
-    m_fileMimetype = new QLabel(this);
-    m_timeCreatedLabel = new QLabel(this);
-    m_timeModifiedLabel = new QLabel(this);
+    m_fileSize = new WrapLabel(this);
+    m_fileMimetype = new WrapLabel(this);
+    m_timeCreatedLabel = new WrapLabel(this);
+    m_timeModifiedLabel = new WrapLabel(this);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_fileIcon);
@@ -101,20 +194,20 @@ void DFMPreviewSidebar::refresh()
     m_fileSizeTips->setVisible(isFile);
     m_fileSize->setVisible(isFile);
 
-    // 文件名
-    m_fileName->setText(info.fileName());
+    // 文件名（按控件宽度强制换行，避免长文件名超出窗口；复制时不带换行符）
+    m_fileName->setWrappedText(info.fileName());
     m_fileName->setToolTip(info.fileName());
 
     // 文件大小
-    m_fileSize->setText(info.sizeDisplayName());
+    m_fileSize->setWrappedText(info.sizeDisplayName());
     m_fileSize->setToolTip(info.sizeDisplayName());
 
-    // MimeType 类型
-    m_fileMimetype->setText(info.mimeTypeDisplayName());
+    // MimeType 类型（同样按宽度强制换行，避免长类型名超出窗口）
+    m_fileMimetype->setWrappedText(info.mimeTypeDisplayName());
 
     // 文件访问/修改时间
-    m_timeCreatedLabel->setText(info.lastReadDisplayName());
-    m_timeModifiedLabel->setText(info.lastModifiedDisplayName());
+    m_timeCreatedLabel->setWrappedText(info.lastReadDisplayName());
+    m_timeModifiedLabel->setWrappedText(info.lastModifiedDisplayName());
 
     /*m_filePath->setText(info.absoluteFilePath());
     m_filePath->setToolTip(info.absoluteFilePath());*/
