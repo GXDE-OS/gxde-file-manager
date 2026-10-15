@@ -93,6 +93,10 @@ DWIDGET_USE_NAMESPACE
 const QColor DARK_TOP_BORDERCOLOR = QColor(255, 255, 255, 13);
 const QColor LIGHT_TOP_BORDERCOLOR = QColor(0, 0, 0, 13);
 
+// 右侧预览侧边栏的宽度约束（可拖拽调整的范围）
+const int PREVIEW_SIDEBAR_MIN_WIDTH = 120;
+const int PREVIEW_SIDEBAR_MAX_WIDTH = 720;
+
 std::unique_ptr<RecordRenameBarState>  DFileManagerWindow::renameBarState{ nullptr };
 std::atomic<bool> DFileManagerWindow::flagForNewWindowFromTab{ false };
 
@@ -113,6 +117,7 @@ public:
     void setRenameBarVisible(bool visible);
     void resetRenameBar();
     void storeUrlListToRenameBar(const QList<DUrl>& list) noexcept;
+    void saveSplitterState();
 
     QPushButton *logoButton{ nullptr };
     QFrame *centralWidget{ nullptr };
@@ -132,6 +137,9 @@ public:
     DRenameBar *renameBar{ nullptr };
     DFMAdvanceSearchBar *advanceSearchBar = nullptr;
     DFMPreviewSidebar *previewSidebar = nullptr;
+    // 用户设置的侧边栏宽度，0 表示尚未初始化
+    int leftSidebarWidth = 0;
+    int previewSidebarWidth = 0;
 
     QMap<DUrl, QWidget *> views;
 
@@ -455,6 +463,25 @@ void DFileManagerWindowPrivate::storeUrlListToRenameBar(const QList<DUrl> &list)
     renameBar->storeUrlList(list);
 }
 
+void DFileManagerWindowPrivate::saveSplitterState()
+{
+    Q_Q(DFileManagerWindow);
+
+    // 读取已有配置，避免覆盖其他窗口状态
+    QVariantMap state = DFMApplication::appObtuselySetting()->value("WindowManager", "SplitterState").toMap();
+
+    // 左侧边栏位置：优先使用跟踪的宽度，避免预览侧边栏隐藏时
+    // QSplitter 按比例放大左侧栏导致的偏差
+    const int leftWidth = leftSidebarWidth > 0 ? leftSidebarWidth : q->getSplitterPosition();
+    if (leftWidth > 0)
+        state["sidebar"] = leftWidth;
+
+    if (previewSidebarWidth > 0)
+        state["previewSidebar"] = previewSidebarWidth;
+
+    DFMApplication::appObtuselySetting()->setValue("WindowManager", "SplitterState", state);
+}
+
 DFileManagerWindow::DFileManagerWindow(QWidget *parent)
     : DFileManagerWindow(DUrl(), parent)
 {
@@ -681,9 +708,18 @@ void DFileManagerWindow::setSplitterPosition(int pos)
 {
     Q_D(DFileManagerWindow);
 
-    if (d->splitter) {
-        d->splitter->setSizes({pos, d->splitter->width() - pos - d->splitter->handleWidth()});
-    }
+    if (!d->splitter)
+        return;
+
+    // 预览侧边栏宽度：优先使用用户设置的宽度，未初始化时默认为分割器宽度的 15%
+    int previewWidth = d->previewSidebarWidth;
+    if (previewWidth <= 0)
+        previewWidth = qRound(d->splitter->width() * 0.15);
+    previewWidth = qBound(PREVIEW_SIDEBAR_MIN_WIDTH, previewWidth, PREVIEW_SIDEBAR_MAX_WIDTH);
+
+    const int handleWidth = d->splitter->handleWidth();
+    const int mainWidth = d->splitter->width() - pos - previewWidth - handleWidth * 2;
+    d->splitter->setSizes({pos, qMax(mainWidth, 0), previewWidth});
 }
 
 quint64 DFileManagerWindow::windowId()
@@ -818,9 +854,10 @@ void DFileManagerWindow::closeEvent(QCloseEvent *event)
 
 void DFileManagerWindow::hideEvent(QHideEvent *event)
 {
-    QVariantMap state;
-    state["sidebar"] = getSplitterPosition();
-    DFMApplication::appObtuselySetting()->setValue("WindowManager", "SplitterState", state);
+    D_D(DFileManagerWindow);
+
+    // 保存分割器状态（左侧边栏位置与右侧预览侧边栏宽度）
+    d->saveSplitterState();
 
     return DMainWindow::hideEvent(event);
 }
@@ -891,9 +928,8 @@ void DFileManagerWindow::resizeEvent(QResizeEvent *event)
     Q_D(DFileManagerWindow);
     DMainWindow::resizeEvent(event);
     d->titleFrame->setFixedSize(event->size().width() - titlebar()->buttonAreaWidth(), TITLE_FIXED_HEIGHT);
-    // 设置预览控件体积
-    d->previewSidebar->setMaximumWidth(event->size().width() * 0.15);
-    d->previewSidebar->setMinimumWidth(event->size().width() * 0.15);
+    // 预览侧边栏宽度由用户拖拽决定（splitterMoved 中记录），窗口缩放时保持固定像素宽度，
+    // 差值由可拉伸的主视图区域吸收，此处无需处理
 }
 
 bool DFileManagerWindow::fmEvent(const QSharedPointer<DFMEvent> &event, QVariant *resultData)
@@ -1042,7 +1078,21 @@ void DFileManagerWindow::initSplitter()
     d->splitter = new DFMSplitter(Qt::Horizontal, this);
     d->splitter->addWidget(d->leftSideBar);
     d->splitter->addWidget(d->rightView);
+    // 预览侧边栏作为第三个控件，用户可拖动其左侧手柄调整宽度
+    d->splitter->addWidget(d->previewSidebar);
     d->splitter->setChildrenCollapsible(false);
+
+    // 用户拖动分割器手柄时记录对应区域的宽度
+    connect(d->splitter, &QSplitter::splitterMoved, this, [d](int pos, int index) {
+        Q_UNUSED(pos)
+        if (!d->splitter)
+            return;
+        // index 为被移动手柄左侧控件的索引：1 为左侧边栏与主视图之间，2 为主视图与预览侧边栏之间
+        if (index == d->splitter->indexOf(d->rightView))
+            d->leftSidebarWidth = d->leftSideBar->width();
+        else if (index == d->splitter->indexOf(d->previewSidebar))
+            d->previewSidebarWidth = d->previewSidebar->width();
+    });
 }
 
 void DFileManagerWindow::initLeftSideBar()
@@ -1101,12 +1151,10 @@ void DFileManagerWindow::initRightView()
     // 第3行：主视图区域
     d->rightViewLayout->addLayout(d->viewStackLayout, 3, 0);
 
-    // 预览侧边栏：从第0行到第3行（tabBar + emptyTrashButton + renameBar + viewStackLayout）
-    d->rightViewLayout->addWidget(d->previewSidebar, 0, 1, 4, 1, Qt::AlignTop);
+    // 预览侧边栏已移至主分割器中（initSplitter），可通过拖拽调整宽度
 
-    // 设置列拉伸因子：主内容区域可拉伸，预览侧边栏固定宽度
+    // 设置列拉伸因子：主内容区域可拉伸
     d->rightViewLayout->setColumnStretch(0, 1);
-    d->rightViewLayout->setColumnStretch(1, 0);
 
     // 设置行拉伸因子：只有主视图区域可拉伸
     d->rightViewLayout->setRowStretch(0, 0); // tabBar 固定高度
@@ -1165,6 +1213,9 @@ void DFileManagerWindow::initCentralWidget()
 {
     D_D(DFileManagerWindow);
     d->previewSidebar = new DFMPreviewSidebar(this);
+    // 预览侧边栏可拖拽调整的宽度范围
+    d->previewSidebar->setMinimumWidth(PREVIEW_SIDEBAR_MIN_WIDTH);
+    d->previewSidebar->setMaximumWidth(PREVIEW_SIDEBAR_MAX_WIDTH);
     bool showRightViewDetails = DFMApplication::genericAttribute(DFMApplication::GA_showRightViewDetails).toBool();
     d->previewSidebar->setVisible(showRightViewDetails);  // 读取配置判断是否应当显示
     initSplitter();
@@ -1315,10 +1366,25 @@ void DFileManagerWindow::onThemeChanged()
 
 void DFileManagerWindow::showEvent(QShowEvent *event)
 {
+    D_D(DFileManagerWindow);
     DMainWindow::showEvent(event);
 
     const QVariantMap &state = DFMApplication::appObtuselySetting()->value("WindowManager", "SplitterState").toMap();
+
+    // 恢复用户设置的预览侧边栏宽度；无记录时默认为窗口宽度的 15%
+    bool hasSavedWidth = false;
+    const int savedWidth = state.value("previewSidebar").toInt(&hasSavedWidth);
+    if (hasSavedWidth && savedWidth > 0) {
+        d->previewSidebarWidth = qBound(PREVIEW_SIDEBAR_MIN_WIDTH, savedWidth, PREVIEW_SIDEBAR_MAX_WIDTH);
+    } else {
+        d->previewSidebarWidth = qBound(PREVIEW_SIDEBAR_MIN_WIDTH,
+                                        qRound(width() * 0.15),
+                                        PREVIEW_SIDEBAR_MAX_WIDTH);
+    }
+
     int splitterPos = state.value("sidebar", DFMSideBarItem::maximumWidth).toInt();
+    if (splitterPos > 0)
+        d->leftSidebarWidth = splitterPos;
     setSplitterPosition(splitterPos);
 }
 
