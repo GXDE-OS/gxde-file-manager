@@ -1,9 +1,16 @@
-gxde-file-manager (6.4.14) UNRELEASED; urgency=medium
+gxde-file-manager (6.4.15) UNRELEASED; urgency=medium
 
+  [ CharOfString ]
   * 修复了桌面图标总是乱飞的问题
   * 移除了对Qt私有函数的依赖
 
- -- CharOfString <root@charofstring.cc>  Wed, 14 Oct 2026 13:32:24 -0500
+  [ gfdgd_xi ]
+  * feat: 修复x11 gxde-desktop-panel运行段错误的问题
+  * feat: 修复DFM右侧预览窗口部分文件名无法自动换行导致文件名显示不全的问题
+  * feat: 右侧预览栏支持预览图片尺寸
+  * feat: 支持调整文件管理器侧边栏大小
+
+ -- gfdgd_xi <3025613752@qq.com>  Thu, 15 Oct 2026 16:32:44 +0800
 
 gxde-file-manager (6.4.13) UNRELEASED; urgency=medium
 
