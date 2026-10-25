@@ -22,6 +22,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
+#include <QMediaPlayer>
 #include <QPainter>
 #include <QPen>
 #include <QPointer>
@@ -29,6 +30,8 @@
 #include <QStandardPaths>
 #include <QTimer>
 #include <QUrl>
+#include <QVideoFrame>
+#include <QVideoSink>
 
 VideoThumbGrabber::VideoThumbGrabber(QObject *parent)
     : QObject(parent)
@@ -92,6 +95,88 @@ void VideoThumbGrabber::grab(const QString &key, const QString &videoPath, qreal
         return;
     m_pendingRequests.insert(key);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // Qt6：直连 QMediaPlayer + QVideoSink 抓第一帧
+    auto *player = new QMediaPlayer(this);
+    auto *sink = new QVideoSink(player);
+    player->setAudioOutput(nullptr);
+    player->setVideoSink(sink);
+    player->setLoops(1);
+
+    const QPointer<VideoThumbGrabber> guard(this);
+
+    auto finishWithPixmap = [this, guard, player, key, scale, cacheFile](const QPixmap &pix) {
+        if (!guard)
+            return;
+
+        player->deleteLater();
+        m_pendingRequests.remove(key);
+
+        if (pix.isNull()) {
+            Q_EMIT thumbnailFounded(key, QPixmap());
+            return;
+        }
+
+        pix.save(cacheFile, "PNG");
+        Q_EMIT thumbnailFounded(key, pix);
+    };
+
+    // 抓到第一帧即收工
+    connect(sink, &QVideoSink::videoFrameChanged, this,
+            [this, guard, player, sink, key, scale,
+             finishWithPixmap](const QVideoFrame &frame) {
+        if (!frame.isValid())
+            return;
+        if (!guard || !m_pendingRequests.contains(key))
+            return; // 已被超时/错误路径收尾
+
+        disconnect(sink, &QVideoSink::videoFrameChanged, this, nullptr);
+        player->stop();
+
+        const QSize target(qRound(ItemWidth * scale), qRound(ItemHeight * scale));
+        QImage image = frame.toImage();
+        if (image.isNull()) {
+            finishWithPixmap(QPixmap());
+            return;
+        }
+
+        image = image.scaled(target, Qt::KeepAspectRatioByExpanding,
+                             Qt::SmoothTransformation);
+        if (image.width() > target.width() || image.height() > target.height()) {
+            image = image.copy(QRect((image.width() - target.width()) / 2,
+                    (image.height() - target.height()) / 2,
+                    target.width(), target.height()));
+        }
+
+        QPixmap pix = QPixmap::fromImage(image);
+        pix.setDevicePixelRatio(scale);
+        finishWithPixmap(pix);
+    });
+
+    // 解码器迟迟不出帧（损坏文件/无可解码器）：超时兜底，给占位图
+    QTimer::singleShot(8 * 1000, this, [this, guard, player, key, scale, finishWithPixmap]() {
+        if (!guard || !m_pendingRequests.contains(key))
+            return;
+
+        player->stop();
+        qWarning() << "(VideoThumbGrabber) grab timed out for" << key;
+        finishWithPixmap(loadGrabbedFrame(QString(), scale));
+    });
+
+    connect(player, &QMediaPlayer::errorOccurred, this,
+            [this, guard, player, key, scale, finishWithPixmap](QMediaPlayer::Error,
+                                                                const QString &reason) {
+        if (!guard || !m_pendingRequests.contains(key))
+            return; // 已被首帧/超时路径收尾
+
+        player->stop();
+        qWarning() << "(VideoThumbGrabber) failed to grab" << key << ":" << reason;
+        finishWithPixmap(loadGrabbedFrame(QString(), scale));
+    });
+
+    player->setSource(QUrl::fromLocalFile(videoPath));
+    player->play();
+#else
     auto *player = new VideoWallpaperPlayer(this);
     const QPointer<VideoThumbGrabber> guard(this);
 
@@ -162,4 +247,5 @@ void VideoThumbGrabber::grab(const QString &key, const QString &videoPath, qreal
         qWarning() << "(VideoThumbGrabber) cannot play" << videoPath;
         Q_EMIT thumbnailFounded(key, loadGrabbedFrame(QString(), scale));
     }
+#endif
 }

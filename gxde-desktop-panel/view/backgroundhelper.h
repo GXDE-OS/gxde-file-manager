@@ -28,12 +28,16 @@
 #include <DWindowManagerHelper>
 #include <QNetworkAccessManager>
 #include <QFile>
+#include <QHash>
 #include <QTimer>
 
 using WMInter = com::deepin::wm;
 DWIDGET_USE_NAMESPACE
 
 class VideoWallpaperPlayer;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+class VideoPresentationWidget;
+#endif
 
 class BackgroundHelper : public QObject
 {
@@ -101,7 +105,15 @@ private:
     WallpaperDisplayMethods getWallpaperDisplayMethodsConfigData();
     void startVideoPlayback();
     void stopVideoPlayback();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // Qt6：每屏一个 raster 自绘呈现控件（见 videowallpaperplayer.h 的说明）
+    void attachVideoWidget(QLabel *background);
+    void detachVideoWidget(QLabel *background);
+    Qt::AspectRatioMode videoAspectRatioMode() const;
+#else
+    // Qt5：逐帧 QImage 绘制路径
     void paintVideoFrame(const QImage &frame);
+#endif
     static QString dynamicWallpaperConfigPath();
     QString readDynamicWallpaperConfig() const;
 
@@ -127,6 +139,10 @@ private:
     VideoWallpaperPlayer *m_videoPlayer = nullptr;
     QString m_dynamicWallpaper;
     bool m_videoFailed = false;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // 每块屏一个呈现控件（Qt6 raster 自绘路径，兼容图标层栈序）
+    QHash<QLabel *, VideoPresentationWidget *> m_videoWidgets;
+#endif
 
 public:
     static BackgroundHelper* getDesktopInstance();

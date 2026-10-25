@@ -25,26 +25,110 @@
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 
-#include <QVideoSink>
+#include <QPainter>
 #include <QVideoFrame>
+#include <QVideoSink>
+
+// ---------------- VideoPresentationWidget ----------------
+
+VideoPresentationWidget::VideoPresentationWidget(VideoWallpaperPlayer *player,
+                                                 QWidget *parent)
+    : QWidget(parent)
+    , m_player(player)
+    , m_sink(new QVideoSink(this))
+{
+    // 收帧只存引用并请求重绘：无拷贝无转换，绘制随重绘合并自动丢帧
+    connect(m_sink, &QVideoSink::videoFrameChanged, this,
+            [this](const QVideoFrame &frame) {
+        if (!frame.isValid())
+            return;
+        m_frame = frame;
+        update();
+    });
+    connect(player, &VideoWallpaperPlayer::errorOccurred, this,
+            [this]() {
+        m_frame = QVideoFrame();
+        update();
+    });
+}
+
+VideoPresentationWidget::~VideoPresentationWidget()
+{
+    detach();
+}
+
+void VideoPresentationWidget::detach()
+{
+    if (!m_player)
+        return;
+
+    if (m_player->frameSink())
+        disconnect(m_player->frameSink(), &QVideoSink::videoFrameChanged,
+                   m_sink, &QVideoSink::setVideoFrame);
+    m_player = nullptr;
+    m_frame = QVideoFrame();
+}
+
+void VideoPresentationWidget::setAspectRatioMode(Qt::AspectRatioMode mode)
+{
+    if (m_mode == mode)
+        return;
+    m_mode = mode;
+    update();
+}
+
+QVideoSink *VideoPresentationWidget::videoSink() const
+{
+    return m_sink;
+}
+
+void VideoPresentationWidget::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event)
+
+    QPainter p(this);
+    // 黑底（信箱模式留黑是常规表现）
+    p.fillRect(rect(), Qt::black);
+
+    if (m_frame.isValid()) {
+        QVideoFrame::PaintOptions options;
+        options.aspectRatioMode = m_mode;
+        options.backgroundColor = Qt::black;
+        // Qt 内部完成映射（HW 帧此处回读）与缩放绘制，天然保持帧率合并
+        m_frame.paint(&p, QRectF(rect()), options);
+    }
+}
+
+// ---------------- VideoWallpaperPlayer ----------------
 
 VideoWallpaperPlayer::VideoWallpaperPlayer(QObject *parent)
     : QObject(parent)
-    , m_player(new QMediaPlayer(this))
     , m_sink(new QVideoSink(this))
 {
-    // 动态壁纸不需要声音
+}
+
+VideoWallpaperPlayer::~VideoWallpaperPlayer()
+{
+    if (m_player) {
+        m_player->stop();
+        m_player->deleteLater();
+    }
+}
+
+// 每次播放新建 QMediaPlayer：规避 stop→setSource→play 复用序列的解码
+// 线程（VAAPI/NVDEC 上下文）teardown 竞态（实测段错误）。旧实例经
+// deleteLater 异步销毁，其解码线程与新的完全隔离。
+void VideoWallpaperPlayer::restartPlayer()
+{
+    if (m_player) {
+        m_player->stop();
+        m_player->deleteLater();
+    }
+
+    m_player = new QMediaPlayer(this);
     m_player->setAudioOutput(nullptr);
     m_player->setVideoSink(m_sink);
     m_player->setLoops(QMediaPlayer::Infinite);
-
-    connect(m_sink, &QVideoSink::videoFrameChanged, this, [this](const QVideoFrame &frame) {
-        if (frame.isValid()) {
-            const QImage image = frame.toImage();
-            if (!image.isNull())
-                Q_EMIT frameReady(image);
-        }
-    });
 
     connect(m_player, &QMediaPlayer::playbackStateChanged, this,
             [this](QMediaPlayer::PlaybackState state) {
@@ -57,10 +141,6 @@ VideoWallpaperPlayer::VideoWallpaperPlayer(QObject *parent)
                    << code << message;
         Q_EMIT errorOccurred(message);
     });
-}
-
-VideoWallpaperPlayer::~VideoWallpaperPlayer()
-{
 }
 
 bool VideoWallpaperPlayer::play(const QString &pathOrUrl)
@@ -77,7 +157,7 @@ bool VideoWallpaperPlayer::play(const QString &pathOrUrl)
         return true;
 
     m_source = path;
-    m_player->stop();
+    restartPlayer();
     m_player->setSource(QUrl::fromLocalFile(path));
     m_player->play();
     return true;
@@ -85,10 +165,14 @@ bool VideoWallpaperPlayer::play(const QString &pathOrUrl)
 
 void VideoWallpaperPlayer::stop()
 {
-    m_player->stop();
-    m_player->setSource(QUrl());
     m_source.clear();
     setPlaying(false);
+
+    if (m_player) {
+        m_player->stop();
+        m_player->deleteLater();
+        m_player = nullptr;
+    }
 }
 
 bool VideoWallpaperPlayer::isPlaying() const
@@ -99,6 +183,42 @@ bool VideoWallpaperPlayer::isPlaying() const
 QString VideoWallpaperPlayer::sourcePath() const
 {
     return m_source;
+}
+
+QWidget *VideoWallpaperPlayer::createPresentation(QWidget *parent)
+{
+    auto *widget = new VideoPresentationWidget(this, parent);
+    // 帧由内部 sink 扇出；QVideoFrame 为引用计数包装，跨 sink 不拷贝
+    connect(m_sink, &QVideoSink::videoFrameChanged,
+            widget->videoSink(), &QVideoSink::setVideoFrame,
+            Qt::DirectConnection);
+    m_presentations.append(widget);
+    return widget;
+}
+
+void VideoWallpaperPlayer::detachPresentation(QWidget *widget)
+{
+    auto *presentation = qobject_cast<VideoPresentationWidget *>(widget);
+    if (!presentation)
+        return;
+
+    disconnect(m_sink, &QVideoSink::videoFrameChanged,
+               presentation->videoSink(), &QVideoSink::setVideoFrame);
+    presentation->detach();
+    m_presentations.removeAll(widget);
+}
+
+void VideoWallpaperPlayer::setAspectRatioMode(Qt::AspectRatioMode mode)
+{
+    for (QWidget *widget : std::as_const(m_presentations)) {
+        if (auto *presentation = qobject_cast<VideoPresentationWidget *>(widget))
+            presentation->setAspectRatioMode(mode);
+    }
+}
+
+QVideoSink *VideoWallpaperPlayer::frameSink() const
+{
+    return m_sink;
 }
 
 void VideoWallpaperPlayer::setPlaying(bool playing)

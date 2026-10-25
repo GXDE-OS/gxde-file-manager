@@ -35,7 +35,6 @@
 #include <QScreen>
 #include <QGuiApplication>
 #include <QtMath>
-
 BackgroundHelper *BackgroundHelper::desktop_instance = nullptr;
 
 namespace {
@@ -113,6 +112,13 @@ bool BackgroundHelper::eventFilter(QObject *watched, QEvent *event)
         QLabel *background = qobject_cast<QLabel *>(watched);
         if (background && backgroundMap.values().contains(background)) {
             m_surfaceGeometryRefreshTimer.start();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            // 视频呈现控件铺满背景窗口并跟随其尺寸
+            if (VideoPresentationWidget *presentation = m_videoWidgets.value(background)) {
+                presentation->setGeometry(0, 0,
+                                          background->width(), background->height());
+            }
+#endif
         }
     }
 
@@ -523,6 +529,12 @@ void BackgroundHelper::onScreenAdded(QScreen* screen) {
     // 可能是由QGuiApplication引发的新屏幕添加，此处应该为新对象添加背景图
     updateBackground(l);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // 播放中的动态壁纸补挂新屏的呈现控件
+    if (m_videoPlayer && m_videoPlayer->isPlaying())
+        attachVideoWidget(l);
+#endif
+
     Q_EMIT backgroundGeometryChanged(l);
     Q_EMIT backgroundAdded(l);
 
@@ -555,6 +567,12 @@ void BackgroundHelper::calculateAllScreenSize()
 
 void BackgroundHelper::onScreenRemoved(QScreen *screen)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // 先归还该屏的视频呈现控件再销毁背景窗口
+    if (QLabel *background = backgroundMap.value(screen))
+        detachVideoWidget(background);
+#endif
+
     if (QLabel *l = backgroundMap.take(screen)) {
         Q_EMIT aboutDestoryBackground(l);
 
@@ -578,6 +596,11 @@ void BackgroundHelper::refreshBackground()
         m_weatherTimer.stop();
         emit weatherImageChanged(QPixmap());
     }
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // 显示方式变更跟随到视频呈现控件
+    if (m_videoPlayer && !m_videoWidgets.isEmpty())
+        m_videoPlayer->setAspectRatioMode(videoAspectRatioMode());
+#endif
     calculateAllScreenSize();
 }
 
@@ -755,8 +778,12 @@ void BackgroundHelper::startVideoPlayback()
 
     if (!m_videoPlayer) {
         m_videoPlayer = new VideoWallpaperPlayer(this);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        // Qt6：呈现控件路径，不取帧（无 frameReady）
+#else
         connect(m_videoPlayer, &VideoWallpaperPlayer::frameReady,
                 this, &BackgroundHelper::paintVideoFrame);
+#endif
         connect(m_videoPlayer, &VideoWallpaperPlayer::errorOccurred,
                 this, [this](const QString &reason) {
             // 文件损坏/缺少解码器等异步解码错误：
@@ -769,15 +796,82 @@ void BackgroundHelper::startVideoPlayback()
     }
 
     m_videoFailed = false;
-    m_videoPlayer->play(m_dynamicWallpaper);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    m_videoPlayer->setAspectRatioMode(videoAspectRatioMode());
+#endif
+
+    if (m_videoPlayer->play(m_dynamicWallpaper)) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        // 为现有背景窗口挂呈现控件（后加入的屏在 onScreenAdded 里补挂）
+        for (QLabel *background : backgroundMap)
+            attachVideoWidget(background);
+#endif
+    }
 }
 
 void BackgroundHelper::stopVideoPlayback()
 {
     if (m_videoPlayer)
         m_videoPlayer->stop();
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    for (auto it = m_videoWidgets.constBegin(); it != m_videoWidgets.constEnd(); ++it) {
+        // 先断开帧转发并释放帧引用（尽快归还解码器 surface），再删控件
+        m_videoPlayer->detachPresentation(it.value());
+        it.value()->deleteLater();
+    }
+    m_videoWidgets.clear();
+#endif
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+
+Qt::AspectRatioMode BackgroundHelper::videoAspectRatioMode() const
+{
+    switch (m_wallpaperDisplayMethods) {
+    case WallpaperDisplayMethods::IgnoreAspectRatio:
+        return Qt::IgnoreAspectRatio;
+    case WallpaperDisplayMethods::KeepAspectRatio:
+    case WallpaperDisplayMethods::Center:
+        return Qt::KeepAspectRatio;
+    case WallpaperDisplayMethods::KeepAspectRatioByExpanding:
+    case WallpaperDisplayMethods::BackgroundSpanned:
+    default:
+        // 跨屏的逐屏画布裁剪不适用于视频呈现控件，按单屏填充近似
+        return Qt::KeepAspectRatioByExpanding;
+    }
+}
+
+void BackgroundHelper::attachVideoWidget(QLabel *background)
+{
+    if (!m_videoPlayer || !background || m_videoWidgets.contains(background))
+        return;
+
+    auto *presentation = qobject_cast<VideoPresentationWidget *>(
+        m_videoPlayer->createPresentation(background));
+    if (!presentation)
+        return;
+    m_videoWidgets.insert(background, presentation);
+
+    // 铺满背景窗口；lower() 置底——桌面图标层(X11下是背景窗口的子控件)
+    // 与天气预报标签保持在视频之上
+    presentation->setGeometry(0, 0, background->width(), background->height());
+    presentation->lower();
+    presentation->setVisible(background->isVisible());
+}
+
+void BackgroundHelper::detachVideoWidget(QLabel *background)
+{
+    if (VideoPresentationWidget *presentation = m_videoWidgets.take(background)) {
+        m_videoPlayer->detachPresentation(presentation);
+        presentation->deleteLater();
+    }
+}
+
+#else
+
+// Qt5 路径：逐帧绘制到各屏背景窗口
 void BackgroundHelper::paintVideoFrame(const QImage &frame)
 {
     if (frame.isNull() || !m_visible || m_dynamicWallpaper.isEmpty())
@@ -827,3 +921,5 @@ void BackgroundHelper::paintVideoFrame(const QImage &frame)
         l->setPixmap(pix);
     }
 }
+
+#endif
