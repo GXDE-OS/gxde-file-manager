@@ -2370,6 +2370,11 @@
         <translation>设置壁纸</translation>
     </message>
     <message>
+        <location filename="../interfaces/dfilemenumanager.cpp" line="941" />
+        <source>Set as dynamic wallpaper</source>
+        <translation>设为动态壁纸</translation>
+    </message>
+    <message>
         <location filename="../deviceinfo/udiskdeviceinfo.cpp" line="294" />
         <source>Local disk</source>
         <translation>本地磁盘</translation>

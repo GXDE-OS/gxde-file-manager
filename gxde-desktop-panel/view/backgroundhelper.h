@@ -33,6 +33,8 @@
 using WMInter = com::deepin::wm;
 DWIDGET_USE_NAMESPACE
 
+class VideoWallpaperPlayer;
+
 class BackgroundHelper : public QObject
 {
     Q_OBJECT
@@ -61,6 +63,19 @@ public:
     Qt::AspectRatioMode wallpaperDisplayMethods2PictureRatioMode(WallpaperDisplayMethods method);
     WallpaperDisplayMethods getWallpaperDisplayMethods() const;
 
+    // ==== 视频动态壁纸 ====
+    // pathOrUrl 为空串时停用动态壁纸；文件不存在或不是视频时返回 false。
+    // 设置成功后会持久化，面板重启后自动恢复
+    bool setDynamicWallpaper(const QString &pathOrUrl);
+    // 预览模式专用(壁纸选择器)：播放视频但不持久化、不发变更信号，
+    // 供选择器在其预览背景层上实时预览视频壁纸
+    bool previewDynamicWallpaper(const QString &pathOrUrl);
+    // 只停掉视频预览播放，不动m_dynamicWallpaper与持久化配置
+    void stopVideoPreview();
+    void stopDynamicWallpaper();
+    QString dynamicWallpaperPath() const;
+    bool isDynamicWallpaperActive() const;
+
     void onWMChanged();
     void refreshBackground();
 Q_SIGNALS:
@@ -70,6 +85,7 @@ Q_SIGNALS:
     void backgroundAdded(QLabel *l);
     void weatherImageChanged(QPixmap);
     void onScreenChanged();
+    void dynamicWallpaperChanged(const QString &path);
 
 private:
     bool eventFilter(QObject *watched, QEvent *event) override;
@@ -83,6 +99,11 @@ private:
     void downloadWeatherImageFinished(QNetworkReply *reply);
     void calculateAllScreenSize();
     WallpaperDisplayMethods getWallpaperDisplayMethodsConfigData();
+    void startVideoPlayback();
+    void stopVideoPlayback();
+    void paintVideoFrame(const QImage &frame);
+    static QString dynamicWallpaperConfigPath();
+    QString readDynamicWallpaperConfig() const;
 
     bool m_isLoadWeatherReport = QFile::exists(QDir::homePath() + "/.config/GXDE/dde-file-manager/weatherReport");
     bool m_previuew = false;
@@ -102,6 +123,10 @@ private:
     QTimer m_weatherTimer;
     QTimer m_surfaceGeometryRefreshTimer;
     WallpaperDisplayMethods m_wallpaperDisplayMethods = WallpaperDisplayMethods::KeepAspectRatioByExpanding;
+
+    VideoWallpaperPlayer *m_videoPlayer = nullptr;
+    QString m_dynamicWallpaper;
+    bool m_videoFailed = false;
 
 public:
     static BackgroundHelper* getDesktopInstance();

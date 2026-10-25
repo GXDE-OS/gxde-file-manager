@@ -52,6 +52,7 @@ set(PANEL_SOURCES
     presenter/gridcore.cpp
     config/dfmdesktopsettings.cpp
     view/backgroundhelper.cpp
+    view/videowallpaperplayer.cpp
 )
 set(PANEL_HEADERS
     config/config.h
@@ -75,6 +76,7 @@ set(PANEL_HEADERS
     deventfilter.h
     config/dfmdesktopsettings.h
     view/backgroundhelper.h
+    view/videowallpaperplayer.h
 )
 
 # util.pri
@@ -110,6 +112,7 @@ list(APPEND PANEL_SOURCES
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/wallpaperlist.cpp
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/wallpaperitem.cpp
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/thumbnailmanager.cpp
+    ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/videothumbgrabber.cpp
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/button.cpp
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/dbus/deepin_wm.cpp
 )
@@ -119,6 +122,7 @@ list(APPEND PANEL_HEADERS
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/wallpaperitem.h
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/constants.h
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/thumbnailmanager.h
+    ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/videothumbgrabber.h
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/button.h
     ${CMAKE_SOURCE_DIR}/gxde-wallpaper-chooser/dbus/deepin_wm.h
 )

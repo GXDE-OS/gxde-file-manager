@@ -623,6 +623,27 @@ void AppController::actionSetAsWallpaper(const QSharedPointer<DFMUrlBaseEvent> &
     }
 }
 
+void AppController::actionSetAsDynamicWallpaper(const QSharedPointer<DFMUrlBaseEvent> &event)
+{
+    const DUrl &fileUrl = event->url();
+    QString localPath;
+
+    if (fileUrl.isLocalFile()) {
+        localPath = fileUrl.toLocalFile();
+    } else {
+        const DAbstractFileInfoPointer &info = DFileService::instance()->createFileInfo(nullptr, fileUrl);
+
+        if (info)
+            localPath = info->toLocalFile();
+    }
+
+    if (localPath.isEmpty())
+        return;
+
+    if (!FileUtils::setDynamicWallpaper(localPath))
+        qWarning() << "Set as dynamic wallpaper failed:" << localPath;
+}
+
 void AppController::actionShare(const QSharedPointer<DFMUrlListBaseEvent> &event)
 {
     emit fileSignalManager->requestShowShareOptionsInPropertyDialog(*event.data());

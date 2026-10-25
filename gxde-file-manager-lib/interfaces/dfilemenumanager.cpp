@@ -938,6 +938,7 @@ void DFileMenuData::initData()
     actionKeys[MenuAction::ListView] = QObject::tr("List");
     actionKeys[MenuAction::ExtendView] = QObject::tr("Extend");
     actionKeys[MenuAction::SetAsWallpaper] = QObject::tr("Set as wallpaper");
+    actionKeys[MenuAction::SetAsDynamicWallpaper] = QObject::tr("Set as dynamic wallpaper");
     actionKeys[MenuAction::ForgetPassword] = QObject::tr("Log out and unmount");
     actionKeys[MenuAction::DeletionDate] = QObject::tr("Time deleted");
     actionKeys[MenuAction::SourcePath] = QObject::tr("Source path");

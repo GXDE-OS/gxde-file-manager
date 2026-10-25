@@ -50,7 +50,9 @@
 #include <QScreen>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <QDBusInterface>
 #include <QDBusMessage>
+#include <QDBusReply>
 #include <QUrl>
 #include <QKeyEvent>
 #include <QDebug>
@@ -193,6 +195,12 @@ void Frame::show()
             m_backgroundHelper = new BackgroundHelper(true, this);
             // 防止壁纸设置窗口被背景窗口覆盖
             connect(m_backgroundHelper, &BackgroundHelper::backgroundAdded, this, &Frame::activateWindow);
+
+            // 桌面正播放视频动态壁纸时, 预览层同步播放, 否则预览层
+            // 会用静态壁纸把桌面上正在播放的动态壁纸盖住
+            const QString currentDynamic = currentDynamicWallpaper();
+            if (!currentDynamic.isEmpty())
+                m_backgroundHelper->previewDynamicWallpaper(currentDynamic);
         }
     } else if (!m_dbusDeepinWM) {
         if (m_backgroundHelper) {
@@ -254,7 +262,22 @@ void Frame::handleNeedCloseButton(QString path, QPoint pos)
         m_closeButton->disconnect();
 
         connect(m_closeButton, &DImageButton::clicked, this, [this, path] {
-            m_dbusAppearance->Delete("background", path);
+            if (WallpaperUtils::isVideoFile(path)) {
+                // 视频动态壁纸不在Appearance守护进程的管辖内, 直接删文件;
+                // 若删的正是桌面正在用的动态壁纸, 让面板一并停掉
+                const QString localPath = WallpaperUtils::localPathOf(path);
+                if (localPath == currentDynamicWallpaper()) {
+                    QDBusInterface desktop("com.deepin.dde.desktop",
+                                           "/com/deepin/dde/desktop",
+                                           "com.deepin.dde.desktop",
+                                           QDBusConnection::sessionBus());
+                    if (desktop.isValid())
+                        desktop.call("SetDynamicWallpaper", QString());
+                }
+                QFile::remove(localPath);
+            } else {
+                m_dbusAppearance->Delete("background", path);
+            }
             m_wallpaperList->removeWallpaper(path);
             m_closeButton->hide();
         }, Qt::UniqueConnection);
@@ -292,27 +315,33 @@ void Frame::hideEvent(QHideEvent *event)
             && dbus_interface->isServiceRegistered(AppearanceServ).value();
 
         if (!m_desktopWallpaper.isEmpty()) {
-            QString wallpaper = m_desktopWallpaper;
+            if (WallpaperUtils::isVideoFile(m_desktopWallpaper)) {
+                // 视频动态壁纸: 不写background-uris/Appearance守护进程(那是
+                // 静态壁纸语义), 走面板DBus提交(内部完成拷贝入库与持久化)
+                commitDynamicWallpaper(m_desktopWallpaper);
+            } else {
+                QString wallpaper = m_desktopWallpaper;
 
-            if (WaylandUtils::isWaylandPlatform()) {
-                wallpaper = QUrl::fromLocalFile(
-                    WallpaperUtils::persistWallpaperToLibrary(m_desktopWallpaper))
-                    .toString();
-            }
-
-            m_dbusAppearance->Set("background", wallpaper);
-
-            // Also ensure GSettings
-            Q_UNUSED(appearanceAvailable);
-            if (m_gsettings) {
-                QStringList uris =
-                    m_gsettings->get("backgroundUris").toStringList();
-                if (uris.isEmpty()) {
-                    uris << wallpaper;
-                } else {
-                    uris[0] = wallpaper;
+                if (WaylandUtils::isWaylandPlatform()) {
+                    wallpaper = QUrl::fromLocalFile(
+                        WallpaperUtils::persistWallpaperToLibrary(m_desktopWallpaper))
+                        .toString();
                 }
-                m_gsettings->set("backgroundUris", uris);
+
+                m_dbusAppearance->Set("background", wallpaper);
+
+                // Also ensure GSettings
+                Q_UNUSED(appearanceAvailable);
+                if (m_gsettings) {
+                    QStringList uris =
+                        m_gsettings->get("backgroundUris").toStringList();
+                    if (uris.isEmpty()) {
+                        uris << wallpaper;
+                    } else {
+                        uris[0] = wallpaper;
+                    }
+                    m_gsettings->set("backgroundUris", uris);
+                }
             }
         } else if (m_dbusDeepinWM) {
             m_dbusDeepinWM->SetTransientBackground("");
@@ -393,6 +422,8 @@ void Frame::setMode(int mode)
     if (m_mode == ScreenSaverMode) {
         if (m_backgroundHelper) {
             m_backgroundHelper->setVisible(true);
+            // 若列表里还挂着视频壁纸预览, 先停掉, 避免屏保预览底下还在播
+            m_backgroundHelper->stopVideoPreview();
         }
 
         m_dbusScreenSaver->Stop();
@@ -837,13 +868,126 @@ QStringList Frame::localWallpaperPaths() const {
     return result;
 }
 
+// 视频动态壁纸的本地扫描, 目录与localWallpaperPaths()一致
+QStringList Frame::localVideoPaths() const {
+    QStringList result;
+    QSet<QString> knownPaths;
+
+    const auto appendFile = [&result, &knownPaths](const QString &pathOrUrl) {
+        const QUrl url(pathOrUrl);
+        const QString localPath = url.isLocalFile() ? url.toLocalFile() : pathOrUrl;
+        const QFileInfo info(localPath);
+        if (!info.isFile() || !info.isReadable())
+            return;
+
+        const QString canonicalPath = info.canonicalFilePath();
+        if (canonicalPath.isEmpty() || knownPaths.contains(canonicalPath))
+            return;
+
+        knownPaths.insert(canonicalPath);
+        result.append(QUrl::fromLocalFile(canonicalPath).toString());
+    };
+
+    const QString genericData =
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+    const QStringList roots {
+        QStringLiteral("/usr/share/wallpapers"),
+        QStringLiteral("/usr/local/share/wallpapers"),
+        QStringLiteral("/usr/share/backgrounds"),
+        QStringLiteral("/usr/local/share/backgrounds"),
+        genericData + QStringLiteral("/wallpapers"),
+        genericData + QStringLiteral("/backgrounds"),
+        WallpaperUtils::wallpaperLibraryDir()
+    };
+    const QStringList filters {
+        QStringLiteral("*.mp4"), QStringLiteral("*.mkv"), QStringLiteral("*.webm"),
+        QStringLiteral("*.avi"), QStringLiteral("*.mov"), QStringLiteral("*.m4v"),
+        QStringLiteral("*.mpg"), QStringLiteral("*.mpeg"), QStringLiteral("*.wmv"),
+        QStringLiteral("*.flv"), QStringLiteral("*.ts"), QStringLiteral("*.3gp"),
+        QStringLiteral("*.ogv")
+    };
+
+    QStringList scannedFiles;
+    for (const QString &root : roots) {
+        if (!QDir(root).exists())
+            continue;
+
+        QDirIterator it(root, filters, QDir::Files | QDir::Readable,
+                        QDirIterator::Subdirectories);
+        while (it.hasNext())
+            scannedFiles.append(it.next());
+    }
+    scannedFiles.sort(Qt::CaseInsensitive);
+    for (const QString &path : scannedFiles)
+        appendFile(path);
+
+    return result;
+}
+
+// 视频动态壁纸提交：优先走桌面面板DBus(面板内完成拷贝入库与持久化)，
+// 面板不可用时写其恢复配置兜底, 面板下次启动会自动恢复播放
+bool Frame::commitDynamicWallpaper(const QString &videoPath) const
+{
+    QDBusInterface desktop("com.deepin.dde.desktop", "/com/deepin/dde/desktop",
+                           "com.deepin.dde.desktop", QDBusConnection::sessionBus());
+    if (desktop.isValid()) {
+        QDBusReply<bool> reply = desktop.call("SetDynamicWallpaper", videoPath);
+        if (reply.isValid() && reply.value())
+            return true;
+
+        qWarning() << "(WallpaperChooser) SetDynamicWallpaper failed:"
+                   << reply.error().message();
+    } else {
+        qWarning() << "(WallpaperChooser) com.deepin.dde.desktop is not available,"
+                      " falling back to writing the restore config directly";
+    }
+
+    const QString persisted = WallpaperUtils::persistWallpaperToLibrary(
+        WallpaperUtils::localPathOf(videoPath));
+    const QString configDir = QDir::homePath() + "/.config/GXDE/dde-file-manager";
+    if (!QDir().mkpath(configDir))
+        return false;
+
+    QFile file(configDir + "/dynamicWallpaper");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        return false;
+
+    file.write(persisted.toUtf8());
+    file.close();
+    return true;
+}
+
+// 查询桌面当前生效的动态壁纸: 优先问面板, 兜底读面板的恢复配置
+QString Frame::currentDynamicWallpaper() const
+{
+    QDBusInterface desktop("com.deepin.dde.desktop", "/com/deepin/dde/desktop",
+                           "com.deepin.dde.desktop", QDBusConnection::sessionBus());
+    if (desktop.isValid()) {
+        QDBusReply<QString> reply = desktop.call("DynamicWallpaper");
+        if (reply.isValid())
+            return reply.value();
+    }
+
+    QFile file(QDir::homePath() + "/.config/GXDE/dde-file-manager/dynamicWallpaper");
+    if (file.exists() && file.open(QIODevice::ReadOnly)) {
+        const QString path = QString::fromUtf8(file.readAll()).trimmed();
+        file.close();
+        if (!path.isEmpty() && QFile::exists(path))
+            return path;
+    }
+
+    return QString();
+}
+
 void Frame::populateWallpaperList(const QStringList &paths) {
     for (const QString &path : paths) {
         WallpaperItem *item = m_wallpaperList->addWallpaper(path);
         item->setData(item->getPath());
         item->setDeletable(m_deletableInfo.value(path));
         item->addButton(DESKTOP_BUTTON_ID, tr("Only desktop"));
-        item->addButton(LOCK_SCREEN_BUTTON_ID, tr("Only lock screen"));
+        // 锁屏壁纸不支持视频
+        if (!WallpaperUtils::isVideoFile(item->getPath()))
+            item->addButton(LOCK_SCREEN_BUTTON_ID, tr("Only lock screen"));
         item->show();
 
         connect(item, &WallpaperItem::buttonClicked,
@@ -864,7 +1008,7 @@ void Frame::refreshList()
         // session it may own its D-Bus name without replying, making List()
         // wait for the default D-Bus timeout and leaving the chooser empty.
         if (WaylandUtils::isWaylandPlatform()) {
-            const QStringList paths = localWallpaperPaths();
+            const QStringList paths = localWallpaperPaths() + localVideoPaths();
 
             // daemon 的 List("background") 会对自定义壁纸标记 Deletable=true，
             // 选择器据此显示删除按钮。Wayland 下我们自行扫描，需要手动补上这个标记。
@@ -920,6 +1064,14 @@ void Frame::refreshList()
                 strings = processListReply(value);
             }
 
+            // 守护进程的List不含视频动态壁纸, 本地扫描补充(排在图片后面),
+            // 并自行标记删除属性(守护进程不管视频文件)
+            const QStringList videoPaths = localVideoPaths();
+            qInfo() << "(WallpaperChooser) local video wallpapers:" << videoPaths;
+            for (const QString &video : videoPaths)
+                m_deletableInfo[video] = WallpaperUtils::isInWallpaperLibrary(video);
+            strings += videoPaths;
+
             populateWallpaperList(strings);
         });
     }
@@ -955,6 +1107,23 @@ void Frame::refreshList()
 void Frame::onItemPressed(const QString &data)
 {
     if (m_mode == WallpaperMode) {
+        if (WallpaperUtils::isVideoFile(data)) {
+            // 视频: deepin-wm的暂态壁纸只认图片, 视频预览统一走本地
+            // 预览背景层(必要时懒创建), 不影响静态壁纸的提交流程
+            if (!m_backgroundHelper) {
+                m_backgroundHelper = new BackgroundHelper(true, this);
+                // 防止壁纸设置窗口被背景窗口覆盖
+                connect(m_backgroundHelper, &BackgroundHelper::backgroundAdded,
+                        this, &Frame::activateWindow);
+            }
+
+            m_backgroundHelper->previewDynamicWallpaper(data);
+            m_desktopWallpaper = data;
+            // 锁屏壁纸不支持视频
+            m_lockWallpaper.clear();
+            return;
+        }
+
         if (m_dbusDeepinWM)
             m_dbusDeepinWM->SetTransientBackground(data);
 

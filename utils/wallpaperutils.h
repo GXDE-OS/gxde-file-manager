@@ -24,6 +24,7 @@
 #include <QFileInfo>
 #include <QLatin1Char>
 #include <QLatin1String>
+#include <QMimeDatabase>
 #include <QStandardPaths>
 #include <QString>
 #include <QUrl>
@@ -38,6 +39,17 @@ inline QString wallpaperLibraryDir() {
 inline QString localPathOf(const QString &pathOrUrl) {
     const QUrl url(pathOrUrl);
     return url.isLocalFile() ? url.toLocalFile() : pathOrUrl;
+}
+
+// 按文件内容(MIME sniffing)判断是否为视频文件，
+// 扩展名伪装的普通文件不会被误判
+inline bool isVideoFile(const QString &pathOrUrl) {
+    const QString localPath = localPathOf(pathOrUrl);
+    if (!QFileInfo(localPath).isFile())
+        return false;
+
+    return QMimeDatabase().mimeTypeForFile(localPath, QMimeDatabase::MatchContent)
+        .name().startsWith(QLatin1String("video/"));
 }
 
 // 判断壁纸是否位于自定义壁纸库中。daemon 的 List("background") 对这类壁纸

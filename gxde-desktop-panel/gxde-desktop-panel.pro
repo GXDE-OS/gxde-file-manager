@@ -63,7 +63,8 @@ SOURCES += \
     view/desktopitemdelegate.cpp \
     presenter/gridcore.cpp \
     config/dfmdesktopsettings.cpp \
-    view/backgroundhelper.cpp
+    view/backgroundhelper.cpp \
+    view/videowallpaperplayer.cpp
 
 
 
@@ -89,7 +90,8 @@ HEADERS += \
     presenter/gridcore.h \
     deventfilter.h \
     config/dfmdesktopsettings.h \
-    view/backgroundhelper.h
+    view/backgroundhelper.h \
+    view/videowallpaperplayer.h
 
 RESOURCES += \
     resource/theme/theme.qrc

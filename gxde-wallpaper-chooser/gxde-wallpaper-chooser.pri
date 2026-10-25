@@ -2,6 +2,7 @@ SOURCES += $$PWD/frame.cpp \
     $$PWD/wallpaperlist.cpp \
     $$PWD/wallpaperitem.cpp \
     $$PWD/thumbnailmanager.cpp \
+    $$PWD/videothumbgrabber.cpp \
     $$PWD/button.cpp \
     $$PWD/dbus/deepin_wm.cpp
 
@@ -10,6 +11,7 @@ HEADERS  += $$PWD/frame.h \
     $$PWD/wallpaperitem.h \
     $$PWD/constants.h \
     $$PWD/thumbnailmanager.h \
+    $$PWD/videothumbgrabber.h \
     $$PWD/button.h \
     $$PWD/dbus/deepin_wm.h
 

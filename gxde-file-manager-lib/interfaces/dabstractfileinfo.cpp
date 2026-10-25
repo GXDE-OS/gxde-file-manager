@@ -906,6 +906,12 @@ QVector<MenuAction> DAbstractFileInfo::menuActionList(DAbstractFileInfo::MenuTyp
                     actionKeys << MenuAction::SetAsWallpaper
                                << MenuAction::Separator;
                 }
+
+                // 视频文件支持设为动态壁纸(mimeTypeName如video/mp4)
+                if (mimeTypeName().startsWith("video") && isReadable()) {
+                    actionKeys << MenuAction::SetAsDynamicWallpaper
+                               << MenuAction::Separator;
+                }
             }
 
 #ifdef SW_LABEL

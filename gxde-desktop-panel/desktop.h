@@ -41,6 +41,25 @@ public:
 public slots:
     void Show();
     Q_SCRIPTABLE void EnableBackground(bool v);
+
+    // ==== 壁纸 DBus 接口（com.deepin.dde.desktop）====
+    // 供其它程序设置/查询壁纸。参数支持本地路径和 file:// URL
+    //
+    // 设置视频动态壁纸：path 为视频文件(常见 mp4/webm/mkv 等)，成功返回 true；
+    // path 传空串则停用动态壁纸并回退静态壁纸。
+    // 例: qdbus com.deepin.dde.desktop /com/deepin/dde/desktop \
+    //      com.deepin.dde.desktop.SetDynamicWallpaper "/home/user/bg.mp4"
+    Q_SCRIPTABLE bool SetDynamicWallpaper(const QString &path);
+    // 查询当前视频动态壁纸路径，未启用时返回空串
+    Q_SCRIPTABLE QString DynamicWallpaper() const;
+    // 设置静态壁纸（写入 com.deepin.daemon.Appearance 与 GSettings，
+    // 生效后会自动停用动态壁纸），成功返回 true
+    Q_SCRIPTABLE bool SetWallpaper(const QString &path);
+
+Q_SIGNALS:
+    // 视频动态壁纸启用/停用/更换时发出，空串表示已停用
+    void DynamicWallpaperChanged(const QString &path);
+
 private:
     explicit Desktop();
     ~Desktop();

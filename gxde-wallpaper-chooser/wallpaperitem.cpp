@@ -25,7 +25,9 @@
 #include "wallpaperitem.h"
 #include "constants.h"
 #include "thumbnailmanager.h"
+#include "videothumbgrabber.h"
 #include "button.h"
+#include "wallpaperutils.h"
 
 #include <QEvent>
 #include <QPixmap>
@@ -124,6 +126,16 @@ void WallpaperItem::initPixmap()
     if (m_useThumbnailManager) {
         qDebug() << "(WallpaperItem) initPixmap: using ThumbnailManager for"
             << m_path << ".";
+
+        // 视频没有QImageReader能读，走视频抓帧通道
+        if (WallpaperUtils::isVideoFile(getPath())) {
+            connect(VideoThumbGrabber::instance(), &VideoThumbGrabber::thumbnailFounded,
+                    this, &WallpaperItem::onThumbnailFounded, Qt::UniqueConnection);
+            VideoThumbGrabber::instance()->grab(QUrl::toPercentEncoding(m_path),
+                                                getPath(), devicePixelRatioF());
+            return;
+        }
+
         refindPixmap();
     } else {
         QIcon icon(m_path);

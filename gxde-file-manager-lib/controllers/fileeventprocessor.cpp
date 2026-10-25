@@ -327,6 +327,9 @@ static bool processMenuEvent(const QSharedPointer<DFMMenuActionEvent> &event)
     case DFMGlobal::SetAsWallpaper:
         AppController::instance()->actionSetAsWallpaper(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), event->selectedUrls().first()));
         break;
+    case DFMGlobal::SetAsDynamicWallpaper:
+        AppController::instance()->actionSetAsDynamicWallpaper(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), event->selectedUrls().first()));
+        break;
     case DFMGlobal::ForgetPassword:
         AppController::instance()->actionForgetPassword(dMakeEventPointer<DFMUrlBaseEvent>(event->sender(), event->selectedUrls().first()));
         break;

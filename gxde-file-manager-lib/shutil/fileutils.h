@@ -80,6 +80,9 @@ public:
 
     static bool setBackground(const QString& pictureFilePath);
 
+    /// 设置视频动态壁纸(优先走桌面面板DBus, 不可用时写恢复配置兜底)
+    static bool setDynamicWallpaper(const QString& videoFilePath);
+
     static QString md5(const QString& data);
     static QByteArray md5(QFile *file, const QString &filePath);
 

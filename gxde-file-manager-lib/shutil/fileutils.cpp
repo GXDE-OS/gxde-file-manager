@@ -785,6 +785,53 @@ bool FileUtils::setBackground(const QString &pictureFilePath)
     return true;
 }
 
+bool FileUtils::setDynamicWallpaper(const QString &videoFilePath)
+{
+    QString videoPath = videoFilePath;
+    const QUrl url(videoPath);
+    if (url.isLocalFile())
+        videoPath = url.toLocalFile();
+
+    const QFileInfo videoInfo(videoPath);
+    if (!videoInfo.isFile() || !videoInfo.isReadable())
+        return false;
+
+    // 按文件内容判断是否为视频, 防扩展名伪装
+    const QString canonicalPath = videoInfo.canonicalFilePath().isEmpty()
+        ? videoPath : videoInfo.canonicalFilePath();
+    if (!WallpaperUtils::isVideoFile(canonicalPath))
+        return false;
+
+    // 首选桌面面板的DBus接口, 由面板完成拷贝入库、持久化与播放
+    QDBusMessage msg = QDBusMessage::createMethodCall("com.deepin.dde.desktop",
+        "/com/deepin/dde/desktop", "com.deepin.dde.desktop", "SetDynamicWallpaper");
+    msg.setArguments({canonicalPath});
+    const QDBusMessage reply = QDBusConnection::sessionBus().call(msg, QDBus::BlockWithGui);
+
+    if (reply.type() == QDBusMessage::ReplyMessage) {
+        // 面板明确拒绝(不可读/非视频)
+        return !reply.arguments().isEmpty() && reply.arguments().first().toBool();
+    }
+
+    qWarning() << "SetDynamicWallpaper via desktop panel failed:"
+               << reply.errorMessage()
+               << "- writing the restore config directly as fallback";
+
+    // 面板DBus不可用时兜底: 拷入壁纸库并写恢复配置, 面板下次启动自动恢复
+    const QString persisted = WallpaperUtils::persistWallpaperToLibrary(canonicalPath);
+    const QString configDir = QDir::homePath() + "/.config/GXDE/dde-file-manager";
+    if (!QDir().mkpath(configDir))
+        return false;
+
+    QFile configFile(configDir + "/dynamicWallpaper");
+    if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        return false;
+
+    configFile.write(persisted.toUtf8());
+    configFile.close();
+    return true;
+}
+
 QString FileUtils::md5(const QString &fpath)
 {
     QFile file(fpath);

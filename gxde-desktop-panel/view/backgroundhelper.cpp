@@ -19,9 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "backgroundhelper.h"
+#include "videowallpaperplayer.h"
 #include "util/xcb/xcb.h"
 #include "util/wayland/layershellhelper.h"
 #include "waylandutils.h"
+#include "wallpaperutils.h"
 #include "../presenter/display.h"
 
 #include <QNetworkReply>
@@ -159,7 +161,19 @@ void BackgroundHelper::setBackground(const QString &path)
 {
     qInfo() << "path:" << path;
 
-    currentWallpaper = path.startsWith("file:") ? QUrl(path).toLocalFile() : path;
+    const QString newWallpaper = path.startsWith("file:") ? QUrl(path).toLocalFile() : path;
+
+    if (m_previuew) {
+        // 预览模式(壁纸选择器)：切回静态图预览时只需停掉视频预览，
+        // 不能动持久化配置，也不能发DBus变更信号
+        stopVideoPlayback();
+    } else if (!currentWallpaper.isEmpty() && newWallpaper != currentWallpaper) {
+        // 用户通过控制中心/壁纸选择器设置了新的静态壁纸时，
+        // 动态壁纸让位并被移除（含多工作区切换到不同静态壁纸的情况）
+        stopDynamicWallpaper();
+    }
+
+    currentWallpaper = newWallpaper;
     backgroundPixmap = QPixmap(currentWallpaper);
 
     refreshBackground();
@@ -222,6 +236,16 @@ void BackgroundHelper::onWMChanged()
 
         // 初始化背景图
         updateBackground();
+
+        // 恢复上次的视频动态壁纸（持久化在用户配置里）
+        const QString savedDynamicWallpaper = readDynamicWallpaperConfig();
+        if (!savedDynamicWallpaper.isEmpty()) {
+            qInfo() << "(Desktop Panel) restoring dynamic wallpaper:" << savedDynamicWallpaper;
+            m_dynamicWallpaper = savedDynamicWallpaper;
+            m_videoFailed = false;
+            if (!m_previuew)
+                startVideoPlayback();
+        }
     } else {
         if (!wmInter) {
             return;
@@ -243,6 +267,11 @@ void BackgroundHelper::onWMChanged()
         currentWorkspaceIndex = 0;
         backgroundPixmap = QPixmap();
 
+        // 停止视频动态壁纸（保留配置文件，重新启用后仍可恢复）
+        stopVideoPlayback();
+        m_dynamicWallpaper.clear();
+        m_videoFailed = false;
+
         disconnect(qApp, &QGuiApplication::screenAdded, this, &BackgroundHelper::onScreenAdded);
         disconnect(qApp, &QGuiApplication::screenRemoved, this, &BackgroundHelper::onScreenRemoved);
 
@@ -260,6 +289,11 @@ void BackgroundHelper::updateBackground(QLabel *l)
     if (!l || backgroundPixmap.isNull()) {
         return;
     }
+
+    // 动态壁纸正常播放时背景由视频帧绘制(paintVideoFrame)，
+    // 跳过静态壁纸的重绘以省 CPU；播放失败后会自动回退到这里
+    if (m_videoPlayer && m_videoPlayer->isPlaying() && !m_videoFailed)
+        return;
 
     QScreen* s = backgroundMap.key(l, nullptr);
     if (!s) {
@@ -595,4 +629,201 @@ BackgroundHelper::WallpaperDisplayMethods BackgroundHelper::getWallpaperDisplayM
     QString data = file.readAll();
     file.close();
     return static_cast<BackgroundHelper::WallpaperDisplayMethods>(data.toInt());
+}
+
+QString BackgroundHelper::dynamicWallpaperConfigPath()
+{
+    return QDir::homePath() + "/.config/GXDE/dde-file-manager/dynamicWallpaper";
+}
+
+QString BackgroundHelper::readDynamicWallpaperConfig() const
+{
+    QFile file(dynamicWallpaperConfigPath());
+    if (!file.exists() || !file.open(QFile::ReadOnly))
+        return QString();
+
+    const QString path = QString::fromUtf8(file.readAll()).trimmed();
+    file.close();
+
+    // 配置指向的文件已被删除（例如移动设备拔出）时视为没有动态壁纸
+    if (path.isEmpty() || !QFile::exists(path))
+        return QString();
+
+    return path;
+}
+
+bool BackgroundHelper::setDynamicWallpaper(const QString &pathOrUrl)
+{
+    QString path = pathOrUrl.startsWith("file:") ? QUrl(pathOrUrl).toLocalFile() : pathOrUrl;
+    path = path.trimmed();
+
+    // 空路径 = 停用动态壁纸
+    if (path.isEmpty()) {
+        stopDynamicWallpaper();
+        return true;
+    }
+
+    const QFileInfo info(path);
+    if (!info.isFile() || !info.isReadable()) {
+        qWarning() << "(Desktop Panel) dynamic wallpaper file is not readable:" << path;
+        return false;
+    }
+
+    if (!WallpaperUtils::isVideoFile(path)) {
+        qWarning() << "(Desktop Panel) dynamic wallpaper is not a video file:" << path;
+        return false;
+    }
+
+    // 拷贝到壁纸库，避免视频来自可移动设备、拔出后壁纸丢失
+    const QString persisted = WallpaperUtils::persistWallpaperToLibrary(path);
+    m_dynamicWallpaper = persisted;
+    m_videoFailed = false;
+
+    // 持久化，面板重启后自动恢复
+    QDir configDir = QDir(QDir::homePath() + "/.config/GXDE/dde-file-manager");
+    if (!configDir.exists())
+        configDir.mkpath(".");
+    QFile file(dynamicWallpaperConfigPath());
+    if (file.open(QFile::WriteOnly | QFile::Truncate)) {
+        file.write(persisted.toUtf8());
+        file.close();
+    } else {
+        qWarning() << "(Desktop Panel) failed to save dynamic wallpaper config:"
+                   << dynamicWallpaperConfigPath() << file.errorString();
+    }
+
+    if (!m_previuew && isEnabled())
+        startVideoPlayback();
+
+    Q_EMIT dynamicWallpaperChanged(persisted);
+    return true;
+}
+
+bool BackgroundHelper::previewDynamicWallpaper(const QString &pathOrUrl)
+{
+    const QString path = WallpaperUtils::localPathOf(pathOrUrl.trimmed());
+    if (!WallpaperUtils::isVideoFile(path)) {
+        qWarning() << "(Desktop Panel) dynamic wallpaper preview is not a video file:" << path;
+        return false;
+    }
+
+    m_dynamicWallpaper = path;
+    m_videoFailed = false;
+
+    if (isEnabled())
+        startVideoPlayback();
+
+    return true;
+}
+
+void BackgroundHelper::stopVideoPreview()
+{
+    stopVideoPlayback();
+    m_videoFailed = false;
+}
+
+void BackgroundHelper::stopDynamicWallpaper()
+{
+    stopVideoPlayback();
+    m_videoFailed = false;
+
+    if (m_dynamicWallpaper.isEmpty())
+        return;
+
+    m_dynamicWallpaper.clear();
+    QFile::remove(dynamicWallpaperConfigPath());
+
+    // 恢复静态壁纸
+    refreshBackground();
+    Q_EMIT dynamicWallpaperChanged(QString());
+}
+
+QString BackgroundHelper::dynamicWallpaperPath() const
+{
+    return m_dynamicWallpaper;
+}
+
+bool BackgroundHelper::isDynamicWallpaperActive() const
+{
+    return m_videoPlayer && m_videoPlayer->isPlaying();
+}
+
+void BackgroundHelper::startVideoPlayback()
+{
+    if (m_dynamicWallpaper.isEmpty())
+        return;
+
+    if (!m_videoPlayer) {
+        m_videoPlayer = new VideoWallpaperPlayer(this);
+        connect(m_videoPlayer, &VideoWallpaperPlayer::frameReady,
+                this, &BackgroundHelper::paintVideoFrame);
+        connect(m_videoPlayer, &VideoWallpaperPlayer::errorOccurred,
+                this, [this](const QString &reason) {
+            // 文件损坏/缺少解码器等异步解码错误：
+            // 停止播放并回退到静态壁纸（保留配置，下次启动重试）
+            qWarning() << "(Desktop Panel) dynamic wallpaper falls back to static:" << reason;
+            m_videoFailed = true;
+            stopVideoPlayback();
+            refreshBackground();
+        });
+    }
+
+    m_videoFailed = false;
+    m_videoPlayer->play(m_dynamicWallpaper);
+}
+
+void BackgroundHelper::stopVideoPlayback()
+{
+    if (m_videoPlayer)
+        m_videoPlayer->stop();
+}
+
+void BackgroundHelper::paintVideoFrame(const QImage &frame)
+{
+    if (frame.isNull() || !m_visible || m_dynamicWallpaper.isEmpty())
+        return;
+
+    for (auto it = backgroundMap.constBegin(); it != backgroundMap.constEnd(); ++it) {
+        QScreen *s = it.key();
+        QLabel *l = it.value();
+        if (!s || !l)
+            continue;
+
+        const qreal pixelRatio = s->devicePixelRatio();
+        const QSize logicalTargetSize = l->size().isEmpty()
+            ? s->geometry().size() : l->size();
+        const QSize targetPixelSize = pixelSize(logicalTargetSize, pixelRatio);
+        if (targetPixelSize.isEmpty() || pixelRatio <= 0)
+            continue;
+
+        QImage img = frame;
+        if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::IgnoreAspectRatio) {
+            // 拉伸
+            img = img.scaled(targetPixelSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            l->setAlignment(Qt::AlignLeft);
+        } else if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::KeepAspectRatio
+                   || m_wallpaperDisplayMethods == WallpaperDisplayMethods::Center) {
+            // 适应居中/居中：不裁剪，QLabel 按对齐方式居中显示
+            if (m_wallpaperDisplayMethods == WallpaperDisplayMethods::KeepAspectRatio) {
+                img = img.scaled(targetPixelSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            }
+            l->setAlignment(Qt::AlignCenter);
+        } else {
+            // 适应屏幕(默认)/跨屏：铺满屏幕并居中裁剪
+            img = img.scaled(targetPixelSize, Qt::KeepAspectRatioByExpanding,
+                             Qt::SmoothTransformation);
+            if (img.width() > targetPixelSize.width()
+                    || img.height() > targetPixelSize.height()) {
+                img = img.copy(QRect((img.width() - targetPixelSize.width()) / 2,
+                        (img.height() - targetPixelSize.height()) / 2,
+                        targetPixelSize.width(),
+                        targetPixelSize.height()));
+            }
+            l->setAlignment(Qt::AlignLeft);
+        }
+
+        QPixmap pix = QPixmap::fromImage(img);
+        pix.setDevicePixelRatio(pixelRatio);
+        l->setPixmap(pix);
+    }
 }

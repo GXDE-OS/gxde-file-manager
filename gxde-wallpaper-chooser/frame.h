@@ -136,10 +136,15 @@ private:
     void initListView();
     void refreshList();
     QStringList localWallpaperPaths() const;
+    QStringList localVideoPaths() const;
     void populateWallpaperList(const QStringList &paths);
     void onItemPressed(const QString &data);
     void onItemButtonClicked(const QString &buttonID);
     QStringList processListReply(const QString &reply);
+    // 视频动态壁纸提交：优先走桌面面板DBus，不可用时写恢复配置兜底
+    bool commitDynamicWallpaper(const QString &videoPath) const;
+    // 查询桌面当前生效的动态壁纸(面板DBus，兜底读面板的恢复配置)
+    QString currentDynamicWallpaper() const;
 };
 
 #endif // FRAME_H

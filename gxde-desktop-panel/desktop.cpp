@@ -15,18 +15,24 @@
 #include <QStyleOptionViewItem>
 #include <QDir>
 #include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusMessage>
+#include <QDBusReply>
 #include <QProcess>
 #include <QCursor>
 #include <QScreen>
 #include <QStringList>
+#include <QFileInfo>
+#include <QUrl>
+#include <QGSettings>
 
 #include <durl.h>
-
 #include "view/canvasgridview.h"
 #include "view/desktopitemdelegate.h"
 #include "view/backgroundhelper.h"
 #include "presenter/apppresenter.h"
 #include "presenter/display.h"
+#include "wallpaperutils.h"
 
 #ifndef DISABLE_ZONE
 #include "../gxde-zone/mainwindow.h"
@@ -66,6 +72,10 @@ Desktop::Desktop()
     }, Qt::DirectConnection);
     // 任意控件改变位置都可能会引起主窗口被其它屏幕上的窗口所遮挡
     connect(d->background, &BackgroundHelper::backgroundGeometryChanged, this, &Desktop::onBackgroundGeometryChanged);
+
+    // DBus 信号转发：动态壁纸变更通知
+    connect(d->background, &BackgroundHelper::dynamicWallpaperChanged,
+            this, &Desktop::DynamicWallpaperChanged);
     onBackgroundEnableChanged();
 }
 
@@ -297,4 +307,69 @@ void Desktop::EnableBackground(bool v)
         d->background->setEnabled(v);
         d->background->onWMChanged();
     }
+}
+
+bool Desktop::SetDynamicWallpaper(const QString &path)
+{
+    if (!d || !d->background) {
+        return false;
+    }
+
+    return d->background->setDynamicWallpaper(path);
+}
+
+QString Desktop::DynamicWallpaper() const
+{
+    return (d && d->background) ? d->background->dynamicWallpaperPath() : QString();
+}
+
+bool Desktop::SetWallpaper(const QString &path)
+{
+    QString localPath = path.startsWith("file:") ? QUrl(path).toLocalFile() : path;
+    localPath = localPath.trimmed();
+    if (localPath.isEmpty() || !QFileInfo(localPath).isFile()) {
+        qWarning() << "(Desktop Panel) SetWallpaper: not a file:" << path;
+        return false;
+    }
+
+    // 与 gxde-wallpaper-chooser 的提交逻辑保持一致：
+    // 拷入壁纸库(避免移动设备拔出后失效)，再同时写 Appearance 守护进程与 GSettings
+    const QString persisted = WallpaperUtils::persistWallpaperToLibrary(localPath);
+    const QString uri = QUrl::fromLocalFile(persisted).toString();
+
+    bool daemonOk = false;
+    QDBusInterface appearance("com.deepin.daemon.Appearance",
+                              "/com/deepin/daemon/Appearance",
+                              "com.deepin.daemon.Appearance",
+                              QDBusConnection::sessionBus());
+    if (appearance.isValid()) {
+        QDBusMessage reply = appearance.call("Set", "background", uri);
+        daemonOk = (reply.type() == QDBusMessage::ReplyMessage);
+        if (!daemonOk)
+            qWarning() << "(Desktop Panel) Appearance.Set failed:" << reply.errorMessage();
+    }
+
+    // GSettings 兜底；面板监听 backgroundUris 变化会立即刷新壁纸，
+    // 设置新的静态壁纸同时也会自动停用动态壁纸
+    bool gsettingsOk = false;
+    if (QGSettings::isSchemaInstalled("com.deepin.dde.appearance")) {
+        QGSettings gsettings("com.deepin.dde.appearance", "");
+        QStringList uris = gsettings.get("backgroundUris").toStringList();
+        if (uris.isEmpty())
+            uris << uri;
+        else
+            uris[0] = uri;
+        gsettings.set("backgroundUris", uris);
+        gsettingsOk = true;
+        qInfo() << "(Desktop Panel) SetWallpaper gsettings written:" << uri;
+    } else {
+        qWarning() << "(Desktop Panel) SetWallpaper: schema com.deepin.dde.appearance not installed";
+    }
+
+    if (!daemonOk && !gsettingsOk)
+        qWarning() << "(Desktop Panel) SetWallpaper failed: neither Appearance daemon nor GSettings is available";
+    else
+        qInfo() << "(Desktop Panel) SetWallpaper done, daemon:" << daemonOk << "gsettings:" << gsettingsOk;
+
+    return daemonOk || gsettingsOk;
 }

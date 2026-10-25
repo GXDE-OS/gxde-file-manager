@@ -242,6 +242,9 @@ public:
         MountImage,
         StageFileForBurning,
 
+        // 追加在枚举末尾(在UserMenuAction保留区之前), 避免改变既有枚举值编号
+        SetAsDynamicWallpaper,
+
         UserMenuAction = Unknow + 2000
     };
 
