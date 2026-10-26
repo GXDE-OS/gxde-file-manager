@@ -1,4 +1,4 @@
-gxde-file-manager (6.4.15) UNRELEASED; urgency=medium
+gxde-file-manager (6.4.16) UNRELEASED; urgency=medium
 
   [ CharOfString ]
   * 修复了桌面图标总是乱飞的问题
@@ -9,8 +9,10 @@ gxde-file-manager (6.4.15) UNRELEASED; urgency=medium
   * feat: 修复DFM右侧预览窗口部分文件名无法自动换行导致文件名显示不全的问题
   * feat: 右侧预览栏支持预览图片尺寸
   * feat: 支持调整文件管理器侧边栏大小
+  * feat: 支持设置动态壁纸
+  * feat: 使用窗口化gxde-wallpaper-chooser
 
- -- gfdgd_xi <3025613752@qq.com>  Thu, 15 Oct 2026 16:32:44 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Mon, 26 Oct 2026 19:09:35 +0800
 
 gxde-file-manager (6.4.13) UNRELEASED; urgency=medium
 
