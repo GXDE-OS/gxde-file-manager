@@ -2677,6 +2677,15 @@ void CanvasGridView::handleContextMenuAction(int action)
         emit autoHideIconToggled();
         break;
 
+    case PauseDynamicWallpaper:
+        if (BackgroundHelper *helper = BackgroundHelper::getDesktopInstance()) {
+            if (helper->isDynamicWallpaperPaused())
+                helper->resumeDynamicWallpaper();
+            else
+                helper->pauseDynamicWallpaper();
+        }
+        break;
+
     case IconSize0:
     case IconSize1:
     case IconSize2:
@@ -2804,6 +2813,25 @@ void CanvasGridView::showEmptyAreaMenu(const Qt::ItemFlags &/*indexFlags*/)
     hideIcon.setCheckable(true);
     hideIcon.setChecked(GridManager::instance()->hideIcon());
     menu->insertAction(pasteAction, &hideIcon);
+
+    // 视频动态壁纸（已配置）时提供"暂停/播放"切换；静态壁纸不显示该条目
+    // 注意：用"是否配置了视频壁纸"(dynamicWallpaperPath 非空) 判断可见性，
+    // 而非 hasDynamicWallpaper()——后者在解码失败回退静态时也为 false，
+    // 此时仍应让用户看到该条目（播放失败属解码/后端问题，另议）
+    // 该 QAction 必须在函数作用域内声明（与 hideIcon 等一致），否则出块后
+    // 局部对象析构会从菜单中移除该动作，导致右键菜单看不到此条目。
+    QAction pauseWallpaper(menu);
+    if (BackgroundHelper *helper = BackgroundHelper::getDesktopInstance()) {
+        if (!helper->dynamicWallpaperPath().isEmpty()) {
+            const bool paused = helper->isDynamicWallpaperPaused();
+            pauseWallpaper.setText(paused ? tr("Resume dynamic wallpaper")
+                                          : tr("Pause dynamic wallpaper"));
+            pauseWallpaper.setData(PauseDynamicWallpaper);
+            pauseWallpaper.setCheckable(true);
+            pauseWallpaper.setChecked(helper->isDynamicWallpaperPaused());
+            menu->insertAction(pasteAction, &pauseWallpaper);
+        }
+    }
 
     auto *propertyAction = menu->actionAt(DFileMenuManager::getActionString(MenuAction::Property));
 //    QAction property(menu);

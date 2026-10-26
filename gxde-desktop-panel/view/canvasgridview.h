@@ -55,6 +55,9 @@ public:
         IconSize2 = IconSize + 2,
         IconSize3 = IconSize + 3,
         IconSize4 = IconSize + 4,
+
+        // 视频动态壁纸暂停/播放切换（仅动态壁纸生效时显示）
+        PauseDynamicWallpaper,
     };
     Q_ENUM(ContextMenuAction)
 

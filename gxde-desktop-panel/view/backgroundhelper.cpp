@@ -530,8 +530,9 @@ void BackgroundHelper::onScreenAdded(QScreen* screen) {
     updateBackground(l);
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    // 播放中的动态壁纸补挂新屏的呈现控件
-    if (m_videoPlayer && m_videoPlayer->isPlaying())
+    // 动态壁纸（含暂停态）补挂新屏的呈现控件；暂停时呈现控件会用
+    // 最后一帧初始化，不会黑屏
+    if (m_videoPlayer && hasDynamicWallpaper())
         attachVideoWidget(l);
 #endif
 
@@ -771,6 +772,39 @@ bool BackgroundHelper::isDynamicWallpaperActive() const
     return m_videoPlayer && m_videoPlayer->isPlaying();
 }
 
+bool BackgroundHelper::hasDynamicWallpaper() const
+{
+    // 视频文件存在（未卸载）且未因解码失败回退；暂停态也算"生效"
+    return !m_dynamicWallpaper.isEmpty() && !m_videoFailed;
+}
+
+bool BackgroundHelper::isDynamicWallpaperPaused() const
+{
+    return m_dynamicPaused;
+}
+
+void BackgroundHelper::pauseDynamicWallpaper()
+{
+    if (!hasDynamicWallpaper() || m_dynamicPaused)
+        return;
+
+    if (m_videoPlayer && m_videoPlayer->pause()) {
+        m_dynamicPaused = true;
+        Q_EMIT dynamicWallpaperPausedChanged(true);
+    }
+}
+
+void BackgroundHelper::resumeDynamicWallpaper()
+{
+    if (!hasDynamicWallpaper() || !m_dynamicPaused)
+        return;
+
+    if (m_videoPlayer && m_videoPlayer->resume()) {
+        m_dynamicPaused = false;
+        Q_EMIT dynamicWallpaperPausedChanged(false);
+    }
+}
+
 void BackgroundHelper::startVideoPlayback()
 {
     if (m_dynamicWallpaper.isEmpty())
@@ -812,6 +846,7 @@ void BackgroundHelper::startVideoPlayback()
 
 void BackgroundHelper::stopVideoPlayback()
 {
+    m_dynamicPaused = false;
     if (m_videoPlayer)
         m_videoPlayer->stop();
 

@@ -82,6 +82,14 @@ QVideoSink *VideoPresentationWidget::videoSink() const
     return m_sink;
 }
 
+void VideoPresentationWidget::setInitialFrame(const QVideoFrame &frame)
+{
+    if (!frame.isValid())
+        return;
+    m_frame = frame;
+    update();
+}
+
 void VideoPresentationWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
@@ -105,6 +113,13 @@ VideoWallpaperPlayer::VideoWallpaperPlayer(QObject *parent)
     : QObject(parent)
     , m_sink(new QVideoSink(this))
 {
+    // 常驻 sink 每帧都先存一份引用（不拷贝），供暂停时新屏初始化/
+    // 以及外部查询最后一帧
+    connect(m_sink, &QVideoSink::videoFrameChanged, this,
+            [this](const QVideoFrame &frame) {
+        if (frame.isValid())
+            m_lastFrame = frame;
+    });
 }
 
 VideoWallpaperPlayer::~VideoWallpaperPlayer()
@@ -124,6 +139,8 @@ void VideoWallpaperPlayer::restartPlayer()
         m_player->stop();
         m_player->deleteLater();
     }
+
+    m_paused = false;
 
     m_player = new QMediaPlayer(this);
     m_player->setAudioOutput(nullptr);
@@ -166,6 +183,8 @@ bool VideoWallpaperPlayer::play(const QString &pathOrUrl)
 void VideoWallpaperPlayer::stop()
 {
     m_source.clear();
+    m_paused = false;
+    m_lastFrame = QVideoFrame();
     setPlaying(false);
 
     if (m_player) {
@@ -173,6 +192,29 @@ void VideoWallpaperPlayer::stop()
         m_player->deleteLater();
         m_player = nullptr;
     }
+}
+
+bool VideoWallpaperPlayer::pause()
+{
+    if (!m_player || !m_playing || m_paused)
+        return false;
+    m_player->pause();   // 保留当前帧与位置；playbackStateChanged(Paused)
+    m_paused = true;     // 会经 setPlaying(false) 改变 isPlaying()，但暂停态独立记录
+    return true;
+}
+
+bool VideoWallpaperPlayer::resume()
+{
+    if (!m_player || !m_paused)
+        return false;
+    m_player->play();    // 从暂停位置继续；playbackStateChanged(Playing)
+    m_paused = false;    // 会经 setPlaying(true) 恢复播放态
+    return true;
+}
+
+bool VideoWallpaperPlayer::isPaused() const
+{
+    return m_paused;
 }
 
 bool VideoWallpaperPlayer::isPlaying() const
@@ -192,6 +234,9 @@ QWidget *VideoWallpaperPlayer::createPresentation(QWidget *parent)
     connect(m_sink, &QVideoSink::videoFrameChanged,
             widget->videoSink(), &QVideoSink::setVideoFrame,
             Qt::DirectConnection);
+    // 暂停态新屏用最后一帧初始化，避免短暂黑屏
+    if (m_lastFrame.isValid())
+        widget->setInitialFrame(m_lastFrame);
     m_presentations.append(widget);
     return widget;
 }
@@ -322,6 +367,7 @@ bool VideoWallpaperPlayer::play(const QString &pathOrUrl)
         return true;
 
     m_source = path;
+    m_paused = false;
     m_player->stop();
     m_player->setMedia(QUrl::fromLocalFile(path));
     m_player->play();
@@ -330,10 +376,34 @@ bool VideoWallpaperPlayer::play(const QString &pathOrUrl)
 
 void VideoWallpaperPlayer::stop()
 {
+    m_paused = false;
     m_player->stop();
     m_player->setMedia(QMediaContent());
     m_source.clear();
     setPlaying(false);
+}
+
+bool VideoWallpaperPlayer::pause()
+{
+    if (!m_player || !m_playing || m_paused)
+        return false;
+    m_player->pause();
+    m_paused = true;
+    return true;
+}
+
+bool VideoWallpaperPlayer::resume()
+{
+    if (!m_player || !m_paused)
+        return false;
+    m_player->play();
+    m_paused = false;
+    return true;
+}
+
+bool VideoWallpaperPlayer::isPaused() const
+{
+    return m_paused;
 }
 
 bool VideoWallpaperPlayer::isPlaying() const
@@ -375,6 +445,21 @@ bool VideoWallpaperPlayer::play(const QString &pathOrUrl)
 
 void VideoWallpaperPlayer::stop()
 {
+}
+
+bool VideoWallpaperPlayer::pause()
+{
+    return false;
+}
+
+bool VideoWallpaperPlayer::resume()
+{
+    return false;
+}
+
+bool VideoWallpaperPlayer::isPaused() const
+{
+    return false;
 }
 
 bool VideoWallpaperPlayer::isPlaying() const

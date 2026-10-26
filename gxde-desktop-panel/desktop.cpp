@@ -76,6 +76,9 @@ Desktop::Desktop()
     // DBus 信号转发：动态壁纸变更通知
     connect(d->background, &BackgroundHelper::dynamicWallpaperChanged,
             this, &Desktop::DynamicWallpaperChanged);
+    // DBus 信号转发：动态壁纸暂停状态变化
+    connect(d->background, &BackgroundHelper::dynamicWallpaperPausedChanged,
+            this, &Desktop::DynamicWallpaperPausedChanged);
     onBackgroundEnableChanged();
 }
 
@@ -321,6 +324,28 @@ bool Desktop::SetDynamicWallpaper(const QString &path)
 QString Desktop::DynamicWallpaper() const
 {
     return (d && d->background) ? d->background->dynamicWallpaperPath() : QString();
+}
+
+void Desktop::SetDynamicWallpaperPaused(bool paused)
+{
+    if (!d || !d->background) {
+        return;
+    }
+
+    if (paused)
+        d->background->pauseDynamicWallpaper();
+    else
+        d->background->resumeDynamicWallpaper();
+}
+
+bool Desktop::DynamicWallpaperPaused() const
+{
+    return (d && d->background) ? d->background->isDynamicWallpaperPaused() : false;
+}
+
+bool Desktop::DynamicWallpaperPlaying() const
+{
+    return (d && d->background) ? d->background->isDynamicWallpaperActive() : false;
 }
 
 bool Desktop::SetWallpaper(const QString &path)

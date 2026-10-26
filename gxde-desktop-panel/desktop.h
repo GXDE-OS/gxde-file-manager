@@ -52,6 +52,14 @@ public slots:
     Q_SCRIPTABLE bool SetDynamicWallpaper(const QString &path);
     // 查询当前视频动态壁纸路径，未启用时返回空串
     Q_SCRIPTABLE QString DynamicWallpaper() const;
+    // 暂停/恢复当前视频动态壁纸；非动态壁纸时调用无效
+    // 例: qdbus com.deepin.dde.desktop /com/deepin/dde/desktop \
+    //      com.deepin.dde.desktop.SetDynamicWallpaperPaused true
+    Q_SCRIPTABLE void SetDynamicWallpaperPaused(bool paused);
+    // 查询当前动态壁纸是否处于暂停态，非动态壁纸时返回 false
+    Q_SCRIPTABLE bool DynamicWallpaperPaused() const;
+    // 查询当前视频动态壁纸是否正在播放（用于诊断；非动态壁纸/解码失败返回 false）
+    Q_SCRIPTABLE bool DynamicWallpaperPlaying() const;
     // 设置静态壁纸（写入 com.deepin.daemon.Appearance 与 GSettings，
     // 生效后会自动停用动态壁纸），成功返回 true
     Q_SCRIPTABLE bool SetWallpaper(const QString &path);
@@ -59,6 +67,8 @@ public slots:
 Q_SIGNALS:
     // 视频动态壁纸启用/停用/更换时发出，空串表示已停用
     void DynamicWallpaperChanged(const QString &path);
+    // 动态壁纸暂停状态变化时发出
+    void DynamicWallpaperPausedChanged(bool paused);
 
 private:
     explicit Desktop();

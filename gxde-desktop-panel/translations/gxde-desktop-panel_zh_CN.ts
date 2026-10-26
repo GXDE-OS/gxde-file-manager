@@ -24,6 +24,15 @@
         <translation>隐藏桌面图标</translation>
     </message>
     <message>
+        <location filename="../view/canvasgridview.cpp" line="2815"/>
+        <source>Pause dynamic wallpaper</source>
+        <translation>暂停动态壁纸</translation>
+    </message>
+    <message>
+        <source>Resume dynamic wallpaper</source>
+        <translation>继续动态壁纸</translation>
+    </message>
+    <message>
         <location filename="../view/canvasgridview.cpp" line="2520"/>
         <source>Set Wallpaper</source>
         <translation>设置壁纸</translation>

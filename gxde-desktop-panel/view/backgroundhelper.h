@@ -80,6 +80,15 @@ public:
     QString dynamicWallpaperPath() const;
     bool isDynamicWallpaperActive() const;
 
+    // 动态壁纸模式是否生效（视频文件存在且未解码失败），与播放/暂停状态无关。
+    // 静态壁纸下返回 false，供桌面右键菜单决定是否显示暂停/播放项
+    bool hasDynamicWallpaper() const;
+    // 当前动态壁纸是否处于暂停态
+    bool isDynamicWallpaperPaused() const;
+    // 暂停/恢复动态视频壁纸（保留当前帧与位置）；非动态壁纸时无效
+    void pauseDynamicWallpaper();
+    void resumeDynamicWallpaper();
+
     void onWMChanged();
     void refreshBackground();
 Q_SIGNALS:
@@ -90,6 +99,7 @@ Q_SIGNALS:
     void weatherImageChanged(QPixmap);
     void onScreenChanged();
     void dynamicWallpaperChanged(const QString &path);
+    void dynamicWallpaperPausedChanged(bool paused);
 
 private:
     bool eventFilter(QObject *watched, QEvent *event) override;
@@ -139,6 +149,7 @@ private:
     VideoWallpaperPlayer *m_videoPlayer = nullptr;
     QString m_dynamicWallpaper;
     bool m_videoFailed = false;
+    bool m_dynamicPaused = false;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     // 每块屏一个呈现控件（Qt6 raster 自绘路径，兼容图标层栈序）
     QHash<QLabel *, VideoPresentationWidget *> m_videoWidgets;

@@ -58,6 +58,9 @@ public:
     void detach(); // 断开与播放器的帧转发（销毁前调用）
     void setAspectRatioMode(Qt::AspectRatioMode mode);
     QVideoSink *videoSink() const;
+    // 为刚接入的呈现控件补一帧：暂停状态下新屏不会收到新帧，
+    // 先用播放器持有的最后一帧初始化，避免黑屏
+    void setInitialFrame(const QVideoFrame &frame);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -96,6 +99,14 @@ public:
     bool play(const QString &pathOrUrl);
     void stop();
 
+    // 暂停：保留当前帧与播放位置（不销毁解码器）；恢复从原位置继续
+    // 仅对正在播放的实例有效，返回是否执行了暂停
+    bool pause();
+    // 从暂停态恢复播放
+    bool resume();
+    // 当前是否处于暂停态（未播放或播放中均为 false）
+    bool isPaused() const;
+
     bool isPlaying() const;
     QString sourcePath() const;
 
@@ -127,6 +138,8 @@ private:
 
     QString m_source;
     bool m_playing = false;
+    bool m_paused = false;
+    QVideoFrame m_lastFrame;               // 最近一帧（供新屏初始帧/查询）
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QMediaPlayer *m_player = nullptr;
