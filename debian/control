@@ -93,6 +93,7 @@ Depends:
  libdframeworkdbus-qt6,
  liblayershellqtinterface6,
  layer-shell-qt,
+ gxde-wallpaper-chooser,
 Conflicts: dde-workspace (<< 2.90.5), dde-desktop (>> 5.0.1-1), gxde-desktop-panel-neo
 Provides: dde-desktop, gxde-desktop-panel-neo
 Replaces: dde-desktop, gxde-desktop-panel-neo

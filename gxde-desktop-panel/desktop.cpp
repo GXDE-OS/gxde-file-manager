@@ -262,8 +262,8 @@ void Desktop::showWallpaperSettings()
     // 该代理(QDBusAbstractInterface 析构)时, 在 X11 会话下会触发 __XEventMonitor
     // 析构崩溃, 连带使 gxde-desktop-panel 进程崩溃，该选择器能在 x11 使用，所以干脆就直接
     // 启动独立进程了，wayland 和 x11 用同个选择器，不再直接内嵌到进程里
-    if (!QProcess::startDetached(QStringLiteral("gxde-wallpaper-chooser-wayland"), args))
-        qWarning() << "failed to launch gxde-wallpaper-chooser-wayland";
+    if (!QProcess::startDetached(QStringLiteral("/usr/bin/gxde-wallpaper-chooser"), args))
+        qWarning() << "failed to launch /usr/bin/gxde-wallpaper-chooser";
 }
 
 #ifndef DISABLE_ZONE

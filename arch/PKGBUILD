@@ -92,7 +92,8 @@ package_gxde-desktop-panel-git() {
            'layer-shell-qt' 'dtk2widget-qt6-git' 'dtk6core-git' 'dtk6gui-git' 'gsettings-qt6'
            'qt6-5compat' 'qt6-base' 'libxcb' 'xcb-util-wm' 'libgcc' 'libstdc++' 'glibc')
   optdepends=('deepin-screensaver-git: screensaver'
-              'gxde-requ-git: GXDE ReQu')
+              'gxde-requ-git: GXDE ReQu'
+              'gxde-wallpaper-chooser-git: GXDE Wallpaper Chooser')
   provides=('gxde-desktop-panel' 'deepin-desktop')
   conflicts=('gxde-desktop-panel' 'deepin-desktop')
 
