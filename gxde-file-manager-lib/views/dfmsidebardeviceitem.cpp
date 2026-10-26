@@ -146,11 +146,12 @@ QMenu *DFMSideBarDeviceItem::createStandardContextMenu() const
         menu->addAction(QObject::tr("Unmount"), this, SLOT(doUnmountOrEject()));
     }
 
-    // 只允许分区和可移动设备格式化
+    // 只允许真实分区和可移动设备格式化（排除 /home 等合成挂载点）
     if ((info.value("mediaType", 0).toInt() == UDiskDeviceInfo::MediaType::native
         || info.value("mediaType", 0).toInt() == UDiskDeviceInfo::MediaType::removable
         ) &&
-        !info.value("optical", false).toBool()) {
+        !info.value("optical", false).toBool() &&
+        info.value("deviceId").toString().startsWith("/dev/")) {
         menu->addAction(QObject::tr("Format"), [this, info, deviceIdUrl]() {
             AppController::instance()->actionFormatDevice(dMakeEventPointer<DFMUrlBaseEvent>(this, deviceIdUrl));
         });

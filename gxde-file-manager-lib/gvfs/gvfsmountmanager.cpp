@@ -1120,8 +1120,12 @@ DUrl GvfsMountManager::getRealMountUrl(const QDiskInfo &info)
         return MountPointUrl;
     }
 
-    if (mounted_root_uri == "/") {
-        MountPointUrl = DUrl::fromLocalFile("/");
+    if (mounted_root_uri == "/" || QUrl(mounted_root_uri).scheme().isEmpty()) {
+        // The root file system ("/") and synthetic local mount points (e.g. a
+        // custom /home data disk) store a plain local path without a scheme, so
+        // normalize it to a `file://` url that the local file controller can
+        // actually handle.
+        MountPointUrl = DUrl::fromLocalFile(mounted_root_uri);
     } else {
         if ((info.type() != "native" &&
              info.type() != "removable" &&

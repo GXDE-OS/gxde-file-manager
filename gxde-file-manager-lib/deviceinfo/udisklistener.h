@@ -124,6 +124,11 @@ private slots:
     void insertFileSystemDevice(const QString dbusPath);
 
 private:
+    // Register the disk mounted at /home as a synthetic device so it shows up
+    // in the computer view and the sidebar (labeled as the "数据盘"/Data Disk).
+    void registerHomeMountPoint();
+
+private:
     DDiskManager* m_diskMgr = nullptr;
     QMap<QString, DBlockDevice*> m_fsDevMap;
 

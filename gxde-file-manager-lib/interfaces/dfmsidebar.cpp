@@ -364,12 +364,17 @@ void DFMSideBarPrivate::initMountedVolumes()
     auto devices_info = fileService->getChildren(q_func(), DUrl(DEVICE_ROOT),
                         QStringList(), QDir::AllEntries);
     for (const DAbstractFileInfoPointer &info : devices_info) {
-        QString devs(info->fileUrl().path());
-        devs.replace("/dev/", "/org/freedesktop/UDisks2/block_devices/");
-        QScopedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(devs));
-        QScopedPointer<DDiskDevice> drv(DDiskManager::createDiskDevice(blkdev->drive()));
-        if (drv->mediaCompatibility().join(' ').contains("optical")) {
-            continue;
+        const QString devPath = info->fileUrl().path();
+        // Synthetic (non real block device) entries such as the /home mount
+        // point have no backing /dev node, skip the optical detection for them.
+        if (devPath.startsWith("/dev/")) {
+            QString devs(devPath);
+            devs.replace("/dev/", "/org/freedesktop/UDisks2/block_devices/");
+            QScopedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(devs));
+            QScopedPointer<DDiskDevice> drv(DDiskManager::createDiskDevice(blkdev->drive()));
+            if (drv->mediaCompatibility().join(' ').contains("optical")) {
+                continue;
+            }
         }
         group->appendItem(new DFMSideBarDeviceItem(info->fileUrl()));
     }
@@ -384,12 +389,15 @@ void DFMSideBarPrivate::initMountedVolumes()
 
     // New device/volume added.
     q->connect(devices_watcher, &DAbstractFileWatcher::subfileCreated, group, [group](const DUrl & url) {
-        QString devs(url.path());
-        devs.replace("/dev/", "/org/freedesktop/UDisks2/block_devices/");
-        QScopedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(devs));
-        QScopedPointer<DDiskDevice> drv(DDiskManager::createDiskDevice(blkdev->drive()));
-        if (drv->mediaCompatibility().join(' ').contains("optical")) {
-            return;
+        const QString devPath = url.path();
+        if (devPath.startsWith("/dev/")) {
+            QString devs(devPath);
+            devs.replace("/dev/", "/org/freedesktop/UDisks2/block_devices/");
+            QScopedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(devs));
+            QScopedPointer<DDiskDevice> drv(DDiskManager::createDiskDevice(blkdev->drive()));
+            if (drv->mediaCompatibility().join(' ').contains("optical")) {
+                return;
+            }
         }
         group->appendItem(new DFMSideBarDeviceItem(url));
     });

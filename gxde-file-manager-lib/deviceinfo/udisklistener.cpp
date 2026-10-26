@@ -98,6 +98,8 @@ void UDiskListener::initDiskManager()
     for (const QString &str : blDevList) {
         insertFileSystemDevice(str);
     }
+
+    registerHomeMountPoint();
 }
 
 void UDiskListener::initConnect()
@@ -208,6 +210,40 @@ void UDiskListener::update()
             addMountDiskInfo(diskInfo);
         }
     }
+
+    registerHomeMountPoint();
+}
+
+void UDiskListener::registerHomeMountPoint()
+{
+    // Show the disk mounted at /home as a separate device in the computer view
+    // and the sidebar, labeled as "数据盘" (Data Disk). Only register it when
+    // /home is an independent filesystem (i.e. not the same one as the root "/").
+    QStorageInfo homeInfo("/home");
+
+    if (!homeInfo.isValid() || homeInfo.rootPath() != QStringLiteral("/home")) {
+        return;
+    }
+
+    if (m_map.contains(QStringLiteral("/home"))) {
+        return;
+    }
+
+    QDiskInfo diskInfo;
+    diskInfo.setId(QStringLiteral("/home"));
+    diskInfo.setType(QStringLiteral("native"));
+    diskInfo.setName(QStringLiteral("_dde_data"));   // -> "Data Disk" / "数据盘"
+    diskInfo.setMounted_root_uri(QStringLiteral("/home"));
+    diskInfo.setCan_mount(false);
+    diskInfo.setCan_unmount(false);
+    diskInfo.setIsNativeCustom(true);
+    diskInfo.setTotal(homeInfo.bytesTotal());
+    diskInfo.setFree(homeInfo.bytesFree());
+    diskInfo.setUsed(homeInfo.bytesTotal() - homeInfo.bytesFree());
+
+    UDiskDeviceInfo *deviceInfo = new UDiskDeviceInfo;
+    deviceInfo->setDiskInfo(diskInfo);
+    addDevice(UDiskDeviceInfoPointer(deviceInfo));
 }
 
 

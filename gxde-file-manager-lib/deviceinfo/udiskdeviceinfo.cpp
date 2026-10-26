@@ -105,6 +105,11 @@ QString UDiskDeviceInfo::getIdType() const
 {
     // getIdType
     QString dbusPath = this->getDBusPath();
+
+    if (dbusPath.isEmpty()) {
+        return QString();
+    }
+
     QScopedPointer<DBlockDevice> blDev(DDiskManager::createBlockDevice(dbusPath));
     return blDev->idType();
 }
@@ -337,6 +342,10 @@ bool UDiskDeviceInfo::canRename() const
 {
     QString devicePath = this->getDBusPath();
 
+    if (devicePath.isEmpty()) {
+        return false;
+    }
+
     DBlockDevice *partition = DDiskManager::createBlockDevice(devicePath, nullptr);
     bool result = partition->canSetLabel();
     partition->deleteLater();
@@ -479,12 +488,18 @@ DUrl UDiskDeviceInfo::redirectedFileUrl() const
 {
     DUrl ret = getMountPointUrl();
 
-    QString dbuspath = m_diskInfo.unix_device();
-    dbuspath.replace("/dev/", "/org/freedesktop/UDisks2/block_devices/");
-    QScopedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(dbuspath));
-    QScopedPointer<DDiskDevice> drive(DDiskManager::createDiskDevice(blkdev->drive()));
-    if (drive->optical()) {
-        ret = DUrl::fromBurnFile(m_diskInfo.unix_device() + "/" BURN_SEG_ONDISC);
+    // Synthetic devices such as the /home mount point have no backing /dev
+    // node, so skip the udisks2 optical detection that would otherwise try
+    // to query an invalid (empty) block device path.
+    const QString unixDevice = m_diskInfo.unix_device();
+    if (!unixDevice.isEmpty()) {
+        QString dbuspath = unixDevice;
+        dbuspath.replace("/dev/", "/org/freedesktop/UDisks2/block_devices/");
+        QScopedPointer<DBlockDevice> blkdev(DDiskManager::createBlockDevice(dbuspath));
+        QScopedPointer<DDiskDevice> drive(DDiskManager::createDiskDevice(blkdev->drive()));
+        if (drive->optical()) {
+            ret = DUrl::fromBurnFile(m_diskInfo.unix_device() + "/" BURN_SEG_ONDISC);
+        }
     }
 
     return ret;
