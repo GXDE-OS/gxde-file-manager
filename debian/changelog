@@ -1,4 +1,4 @@
-gxde-file-manager (6.4.16) UNRELEASED; urgency=medium
+gxde-file-manager (6.4.17) UNRELEASED; urgency=medium
 
   [ CharOfString ]
   * 修复了桌面图标总是乱飞的问题
@@ -11,8 +11,9 @@ gxde-file-manager (6.4.16) UNRELEASED; urgency=medium
   * feat: 支持调整文件管理器侧边栏大小
   * feat: 支持设置动态壁纸
   * feat: 使用窗口化gxde-wallpaper-chooser
+  * feat: 支持显示数据盘
 
- -- gfdgd_xi <3025613752@qq.com>  Mon, 26 Oct 2026 19:09:35 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Mon, 26 Oct 2026 21:02:23 +0800
 
 gxde-file-manager (6.4.13) UNRELEASED; urgency=medium
 
