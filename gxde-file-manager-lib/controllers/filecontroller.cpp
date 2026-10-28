@@ -626,7 +626,6 @@ QProcessEnvironment compressorEnvironment()
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
     env.remove("QT_QPA_PLATFORM_PLUGIN_PATH");
-    env.remove("QT_QPA_PLATFORM");
 
     if (WaylandUtils::isWaylandPlatform()) {
         env.remove("DTK2_XWAYLAND");
