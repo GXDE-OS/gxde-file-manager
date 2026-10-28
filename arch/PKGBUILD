@@ -2,7 +2,7 @@
 pkgbase=gxde-file-manager-git
 pkgname=('gxde-file-manager-git' 'gxde-desktop-panel-git' 'gxde-disk-mount-plugin-git'
          'libgxde-file-manager-git')
-pkgver=6.4.17
+pkgver=6.4.18
 pkgrel=1
 pkgdesc='GXDE file manager'
 arch=('x86_64' 'aarch64')
