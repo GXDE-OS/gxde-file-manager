@@ -528,6 +528,13 @@
     </message>
 </context>
 <context>
+    <name>DToolBar</name>
+    <message>
+        <source>Show/hide sidebar</source>
+        <translation>显示/隐藏侧边栏</translation>
+    </message>
+</context>
+<context>
     <name>DeepinStorage</name>
     <message>
         <location filename="../devicemanagement/dfmudisks2deviceinfo.cpp" line="114" />
@@ -1164,6 +1171,11 @@
         <location filename="../configure/global-setting-template.js" line="145" />
         <source>Show hover highlight box</source>
         <translation>鼠标悬停时显示高亮框</translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="133" />
+        <source>Show sidebar</source>
+        <translation>显示侧边栏</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="173" />

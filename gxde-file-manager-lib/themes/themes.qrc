@@ -69,6 +69,8 @@
         <file>dark/icons/search_hover.svg</file>
         <file>dark/icons/search_normal.svg</file>
         <file>dark/icons/search_press.svg</file>
+        <file>dark/icons/sidebar_hover.svg</file>
+        <file>dark/icons/sidebar_normal.svg</file>
         <file>dark/icons/filter_hover.svg</file>
         <file>dark/icons/filter_normal.svg</file>
         <file>dark/icons/filter_active.svg</file>

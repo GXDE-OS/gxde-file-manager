@@ -127,6 +127,12 @@
                             "text": qsTranslate("GenerateSettingTranslate", "Show hover highlight box"),
                             "type": "checkbox",
                             "default": true
+                        },
+                        {
+                            "key": "show_sidebar",
+                            "text": qsTranslate("GenerateSettingTranslate", "Show sidebar"),
+                            "type": "checkbox",
+                            "default": true
                         }
                     ]
                 },

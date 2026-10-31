@@ -357,6 +357,35 @@ QPushButton#searchButton:pressed{
     qproperty-iconSize: 16px;
 }
 
+QPushButton#sideBarButton{
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 3px, 3px, 3px, 3px;
+    qproperty-icon: url(:/dark/icons/sidebar_normal.svg);
+    qproperty-iconSize: 16px;
+}
+
+QPushButton#sideBarButton:checked{
+    background-color: #2ca7f8;
+    padding: 3px, 3px, 3px, 3px;
+    qproperty-icon: url(:/dark/icons/sidebar_hover.svg);
+    qproperty-iconSize: 16px;
+}
+
+QPushButton#sideBarButton:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 3px, 3px, 3px, 3px;
+    qproperty-icon: url(:/dark/icons/sidebar_hover.svg);
+    qproperty-iconSize: 16px;
+}
+
+QPushButton#sideBarButton:pressed{
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 3px, 3px, 3px, 3px;
+    qproperty-icon: url(:/dark/icons/sidebar_hover.svg);
+    qproperty-iconSize: 16px;
+}
+
 QPushButton#filterButton{
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 4px;

@@ -528,6 +528,13 @@
     </message>
 </context>
 <context>
+    <name>DToolBar</name>
+    <message>
+        <source>Show/hide sidebar</source>
+        <translation>顯示/隱藏側邊欄</translation>
+    </message>
+</context>
+<context>
     <name>DeepinStorage</name>
     <message>
         <location filename="../devicemanagement/dfmudisks2deviceinfo.cpp" line="114" />
@@ -1150,6 +1157,11 @@
         <location filename="../configure/global-setting-template.js" line="133" />
         <source>Show hidden files</source>
         <translation>顯示隱藏檔案</translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="133" />
+        <source>Show sidebar</source>
+        <translation>顯示側邊欄</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template.js" line="139" />

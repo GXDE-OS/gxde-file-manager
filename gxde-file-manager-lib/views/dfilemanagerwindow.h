@@ -139,6 +139,7 @@ public slots:
     void requestEmptyTrashFiles();
     void onTrashStateChanged();
     void setPreviewSidebarVisible(bool isVisiable);
+    void setLeftSideBarVisible(bool isVisible);
 
     void onShowRenameBar(const DFMUrlListBaseEvent &event)noexcept;
     void onTabBarCurrentIndexChange(const int &index)noexcept;

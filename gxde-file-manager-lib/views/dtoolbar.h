@@ -64,6 +64,7 @@ public:
     void initConnect();
     DFMCrumbBar *getCrumbWidget();
     QPushButton* getSettingsButton();
+    QPushButton* getSideBarButton();
     void addHistoryStack();
 
     int navStackCount() const;
@@ -108,6 +109,7 @@ private:
     QPushButton* m_upButton = nullptr;
     QPushButton* m_searchButton = nullptr;
     QPushButton* m_settingsButton = nullptr;
+    QPushButton* m_sideBarButton = nullptr;
     QFrame* m_contollerToolBar;
     DGraphicsClipEffect *m_contollerToolBarClipMask;
     QHBoxLayout *m_contollerToolBarContentLayout;

@@ -602,6 +602,21 @@ void DFileManagerWindow::setPreviewSidebarVisible(bool isVisiable)
     d->previewSidebar->setVisible(isVisiable);
 }
 
+void DFileManagerWindow::setLeftSideBarVisible(bool isVisible)
+{
+    D_D(DFileManagerWindow);
+
+    if (!d->leftSideBar)
+        return;
+
+    d->leftSideBar->setVisible(isVisible);
+
+    // 重新显示时按记录的宽度恢复分割位置，避免侧边栏被压缩为 0
+    if (isVisible && d->splitter && d->leftSidebarWidth > 0) {
+        setSplitterPosition(d->leftSidebarWidth);
+    }
+}
+
 void DFileManagerWindow::requestEmptyTrashFiles()
 {
     DFMGlobal::clearTrash();
@@ -1179,6 +1194,15 @@ void DFileManagerWindow::initToolBar()
     d->toolbar = new DToolBar(this);
     d->toolbar->setObjectName("ToolBar");
     d->toolbar->setFixedHeight(40);
+
+    // 侧边栏开关按钮：点击写入通用属性，由 genericAttributeChanged 驱动所有窗口切换
+    if (d->toolbar->getSideBarButton()) {
+        QPushButton *sideBarButton = d->toolbar->getSideBarButton();
+        sideBarButton->setChecked(DFMApplication::genericAttribute(DFMApplication::GA_ShowLeftSideBar).toBool());
+        connect(sideBarButton, &QPushButton::clicked, this, [](bool checked) {
+            DFMApplication::setGenericAttribute(DFMApplication::GA_ShowLeftSideBar, checked);
+        });
+    }
 }
 
 void DFileManagerWindow::initTabBar()
@@ -1219,6 +1243,9 @@ void DFileManagerWindow::initCentralWidget()
     bool showRightViewDetails = DFMApplication::genericAttribute(DFMApplication::GA_showRightViewDetails).toBool();
     d->previewSidebar->setVisible(showRightViewDetails);  // 读取配置判断是否应当显示
     initSplitter();
+
+    // 读取配置判断左侧边栏是否显示
+    d->leftSideBar->setVisible(DFMApplication::genericAttribute(DFMApplication::GA_ShowLeftSideBar).toBool());
 
     d->centralWidget = new QFrame(this);
     d->centralWidget->setObjectName("CentralWidget");
@@ -1275,6 +1302,18 @@ void DFileManagerWindow::initConnect()
 
     QObject::connect(fileSignalManager, &FileSignalManager::requestMultiFilesRename, this, &DFileManagerWindow::onShowRenameBar);
     QObject::connect(d->tabBar, &TabBar::currentChanged, this, &DFileManagerWindow::onTabBarCurrentIndexChange);
+
+    // 设置中切换“显示侧边栏”时，所有已打开窗口实时生效
+    QObject::connect(DFMApplication::instance(), &DFMApplication::genericAttributeChanged, this, [this, d](DFMApplication::GenericAttribute ga, const QVariant &value) {
+        if (ga == DFMApplication::GA_ShowLeftSideBar) {
+            setLeftSideBarVisible(value.toBool());
+
+            // 保持工具栏开关按钮与当前状态一致
+            if (d->toolbar && d->toolbar->getSideBarButton()) {
+                d->toolbar->getSideBarButton()->setChecked(value.toBool());
+            }
+        }
+    });
 }
 
 void DFileManagerWindow::moveCenterByRect(QRect rect)

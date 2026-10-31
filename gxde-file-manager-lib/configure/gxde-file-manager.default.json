@@ -40,7 +40,8 @@
         "DisableNonRemovableDeviceUnmount": false,
         "HiddenSystemPartition": false,
         "ShowCsdCrumbBarClickableArea": true,
-        "ShowHoverBox": true
+        "ShowHoverBox": true,
+        "ShowLeftSideBar": true
     },
     "AnythingMonitorFilterPath": {
         "WhiteList":[

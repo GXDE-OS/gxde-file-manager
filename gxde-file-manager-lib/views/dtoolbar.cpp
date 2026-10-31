@@ -115,6 +115,13 @@ void DToolBar::initAddressToolBar()
 
     QHBoxLayout * backForwardLayout = new QHBoxLayout;
 
+    m_sideBarButton = new QPushButton(this);
+    m_sideBarButton->setObjectName("sideBarButton");
+    m_sideBarButton->setFixedWidth(ButtonWidth);
+    m_sideBarButton->setFixedHeight(ButtonHeight);
+    m_sideBarButton->setCheckable(true);
+    m_sideBarButton->setFocusPolicy(Qt::NoFocus);
+    m_sideBarButton->setToolTip(tr("Show/hide sidebar"));
 
     m_backButton = new QPushButton(this);
     m_backButton->setObjectName("backButton");
@@ -143,6 +150,8 @@ void DToolBar::initAddressToolBar()
     m_searchButton->setFixedHeight(ButtonHeight);
     m_searchButton->setFocusPolicy(Qt::NoFocus);
 
+    backForwardLayout->addWidget(m_sideBarButton);
+    backForwardLayout->addSpacing(6);
     backForwardLayout->addWidget(m_backButton);
     backForwardLayout->addWidget(m_forwardButton);
     backForwardLayout->addWidget(m_upButton);
@@ -230,6 +239,11 @@ DFMCrumbBar *DToolBar::getCrumbWidget()
 QPushButton *DToolBar::getSettingsButton()
 {
     return m_settingsButton;
+}
+
+QPushButton *DToolBar::getSideBarButton()
+{
+    return m_sideBarButton;
 }
 
 void DToolBar::searchBarActivated()

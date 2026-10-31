@@ -500,6 +500,13 @@
     </message>
 </context>
 <context>
+    <name>DToolBar</name>
+    <message>
+        <source>Show/hide sidebar</source>
+        <translation>Show/hide sidebar</translation>
+    </message>
+</context>
+<context>
     <name>DeepinStorage</name>
     <message>
         <location filename="../devicemanagement/dfmudisks2deviceinfo.cpp" line="114" />
@@ -1187,6 +1194,11 @@
         <location filename="../configure/global-setting-template.js" line="133" />
         <source>Show hidden files</source>
         <translation>Show hidden files</translation>
+    </message>
+    <message>
+        <location filename="../configure/global-setting-template.js" line="133" />
+        <source>Show sidebar</source>
+        <translation>Show sidebar</translation>
     </message>
     <message>
         <location filename="../configure/global-setting-template-fedora.js" line="139" />
