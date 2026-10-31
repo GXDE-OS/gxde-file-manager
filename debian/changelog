@@ -1,10 +1,14 @@
-gxde-file-manager (6.4.18) UNRELEASED; urgency=medium
+gxde-file-manager (6.4.19) UNRELEASED; urgency=medium
 
   [ shenmo ]
   * 移除压缩/解压启动 gxde-compressor 时手动清理 QT_QPA_PLATFORM 的处理
     （dtk2widget 6.3.8 起会自动还原被改写的环境变量）
 
- -- shenmo <shenmo@spark-app.store>  Wed, 28 Oct 2026 22:11:00 +0800
+  [ gfdgd_xi ]
+  * feat: 支持隐藏文件管理器左侧栏
+  * feat: 支持隐藏文件管理器左侧栏特定条目
+
+ -- gfdgd_xi <3025613752@qq.com>  Sat, 31 Oct 2026 23:03:10 +0800
 
 gxde-file-manager (6.4.17) UNRELEASED; urgency=medium
 
