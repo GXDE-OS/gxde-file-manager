@@ -355,9 +355,20 @@ DFMSettingDialog::DFMSettingDialog(QWidget *parent):
 
     // 设置关闭按钮图标
     DImageButton *closeButton = this->findChild<DImageButton *>();
-    qDebug() << closeButton;
     if (closeButton != NULL) {
         closeButton->show();
+
+        // 图标必须写进样式表：DImageButton 悬停时 DThemeManager 会重新 polish 控件并重新应用
+        // 主题里的 qproperty-*Pic（40x40 的默认 SVG），仅用 setNormalPic 等接口设置的图标
+        // 会被覆盖，导致按钮变大后无法恢复。追加在对话框样式表末尾的同名规则在每次
+        // polish 时都会生效，保证悬停、按下时仍是 27x23 的自定义图标。
+        setStyleSheet(styleSheet() + QLatin1String(
+            "#DSettingsDialogClose{"
+            "qproperty-normalPic: url(:/images/dialogs/images/light/window_close_normal.png);"
+            "qproperty-hoverPic: url(:/images/dialogs/images/light/window_close_hover.png);"
+            "qproperty-pressPic: url(:/images/dialogs/images/light/window_close_press.png);"
+            "}"));
+
         closeButton->setHoverPic(":/images/dialogs/images/light/window_close_hover.png");
         closeButton->setNormalPic(":/images/dialogs/images/light/window_close_normal.png");
         closeButton->setPressPic(":/images/dialogs/images/light/window_close_press.png");
