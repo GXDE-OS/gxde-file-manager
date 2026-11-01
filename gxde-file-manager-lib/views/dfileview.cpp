@@ -3030,6 +3030,8 @@ void DFileView::updateToolBarActions(QWidget *widget, QString theme)
 
         QIcon rightViewDetailsAction_icon;
         rightViewDetailsAction_icon.addFile(ThemeConfig::instace()->string("FileView", "rightViewDetailsAction.icon"));
+        rightViewDetailsAction_icon.addFile(ThemeConfig::instace()->string("FileView", "rightViewDetailsAction.icon", ThemeConfig::Hover), QSize(), QIcon::Active);
+        rightViewDetailsAction_icon.addFile(ThemeConfig::instace()->string("FileView", "rightViewDetailsAction.icon", ThemeConfig::Checked), QSize(), QIcon::Normal, QIcon::On);
         m_rightViewDetailsAction->setIcon(rightViewDetailsAction_icon);
 
         icon_view_mode_icon.addFile(ThemeConfig::instace()->string("FileView", "iconview.icon"));

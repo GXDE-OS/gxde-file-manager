@@ -383,14 +383,17 @@ QPushButton#searchButton:hover{
     qproperty-iconSize: 16px;
 }
 
+
+
+
+
 QPushButton#sideBarButton{
     background-color:white;
     border: 1px solid rgba(0, 0, 0, 0.1);
     color: black;
     border-radius: 4px;
     padding: 3px, 3px, 3px, 3px;
-    qproperty-icon: url(:/icons/images/icons/sidebar_normal_16px.svg);
-    qproperty-iconSize: 16px;
+    image: url(:/icons/images/icons/sidebar_normal_16px.svg);
 }
 
 QPushButton#sideBarButton:checked{
@@ -398,8 +401,7 @@ QPushButton#sideBarButton:checked{
     border: 1px solid #2ca7f8;
     color: white;
     padding: 3px, 3px, 3px, 3px;
-    qproperty-icon: url(:/icons/images/icons/sidebar_hover_16px.svg);
-    qproperty-iconSize: 16px;
+    image: url(:/icons/images/icons/sidebar_hover_16px.svg);
 }
 
 QPushButton#sideBarButton:hover{
@@ -409,17 +411,15 @@ QPushButton#sideBarButton:hover{
     border: 1px solid #3caafd;
     color: white;
     padding: 3px, 3px, 3px, 3px;
-    qproperty-icon: url(:/icons/images/icons/sidebar_hover_16px.svg);
-    qproperty-iconSize: 16px;
+    image: url(:/icons/images/icons/sidebar_hover_16px.svg);
 }
 
 QPushButton#sideBarButton:pressed{
-    background-color:white;
-    border: 1px solid #1088ff;
+    background-color:#2ca7f8;
+    border: 1px solid #2ca7f8;
     color: white;
     padding: 3px, 3px, 3px, 3px;
-    qproperty-icon: url(:/icons/images/icons/sidebar_hover_16px.svg);
-    qproperty-iconSize: 16px;
+    image: url(:/icons/images/icons/sidebar_hover_16px.svg);
 }
 
 QPushButton#filterButton{
