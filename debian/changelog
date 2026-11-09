@@ -1,4 +1,4 @@
-gxde-file-manager (6.4.20) UNRELEASED; urgency=medium
+gxde-file-manager (6.4.21) UNRELEASED; urgency=medium
 
   [ shenmo ]
   * 移除压缩/解压启动 gxde-compressor 时手动清理 QT_QPA_PLATFORM 的处理
@@ -9,8 +9,9 @@ gxde-file-manager (6.4.20) UNRELEASED; urgency=medium
   * feat: 支持隐藏文件管理器左侧栏特定条目
   * 优化左右侧边栏按钮图标
   * fix: 修复设置窗口关闭按钮鼠标悬浮时样式异常的问题
+  * feat: 支持按磁盘卷标字母顺序排序(https://github.com/GXDE-OS/GXDE/issues/32 )
 
- -- gfdgd_xi <3025613752@qq.com>  Sun, 01 Nov 2026 13:21:46 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Mon, 09 Nov 2026 21:20:39 +0800
 
 gxde-file-manager (6.4.17) UNRELEASED; urgency=medium
 
