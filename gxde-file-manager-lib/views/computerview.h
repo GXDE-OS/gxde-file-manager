@@ -206,6 +206,8 @@ protected:
     void setIconSizeBySizeIndex(int index);
 
 private:
+    void sortDiskItems();
+
     QString m_viewId;
     TitleLine* m_systemTitleLine=NULL;
     DFlowLayout* m_systemFlowLayout = nullptr;

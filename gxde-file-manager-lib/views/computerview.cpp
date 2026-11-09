@@ -38,6 +38,7 @@
 #include "controllers/appcontroller.h"
 #include "deviceinfo/udisklistener.h"
 #include "dabstractfileinfo.h"
+#include "interfaces/dfmglobal.h"
 #include "interfaces/dfmstandardpaths.h"
 #include "gvfs/gvfsmountmanager.h"
 #include "singleton.h"
@@ -63,12 +64,129 @@
 #include <QScroller>
 
 #include <QStyleHints>
+#include <QCollator>
+#include <QRegularExpression>
+#include <algorithm>
 
 #include <DApplication>
 
 DWIDGET_USE_NAMESPACE
 
 #define CVI_PROGRESSLINE_HEIGHT 4
+
+namespace {
+
+// 磁盘排列优先级：系统盘、数据盘固定在前两位，有盘标的按名称字母序，
+// 无盘标（名称回退成容量）的按容量从大到小排在最后。
+enum DiskItemRank {
+    SystemDiskRank = 0,
+    DataDiskRank = 1,
+    NamedDiskRank = 2,
+    UnnamedDiskRank = 3
+};
+
+bool diskItemHasCapacityName(const QString &name)
+{
+    // GIO 对无卷标的卷会生成 "256 GB"、"1 TB Volume" 之类的名字；卷标为空时
+    // fileDisplayName() 回退成 "256.0 GiB"，windowsStyle 下还会追加 " (D:)"。
+    // 只要显示名以「数字 + 容量单位」开头，就视为没有卷标。
+    static const QRegularExpression pattern(
+                QStringLiteral("^\\s*\\d+(?:\\.\\d+)?\\s*(?:B|KB|MB|GB|TB|KiB|MiB|GiB|TiB)(?![A-Za-z])"),
+                QRegularExpression::CaseInsensitiveOption);
+    return pattern.match(name).hasMatch();
+}
+
+int diskItemRank(const ComputerViewItem *item)
+{
+    if (!item) {
+        return NamedDiskRank;
+    }
+    if (!item->deviceInfo().data()) {
+        return diskItemHasCapacityName(item->name()) ? UnnamedDiskRank : NamedDiskRank;
+    }
+
+    const QDiskInfo diskInfo = item->deviceInfo()->getDiskInfo();
+    if (diskInfo.isNativeCustom() && diskInfo.id() == QStringLiteral("/")
+            && diskInfo.mounted_root_uri() == QStringLiteral("/")) {
+        return SystemDiskRank;
+    }
+    if (diskInfo.isNativeCustom() && diskInfo.id() == QStringLiteral("/home")
+            && diskInfo.mounted_root_uri() == QStringLiteral("/home")) {
+        return DataDiskRank;
+    }
+    // 界面上只显示容量的盘统一归到最后一组，不能让它们混进按字母排序的一组
+    if (diskInfo.name().isEmpty() || diskItemHasCapacityName(item->name())) {
+        return UnnamedDiskRank;
+    }
+
+    return NamedDiskRank;
+}
+
+QString diskItemSortKey(const QString &name)
+{
+    QString key;
+    key.reserve(name.size());
+
+    for (const QChar ch : name) {
+        if (ch.script() != QChar::Script_Han) {
+            key.append(ch);
+            continue;
+        }
+
+        // 汉字转成拼音后与拉丁字母一起排序，词库中的声调数字不参与比较
+        const QString pinyin = DFMGlobal::toPinyin(QString(ch));
+        for (const QChar pyChar : pinyin) {
+            if (!pyChar.isDigit())
+                key.append(pyChar);
+        }
+    }
+
+    return key;
+}
+
+bool diskItemLessThan(QLayoutItem *lhs, QLayoutItem *rhs)
+{
+    static const QCollator collator = [] {
+        QCollator c;
+        c.setNumericMode(true);
+        c.setCaseSensitivity(Qt::CaseInsensitive);
+        return c;
+    }();
+
+    const auto itemOf = [](QLayoutItem *layoutItem) -> ComputerViewItem * {
+        QWidget *widget = layoutItem ? layoutItem->widget() : nullptr;
+        return widget ? dynamic_cast<ComputerViewItem *>(widget) : nullptr;
+    };
+
+    ComputerViewItem *left = itemOf(lhs);
+    ComputerViewItem *right = itemOf(rhs);
+    if (!left || !right)
+        return false;
+
+    const int leftRank = diskItemRank(left);
+    const int rightRank = diskItemRank(right);
+    if (leftRank != rightRank)
+        return leftRank < rightRank;
+
+    // 系统盘、数据盘各自只有一项，保持原顺序
+    if (leftRank == SystemDiskRank || leftRank == DataDiskRank)
+        return false;
+
+    // 无盘标的盘按容量从大到小
+    if (leftRank == UnnamedDiskRank) {
+        const qulonglong leftSize = left->deviceInfo()->getDiskInfo().total();
+        const qulonglong rightSize = right->deviceInfo()->getDiskInfo().total();
+        return leftSize > rightSize;
+    }
+
+    const int result = collator.compare(diskItemSortKey(left->name()), diskItemSortKey(right->name()));
+    if (result != 0)
+        return result < 0;
+
+    return collator.compare(left->name(), right->name()) < 0;
+}
+
+} // namespace
 
 TitleLine::TitleLine(const QString &title, QWidget *parent):
     QFrame(parent),
@@ -714,6 +832,8 @@ void ComputerView::initConnect()
             cvi->setName(deviceInfoPointer->fileDisplayName());
         }
         cvi->updateStatus();
+        // 重命名后名称变化，需要重新排序
+        sortDiskItems();
     });
 
     connect(devices_watcher, &DAbstractFileWatcher::fileAttributeChanged, this, [ = ](const DUrl & url) {
@@ -938,38 +1058,92 @@ bool ComputerView::setRootUrl(const DUrl &url)
     return DUrl::fromComputerFile("/") == url;
 }
 
+void ComputerView::sortDiskItems()
+{
+    const auto sortLayout = [](DFlowLayout *layout) {
+        if (!layout || layout->count() < 2) {
+            return;
+        }
+
+        QList<QLayoutItem *> items;
+        while (QLayoutItem *layoutItem = layout->takeAt(0)) {
+            items.append(layoutItem);
+        }
+
+        std::stable_sort(items.begin(), items.end(), diskItemLessThan);
+
+        for (QLayoutItem *layoutItem : items) {
+            layout->addItem(layoutItem);
+        }
+    };
+
+    // 内置盘与外置盘各自排序：系统盘、数据盘、有盘标盘（字母序）、无盘标盘（容量降序）
+    sortLayout(m_nativeFlowLayout);
+    sortLayout(m_removableFlowLayout);
+
+    const auto logOrder = [](const char *group, DFlowLayout *layout) {
+        if (!layout) {
+            return;
+        }
+        QStringList names;
+        for (int i = 0; i < layout->count(); ++i) {
+            QLayoutItem *layoutItem = layout->itemAt(i);
+            QWidget *widget = layoutItem ? layoutItem->widget() : nullptr;
+            ComputerViewItem *item = widget ? dynamic_cast<ComputerViewItem *>(widget) : nullptr;
+            if (item) {
+                names.append(item->name());
+            }
+        }
+        qDebug() << "computer view disk order" << group << names;
+    };
+    logOrder("internal", m_nativeFlowLayout);
+    logOrder("external", m_removableFlowLayout);
+}
+
 void ComputerView::volumeAdded(UDiskDeviceInfoPointer device)
 {
     qDebug() << "===========volumeAdded=============" << device->getId() << m_nativeItems.contains(device->getId()) << m_removableItems.contains(device->getId());
     qDebug() << device->getDiskInfo();
-    ComputerViewItem *item = NULL;
-    QString id = device->getId();
-    if (m_nativeItems.contains(id)) {
-        item = m_nativeItems.value(id);
-    } else if (m_removableItems.contains(id)) {
-        item = m_removableItems.value(id);
-    } else {
+    const QString id = device->getId();
+    const bool isNative = device->getMediaType() == UDiskDeviceInfo::native;
+    DFlowLayout *layout = isNative ? m_nativeFlowLayout : m_removableFlowLayout;
+    DFlowLayout *otherLayout = isNative ? m_removableFlowLayout : m_nativeFlowLayout;
+    QMap<QString, ComputerViewItem *> &items = isNative ? m_nativeItems : m_removableItems;
+    QMap<QString, ComputerViewItem *> &otherItems = isNative ? m_removableItems : m_nativeItems;
+
+    const bool alreadyAdded = items.contains(id);
+    ComputerViewItem *item = items.value(id);
+    if (!item) {
+        // 设备类型变化时，把图标从另一个分组迁移过来
+        item = otherItems.take(id);
+        if (item) {
+            otherLayout->removeWidget(item);
+        }
+    }
+    if (!item) {
         item = new ComputerViewItem;
     }
     item->setHasMemoryInfo(true);
     item->setDeviceInfo(device);
     item->setName(device->fileDisplayName());
 
-    if (device->getMediaType() == UDiskDeviceInfo::native) {
-        m_nativeFlowLayout->addWidget(item);
-        m_nativeItems.insert(device->getId(), item);
+    if (!alreadyAdded) {
+        layout->addWidget(item);
+        items.insert(id, item);
+    }
+
+    if (isNative) {
         if (m_nativeItems.count() > 0) {
             m_nativeTitleLine->show();
         }
     } else {
-        m_removableFlowLayout->addWidget(item);
-        m_removableItems.insert(device->getId(), item);
         if (m_removableItems.count() > 0) {
             m_removableTitleLine->show();
         }
     }
     updateItemBySizeIndex(m_currentIconSizeIndex, item);
 
+    sortDiskItems();
     updateStatusBar();
 }
 
