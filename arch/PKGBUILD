@@ -1,7 +1,7 @@
 # Maintainer: CharOfString <root@charofstring.cc>
-pkgbase=gxde-file-manager-git
-pkgname=('gxde-file-manager-git' 'gxde-desktop-panel-git' 'gxde-disk-mount-plugin-git'
-         'libgxde-file-manager-git')
+pkgbase=gxde-file-manager
+pkgname=('gxde-file-manager' 'gxde-desktop-panel' 'gxde-disk-mount-plugin'
+         'libgxde-file-manager')
 pkgver=6.4.20
 pkgrel=1
 pkgdesc='GXDE file manager'
@@ -10,11 +10,11 @@ url="https://github.com/GXDE-OS/gxde-file-manager"
 license=('GPL-3.0-or-later')
 makedepends=('git' 'qt6-tools' 'qt6-base' 'qt6-svg' 'qt6-multimedia' 'qt6-declarative' 'qt6-5compat'
              'gsettings-qt6' 'file' 'libsecret' 'poppler' 'polkit-qt6' 'ffmpegthumbnailer' 'taglib'
-             'dtk2widget-qt6-git' 'dtk6core-git' 'libxcb' 'libx11' 'glib2' 'gxde-dock-git'
-             'xcb-util-wm' 'deepin-qt-dbus-factory-git' 'dframework-dbus-qt6-git' 'deepin-gettext-tools'
-             'kcodecs' 'udisks2-qt6-git' 'libxrender' 'mtdev' 'fontconfig' 'freetype2' 'mesa'
-             'disomaster-qt6-git' 'libwebp' 'libgxmr-qt6-git' 'layer-shell-qt' 'cairo'
-             'librofd-ffi-git' 'dtk6gui-git' 'gxde-bernese-git')
+             'dtk2widget-qt6' 'gxde-dtk6core' 'libxcb' 'libx11' 'glib2' 'gxde-dock'
+             'xcb-util-wm' 'gxde-deepin-qt-dbus-factory' 'dframework-dbus-qt6' 'deepin-gettext-tools'
+             'kcodecs' 'gxde-udisks2-qt6' 'libxrender' 'mtdev' 'fontconfig' 'freetype2' 'mesa'
+             'disomaster-qt6' 'libwebp' 'libgxmr-qt6' 'layer-shell-qt' 'cairo'
+             'librofd-ffi' 'gxde-dtk6gui' 'gxde-bernese')
 source=()
 sha512sums=()
 
@@ -56,16 +56,17 @@ _pick() {
   done
 }
 
-package_gxde-file-manager-git() {
-  depends=("libgxde-file-manager-git=$pkgver-$pkgrel" 'socat' 'dtk2widget-qt6-git' 'dtk6core-git'
-           'dtk6log-git' 'disomaster-qt6-git' 'libisoburn' 'gxde-compressor-git' 'polkit-qt6'
+package_gxde-file-manager() {
+  depends=("libgxde-file-manager=$pkgver-$pkgrel" 'socat' 'dtk2widget-qt6' 'gxde-dtk6core'
+           'gxde-dtk6log' 'disomaster-qt6' 'libisoburn' 'gxde-compressor' 'polkit-qt6'
            'qt6-5compat' 'qt6-base' 'libx11' 'libgcc' 'libstdc++' 'glibc')
-  optdepends=('deepin-qt6integration-git: DTK6 platform theme'
+  optdepends=('gxde-deepin-qt6integration: DTK6 platform theme'
               'avfs: browse inside archives'
-              'gxde-file-manager-integration-git: extra file manager plugins'
-              'gxde-disk-mount-plugin-git: disk mount plugin for the dock')
-  provides=('gxde-file-manager' 'deepin-file-manager')
-  conflicts=('gxde-file-manager' 'deepin-file-manager' 'deepin-menu<6.0.0')
+              'gxde-file-manager-integration: extra file manager plugins'
+              'gxde-disk-mount-plugin: disk mount plugin for the dock')
+  provides=('deepin-file-manager' "gxde-file-manager-git=$pkgver")
+  conflicts=('deepin-file-manager' 'deepin-menu<6.0.0' 'gxde-file-manager-git')
+  replaces=('gxde-file-manager-git')
 
   _pick usr/bin/gxde-file-manager usr/bin/gxde-file-manager-daemon usr/bin/gxde-file-manager-pkexec \
         usr/bin/gxde-property-dialog usr/bin/gxde-xdg-user-dirs-update usr/bin/usb-device-formatter \
@@ -86,16 +87,17 @@ package_gxde-file-manager-git() {
     "$pkgdir/usr/share/dbus-1/system.d/com.deepin.filemanager.daemon.conf"
 }
 
-package_gxde-desktop-panel-git() {
+package_gxde-desktop-panel() {
   pkgdesc='GXDE desktop (icons and wallpaper)'
-  depends=("libgxde-file-manager-git=$pkgver-$pkgrel" 'gxde-daemon-git' 'dframework-dbus-qt6-git'
-           'layer-shell-qt' 'dtk2widget-qt6-git' 'dtk6core-git' 'dtk6gui-git' 'gsettings-qt6'
+  depends=("libgxde-file-manager=$pkgver-$pkgrel" 'gxde-daemon' 'dframework-dbus-qt6'
+           'layer-shell-qt' 'dtk2widget-qt6' 'gxde-dtk6core' 'gxde-dtk6gui' 'gsettings-qt6'
            'qt6-5compat' 'qt6-base' 'libxcb' 'xcb-util-wm' 'libgcc' 'libstdc++' 'glibc')
-  optdepends=('deepin-screensaver-git: screensaver'
-              'gxde-requ-git: GXDE ReQu'
-              'gxde-wallpaper-chooser-git: GXDE Wallpaper Chooser')
-  provides=('gxde-desktop-panel' 'deepin-desktop')
-  conflicts=('gxde-desktop-panel' 'deepin-desktop')
+  optdepends=('gxde-deepin-screensaver: screensaver'
+              'gxde-requ: GXDE ReQu'
+              'gxde-wallpaper: GXDE Wallpaper Chooser')
+  provides=('deepin-desktop' "gxde-desktop-panel-git=$pkgver")
+  conflicts=('deepin-desktop' 'gxde-desktop-panel-git')
+  replaces=('gxde-desktop-panel-git')
 
   _pick usr/bin/gxde-desktop-panel usr/bin/gxde-rename-interface-treeland \
         usr/bin/gxde-wallpaper-chooser-wayland usr/share/applications/gxde-computer.desktop \
@@ -104,18 +106,19 @@ package_gxde-desktop-panel-git() {
         usr/share/dbus-1/services/com.deepin.dde.desktop.service
 }
 
-package_gxde-disk-mount-plugin-git() {
+package_gxde-disk-mount-plugin() {
   pkgdesc='Disk mount plugin for the GXDE dock'
-  depends=('gxde-dock-git' 'dtk2widget-qt6-git' 'dtk6core-git' 'udisks2-qt6-git' 'qt6-base' 'glib2'
-           'libgcc' 'libstdc++' 'glibc' 'gxde-bernese-git')
-  provides=('gxde-disk-mount-plugin')
-  conflicts=('gxde-disk-mount-plugin')
+  depends=('gxde-dock' 'dtk2widget-qt6' 'gxde-dtk6core' 'gxde-udisks2-qt6' 'qt6-base' 'glib2'
+           'libgcc' 'libstdc++' 'glibc' 'gxde-bernese')
+  provides=("gxde-disk-mount-plugin-git=$pkgver")
+  conflicts=('gxde-disk-mount-plugin-git')
+  replaces=('gxde-disk-mount-plugin-git')
 
   _pick usr/lib/gxde-dock/plugins/system-trays/libdde-disk-mount-plugin.so \
         usr/share/dde-disk-mount-plugin/translations
 }
 
-package_libgxde-file-manager-git() {
+package_libgxde-file-manager() {
   pkgdesc='GXDE file manager library, plugins and data'
   # Debian 把开发文件拆到 -dev 包，这里没有文件冲突，按 Arch 惯例合并
   # Debian splits the development files into a -dev package; nothing collides
@@ -123,11 +126,12 @@ package_libgxde-file-manager-git() {
   # 公开头文件 dfmglobal.h 包含 <QtCore5Compat/QTextCodec>，因此 qt6-5compat 也是开发所需
   # The public header dfmglobal.h includes <QtCore5Compat/QTextCodec>, so
   # qt6-5compat is needed for development too.
-  depends=('disomaster-qt6-git' 'dtk2widget-qt6-git' 'dtk6core-git' 'libgxmr-qt6-git' 'librofd-ffi-git'
-           'udisks2-qt6-git' 'cairo' 'ffmpegthumbnailer' 'glib2' 'gsettings-qt6' 'kcodecs' 'libsecret'
+  depends=('disomaster-qt6' 'dtk2widget-qt6' 'gxde-dtk6core' 'libgxmr-qt6' 'librofd-ffi'
+           'gxde-udisks2-qt6' 'cairo' 'ffmpegthumbnailer' 'glib2' 'gsettings-qt6' 'kcodecs' 'libsecret'
            'poppler' 'qt6-5compat' 'qt6-base' 'qt6-multimedia' 'qt6-svg' 'libgcc' 'libstdc++' 'glibc')
-  provides=('libgxde-file-manager')
-  conflicts=('libgxde-file-manager')
+  provides=("libgxde-file-manager-git=$pkgver")
+  conflicts=('libgxde-file-manager-git')
+  replaces=('libgxde-file-manager-git')
 
   # 通配符需在暂存目录中展开 ・ The globs must expand inside the staging root.
   cd "$srcdir/root"
