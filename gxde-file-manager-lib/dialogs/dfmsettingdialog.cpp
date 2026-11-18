@@ -138,6 +138,7 @@ private:
         {"advance.index.index_internal", DFMApplication::GA_IndexInternal},
         {"advance.index.index_external", DFMApplication::GA_IndexExternal},
         {"advance.search.show_hidden", DFMApplication::GA_ShowedHiddenOnSearch},
+        {"advance.preview.file_thumbnail_preview", DFMApplication::GA_PreviewFileThumbnail},
         {"advance.preview.compress_file_preview", DFMApplication::GA_PreviewCompressFile},
         {"advance.preview.text_file_preview", DFMApplication::GA_PreviewTextFile},
         {"advance.preview.document_file_preview", DFMApplication::GA_PreviewDocumentFile},

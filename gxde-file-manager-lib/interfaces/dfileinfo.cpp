@@ -39,6 +39,7 @@
 
 #include "dfileservices.h"
 #include "dthumbnailprovider.h"
+#include "dfmapplication.h"
 #include "dfileiconprovider.h"
 #include "dmimedatabase.h"
 #include "dabstractfilewatcher.h"
@@ -849,6 +850,13 @@ void DFileInfo::makeToInactive()
 QIcon DFileInfo::fileIcon() const
 {
     Q_D(const DFileInfo);
+
+    if (!DFMApplication::genericAttribute(DFMApplication::GA_PreviewFileThumbnail).toBool()
+            && (d->needThumbnail || d->hasThumbnail > 0)) {
+        d->needThumbnail = false;
+        d->hasThumbnail = 0;
+        d->icon = QIcon();
+    }
 
     if (!d->icon.isNull() && !d->needThumbnail && (!d->iconFromTheme || !d->icon.name().isEmpty())) {
         return d->icon;

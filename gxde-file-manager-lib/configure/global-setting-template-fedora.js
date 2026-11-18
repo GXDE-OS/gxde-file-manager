@@ -197,6 +197,12 @@
                     "name": qsTranslate("GenerateSettingTranslate", "Preview"),
                     "options": [
                         {
+                            "key": "file_thumbnail_preview",
+                            "text": qsTranslate("GenerateSettingTranslate", "Show file thumbnails"),
+                            "type": "checkbox",
+                            "default": true
+                        },
+                        {
                             "key": "compress_file_preview",
                             "text": qsTranslate("GenerateSettingTranslate", "Compress file preview"),
                             "type": "checkbox",

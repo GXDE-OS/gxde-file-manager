@@ -158,6 +158,9 @@ bool DThumbnailProvider::hasThumbnail(const QFileInfo &info) const
 {
     Q_D(const DThumbnailProvider);
 
+    if (!DFMApplication::genericAttribute(DFMApplication::GA_PreviewFileThumbnail).toBool())
+        return false;
+
     if (info.isDir() && (QFile::exists(info.absoluteFilePath() + "/autorun.inf") || QFile::exists(info.absoluteFilePath() + "/AUTORUN.INF"))) {
         // 判断是否有 autorun.inf 缩略图
         // 读取 autorun.inf 显示缩略图

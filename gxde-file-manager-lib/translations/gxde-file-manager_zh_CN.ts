@@ -1253,6 +1253,11 @@
         <translation>预览</translation>
     </message>
     <message>
+        <location filename="../configure/global-setting-template.js" line="280" />
+        <source>Show file thumbnails</source>
+        <translation>使用缩略图显示文件内容</translation>
+    </message>
+    <message>
         <location filename="../configure/global-setting-template.js" line="196" />
         <source>Compress file preview</source>
         <translation>压缩包预览</translation>
