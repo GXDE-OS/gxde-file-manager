@@ -126,7 +126,9 @@ package_libgxde-file-manager() {
   # 公开头文件 dfmglobal.h 包含 <QtCore5Compat/QTextCodec>，因此 qt6-5compat 也是开发所需
   # The public header dfmglobal.h includes <QtCore5Compat/QTextCodec>, so
   # qt6-5compat is needed for development too.
-  depends=('disomaster-qt6' 'dtk2widget-qt6' 'gxde-dtk6core' 'libgxmr-qt6' 'librofd-ffi'
+  # libgxde-file-manager.so 链接 libgxde-bernese-qt6，gxde-file-manager.pc 也 Requires gxde-bernese-qt6
+  # libgxde-file-manager.so links libgxde-bernese-qt6 and gxde-file-manager.pc Requires gxde-bernese-qt6.
+  depends=('disomaster-qt6' 'dtk2widget-qt6' 'gxde-dtk6core' 'libgxmr-qt6' 'librofd-ffi' 'gxde-bernese'
            'gxde-udisks2-qt6' 'cairo' 'ffmpegthumbnailer' 'glib2' 'gsettings-qt6' 'kcodecs' 'libsecret'
            'poppler' 'qt6-5compat' 'qt6-base' 'qt6-multimedia' 'qt6-svg' 'libgcc' 'libstdc++' 'glibc')
   provides=("libgxde-file-manager-git=$pkgver")
