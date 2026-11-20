@@ -6,6 +6,7 @@ if(NOT GXDE_ARCH MATCHES "^(i386|i[3-6]86)$")
 endif()
 add_subdirectory(dde-text-preview-plugin)
 add_subdirectory(dde-music-preview-plugin)
+add_subdirectory(dde-deb-preview-plugin)
 
 if(NOT DISABLE_FFMPEG AND NOT BUILD_MINIMUM
    AND NOT GXDE_ARCH MATCHES "^(sw_64|mips64|mips32)$")
