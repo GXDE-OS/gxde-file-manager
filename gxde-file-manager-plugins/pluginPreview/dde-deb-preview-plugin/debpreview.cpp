@@ -118,9 +118,11 @@ void DebPreview::initUI()
     m_tabWidget->addTab(m_infoScroll, tr("基本信息"));
 
     // 脚本页
+    // 注意：Qt6 下 DStyle 绘制的 QTabWidget 页面框线内缩约 6px，
+    // 边距过小会导致下拉框/文本框绘制到框线上，看起来重叠
     QWidget *scriptPage = new QWidget(m_tabWidget);
     QVBoxLayout *scriptLayout = new QVBoxLayout(scriptPage);
-    scriptLayout->setContentsMargins(0, 6, 0, 0);
+    scriptLayout->setContentsMargins(10, 10, 10, 10);
     scriptLayout->setSpacing(6);
 
     m_scriptCombo = new QComboBox(scriptPage);

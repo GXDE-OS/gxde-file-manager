@@ -10,6 +10,11 @@ TARGET = dde-deb-preview-plugin
 TEMPLATE = lib
 CONFIG += c++17 plugin
 
+# 插件由文件管理器以 dlopen 方式加载：链接 jemalloc 后会因
+# “无法在静态 TLS 块中分配内存”导致整个插件加载失败（空格预览失效），
+# 因此参照 debian/rules 对 Qt6 的处理，在此显式禁用
+DISABLE_JEMALLOC = 1
+
 include(../../../common/common.pri)
 
 greaterThan(QT_MAJOR_VERSION, 5) {
