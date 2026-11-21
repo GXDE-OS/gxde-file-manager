@@ -2,7 +2,7 @@
 pkgbase=gxde-file-manager
 pkgname=('gxde-file-manager' 'gxde-desktop-panel' 'gxde-disk-mount-plugin'
          'libgxde-file-manager')
-pkgver=6.4.20
+pkgver=6.4.22
 pkgrel=1
 pkgdesc='GXDE file manager'
 arch=('x86_64' 'aarch64')
