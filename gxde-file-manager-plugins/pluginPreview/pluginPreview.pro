@@ -5,7 +5,8 @@ SUBDIRS += \
     dde-pdf-preview-plugin \
     dde-text-preview-plugin \
     dde-music-preview-plugin \
-    dde-deb-preview-plugin
+    dde-deb-preview-plugin \
+    dde-exe-preview-plugin
 
 ARCH = $$QT_ARCH
 
